@@ -99,6 +99,7 @@ body {
 .hero-overflow-menu {
   position: relative;
   flex: 0 0 auto;
+  margin-left: auto;
 }
 
 .hero-menu-button {
@@ -966,6 +967,7 @@ h1 {
 
   .brand-row {
     align-items: center;
+    width: 100%;
   }
 
   .hero-menu-button {

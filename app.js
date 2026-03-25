@@ -2223,13 +2223,17 @@ function renderResults() {
       ? "Most Popular Strings"
       : proOnly
         ? "Pro Player Strings"
-        : "String Recommendations";
+        : searchQuery
+          ? "Search Results"
+          : "String Recommendations";
   }
   resultsCount.textContent = popularOnly
     ? `${ranked.length} popular strings`
     : proOnly
       ? `${ranked.length} pro-player strings`
-      : `${ranked.length} matches`;
+      : searchQuery
+        ? `${ranked.length} search matches`
+        : `${ranked.length} matches`;
 
   if (ranked.length === 0) {
     resultsList.innerHTML = `
@@ -2337,7 +2341,7 @@ function syncClearSearchButton() {
 }
 
 function syncFocusedMode() {
-  const isFocused = popularOnly || proOnly;
+  const isFocused = popularOnly || proOnly || Boolean(searchQuery);
 
   if (heroSection) {
     heroSection.classList.toggle("is-results-focused", isFocused);
@@ -2360,7 +2364,7 @@ function syncFocusedMode() {
 
     activeModeBar.hidden = false;
     activeModeBar.innerHTML = `
-      <span class="active-mode-pill">${popularOnly ? "Showing 20 Most Popular" : "Showing Pro Player Strings"}</span>
+      <span class="active-mode-pill">${popularOnly ? "Showing 20 Most Popular" : proOnly ? "Showing Pro Player Strings" : `Searching for "${searchQuery}"`}</span>
       <button class="active-mode-clear" type="button">Back to main choices</button>
     `;
 
