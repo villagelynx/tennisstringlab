@@ -1916,6 +1916,8 @@ stringEntry("Yonex Poly Tour Fire", {
   })
 ];
 
+window.TENNIS_STRING_DATA = STRINGS;
+
 const strictFilterKeys = new Set(["brand", "type", "atpPlayer", "wtaPlayer", "stringColor", "gauge", "playerLevel", "gameStyle", "tensionBand", "racketFamily"]);
 
 window.TENNIS_STRING_PLANNER_STRINGS = STRINGS;

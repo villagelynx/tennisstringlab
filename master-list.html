@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tennis String Lab Master List</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-utility">
+        <div class="utility-links">
+          <a class="hero-link utility-link secondary-hero-link" href="./index.html">Back to Tennis String Lab</a>
+        </div>
+      </div>
+      <p class="eyebrow">Master Database</p>
+      <h1>Browse every string in the database by name, brand, and type.</h1>
+      <p class="hero-copy">
+        Use the master list to scan the full catalog, search by string name, and sort alphabetically or narrow by brand and string type.
+      </p>
+      <div class="master-controls">
+        <input id="masterSearchInput" class="search-input" type="search" placeholder="Search by string name or brand">
+        <select id="masterBrandFilter" class="search-input master-select">
+          <option value="Any">All Brands</option>
+        </select>
+        <select id="masterTypeFilter" class="search-input master-select">
+          <option value="Any">All Types</option>
+        </select>
+        <select id="masterPlayerFilter" class="search-input master-select">
+          <option value="Any">All Pro Players</option>
+        </select>
+        <select id="masterSortSelect" class="search-input master-select">
+          <option value="az">Alphabetical A-Z</option>
+          <option value="za">Alphabetical Z-A</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="results-panel master-results-panel">
+      <div class="results-header">
+        <div>
+          <p class="eyebrow">Complete Catalog</p>
+          <h2>Master String List</h2>
+        </div>
+        <div class="results-meta">
+          <p id="masterDatabaseCount" class="results-count">0 strings in database</p>
+          <p id="masterResultsCount" class="results-count">0 shown</p>
+        </div>
+      </div>
+
+      <div id="masterListTable" class="master-list-table"></div>
+    </section>
+  </main>
+
+  <div class="planner-hidden" aria-hidden="true">
+    <div id="filterGrid"></div>
+    <div id="resultsList"></div>
+    <div id="resultsCount"></div>
+    <div id="databaseCount"></div>
+    <button id="resetButton" type="button"></button>
+    <input id="stringSearchInput" type="search">
+    <button id="popularStringsButton" type="button"></button>
+    <button id="proPlayersButton" type="button"></button>
+    <div id="typeMenu">
+      <button type="button" data-type="Any"></button>
+    </div>
+    <div id="typeDescriptionEyebrow"></div>
+    <div id="typeDescriptionTitle"></div>
+    <div id="typeDescriptionText"></div>
+  </div>
+
+  <script src="./app.js"></script>
+  <script src="./master-list.js"></script>
+</body>
+</html>

@@ -205,6 +205,18 @@ h1 {
   font: inherit;
 }
 
+.pro-players-hero-button {
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.hero-button-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  transform: translateY(1px);
+}
+
 .secondary-hero-link,
 .utility-link {
   background: linear-gradient(135deg, #d7edbf, #b8d98d);
@@ -214,6 +226,16 @@ h1 {
 .hero-link.is-active {
   background: linear-gradient(135deg, #0f6d4c, #0a4d36);
   color: #ffffff;
+}
+
+.proshops-hero-link {
+  background: linear-gradient(135deg, #fff98a, #f7df45);
+  color: #574600;
+}
+
+.master-list-hero-link {
+  background: linear-gradient(135deg, #dff3ff, #b9e2ff);
+  color: #0d4d7a;
 }
 
 .layout-grid {
@@ -527,6 +549,83 @@ h1 {
   width: min(420px, 100%);
 }
 
+.planner-hidden {
+  display: none;
+}
+
+.master-controls {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.6fr) repeat(4, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.master-select {
+  appearance: none;
+}
+
+.master-results-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.master-list-table {
+  display: grid;
+  gap: 10px;
+}
+
+.master-list-head,
+.master-list-row {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.5fr) minmax(130px, 0.9fr) minmax(130px, 0.85fr) minmax(260px, 1.5fr);
+  gap: 16px;
+  align-items: center;
+}
+
+.master-list-head {
+  padding: 0 14px 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.master-list-row {
+  padding: 16px 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(10, 77, 132, 0.08);
+  box-shadow: 0 14px 34px rgba(10, 77, 132, 0.06);
+}
+
+.master-list-name strong {
+  font-size: 1rem;
+  color: #0a2e52;
+}
+
+.master-list-meta {
+  font-size: 0.95rem;
+  color: #35506d;
+}
+
+.master-more-players {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+  color: #0a4d84;
+  font-weight: 700;
+  cursor: help;
+}
+
+.master-empty-state {
+  padding: 28px 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(10, 77, 132, 0.08);
+  color: var(--muted);
+}
+
 .image-library-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -646,6 +745,16 @@ h1 {
   .filter-panel,
   .results-panel {
     padding: 16px;
+  }
+
+  .master-controls,
+  .master-list-head,
+  .master-list-row {
+    grid-template-columns: 1fr;
+  }
+
+  .master-list-head {
+    display: none;
   }
 
   .hero-heading-row,
