@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tennis String Lab Admin Instructions</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-utility">
+        <div class="utility-links">
+          <a class="hero-link utility-link secondary-hero-link" href="./admin.html">Back to Admin</a>
+          <a class="hero-link utility-link secondary-hero-link" href="./index.html">Back to Public Site</a>
+        </div>
+      </div>
+      <p class="eyebrow">Admin Guide</p>
+      <h1>How to manage Tennis String Lab</h1>
+      <p class="hero-copy">
+        This page is your quick guide for maintaining the site, updating links, managing players, and handling images.
+      </p>
+    </section>
+
+    <section class="results-panel standalone-panel">
+      <div class="results-list">
+        <article class="type-description-card">
+          <p class="eyebrow">Main Files</p>
+          <h3>Where everything lives</h3>
+          <p class="summary-copy">
+            Main public page: <a href="./index.html">index.html</a><br>
+            String data and logic: <a href="./app.js">app.js</a><br>
+            Site styling: <a href="./styles.css">styles.css</a><br>
+            Pro shops page: <a href="./proshops.html">proshops.html</a><br>
+            Pro-player admin: <a href="./proplayers.html">proplayers.html</a><br>
+            Image library: <a href="./images.html">images.html</a>
+          </p>
+        </article>
+
+        <article class="type-description-card">
+          <p class="eyebrow">Affiliate Links</p>
+          <h3>How to add Amazon affiliate links</h3>
+          <p class="summary-copy">
+            Open <a href="./app.js">app.js</a> and find the string you want to update. Add these fields inside that string entry:
+          </p>
+          <pre class="admin-code-block"><code>amazonSetUrl: "https://www.amazon.com/dp/SETLINK?tag=yourtag-20",
+amazonReelUrl: "https://www.amazon.com/dp/REELLINK?tag=yourtag-20"</code></pre>
+          <p class="summary-copy">
+            If you leave those blank, the site automatically falls back to an Amazon search for that string.
+          </p>
+        </article>
+
+        <article class="type-description-card">
+          <p class="eyebrow">Pro Players</p>
+          <h3>How to manage pro-player mappings</h3>
+          <p class="summary-copy">
+            Use <a href="./proplayers.html">Manage Pro Players</a> to add or delete custom ATP and WTA records. You can save player name, string, tension, racket, and notes there.
+          </p>
+        </article>
+
+        <article class="type-description-card">
+          <p class="eyebrow">Images</p>
+          <h3>How to manage string images</h3>
+          <p class="summary-copy">
+            Use <a href="./images.html">String Image Library</a> to drop or paste images onto strings. These are stored in your browser on your computer, so they are useful for local admin work but are not yet a true hosted image system.
+          </p>
+        </article>
+
+        <article class="type-description-card">
+          <p class="eyebrow">Important</p>
+          <h3>Current admin limitation</h3>
+          <p class="summary-copy">
+            This is still a static website. The admin pages are separated from the public menu, but they are not protected by login. Real admin-only access would require authentication on the live site.
+          </p>
+        </article>
+
+        <article class="type-description-card">
+          <p class="eyebrow">Deployment</p>
+          <h3>How to publish Tennis String Lab</h3>
+          <p class="summary-copy">
+            This is a static website, so the easiest deployment options are Netlify, Cloudflare Pages, GitHub Pages, or a normal web host that accepts HTML, CSS, and JavaScript files.
+          </p>
+          <p class="summary-copy">
+            Basic deployment steps:
+          </p>
+          <p class="summary-copy">
+            1. Keep all project files together in the same folder.<br>
+            2. Upload the full TennisStringPlanner folder contents to your hosting service.<br>
+            3. Make sure <a href="./index.html">index.html</a> is the homepage file.<br>
+            4. Keep <a href="./app.js">app.js</a>, <a href="./styles.css">styles.css</a>, <a href="./proshops.html">proshops.html</a>, <a href="./proplayers.html">proplayers.html</a>, <a href="./images.html">images.html</a>, and <a href="./admin.html">admin.html</a> in place.<br>
+            5. After uploading, test the public homepage and then test the admin pages separately.
+          </p>
+          <p class="summary-copy">
+            Recommended deployment flow:
+          </p>
+          <p class="summary-copy">
+            1. Put the site files into a GitHub repository.<br>
+            2. Connect that repository to Netlify or Cloudflare Pages.<br>
+            3. Publish the site and point your domain <strong>tennisstringlab.com</strong> to the host.<br>
+            4. Re-upload or redeploy each time you update the site files.
+          </p>
+          <p class="summary-copy">
+            Important note: browser-saved images and custom local admin records do not automatically move to the live site. Those are stored locally in your browser unless you later build a real backend or file-storage system.
+          </p>
+        </article>
+
+        <article class="type-description-card">
+          <p class="eyebrow">Domain Setup</p>
+          <h3>How to connect tennisstringlab.com</h3>
+          <p class="summary-copy">
+            If you use Netlify or Cloudflare Pages, add your site there first and confirm the site is live on the temporary hosting URL.
+          </p>
+          <p class="summary-copy">
+            Then:
+          </p>
+          <p class="summary-copy">
+            1. Add <strong>tennisstringlab.com</strong> as a custom domain in your hosting dashboard.<br>
+            2. Follow the host instructions for DNS settings.<br>
+            3. Update the domain DNS where your domain name was purchased.<br>
+            4. Wait for DNS to propagate, then test both the root domain and the www version if you want both to work.
+          </p>
+        </article>
+
+        <article class="type-description-card">
+          <p class="eyebrow">File Handoff</p>
+          <h3>What files your son needs</h3>
+          <p class="summary-copy">
+            The safest way is to send the full <strong>TennisStringPlanner</strong> folder as a zip file.
+          </p>
+          <p class="summary-copy">
+            Key files to include:
+          </p>
+          <p class="summary-copy">
+            <a href="./index.html">index.html</a><br>
+            <a href="./app.js">app.js</a><br>
+            <a href="./styles.css">styles.css</a><br>
+            <a href="./proshops.html">proshops.html</a><br>
+            <a href="./proshops.js">proshops.js</a><br>
+            <a href="./admin.html">admin.html</a><br>
+            <a href="./admin-instructions.html">admin-instructions.html</a><br>
+            <a href="./proplayers.html">proplayers.html</a><br>
+            <a href="./proplayers.js">proplayers.js</a><br>
+            <a href="./images.html">images.html</a><br>
+            <a href="./image-library.js">image-library.js</a><br>
+            plus the <strong>images</strong> folder
+          </p>
+          <p class="summary-copy">
+            If he uploads the full folder contents to the web host and keeps the files together, the site should load correctly.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

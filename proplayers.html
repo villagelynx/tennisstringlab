@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tennis String Lab Pro Player Manager</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-utility">
+        <div class="utility-links">
+          <a class="hero-link utility-link secondary-hero-link" href="./index.html">Back to Tennis String Lab</a>
+        </div>
+      </div>
+      <p class="eyebrow">Pro Player Manager</p>
+      <h1>Add, edit, and delete custom pro player string notes.</h1>
+      <p class="hero-copy">
+        Save ATP or WTA player associations locally with their string, typical tension, and optional racket. These entries feed back into Tennis String Lab for search, pro-player display, and string notes on this computer.
+      </p>
+    </section>
+
+    <section class="layout-grid">
+      <aside class="filter-panel">
+        <div class="panel-header">
+          <h2>Add Pro Player</h2>
+        </div>
+        <form id="proPlayerForm" class="filter-grid">
+          <div class="field">
+            <label for="playerNameInput">Player Name</label>
+            <input id="playerNameInput" class="search-input" type="text" placeholder="Example: Casper Ruud" required>
+          </div>
+          <div class="field">
+            <label for="playerTourSelect">Tour</label>
+            <select id="playerTourSelect">
+              <option value="ATP">ATP</option>
+              <option value="WTA">WTA</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="playerStringSelect">String</label>
+            <select id="playerStringSelect"></select>
+          </div>
+          <div class="field">
+            <label for="playerTensionInput">Tension</label>
+            <input id="playerTensionInput" class="search-input" type="text" placeholder="Example: 52 / 50 lbs" required>
+          </div>
+          <div class="field">
+            <label for="playerRacketInput">Racket</label>
+            <input id="playerRacketInput" class="search-input" type="text" placeholder="Example: Head Radical MP 2025">
+          </div>
+          <div class="field">
+            <label for="playerNoteInput">Note</label>
+            <input id="playerNoteInput" class="search-input" type="text" placeholder="Example: Typical tournament reference">
+          </div>
+          <button class="secondary-button" type="submit">Save Pro Player</button>
+          <p id="proPlayerStatus" class="results-count">No changes yet.</p>
+        </form>
+      </aside>
+
+      <section class="results-panel">
+        <div class="results-header">
+          <div>
+            <p class="eyebrow">Saved Records</p>
+            <h2>Custom Pro Players</h2>
+          </div>
+          <div class="results-meta">
+            <p id="proPlayerCount" class="results-count">0 saved players</p>
+          </div>
+        </div>
+
+        <div id="proPlayerList" class="results-list"></div>
+
+        <div class="results-header compact-section-header">
+          <div>
+            <p class="eyebrow">Coverage Gaps</p>
+            <h2>Players Still Missing String Associations</h2>
+          </div>
+          <div class="results-meta">
+            <p id="missingPlayerCount" class="results-count">0 players missing</p>
+          </div>
+        </div>
+
+        <div id="missingPlayerList" class="results-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+  <script src="./proplayers.js"></script>
+</body>
+</html>

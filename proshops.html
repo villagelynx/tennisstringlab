@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tennis String Lab Pro Shops</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-utility">
+        <div class="utility-links">
+          <a class="hero-link utility-link secondary-hero-link" href="./index.html">Back to Tennis String Lab</a>
+        </div>
+      </div>
+      <p class="eyebrow">Pro Shops</p>
+      <h1>Find pro shops and stores that string rackets.</h1>
+      <p class="hero-copy">
+        Search by city, state or province, or shop name to find tennis retailers and pro shops that offer restringing and setup help.
+      </p>
+      <div class="hero-actions">
+        <input id="shopSearchInput" class="search-input hero-search-control" type="search" placeholder="Search city, shop, state, or province">
+        <select id="shopRegionSelect" class="search-input hero-search-control">
+          <option value="All">All Regions</option>
+          <option value="West Coast">West Coast</option>
+          <option value="Southwest">Southwest</option>
+          <option value="Midwest">Midwest</option>
+          <option value="Northeast">Northeast</option>
+          <option value="Southeast">Southeast</option>
+          <option value="Canada">Canada</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="results-panel standalone-panel">
+      <div class="results-header">
+        <div>
+          <p class="eyebrow">Shops</p>
+          <h2>Stringing Locations</h2>
+        </div>
+        <div class="results-meta">
+          <p id="shopCount" class="results-count">0 shops</p>
+        </div>
+      </div>
+      <div class="results-list" id="shopList"></div>
+    </section>
+  </main>
+
+  <script src="./proshops.js"></script>
+</body>
+</html>

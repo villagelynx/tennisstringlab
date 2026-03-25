@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tennis String Lab Image Library</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-utility">
+        <div class="utility-links">
+          <a class="hero-link utility-link secondary-hero-link" href="./index.html">Back to Tennis String Lab</a>
+        </div>
+      </div>
+      <p class="eyebrow">Image Library</p>
+      <h1>Drop in real string photos and save them for the planner.</h1>
+      <p class="hero-copy">
+        Click a string card, then drag and drop, double-click to pick a file, or paste an image. Saved photos stay in this browser on this computer.
+      </p>
+    </section>
+
+    <section class="results-panel standalone-panel">
+      <div class="results-header">
+        <div>
+          <p class="eyebrow">Full String Database</p>
+          <h2>Photo Slots</h2>
+        </div>
+        <div class="results-meta">
+          <p id="imageLibraryCount" class="results-count">0 strings shown</p>
+          <p id="imageLibraryStatus" class="results-count">No changes yet</p>
+        </div>
+      </div>
+
+      <div class="library-note-card">
+        <p>Use this page to manage string images without editing code. Saved images override the generated placeholder art for matching strings.</p>
+      </div>
+
+      <div class="image-library-toolbar">
+        <input id="imageLibrarySearch" class="search-input library-search-input" type="search" placeholder="Search strings by name or brand">
+      </div>
+
+      <div id="imageLibraryGrid" class="image-library-grid"></div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+  <script src="./image-library.js"></script>
+</body>
+</html>
