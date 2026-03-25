@@ -48,6 +48,7 @@ body {
 .hero {
   border-radius: 30px;
   padding: 26px;
+  position: relative;
 }
 
 .type-description-card {
@@ -973,8 +974,12 @@ h1 {
   }
 
   .hero-overflow-menu {
-    margin-right: -2px;
-    transform: translateY(-6px);
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    margin-right: 0;
+    transform: none;
+    z-index: 12;
   }
 
   .hero-menu-button {
