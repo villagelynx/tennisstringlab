@@ -2511,23 +2511,25 @@ function renderStringCard(entry, score, matchedTags) {
 
   return `
     <article class="result-card">
-      <div class="plant-image">
-        <img
-          src="${entry.image}"
-          alt="${entry.name}"
-          data-fallback="${fallbackImage}"
-          onerror="this.onerror=null;this.src=this.dataset.fallback;"
-        >
-      </div>
       <div class="result-content">
         <div class="result-top">
-          <div class="result-title">
-            <h3>${entry.name}</h3>
-            <p class="latin-name">${entry.brand} | ${entry.type} | ${entry.gauge}</p>
+          <div class="result-top-main">
+            <div class="result-title">
+              <h3>${entry.name}</h3>
+              <p class="latin-name">${entry.brand} | ${entry.type} | ${entry.gauge}</p>
+            </div>
+            <div class="score-pill">
+              <span>${score.toFixed(1)}/10</span>
+              <small>Match Score</small>
+            </div>
           </div>
-          <div class="score-pill">
-            <span>${score.toFixed(1)}/10</span>
-            <small>Match Score</small>
+          <div class="plant-image">
+            <img
+              src="${entry.image}"
+              alt="${entry.name}"
+              data-fallback="${fallbackImage}"
+              onerror="this.onerror=null;this.src=this.dataset.fallback;"
+            >
           </div>
         </div>
         <p class="summary-copy">${entry.summary}</p>
