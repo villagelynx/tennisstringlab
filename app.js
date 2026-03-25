@@ -3,6 +3,8 @@ const resultsList = document.getElementById("resultsList");
 const resultsCount = document.getElementById("resultsCount");
 const databaseCount = document.getElementById("databaseCount");
 const resetButton = document.getElementById("resetButton");
+const mobileFilterToggle = document.getElementById("mobileFilterToggle");
+const mobileQuickPlayerFilter = document.getElementById("mobileQuickPlayerFilter");
 const stringSearchInput = document.getElementById("stringSearchInput");
 const popularStringsButton = document.getElementById("popularStringsButton");
 const proPlayersButton = document.getElementById("proPlayersButton");
@@ -10,6 +12,15 @@ const typeMenu = document.getElementById("typeMenu");
 const typeDescriptionEyebrow = document.getElementById("typeDescriptionEyebrow");
 const typeDescriptionTitle = document.getElementById("typeDescriptionTitle");
 const typeDescriptionText = document.getElementById("typeDescriptionText");
+
+if (mobileFilterToggle) {
+  mobileFilterToggle.addEventListener("click", () => {
+    const shouldCollapse = !filterGrid.classList.contains("is-collapsed");
+    filterGrid.classList.toggle("is-collapsed", shouldCollapse);
+    mobileFilterToggle.textContent = shouldCollapse ? "Show Filters" : "Hide Filters";
+    mobileFilterToggle.setAttribute("aria-expanded", shouldCollapse ? "false" : "true");
+  });
+}
 
 const IMAGE_STORAGE_PREFIX = "tennisStringPlannerImage:";
 const PRO_PLAYER_STORAGE_KEY = "tennisStringPlannerCustomPros";
@@ -1928,6 +1939,7 @@ window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS = {
 
 if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
   renderFilters();
+  populateMobileQuickPlayerFilter();
   renderResults();
 
   if (stringSearchInput) {
@@ -1998,6 +2010,7 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
     syncPopularButton();
     syncProButton();
     syncTypeMenu();
+    syncMobileQuickPlayerFilter();
     renderResults();
   });
 }
@@ -2026,9 +2039,69 @@ function renderFilters() {
       if (filter.key === "type") {
         syncTypeMenu();
       }
+      if (filter.key === "atpPlayer" || filter.key === "wtaPlayer") {
+        syncMobileQuickPlayerFilter();
+      }
       renderResults();
     });
   });
+}
+
+function populateMobileQuickPlayerFilter() {
+  if (!mobileQuickPlayerFilter) {
+    return;
+  }
+
+  const atpPlayers = FILTERS.find((filter) => filter.key === "atpPlayer")?.options.filter((option) => option !== "Any") || [];
+  const wtaPlayers = FILTERS.find((filter) => filter.key === "wtaPlayer")?.options.filter((option) => option !== "Any") || [];
+  const players = [...new Set([...atpPlayers, ...wtaPlayers])].sort((left, right) => left.localeCompare(right));
+
+  mobileQuickPlayerFilter.innerHTML = `
+    <option value="Any">All Pro Players</option>
+    ${players.map((player) => `<option value="${player}">${player}</option>`).join("")}
+  `;
+
+  mobileQuickPlayerFilter.addEventListener("change", (event) => {
+    const selectedPlayer = event.currentTarget.value;
+    const isAtpPlayer = atpPlayers.includes(selectedPlayer);
+    const isWtaPlayer = wtaPlayers.includes(selectedPlayer);
+
+    state.atpPlayer = isAtpPlayer ? selectedPlayer : "Any";
+    state.wtaPlayer = isWtaPlayer ? selectedPlayer : "Any";
+
+    const atpSelect = document.getElementById("filter-atpPlayer");
+    const wtaSelect = document.getElementById("filter-wtaPlayer");
+
+    if (atpSelect) {
+      atpSelect.value = state.atpPlayer;
+    }
+
+    if (wtaSelect) {
+      wtaSelect.value = state.wtaPlayer;
+    }
+
+    renderResults();
+  });
+
+  syncMobileQuickPlayerFilter();
+}
+
+function syncMobileQuickPlayerFilter() {
+  if (!mobileQuickPlayerFilter) {
+    return;
+  }
+
+  if (state.atpPlayer && state.atpPlayer !== "Any") {
+    mobileQuickPlayerFilter.value = state.atpPlayer;
+    return;
+  }
+
+  if (state.wtaPlayer && state.wtaPlayer !== "Any") {
+    mobileQuickPlayerFilter.value = state.wtaPlayer;
+    return;
+  }
+
+  mobileQuickPlayerFilter.value = "Any";
 }
 
 function buildFilterOptions(filter, playerCoverage) {
