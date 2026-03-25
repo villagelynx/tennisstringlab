@@ -1230,6 +1230,20 @@ h1 {
     grid-template-columns: 1fr;
   }
 
+  .plant-image {
+    min-height: 132px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .plant-image img {
+    width: 100%;
+    height: 108px;
+    object-fit: contain;
+  }
+
   .result-content {
     padding: 0 14px 14px;
   }
