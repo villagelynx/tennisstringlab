@@ -792,7 +792,30 @@ h1 {
   margin-left: 4px;
   color: #0a4d84;
   font-weight: 700;
-  cursor: help;
+  cursor: pointer;
+}
+
+.master-more-details {
+  display: inline-block;
+  margin-left: 4px;
+}
+
+.master-more-details summary {
+  list-style: none;
+}
+
+.master-more-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.master-more-panel {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(10, 77, 132, 0.08);
+  border: 1px solid rgba(10, 77, 132, 0.08);
+  color: #294e72;
+  line-height: 1.45;
 }
 
 .master-empty-state {

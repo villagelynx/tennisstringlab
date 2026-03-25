@@ -107,7 +107,13 @@ function formatProPlayers(entry) {
 
   const visiblePlayers = players.slice(0, 3).join(", ");
   const extraPlayers = players.slice(3).join(", ");
-  return `${visiblePlayers} <span class="master-more-players" title="${escapeHtml(extraPlayers)}">+${players.length - 3} more</span>`;
+  return `
+    <span>${visiblePlayers}</span>
+    <details class="master-more-details">
+      <summary class="master-more-players">+${players.length - 3} more</summary>
+      <div class="master-more-panel">${escapeHtml(extraPlayers)}</div>
+    </details>
+  `;
 }
 
 function escapeHtml(value) {
