@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tennis String Lab Favicon Preview</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./styles.css">
+  <style>
+    .favicon-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .favicon-preview-card {
+      display: grid;
+      gap: 14px;
+      justify-items: center;
+      padding: 24px 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(10, 77, 132, 0.08);
+      box-shadow: 0 16px 40px rgba(10, 77, 132, 0.08);
+    }
+
+    .favicon-preview-tile {
+      display: grid;
+      place-items: center;
+      width: 76px;
+      height: 76px;
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(244, 248, 252, 0.95), rgba(231, 240, 247, 0.92));
+      border: 1px solid rgba(10, 77, 132, 0.08);
+    }
+
+    .favicon-preview-size {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0a4d84;
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-utility">
+        <div class="utility-links">
+          <a class="hero-link utility-link secondary-hero-link" href="./index.html">Back to Tennis String Lab</a>
+        </div>
+      </div>
+      <p class="eyebrow">Favicon Preview</p>
+      <h1>Preview the Tennis String Lab icon at small sizes.</h1>
+      <p class="hero-copy">
+        This page shows the favicon at the sizes most similar to a browser tab, bookmark, and small app icon.
+      </p>
+    </section>
+
+    <section class="results-panel" style="margin-top: 24px;">
+      <div class="favicon-preview-grid">
+        <article class="favicon-preview-card">
+          <div class="favicon-preview-tile">
+            <img src="./favicon.svg" alt="Favicon preview 16 by 16" width="16" height="16">
+          </div>
+          <p class="favicon-preview-size">16 x 16</p>
+        </article>
+
+        <article class="favicon-preview-card">
+          <div class="favicon-preview-tile">
+            <img src="./favicon.svg" alt="Favicon preview 24 by 24" width="24" height="24">
+          </div>
+          <p class="favicon-preview-size">24 x 24</p>
+        </article>
+
+        <article class="favicon-preview-card">
+          <div class="favicon-preview-tile">
+            <img src="./favicon.svg" alt="Favicon preview 32 by 32" width="32" height="32">
+          </div>
+          <p class="favicon-preview-size">32 x 32</p>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

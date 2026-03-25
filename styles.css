@@ -297,18 +297,6 @@ h1 {
   font-weight: 700;
 }
 
-.results-meta-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 32px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #d7edbf, #b8d98d);
-  color: var(--green-dark);
-  font-size: 0.86rem;
-  font-weight: 700;
-  text-decoration: none;
-}
 
 .results-list {
   display: grid;
