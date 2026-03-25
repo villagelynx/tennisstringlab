@@ -1239,9 +1239,11 @@ h1 {
   }
 
   .plant-image img {
-    width: 100%;
-    height: 108px;
+    width: auto;
+    max-width: 72%;
+    height: 96px;
     object-fit: contain;
+    object-position: center;
   }
 
   .result-content {
