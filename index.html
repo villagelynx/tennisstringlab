@@ -16,7 +16,7 @@
 </head>
 <body>
   <main class="page-shell">
-    <section class="hero">
+    <section class="hero" id="heroSection">
       <div class="hero-heading-row">
         <div class="hero-heading-copy">
           <div class="brand-lockup">
@@ -50,15 +50,29 @@
             Search by string, brand, player, or racket, then narrow everything with quick filters for type, spin, feel, durability, and player level.
           </p>
         </div>
+        <div class="hero-overflow-menu">
+          <button id="heroMenuButton" class="hero-menu-button" type="button" aria-expanded="false" aria-controls="heroMenuPanel" aria-label="Open menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <div id="heroMenuPanel" class="hero-menu-panel" hidden>
+            <a class="hero-menu-link" href="./proshops.html">Pro Shops</a>
+          </div>
+        </div>
       </div>
       <div class="hero-search-row">
-        <input id="stringSearchInput" class="search-input string-search-input" type="search" placeholder="Search string, brand, ATP player, WTA player, racket, or style">
-      </div>
-      <div class="mobile-quick-player-row">
-        <label class="mobile-quick-player-label" for="mobileQuickPlayerFilter">Pro Player</label>
-        <select id="mobileQuickPlayerFilter" class="search-input mobile-quick-player-filter">
-          <option value="Any">All Pro Players</option>
-        </select>
+        <label class="search-shell" for="stringSearchInput">
+          <span class="search-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="presentation">
+              <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"></circle>
+              <path d="M16 16l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+          </span>
+          <input id="stringSearchInput" class="search-input string-search-input" type="search" placeholder="Search string, brand, ATP player, WTA player, racket, or style">
+          <button id="clearSearchButton" class="clear-search-button" type="button" hidden>Clear</button>
+        </label>
+        <p class="search-help">Search updates instantly as you type.</p>
       </div>
       <div class="hero-actions">
         <a class="hero-link master-list-hero-link hero-action-card" href="./master-list.html">
@@ -84,13 +98,14 @@
             <span>See what top ATP and WTA players use</span>
           </span>
         </button>
-        <a class="hero-link proshops-hero-link hero-action-card" href="./proshops.html">
-          <span class="hero-action-copy">
-            <strong>Pro Shops</strong>
-            <span>Find nearby shops and stringing help</span>
-          </span>
-        </a>
       </div>
+      <div class="mobile-quick-player-row">
+        <label class="mobile-quick-player-label" for="mobileQuickPlayerFilter">Pro Player</label>
+        <select id="mobileQuickPlayerFilter" class="search-input mobile-quick-player-filter">
+          <option value="Any">All Pro Players</option>
+        </select>
+      </div>
+      <div id="activeModeBar" class="active-mode-bar" hidden></div>
       <div class="type-menu" id="typeMenu">
         <button class="type-chip is-active" type="button" data-type="Any">All Types</button>
         <button class="type-chip" type="button" data-type="Poly">Poly</button>
@@ -102,7 +117,7 @@
       </div>
     </section>
 
-    <section class="layout-grid">
+    <section class="layout-grid" id="layoutGrid">
       <aside class="filter-panel">
         <div class="panel-header">
           <div>

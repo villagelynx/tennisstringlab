@@ -6,9 +6,16 @@ const resetButton = document.getElementById("resetButton");
 const mobileFilterToggle = document.getElementById("mobileFilterToggle");
 const mobileQuickPlayerFilter = document.getElementById("mobileQuickPlayerFilter");
 const stringSearchInput = document.getElementById("stringSearchInput");
+const clearSearchButton = document.getElementById("clearSearchButton");
 const popularStringsButton = document.getElementById("popularStringsButton");
 const proPlayersButton = document.getElementById("proPlayersButton");
 const typeMenu = document.getElementById("typeMenu");
+const heroSection = document.getElementById("heroSection");
+const layoutGrid = document.getElementById("layoutGrid");
+const activeModeBar = document.getElementById("activeModeBar");
+const heroMenuButton = document.getElementById("heroMenuButton");
+const heroMenuPanel = document.getElementById("heroMenuPanel");
+const typeDescriptionCard = document.getElementById("typeDescriptionCard");
 const typeDescriptionEyebrow = document.getElementById("typeDescriptionEyebrow");
 const typeDescriptionTitle = document.getElementById("typeDescriptionTitle");
 const typeDescriptionText = document.getElementById("typeDescriptionText");
@@ -19,6 +26,21 @@ if (mobileFilterToggle) {
     filterGrid.classList.toggle("is-collapsed", shouldCollapse);
     mobileFilterToggle.textContent = shouldCollapse ? "Show Filters" : "Hide Filters";
     mobileFilterToggle.setAttribute("aria-expanded", shouldCollapse ? "false" : "true");
+  });
+}
+
+if (heroMenuButton && heroMenuPanel) {
+  heroMenuButton.addEventListener("click", () => {
+    const isOpen = heroMenuButton.getAttribute("aria-expanded") === "true";
+    heroMenuButton.setAttribute("aria-expanded", isOpen ? "false" : "true");
+    heroMenuPanel.hidden = isOpen;
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!heroMenuPanel.hidden && !event.target.closest(".hero-overflow-menu")) {
+      heroMenuButton.setAttribute("aria-expanded", "false");
+      heroMenuPanel.hidden = true;
+    }
   });
 }
 
@@ -1940,6 +1962,7 @@ window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS = {
 if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
   renderFilters();
   populateMobileQuickPlayerFilter();
+  syncClearSearchButton();
   renderResults();
 
   if (stringSearchInput) {
@@ -1947,8 +1970,19 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
       searchQuery = event.currentTarget.value.trim().toLowerCase();
       popularOnly = false;
       proOnly = false;
+      syncClearSearchButton();
       syncPopularButton();
       syncProButton();
+      renderResults();
+    });
+  }
+
+  if (clearSearchButton && stringSearchInput) {
+    clearSearchButton.addEventListener("click", () => {
+      stringSearchInput.value = "";
+      stringSearchInput.focus();
+      searchQuery = "";
+      syncClearSearchButton();
       renderResults();
     });
   }
@@ -2007,6 +2041,7 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
     if (stringSearchInput) {
       stringSearchInput.value = "";
     }
+    syncClearSearchButton();
     syncPopularButton();
     syncProButton();
     syncTypeMenu();
@@ -2180,7 +2215,16 @@ function renderResults() {
     .sort((left, right) => right.score - left.score);
 
   renderTypeDescription();
+  syncFocusedMode();
   databaseCount.textContent = `${STRINGS.length} strings in database`;
+  const resultsTitle = document.getElementById("resultsTitle");
+  if (resultsTitle) {
+    resultsTitle.textContent = popularOnly
+      ? "Most Popular Strings"
+      : proOnly
+        ? "Pro Player Strings"
+        : "String Recommendations";
+  }
   resultsCount.textContent = popularOnly
     ? `${ranked.length} popular strings`
     : proOnly
@@ -2274,7 +2318,6 @@ function syncPopularButton() {
   }
 
   popularStringsButton.classList.toggle("is-active", popularOnly);
-  popularStringsButton.textContent = popularOnly ? "Showing Popular Strings" : "20 Most Popular Strings";
 }
 
 function syncProButton() {
@@ -2283,7 +2326,56 @@ function syncProButton() {
   }
 
   proPlayersButton.classList.toggle("is-active", proOnly);
-  proPlayersButton.textContent = proOnly ? "Showing Pro Strings" : "Pro Player Strings";
+}
+
+function syncClearSearchButton() {
+  if (!clearSearchButton) {
+    return;
+  }
+
+  clearSearchButton.hidden = !searchQuery;
+}
+
+function syncFocusedMode() {
+  const isFocused = popularOnly || proOnly;
+
+  if (heroSection) {
+    heroSection.classList.toggle("is-results-focused", isFocused);
+  }
+
+  if (layoutGrid) {
+    layoutGrid.classList.toggle("is-results-focused", isFocused);
+  }
+
+  if (typeDescriptionCard) {
+    typeDescriptionCard.hidden = isFocused;
+  }
+
+  if (activeModeBar) {
+    if (!isFocused) {
+      activeModeBar.hidden = true;
+      activeModeBar.innerHTML = "";
+      return;
+    }
+
+    activeModeBar.hidden = false;
+    activeModeBar.innerHTML = `
+      <span class="active-mode-pill">${popularOnly ? "Showing 20 Most Popular" : "Showing Pro Player Strings"}</span>
+      <button class="active-mode-clear" type="button">Back to main choices</button>
+    `;
+
+    const clearButton = activeModeBar.querySelector(".active-mode-clear");
+    if (clearButton) {
+      clearButton.addEventListener("click", () => {
+        popularOnly = false;
+        proOnly = false;
+        syncPopularButton();
+        syncProButton();
+        syncFocusedMode();
+        renderResults();
+      });
+    }
+  }
 }
 
 function syncTypeMenu() {
