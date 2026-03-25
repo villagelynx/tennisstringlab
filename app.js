@@ -5,6 +5,7 @@ const databaseCount = document.getElementById("databaseCount");
 const resetButton = document.getElementById("resetButton");
 const mobileFilterToggle = document.getElementById("mobileFilterToggle");
 const mobileQuickPlayerFilter = document.getElementById("mobileQuickPlayerFilter");
+const mobileQuickTypeFilter = document.getElementById("mobileQuickTypeFilter");
 const stringSearchInput = document.getElementById("stringSearchInput");
 const clearSearchButton = document.getElementById("clearSearchButton");
 const popularStringsButton = document.getElementById("popularStringsButton");
@@ -1962,6 +1963,7 @@ window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS = {
 if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
   renderFilters();
   populateMobileQuickPlayerFilter();
+  syncMobileQuickTypeFilter();
   syncClearSearchButton();
   renderResults();
 
@@ -2021,6 +2023,7 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
           typeSelect.value = selectedType;
         }
         syncTypeMenu();
+        syncMobileQuickTypeFilter();
         renderResults();
       });
     });
@@ -2046,6 +2049,7 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
     syncProButton();
     syncTypeMenu();
     syncMobileQuickPlayerFilter();
+    syncMobileQuickTypeFilter();
     renderResults();
   });
 }
@@ -2073,6 +2077,7 @@ function renderFilters() {
       state[filter.key] = event.currentTarget.value;
       if (filter.key === "type") {
         syncTypeMenu();
+        syncMobileQuickTypeFilter();
       }
       if (filter.key === "atpPlayer" || filter.key === "wtaPlayer") {
         syncMobileQuickPlayerFilter();
@@ -2121,6 +2126,22 @@ function populateMobileQuickPlayerFilter() {
   syncMobileQuickPlayerFilter();
 }
 
+if (mobileQuickTypeFilter) {
+  mobileQuickTypeFilter.addEventListener("change", (event) => {
+    const selectedType = event.currentTarget.value || "Any";
+    state.type = selectedType;
+
+    const typeSelect = document.getElementById("filter-type");
+    if (typeSelect) {
+      typeSelect.value = selectedType;
+    }
+
+    syncTypeMenu();
+    syncMobileQuickTypeFilter();
+    renderResults();
+  });
+}
+
 function syncMobileQuickPlayerFilter() {
   if (!mobileQuickPlayerFilter) {
     return;
@@ -2137,6 +2158,14 @@ function syncMobileQuickPlayerFilter() {
   }
 
   mobileQuickPlayerFilter.value = "Any";
+}
+
+function syncMobileQuickTypeFilter() {
+  if (!mobileQuickTypeFilter) {
+    return;
+  }
+
+  mobileQuickTypeFilter.value = state.type || "Any";
 }
 
 function buildFilterOptions(filter, playerCoverage) {
@@ -2341,7 +2370,7 @@ function syncClearSearchButton() {
 }
 
 function syncFocusedMode() {
-  const isFocused = popularOnly || proOnly || Boolean(searchQuery);
+  const isFocused = popularOnly || proOnly || Boolean(searchQuery) || state.type !== "Any";
 
   if (heroSection) {
     heroSection.classList.toggle("is-results-focused", isFocused);
@@ -2364,7 +2393,7 @@ function syncFocusedMode() {
 
     activeModeBar.hidden = false;
     activeModeBar.innerHTML = `
-      <span class="active-mode-pill">${popularOnly ? "Showing 20 Most Popular" : proOnly ? "Showing Pro Player Strings" : `Searching for "${searchQuery}"`}</span>
+      <span class="active-mode-pill">${popularOnly ? "Showing 20 Most Popular" : proOnly ? "Showing Pro Player Strings" : searchQuery ? `Searching for "${searchQuery}"` : `Showing ${state.type}`}</span>
       <button class="active-mode-clear" type="button">Back to main choices</button>
     `;
 
