@@ -94,12 +94,14 @@ body {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
+  width: 100%;
 }
 
 .hero-overflow-menu {
   position: relative;
   flex: 0 0 auto;
   margin-left: auto;
+  align-self: flex-start;
 }
 
 .hero-menu-button {
@@ -968,6 +970,11 @@ h1 {
   .brand-row {
     align-items: center;
     width: 100%;
+  }
+
+  .hero-overflow-menu {
+    margin-right: -2px;
+    transform: translateY(-6px);
   }
 
   .hero-menu-button {
