@@ -53,6 +53,9 @@ function getFilteredMasterStrings() {
   });
 
   filtered.sort((left, right) => {
+    if (sort === "pros") {
+      return getMasterProCount(right) - getMasterProCount(left) || left.name.localeCompare(right.name);
+    }
     const direction = sort === "za" ? -1 : 1;
     return left.name.localeCompare(right.name) * direction;
   });
@@ -191,6 +194,16 @@ function renderMasterProBadge(entry) {
       <div class="pro-count-tooltip">${title}</div>
     </div>
   `;
+}
+
+function getMasterProCount(entry) {
+  const customAssociations = typeof getCustomProAssociations === "function" ? getCustomProAssociations(entry) : { atpPlayers: [], wtaPlayers: [] };
+  return [...new Set([
+    ...(entry.atpPlayers || []),
+    ...(entry.wtaPlayers || []),
+    ...(customAssociations.atpPlayers || []),
+    ...(customAssociations.wtaPlayers || [])
+  ])].length;
 }
 
 function renderMasterTensions(entry) {
