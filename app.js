@@ -30,6 +30,8 @@ const sliderPowerValue = document.getElementById("sliderPowerValue");
 const sliderSpinValue = document.getElementById("sliderSpinValue");
 const sliderControlValue = document.getElementById("sliderControlValue");
 const sliderProPlayersValue = document.getElementById("sliderProPlayersValue");
+const sliderPanelToggle = document.getElementById("sliderPanelToggle");
+const sliderPanelBody = document.getElementById("sliderPanelBody");
 
 if (mobileFilterToggle) {
   mobileFilterToggle.addEventListener("click", () => {
@@ -233,6 +235,9 @@ const sliderPreferences = {
   control: 5,
   proPlayers: 5
 };
+let sliderRenderTimeout = null;
+let sliderInteractionActive = false;
+let sliderInteractionTimeout = null;
 
 // Admin note:
 // To add Amazon affiliate links for a specific string, include these optional fields
@@ -2130,6 +2135,7 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
   populateMobileQuickPlayerFilter();
   syncMobileQuickTypeFilter();
   initializePreferenceSliders();
+  initializeSliderPanelToggle();
   syncClearSearchButton();
   renderResults();
 
@@ -2204,6 +2210,19 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
   });
 }
 
+function initializeSliderPanelToggle() {
+  if (!sliderPanelToggle || !sliderPanelBody) {
+    return;
+  }
+
+  sliderPanelToggle.addEventListener("click", () => {
+    const nextCollapsed = !sliderPanelBody.classList.contains("is-collapsed");
+    sliderPanelBody.classList.toggle("is-collapsed", nextCollapsed);
+    sliderPanelToggle.textContent = nextCollapsed ? "Show Sliders" : "Hide Sliders";
+    sliderPanelToggle.setAttribute("aria-expanded", nextCollapsed ? "false" : "true");
+  });
+}
+
 function initializePreferenceSliders() {
   [
     { input: sliderPower, output: sliderPowerValue, key: "power" },
@@ -2221,9 +2240,44 @@ function initializePreferenceSliders() {
       const nextValue = Number(event.currentTarget.value || 5);
       sliderPreferences[item.key] = nextValue;
       item.output.textContent = String(nextValue);
-      renderResults();
+      markSliderInteraction();
+      scheduleSliderRender();
+    });
+    item.input.addEventListener("change", () => {
+      markSliderInteraction();
+      flushSliderRender();
     });
   });
+}
+
+function scheduleSliderRender() {
+  if (sliderRenderTimeout) {
+    window.clearTimeout(sliderRenderTimeout);
+  }
+
+  sliderRenderTimeout = window.setTimeout(() => {
+    sliderRenderTimeout = null;
+    renderResults();
+  }, 180);
+}
+
+function flushSliderRender() {
+  if (sliderRenderTimeout) {
+    window.clearTimeout(sliderRenderTimeout);
+    sliderRenderTimeout = null;
+  }
+  renderResults();
+}
+
+function markSliderInteraction() {
+  sliderInteractionActive = true;
+  if (sliderInteractionTimeout) {
+    window.clearTimeout(sliderInteractionTimeout);
+  }
+  sliderInteractionTimeout = window.setTimeout(() => {
+    sliderInteractionActive = false;
+    sliderInteractionTimeout = null;
+  }, 700);
 }
 
 function renderFilters() {
@@ -2609,7 +2663,7 @@ function hasActiveSliderPreferences() {
 }
 
 function scrollToResultsOnMobile() {
-  if (!resultsPanel || typeof window === "undefined" || window.innerWidth > 760) {
+  if (!resultsPanel || typeof window === "undefined" || window.innerWidth > 760 || sliderInteractionActive) {
     return;
   }
 
