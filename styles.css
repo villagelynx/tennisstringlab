@@ -311,6 +311,13 @@ h1 {
   color: var(--muted);
 }
 
+.slider-results-summary {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
 .type-menu {
   display: flex;
   flex-wrap: wrap;

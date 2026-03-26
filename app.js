@@ -32,6 +32,7 @@ const sliderControlValue = document.getElementById("sliderControlValue");
 const sliderProPlayersValue = document.getElementById("sliderProPlayersValue");
 const sliderPanelToggle = document.getElementById("sliderPanelToggle");
 const sliderPanelBody = document.getElementById("sliderPanelBody");
+const sliderResultsSummary = document.getElementById("sliderResultsSummary");
 
 if (mobileFilterToggle) {
   mobileFilterToggle.addEventListener("click", () => {
@@ -2505,6 +2506,9 @@ function renderResults() {
       : searchQuery
         ? `${ranked.length} search matches`
         : `${ranked.length} matches`;
+  if (sliderResultsSummary) {
+    sliderResultsSummary.textContent = `Showing ${ranked.length} of ${STRINGS.length} strings`;
+  }
 
   if (ranked.length === 0) {
     resultsList.innerHTML = `
