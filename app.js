@@ -6,6 +6,7 @@ const resetButton = document.getElementById("resetButton");
 const mobileFilterToggle = document.getElementById("mobileFilterToggle");
 const mobileQuickPlayerFilter = document.getElementById("mobileQuickPlayerFilter");
 const mobileQuickTypeFilter = document.getElementById("mobileQuickTypeFilter");
+const mobileQuickTypeRow = document.querySelector(".mobile-quick-type-row");
 const stringSearchInput = document.getElementById("stringSearchInput");
 const clearSearchButton = document.getElementById("clearSearchButton");
 const popularStringsButton = document.getElementById("popularStringsButton");
@@ -15,6 +16,7 @@ const heroSection = document.getElementById("heroSection");
 const layoutGrid = document.getElementById("layoutGrid");
 const activeModeBar = document.getElementById("activeModeBar");
 const resultsPanel = document.querySelector(".results-panel");
+const brandHomeLink = document.querySelector(".brand-home-link");
 const heroMenuButton = document.getElementById("heroMenuButton");
 const heroMenuPanel = document.getElementById("heroMenuPanel");
 const typeDescriptionCard = document.getElementById("typeDescriptionCard");
@@ -1989,6 +1991,16 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
   syncClearSearchButton();
   renderResults();
 
+  if (brandHomeLink) {
+    brandHomeLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      resetToMainChoices();
+      if (heroSection && typeof window !== "undefined") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+  }
+
   if (stringSearchInput) {
     stringSearchInput.addEventListener("input", (event) => {
       searchQuery = event.currentTarget.value.trim().toLowerCase();
@@ -2053,26 +2065,7 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
   }
 
   resetButton.addEventListener("click", () => {
-    FILTERS.forEach((filter) => {
-      state[filter.key] = "Any";
-      const select = document.getElementById(`filter-${filter.key}`);
-      if (select) {
-        select.value = "Any";
-      }
-    });
-    searchQuery = "";
-    popularOnly = false;
-    proOnly = false;
-    if (stringSearchInput) {
-      stringSearchInput.value = "";
-    }
-    syncClearSearchButton();
-    syncPopularButton();
-    syncProButton();
-    syncTypeMenu();
-    syncMobileQuickPlayerFilter();
-    syncMobileQuickTypeFilter();
-    renderResults();
+    resetToMainChoices();
   });
 }
 
@@ -2407,6 +2400,10 @@ function syncFocusedMode() {
     typeDescriptionCard.hidden = isFocused;
   }
 
+  if (mobileQuickTypeRow) {
+    mobileQuickTypeRow.hidden = Boolean(selectedPlayer);
+  }
+
   if (activeModeBar) {
     if (!isFocused) {
       activeModeBar.hidden = true;
@@ -2423,12 +2420,7 @@ function syncFocusedMode() {
     const clearButton = activeModeBar.querySelector(".active-mode-clear");
     if (clearButton) {
       clearButton.addEventListener("click", () => {
-        popularOnly = false;
-        proOnly = false;
-        syncPopularButton();
-        syncProButton();
-        syncFocusedMode();
-        renderResults();
+        resetToMainChoices();
       });
     }
   }
@@ -2446,6 +2438,32 @@ function scrollToResultsOnMobile() {
   window.requestAnimationFrame(() => {
     resultsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
   });
+}
+
+function resetToMainChoices() {
+  FILTERS.forEach((filter) => {
+    state[filter.key] = "Any";
+    const select = document.getElementById(`filter-${filter.key}`);
+    if (select) {
+      select.value = "Any";
+    }
+  });
+
+  searchQuery = "";
+  popularOnly = false;
+  proOnly = false;
+
+  if (stringSearchInput) {
+    stringSearchInput.value = "";
+  }
+
+  syncClearSearchButton();
+  syncPopularButton();
+  syncProButton();
+  syncTypeMenu();
+  syncMobileQuickPlayerFilter();
+  syncMobileQuickTypeFilter();
+  renderResults();
 }
 
 function syncTypeMenu() {
