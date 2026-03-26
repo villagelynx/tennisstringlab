@@ -3026,6 +3026,14 @@ function mergeUniqueStrings(primary, secondary) {
   return [...new Set([...(primary || []), ...(secondary || [])])];
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
 function stringEntry(name, attributes) {
   const estimatedPricing = estimateStringPricing(attributes);
   const normalizedAttributes = {
