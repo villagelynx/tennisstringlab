@@ -2921,7 +2921,7 @@ function renderStringCard(entry, score, matchedTags) {
         </div>
         <div class="result-badge-stack">
           ${totalProPlayers > 0 ? `
-            <div class="pro-count-badge" aria-label="${totalProPlayers} pro players use this string">
+            <div class="pro-count-badge" aria-label="${totalProPlayers} pro players use this string" title="${proBadgeTitle}">
               <span>${totalProPlayers}</span>
               <small>Pros</small>
               <div class="pro-count-tooltip">${proBadgeTitle}</div>

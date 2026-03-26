@@ -618,7 +618,7 @@ h1 {
 }
 
 .result-card-collapsible {
-  overflow: hidden;
+  overflow: visible;
 }
 
 .result-summary {
@@ -1039,7 +1039,7 @@ h1 {
   background: rgba(255, 255, 255, 0.82);
   border: 1px solid rgba(10, 77, 132, 0.08);
   box-shadow: 0 14px 34px rgba(10, 77, 132, 0.06);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .master-list-card[open] .master-list-row {

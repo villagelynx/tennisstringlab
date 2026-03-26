@@ -185,7 +185,7 @@ function renderMasterProBadge(entry) {
   }
 
   return `
-    <div class="pro-count-badge pro-count-badge-small" aria-label="${count} pro players use this string">
+    <div class="pro-count-badge pro-count-badge-small" aria-label="${count} pro players use this string" title="${title}">
       <span>${count}</span>
       <small>Pros</small>
       <div class="pro-count-tooltip">${title}</div>
