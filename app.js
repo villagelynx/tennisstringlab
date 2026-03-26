@@ -716,14 +716,6 @@ stringEntry("Yonex Poly Tour Pro", {
     summary: "One of the benchmark shaped polys for maximum bite, control, and RPM production.",
     note: "A common choice for aggressive baseliners with fast racquet-head speed."
   }),
-  stringEntry("Solinco Outlast", {
-    brand: "Solinco", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "Very High",
-    comfort: "Low", feel: "Muted", gauge: "16", playerLevel: "Advanced", gameStyle: "Counterpuncher",
-    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
-    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#6ebd63",
-    summary: "Durability-focused round co-poly for players who want a more stable, lower-launch response.",
-    note: "Useful if you break softer strings quickly."
-  }),
   stringEntry("Tecnifibre Black Code", {
     brand: "Tecnifibre", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "High",
     comfort: "Medium", feel: "Muted", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
@@ -734,14 +726,6 @@ stringEntry("Yonex Poly Tour Pro", {
     armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#555555",
     summary: "Softer-feeling shaped poly that balances spin, comfort, and a smoother trajectory than firmer tour strings.",
     note: "A good transition string for players testing shaped polys."
-  }),
-  stringEntry("Tecnifibre NRG2", {
-    brand: "Tecnifibre", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
-    comfort: "High", feel: "Plush", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
-    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
-    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f1dd80",
-    summary: "Classic power-oriented multi with soft impact, easy depth, and excellent comfort.",
-    note: "Great for doubles players and anyone prioritizing touch and feel."
   }),
   stringEntry("Babolat RPM Power", {
     brand: "Babolat", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
@@ -861,14 +845,6 @@ stringEntry("Yonex Poly Tour Fire", {
     summary: "Comfortable multi with a cleaner, more controlled response than most soft strings.",
     note: "Nice for players who want comfort but not too much trampoline."
   }),
-  stringEntry("Toroline Caviar", {
-    brand: "Toroline", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
-    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
-    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
-    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#7bc1f5",
-    summary: "Modern boutique co-poly with lively response, good control, and a clean feel.",
-    note: "A strong option if you want something fresh but still tour-style."
-  }),
   stringEntry("Babolat RPM Soft", {
     brand: "Babolat", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "Medium",
     comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
@@ -900,14 +876,6 @@ stringEntry("Yonex Poly Tour Fire", {
     armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Premium", imageTone: "#b4b7be",
     summary: "A more elastic Luxilon option with a smoother, more forgiving response than 4G or ALU.",
     note: "Useful if you want Luxilon control with easier comfort."
-  }),
-  stringEntry("Luxilon Adrenaline", {
-    brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "High",
-    comfort: "Low", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Flat Hitter",
-    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
-    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#a1a8b3",
-    summary: "Firm Luxilon value option for players who prioritize control and durability.",
-    note: "A practical budget step into the Luxilon family."
   }),
   stringEntry("Luxilon Big Banger Original", {
     brand: "Luxilon", type: "Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "Very High",
@@ -989,14 +957,6 @@ stringEntry("Yonex Poly Tour Fire", {
     summary: "Prebuilt Wilson hybrid for players wanting control with more comfort than a full poly.",
     note: "A convenient way to try a hybrid setup."
   }),
-  stringEntry("Head Sonic Pro", {
-    brand: "Head", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "High",
-    comfort: "Medium", feel: "Muted", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
-    tensionBand: "High 40s", racketFamily: "Head Speed", atpPlayers: [], wtaPlayers: [],
-    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#4d4d4d",
-    summary: "Friendly-feeling Head poly with balanced control and durability.",
-    note: "A good entry point for club players trying poly."
-  }),
   stringEntry("Head Gravity", {
     brand: "Head", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
     comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
@@ -1004,22 +964,6 @@ stringEntry("Yonex Poly Tour Fire", {
     armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#dcdcdc",
     summary: "Soft multifilament built for comfort, depth, and a relaxed response.",
     note: "Strong option for recreational players seeking easy power."
-  }),
-  stringEntry("Head Reflex MLT", {
-    brand: "Head", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
-    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
-    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
-    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#efe6cf",
-    summary: "Premium Head multi with strong comfort and a crisp, premium touch response.",
-    note: "A nice alternative to Velocity MLT if you want more feel."
-  }),
-  stringEntry("Yonex Rexis Speed", {
-    brand: "Yonex", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
-    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
-    tensionBand: "Mid 50s", racketFamily: "Yonex Ezone", atpPlayers: [], wtaPlayers: [],
-    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f4f0d9",
-    summary: "Lively premium multi with easy pace and a slightly crisper response than comfort-first options.",
-    note: "Great for doubles and touch-focused players."
   }),
   stringEntry("Yonex Rexis Feel", {
     brand: "Yonex", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Low",
@@ -1060,14 +1004,6 @@ stringEntry("Yonex Poly Tour Fire", {
     armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#d8a7ff",
     summary: "Softer sibling to Cyclone that keeps spin but offers a friendlier response.",
     note: "A nice choice for topspin players who dislike harsh beds."
-  }),
-  stringEntry("Volkl Power Fiber Pro", {
-    brand: "Volkl", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
-    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
-    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
-    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f0e3bf",
-    summary: "Comfort-driven Volkl multi with a soft, lively feel.",
-    note: "Useful for players with arm sensitivity."
   }),
   stringEntry("Volkl Classic Synthetic Gut", {
     brand: "Volkl", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
@@ -1231,14 +1167,6 @@ stringEntry("Yonex Poly Tour Fire", {
     armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#b8c3cc",
     summary: "Value-minded Luxilon poly with a firm, controlled response and strong durability.",
     note: "A practical alternative for players who want the Luxilon feel at a lower cost."
-  }),
-  stringEntry("Luxilon M2 Pro", {
-    brand: "Luxilon", type: "Multifilament", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "Medium",
-    comfort: "Medium", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
-    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
-    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Premium", imageTone: "#d3c8af",
-    summary: "Unique Luxilon multi aimed at blending comfort with cleaner control than many soft strings.",
-    note: "Interesting for players who want a premium non-poly option with more structure."
   }),
   stringEntry("Luxilon Original", {
     brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "Very High",
@@ -1970,6 +1898,206 @@ stringEntry("Yonex Poly Tour Fire", {
     armFriendliness: "Low", surface: "Clay", priceTier: "Budget", imageTone: "#82d45f",
     summary: "Spin-oriented Genesis poly with a shaped profile and controlled, lower-powered response.",
     note: "A good fit for players who want extra bite and a budget-friendly polyester."
+  }),
+  stringEntry("Babolat Xalt", {
+    brand: "Babolat", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Babolat Pure Drive", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f7e2be",
+    summary: "Modern comfort-oriented multi aimed at easy power and arm-friendly response.",
+    note: "Useful for players who want a softer alternative to firmer Babolat setups."
+  }),
+  stringEntry("Babolat Pro Last", {
+    brand: "Babolat", type: "Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "Very High",
+    comfort: "Low", feel: "Crisp", gauge: "15L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Babolat Pure Aero", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Premium", imageTone: "#d8c66a",
+    summary: "Extra-durable Babolat tour poly built for long life and a dead, controlled launch.",
+    note: "Best for string breakers who want maximum longevity and a firmer response."
+  }),
+  stringEntry("Luxilon Monotec Supersense", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#8fd2aa",
+    summary: "Smoother Luxilon poly with a little more ball pocketing and feel than the brand's deadest strings.",
+    note: "Useful for advanced players who want control without a completely muted response."
+  }),
+  stringEntry("Babolat RPM Rough", {
+    brand: "Babolat", type: "Poly", stringShape: "Textured", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Babolat Pure Aero", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Premium", imageTone: "#d6cd65",
+    summary: "Textured RPM variant built for extra grab and heavier ball rotation.",
+    note: "A natural fit for spin-first baseline games."
+  }),
+  stringEntry("Luxilon Big Banger Ace", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "18", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Premium", imageTone: "#9ad778",
+    summary: "Thin-gauge Luxilon poly that offers easier access to spin and livelier snapback.",
+    note: "Great for players who want a tour poly feel with extra bite from a thinner gauge."
+  }),
+  stringEntry("Solinco Barb Wire", {
+    brand: "Solinco", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#7ecf60",
+    summary: "Firm, aggressively shaped Solinco poly built to maximize bite and directional control.",
+    note: "Best for committed topspin hitters who like a deader, more locked-in bed."
+  }),
+  stringEntry("Tecnifibre HDMX Tour", {
+    brand: "Tecnifibre", type: "Hybrid-Style Multi", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#efd4bd",
+    summary: "Complex Tecnifibre construction blending multi comfort with a little more control and durability.",
+    note: "A nice step up for players who want premium comfort without a trampoline feel."
+  }),
+  stringEntry("Solinco Tour Bite Diamond Rough", {
+    brand: "Solinco", type: "Co-Poly", stringShape: "Textured", spin: "Very High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Premium", imageTone: "#86d067",
+    summary: "Extra-grippy Tour Bite variant built for maximum spin and firm directional trust.",
+    note: "Ideal for high-rpm hitters who like a shaped, aggressive bed."
+  }),
+  stringEntry("Tecnifibre XR3", {
+    brand: "Tecnifibre", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Lively", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f1d2c4",
+    summary: "Elastic premium Tecnifibre multi with easy depth, strong comfort, and a lively launch.",
+    note: "Works well for players who want multi power with a slightly cleaner response than the softest options."
+  }),
+  stringEntry("Wilson Syn Gut Power", {
+    brand: "Wilson", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#e8dbc3",
+    summary: "Straightforward Wilson synthetic gut with balanced pop, crisp feel, and solid value.",
+    note: "A dependable option for recreational players or backup stringing."
+  }),
+  stringEntry("Wilson Sensation Plus", {
+    brand: "Wilson", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Wilson Clash", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f3d9c1",
+    summary: "More durable take on Wilson Sensation with soft feel and easy depth.",
+    note: "Nice for players wanting comfort without moving into a premium price tier."
+  }),
+  stringEntry("Wilson Super Tour", {
+    brand: "Wilson", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Wilson Blade", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#ead8c7",
+    summary: "Classic Wilson value string with a familiar crisp synthetic gut response.",
+    note: "Useful as a budget-friendly all-around setup for casual players."
+  }),
+  stringEntry("Head Intellitour", {
+    brand: "Head", type: "Hybrid", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Muted", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Head Radical", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#d7d3bc",
+    summary: "Pre-packaged Head hybrid that leans into comfort, touch, and a lower-powered response.",
+    note: "Good for players who want a softer, more controlled bed without building their own hybrid."
+  }),
+  stringEntry("Yonex Poly Tour Air", {
+    brand: "Yonex", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Muted", gauge: "16L", playerLevel: "Intermediate", gameStyle: "Counterpuncher",
+    tensionBand: "Low 50s", racketFamily: "Yonex Ezone", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#8dd7ef",
+    summary: "Comfort-first Yonex poly aimed at softer impact and easier playability.",
+    note: "A good bridge string for players easing into polyester."
+  }),
+  stringEntry("Head Master", {
+    brand: "Head", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#e7ddc7",
+    summary: "Affordable Head synthetic gut with a traditional feel and balanced response.",
+    note: "A sensible entry-level string for general recreational use."
+  }),
+  stringEntry("Prince Lightning XX", {
+    brand: "Prince", type: "Synthetic Gut", stringShape: "Textured", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Lively", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#efe0c5",
+    summary: "Lively Prince synthetic gut with extra sparkle and a slightly textured outer wrap.",
+    note: "Good for players wanting an inexpensive string with easy depth."
+  }),
+  stringEntry("Kirschbaum Max Power Rough", {
+    brand: "Kirschbaum", type: "Co-Poly", stringShape: "Textured", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#e56a62",
+    summary: "Textured Max Power variant with a firmer response and extra bite.",
+    note: "Works for flatter hitters who still want some added grip."
+  }),
+  stringEntry("Prince Topspin Plus", {
+    brand: "Prince", type: "Synthetic Gut", stringShape: "Textured", spin: "Medium", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Budget", imageTone: "#e6e0b8",
+    summary: "Budget Prince option with a textured wrap aimed at adding a little more grip on the ball.",
+    note: "Useful for recreational players who want a spin-leaning synthetic gut."
+  }),
+  stringEntry("Prince Premier Power", {
+    brand: "Prince", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f1e2c7",
+    summary: "Power-focused Prince multi designed for easier depth and a smooth response.",
+    note: "Great when you want a softer string bed with help on pace."
+  }),
+  stringEntry("Gamma Ocho TNT", {
+    brand: "Gamma", type: "Synthetic Gut", stringShape: "Shaped", spin: "Medium", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#8fd8ef",
+    summary: "Gamma TNT-family string with an octagonal profile for a little more spin and bite.",
+    note: "A nice middle ground for players who want texture without going full poly."
+  }),
+  stringEntry("Diadem Impulse", {
+    brand: "Diadem", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#bfe0f7",
+    summary: "Soft Diadem multi built for comfort, clean pocketing, and easy depth.",
+    note: "Helpful for players prioritizing arm relief and a forgiving response."
+  }),
+  stringEntry("Kirschbaum Synthetic Gut", {
+    brand: "Kirschbaum", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#e7cfc0",
+    summary: "Value-oriented Kirschbaum synthetic gut with predictable launch and traditional feel.",
+    note: "Good as a low-cost all-around option or backup restring."
+  }),
+  stringEntry("Restring Vivo", {
+    brand: "Restring", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#8abff0",
+    summary: "Modern boutique poly with a livelier response and easy snapback for aggressive hitters.",
+    note: "A good option when you want more pop than the deadest control polys."
+  }),
+  stringEntry("Diadem Pro X", {
+    brand: "Diadem", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#88c6f1",
+    summary: "Controlled Diadem poly with balanced pop, spin, and directional trust.",
+    note: "A versatile modern poly for players who want a little of everything."
+  }),
+  stringEntry("Volkl V-Pro", {
+    brand: "Volkl", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#8bb7f0",
+    summary: "Control-led Volkl poly with a stable, lower-powered response and dependable flight.",
+    note: "Useful for players who prefer precision and predictable trajectory over free pace."
   })
 ];
 
