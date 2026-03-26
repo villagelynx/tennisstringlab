@@ -6,8 +6,13 @@ const masterSortSelect = document.getElementById("masterSortSelect");
 const masterDatabaseCount = document.getElementById("masterDatabaseCount");
 const masterResultsCount = document.getElementById("masterResultsCount");
 const masterListTable = document.getElementById("masterListTable");
+const masterTypeDescriptionCard = document.getElementById("masterTypeDescriptionCard");
+const masterTypeDescriptionEyebrow = document.getElementById("masterTypeDescriptionEyebrow");
+const masterTypeDescriptionTitle = document.getElementById("masterTypeDescriptionTitle");
+const masterTypeDescriptionText = document.getElementById("masterTypeDescriptionText");
 
 const masterStrings = Array.isArray(window.TENNIS_STRING_DATA) ? window.TENNIS_STRING_DATA.slice() : [];
+const masterTypeDescriptions = window.TENNIS_STRING_TYPE_DESCRIPTIONS || {};
 
 function populateMasterFilters() {
   const brands = [...new Set(masterStrings.map((entry) => entry.brand).filter(Boolean))].sort((a, b) => a.localeCompare(b));
@@ -89,6 +94,7 @@ function getFilteredMasterStrings() {
 
 function renderMasterList() {
   const filtered = getFilteredMasterStrings();
+  renderMasterTypeDescription();
 
   masterDatabaseCount.textContent = `${masterStrings.length} strings in database`;
   masterResultsCount.textContent = `${filtered.length} shown`;
@@ -154,6 +160,25 @@ function renderMasterList() {
       </details>
     `).join("")}
   `;
+}
+
+function renderMasterTypeDescription() {
+  if (!masterTypeDescriptionCard || !masterTypeDescriptionEyebrow || !masterTypeDescriptionTitle || !masterTypeDescriptionText) {
+    return;
+  }
+
+  const typeKey = masterTypeFilter?.value || "Any";
+  const content = masterTypeDescriptions[typeKey] || masterTypeDescriptions.Any;
+  const showDescription = typeKey !== "Any" && content;
+
+  masterTypeDescriptionCard.hidden = !showDescription;
+  if (!showDescription) {
+    return;
+  }
+
+  masterTypeDescriptionEyebrow.textContent = content.eyebrow;
+  masterTypeDescriptionTitle.textContent = content.title;
+  masterTypeDescriptionText.textContent = content.text;
 }
 
 function formatProPlayers(entry) {

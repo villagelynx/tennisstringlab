@@ -28,6 +28,9 @@ const resultsTypeDescriptionCard = document.getElementById("resultsTypeDescripti
 const resultsTypeDescriptionEyebrow = document.getElementById("resultsTypeDescriptionEyebrow");
 const resultsTypeDescriptionTitle = document.getElementById("resultsTypeDescriptionTitle");
 const resultsTypeDescriptionText = document.getElementById("resultsTypeDescriptionText");
+const guideMatchesSection = document.getElementById("guideMatchesSection");
+const guideMatchesList = document.getElementById("guideMatchesList");
+const guideMatchesCount = document.getElementById("guideMatchesCount");
 const sliderPower = document.getElementById("sliderPower");
 const sliderSpin = document.getElementById("sliderSpin");
 const sliderControl = document.getElementById("sliderControl");
@@ -212,6 +215,73 @@ const TYPE_DESCRIPTIONS = {
     text: "Hybrids combine two different string types, often to blend control and spin from poly with the comfort, feel, or power of gut or multifilament."
   }
 };
+
+if (typeof window !== "undefined") {
+  window.TENNIS_STRING_TYPE_DESCRIPTIONS = TYPE_DESCRIPTIONS;
+}
+
+const GUIDE_PAGES = [
+  {
+    title: "String Type Descriptions",
+    href: "./string-types.html",
+    description: "Compare the main string families and understand how they differ in spin, comfort, power, control, and durability.",
+    keywords: ["string type", "string types", "types", "poly", "co-poly", "multifilament", "natural gut", "synthetic gut", "hybrid"]
+  },
+  {
+    title: "Tension Guide",
+    href: "./tension-guide.html",
+    description: "Learn how lower and higher tension change comfort, power, control, and overall response.",
+    keywords: ["tension", "lbs", "pounds", "low tension", "high tension", "string tension"]
+  },
+  {
+    title: "Gauge Guide",
+    href: "./gauge-guide.html",
+    description: "See how string thickness affects feel, durability, spin, and liveliness.",
+    keywords: ["gauge", "16", "17", "18", "thickness", "string gauge", "16l"]
+  },
+  {
+    title: "Hybrid String Guide",
+    href: "./hybrid-guide.html",
+    description: "Understand mains, crosses, and common hybrid combinations like poly plus gut or poly plus multi.",
+    keywords: ["hybrid", "mains", "crosses", "poly gut", "poly multi", "hybrid strings"]
+  },
+  {
+    title: "Arm-Friendly Strings",
+    href: "./arm-friendly.html",
+    description: "Comfort-focused guidance for players dealing with harsh setups, tennis elbow, or arm sensitivity.",
+    keywords: ["arm", "arm friendly", "comfort", "tennis elbow", "elbow", "soft strings"]
+  },
+  {
+    title: "String Shape Guide",
+    href: "./string-shape-guide.html",
+    description: "Compare round, shaped, and textured strings and how they influence feel and spin.",
+    keywords: ["shape", "shaped", "round", "textured", "spin shape", "string shape"]
+  },
+  {
+    title: "How Often to Restring",
+    href: "./restring-guide.html",
+    description: "Know when a string setup is ready to be changed based on feel, hours played, and string type.",
+    keywords: ["restring", "how often", "how often to restring", "dead strings", "replace strings", "old strings"]
+  },
+  {
+    title: "Best Strings by Player Type",
+    href: "./player-type-guide.html",
+    description: "Find the best string directions for beginners, intermediates, advanced hitters, touch players, and more.",
+    keywords: ["player type", "beginner", "intermediate", "advanced", "junior", "senior", "all court", "touch player"]
+  },
+  {
+    title: "Best Strings by Need",
+    href: "./best-by-need.html",
+    description: "Browse practical directions for players shopping by spin, control, power, comfort, durability, or feel.",
+    keywords: ["best for spin", "best for control", "best for power", "best for comfort", "durability", "feel", "need"]
+  },
+  {
+    title: "Popular String Comparisons",
+    href: "./popular-comparisons.html",
+    description: "Quick head-to-head guidance for common string matchups like RPM Blast vs Hyper-G and ALU Power vs 4G.",
+    keywords: ["comparison", "compare", "vs", "rpm blast", "hyper-g", "alu power", "4g", "nxt", "x-one"]
+  }
+];
 
 const OFFICIAL_BRAND_PAGES = {
   Babolat: "https://www.babolat.com/us/tennis/strings.html",
@@ -2508,6 +2578,7 @@ function renderResults() {
     .sort(compareRankedStrings);
 
   renderTypeDescription();
+  renderGuideMatches();
   syncFocusedMode();
   databaseCount.textContent = `${STRINGS.length} strings in database`;
   const resultsTitle = document.getElementById("resultsTitle");
@@ -2546,6 +2617,72 @@ function renderResults() {
   resultsList.innerHTML = ranked
     .map(({ string, score, matchedTags }) => renderStringCard(string, score, matchedTags))
     .join("");
+}
+
+function renderGuideMatches() {
+  if (!guideMatchesSection || !guideMatchesList || !guideMatchesCount) {
+    return;
+  }
+
+  const matches = getGuideMatches(searchQuery);
+  const showGuides = Boolean(searchQuery) && matches.length > 0;
+
+  guideMatchesSection.hidden = !showGuides;
+  if (!showGuides) {
+    guideMatchesList.innerHTML = "";
+    guideMatchesCount.textContent = "0 guides";
+    return;
+  }
+
+  guideMatchesCount.textContent = `${matches.length} guide${matches.length === 1 ? "" : "s"}`;
+  guideMatchesList.innerHTML = matches.map((guide) => `
+    <a class="guide-match-card" href="${guide.href}">
+      <p class="eyebrow">Reference Guide</p>
+      <h3>${guide.title}</h3>
+      <p class="summary-copy">${guide.description}</p>
+    </a>
+  `).join("");
+}
+
+function getGuideMatches(query) {
+  const source = String(query || "").trim().toLowerCase();
+  if (!source) {
+    return [];
+  }
+
+  return GUIDE_PAGES
+    .map((guide) => {
+      const haystack = [guide.title, guide.description, ...(guide.keywords || [])]
+        .join(" ")
+        .toLowerCase();
+
+      let score = 0;
+      if (guide.title.toLowerCase().includes(source)) {
+        score += 6;
+      }
+      if (haystack.includes(source)) {
+        score += 3;
+      }
+      for (const keyword of guide.keywords || []) {
+        const normalizedKeyword = String(keyword).toLowerCase();
+        if (normalizedKeyword === source) {
+          score += 10;
+        } else if (normalizedKeyword.includes(source) || source.includes(normalizedKeyword)) {
+          score += 4;
+        }
+      }
+
+      return { guide, score };
+    })
+    .filter((entry) => entry.score > 0)
+    .sort((left, right) => {
+      if (right.score !== left.score) {
+        return right.score - left.score;
+      }
+      return left.guide.title.localeCompare(right.guide.title);
+    })
+    .slice(0, 4)
+    .map((entry) => entry.guide);
 }
 
 function renderTypeDescription() {
