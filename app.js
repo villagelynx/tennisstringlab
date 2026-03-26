@@ -2477,13 +2477,23 @@ function getStoredCustomProPlayers() {
 
 function renderResults() {
   const hasHardFilters = FILTERS.some((filter) => state[filter.key] && state[filter.key] !== "Any");
+  const hasSliderOnlyFocus = hasActiveSliderPreferences() && !hasHardFilters && !searchQuery && !popularOnly && !proOnly;
   const shouldRequirePositiveScore = hasHardFilters;
+  const sliderScoreThreshold = hasSliderOnlyFocus ? 6.4 : 0;
   const ranked = STRINGS
     .map((entry) => ({
       string: entry,
       ...scoreString(entry)
     }))
-    .filter((entry) => (!shouldRequirePositiveScore || entry.score > 0) && matchesSearch(entry.string) && matchesPopular(entry.string) && matchesProPlayers(entry.string))
+    .filter((entry) => {
+      if (shouldRequirePositiveScore && entry.score <= 0) {
+        return false;
+      }
+      if (hasSliderOnlyFocus && entry.score < sliderScoreThreshold) {
+        return false;
+      }
+      return matchesSearch(entry.string) && matchesPopular(entry.string) && matchesProPlayers(entry.string);
+    })
     .sort(compareRankedStrings);
 
   renderTypeDescription();
@@ -2506,7 +2516,6 @@ function renderResults() {
       : searchQuery
         ? `${ranked.length} search matches`
         : `${ranked.length} matches`;
-  const hasSliderOnlyFocus = hasActiveSliderPreferences() && !popularOnly && !proOnly && !searchQuery;
   resultsCount.textContent = hasSliderOnlyFocus
     ? `${ranked.length} of ${STRINGS.length} matches`
     : baseResultsText;
