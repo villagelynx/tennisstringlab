@@ -16,7 +16,6 @@ const heroSection = document.getElementById("heroSection");
 const layoutGrid = document.getElementById("layoutGrid");
 const activeModeBar = document.getElementById("activeModeBar");
 const resultsPanel = document.querySelector(".results-panel");
-const brandHomeLink = document.querySelector(".brand-home-link");
 const heroMenuButton = document.getElementById("heroMenuButton");
 const heroMenuPanel = document.getElementById("heroMenuPanel");
 const typeDescriptionCard = document.getElementById("typeDescriptionCard");
@@ -1991,16 +1990,6 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
   syncClearSearchButton();
   renderResults();
 
-  if (brandHomeLink) {
-    brandHomeLink.addEventListener("click", (event) => {
-      event.preventDefault();
-      resetToMainChoices();
-      if (heroSection && typeof window !== "undefined") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-    });
-  }
-
   if (stringSearchInput) {
     stringSearchInput.addEventListener("input", (event) => {
       searchQuery = event.currentTarget.value.trim().toLowerCase();
@@ -2420,7 +2409,9 @@ function syncFocusedMode() {
     const clearButton = activeModeBar.querySelector(".active-mode-clear");
     if (clearButton) {
       clearButton.addEventListener("click", () => {
-        resetToMainChoices();
+        if (typeof window !== "undefined") {
+          window.location.href = "./index.html?home=1";
+        }
       });
     }
   }
