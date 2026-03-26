@@ -116,6 +116,7 @@ body {
   position: relative;
   flex: 0 0 auto;
   margin-left: auto;
+  margin-right: -8px;
   align-self: flex-start;
 }
 
@@ -1398,7 +1399,7 @@ h1 {
   .hero-overflow-menu {
     position: absolute;
     top: 14px;
-    right: 14px;
+    right: 8px;
     margin-right: 0;
     transform: none;
     z-index: 12;
