@@ -14,6 +14,7 @@ const typeMenu = document.getElementById("typeMenu");
 const heroSection = document.getElementById("heroSection");
 const layoutGrid = document.getElementById("layoutGrid");
 const activeModeBar = document.getElementById("activeModeBar");
+const resultsPanel = document.querySelector(".results-panel");
 const heroMenuButton = document.getElementById("heroMenuButton");
 const heroMenuPanel = document.getElementById("heroMenuPanel");
 const typeDescriptionCard = document.getElementById("typeDescriptionCard");
@@ -2409,6 +2410,20 @@ function syncFocusedMode() {
       });
     }
   }
+
+  if (isFocused) {
+    scrollToResultsOnMobile();
+  }
+}
+
+function scrollToResultsOnMobile() {
+  if (!resultsPanel || typeof window === "undefined" || window.innerWidth > 760) {
+    return;
+  }
+
+  window.requestAnimationFrame(() => {
+    resultsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 }
 
 function syncTypeMenu() {
