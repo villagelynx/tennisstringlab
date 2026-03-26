@@ -132,8 +132,8 @@ const STRING_COLOR_HEX = {
 const FILTERS = [
   { key: "brand", label: "String Brand", options: ["Any", "Babolat", "Luxilon", "Solinco", "Tecnifibre", "Wilson", "Yonex", "Head", "Kirschbaum", "Volkl", "Prince", "Toroline", "Gosen", "Signum Pro", "Dunlop", "Gamma", "MSV", "Weiss Cannon", "Mayami", "Restring", "Diadem", "Genesis"] },
   { key: "type", label: "Type of String", options: ["Any", "Poly", "Co-Poly", "Synthetic Gut", "Multifilament", "Natural Gut", "Hybrid"] },
-  { key: "atpPlayer", label: "ATP Player", options: ["Any", "Jannik Sinner", "Alexander Zverev", "Carlos Alcaraz", "Taylor Fritz", "Novak Djokovic", "Casper Ruud", "Daniil Medvedev", "Andrey Rublev", "Stefanos Tsitsipas", "Alex de Minaur", "Holger Rune", "Tommy Paul", "Ben Shelton", "Ugo Humbert", "Grigor Dimitrov", "Hubert Hurkacz", "Lorenzo Musetti", "Frances Tiafoe", "Sebastian Korda", "Arthur Fils", "Karen Khachanov", "Nicolas Jarry", "Felix Auger-Aliassime", "Matteo Berrettini", "Cameron Norrie", "Alejandro Tabilo", "Jiri Lehecka", "Jack Draper", "Rafael Nadal", "Roger Federer"] },
-  { key: "wtaPlayer", label: "WTA Player", options: ["Any", "Iga Swiatek", "Aryna Sabalenka", "Coco Gauff", "Jessica Pegula", "Elena Rybakina", "Marketa Vondrousova", "Qinwen Zheng", "Ons Jabeur", "Maria Sakkari", "Jelena Ostapenko", "Daria Kasatkina", "Danielle Collins", "Barbora Krejcikova", "Emma Navarro", "Beatriz Haddad Maia", "Liudmila Samsonova", "Caroline Garcia", "Madison Keys", "Anna Kalinskaya", "Naomi Osaka", "Paula Badosa", "Donna Vekic", "Ekaterina Alexandrova", "Marta Kostyuk", "Elina Svitolina", "Mirra Andreeva", "Karolina Muchova", "Veronika Kudermetova", "Jasmine Paolini", "Sloane Stephens"] },
+  { key: "atpPlayer", label: "ATP Player", options: ["Any", "Jannik Sinner", "Alexander Zverev", "Carlos Alcaraz", "Taylor Fritz", "Novak Djokovic", "Casper Ruud", "Daniil Medvedev", "Andrey Rublev", "Stefanos Tsitsipas", "Alex de Minaur", "Holger Rune", "Tommy Paul", "Ben Shelton", "Ugo Humbert", "Grigor Dimitrov", "Hubert Hurkacz", "Lorenzo Musetti", "Frances Tiafoe", "Sebastian Korda", "Arthur Fils", "Karen Khachanov", "Nicolas Jarry", "Felix Auger-Aliassime", "Matteo Berrettini", "Matteo Arnaldi", "Cameron Norrie", "Alejandro Tabilo", "Jiri Lehecka", "Jack Draper", "Alexander Bublik", "Tomas Machac", "Alexei Popyrin", "Nuno Borges", "Sebastian Baez", "Rafael Nadal", "Roger Federer"] },
+  { key: "wtaPlayer", label: "WTA Player", options: ["Any", "Iga Swiatek", "Aryna Sabalenka", "Coco Gauff", "Jessica Pegula", "Elena Rybakina", "Amanda Anisimova", "Belinda Bencic", "Clara Tauson", "Marketa Vondrousova", "Qinwen Zheng", "Ons Jabeur", "Maria Sakkari", "Jelena Ostapenko", "Daria Kasatkina", "Danielle Collins", "Barbora Krejcikova", "Emma Navarro", "Beatriz Haddad Maia", "Liudmila Samsonova", "Caroline Garcia", "Madison Keys", "Anna Kalinskaya", "Naomi Osaka", "Paula Badosa", "Donna Vekic", "Ekaterina Alexandrova", "Marta Kostyuk", "Elina Svitolina", "Mirra Andreeva", "Karolina Muchova", "Veronika Kudermetova", "Jasmine Paolini", "Leylah Fernandez", "Diana Shnaider", "McCartney Kessler", "Anna Blinkova", "Sloane Stephens"] },
   { key: "stringColor", label: "String Color", options: ["Any", "Black", "Silver", "Grey", "White", "Natural", "Gold", "Bronze", "Blue", "Green", "Yellow", "Orange", "Red", "Purple", "Champagne", "Copper"] },
   { key: "stringShape", label: "String Shape", options: ["Any", "Round", "Shaped", "Textured", "Hybrid Mix"] },
   { key: "spin", label: "Spin", options: ["Any", "Low", "Medium", "High", "Very High"] },
@@ -230,10 +230,12 @@ const STRINGS = [
   stringEntry("Babolat RPM Blast", {
     brand: "Babolat", type: "Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
     comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
-    tensionBand: "Low 50s", racketFamily: "Babolat Pure Aero", atpPlayers: ["Arthur Fils", "Carlos Alcaraz", "Holger Rune", "Rafael Nadal"], wtaPlayers: [],
+    tensionBand: "Low 50s", racketFamily: "Babolat Pure Aero", atpPlayers: ["Arthur Fils", "Carlos Alcaraz", "Holger Rune", "Alexander Bublik", "Rafael Nadal"], wtaPlayers: ["Leylah Fernandez"],
     proRackets: [
       { player: "Arthur Fils", racket: "Babolat Pure Aero 98" },
-      { player: "Carlos Alcaraz", racket: "Babolat Pure Aero 98" }
+      { player: "Carlos Alcaraz", racket: "Babolat Pure Aero 98" },
+      { player: "Alexander Bublik", racket: "Babolat Aero-style pro stock / blacked-out frame" },
+      { player: "Leylah Fernandez", racket: "Babolat Pure Aero 98" }
     ],
     armFriendliness: "Low", surface: "All Surfaces", priceTier: "Premium", imageTone: "#d1ff38",
     proTensions: [
@@ -247,9 +249,11 @@ const STRINGS = [
 stringEntry("Luxilon ALU Power", {
   brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
   comfort: "Low", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
-  tensionBand: "Low 50s", racketFamily: "Wilson Blade", atpPlayers: ["Cameron Norrie", "Jack Draper", "Jiri Lehecka", "Karen Khachanov", "Novak Djokovic", "Daniil Medvedev", "Sebastian Korda"], wtaPlayers: ["Anna Kalinskaya", "Aryna Sabalenka", "Barbora Krejcikova", "Beatriz Haddad Maia", "Coco Gauff", "Maria Sakkari", "Mirra Andreeva", "Ons Jabeur", "Paula Badosa"],
+  tensionBand: "Low 50s", racketFamily: "Wilson Blade", atpPlayers: ["Cameron Norrie", "Jack Draper", "Jiri Lehecka", "Karen Khachanov", "Novak Djokovic", "Daniil Medvedev", "Sebastian Korda"], wtaPlayers: ["Anna Kalinskaya", "Amanda Anisimova", "Anna Blinkova", "Aryna Sabalenka", "Barbora Krejcikova", "Beatriz Haddad Maia", "Coco Gauff", "Maria Sakkari", "McCartney Kessler", "Mirra Andreeva", "Ons Jabeur", "Paula Badosa"],
     proRackets: [
       { player: "Anna Kalinskaya", racket: "Wilson Ultra 100 v5" },
+      { player: "Amanda Anisimova", racket: "Wilson Steam 100 BLX" },
+      { player: "Anna Blinkova", racket: "Wilson Steam 100" },
       { player: "Barbora Krejcikova", racket: "Customized HEAD Youtek IG Extreme Pro (Extreme MP cosmetic)" },
       { player: "Beatriz Haddad Maia", racket: "Wilson Steam 100" },
       { player: "Coco Gauff", racket: "HEAD racquet" },
@@ -258,6 +262,7 @@ stringEntry("Luxilon ALU Power", {
       { player: "Karen Khachanov", racket: "Wilson Blade 98 18x20 v9" },
       { player: "Aryna Sabalenka", racket: "Wilson Blade 98 18x20 v9" },
       { player: "Jiri Lehecka", racket: "Wilson Pro Staff 97 V14 cosmetic / customized Six One 95" },
+      { player: "McCartney Kessler", racket: "Wilson Blade 98 16x19 / Blade Pro mold" },
       { player: "Paula Badosa", racket: "Wilson Blade 98 v9 / customized Wilson Steam 100" },
       { player: "Sebastian Korda", racket: "Wilson Blade 98" },
       { player: "Ons Jabeur", racket: "Wilson Pro Staff 97 v14" }
@@ -300,10 +305,13 @@ stringEntry("Luxilon ALU Power", {
   stringEntry("Babolat VS Touch", {
     brand: "Babolat", type: "Natural Gut", stringShape: "Round", spin: "Medium", power: "High", control: "High", durability: "Medium",
     comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Pro", gameStyle: "All-Court",
-    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: ["Novak Djokovic", "Roger Federer"], wtaPlayers: ["Iga Swiatek"],
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: ["Novak Djokovic", "Roger Federer"], wtaPlayers: ["Iga Swiatek", "Belinda Bencic", "McCartney Kessler", "Anna Blinkova"],
     proRackets: [
       { player: "Novak Djokovic", racket: "Head Speed Pro 2024" },
-      { player: "Roger Federer", racket: "Wilson RF 01 Pro" }
+      { player: "Roger Federer", racket: "Wilson RF 01 Pro" },
+      { player: "Belinda Bencic", racket: "Yonex EZONE 100" },
+      { player: "McCartney Kessler", racket: "Wilson Blade 98 16x19 / Blade Pro mold" },
+      { player: "Anna Blinkova", racket: "Wilson Steam 100" }
     ],
     armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f7deb0",
     proTensions: [
@@ -315,9 +323,10 @@ stringEntry("Luxilon ALU Power", {
 stringEntry("Yonex Poly Tour Pro", {
   brand: "Yonex", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
   comfort: "Medium", feel: "Muted", gauge: "16L", playerLevel: "Intermediate", gameStyle: "Counterpuncher",
-  tensionBand: "High 40s", racketFamily: "Yonex Ezone", atpPlayers: ["Alejandro Tabilo", "Ben Shelton", "Casper Ruud", "Frances Tiafoe", "Nick Kyrgios"], wtaPlayers: ["Jasmine Paolini", "Naomi Osaka"],
+  tensionBand: "High 40s", racketFamily: "Yonex Ezone", atpPlayers: ["Alejandro Tabilo", "Ben Shelton", "Casper Ruud", "Frances Tiafoe", "Nick Kyrgios"], wtaPlayers: ["Belinda Bencic", "Jasmine Paolini", "Naomi Osaka"],
     proRackets: [
-      { player: "Alejandro Tabilo", racket: "Yonex VCORE 98 (older paint generation)" }
+      { player: "Alejandro Tabilo", racket: "Yonex VCORE 98 (older paint generation)" },
+      { player: "Belinda Bencic", racket: "Yonex EZONE 100" }
     ],
     armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#f1da4b",
     summary: "Softer co-poly that balances control and comfort without feeling too dead.",
@@ -345,8 +354,9 @@ stringEntry("Yonex Poly Tour Pro", {
   stringEntry("Luxilon 4G", {
     brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "Very High",
     comfort: "Low", feel: "Muted", gauge: "16L", playerLevel: "Pro", gameStyle: "Counterpuncher",
-    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: ["Alexander Zverev", "Nicolas Jarry"], wtaPlayers: ["Ekaterina Alexandrova", "Jelena Ostapenko", "Marta Kostyuk", "Qinwen Zheng", "Veronika Kudermetova"],
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: ["Alexander Zverev", "Alexei Popyrin", "Nicolas Jarry"], wtaPlayers: ["Ekaterina Alexandrova", "Jelena Ostapenko", "Marta Kostyuk", "Qinwen Zheng", "Veronika Kudermetova"],
     proRackets: [
+      { player: "Alexei Popyrin", racket: "Dunlop FX 500 Tour" },
       { player: "Ekaterina Alexandrova", racket: "Wilson Blade 98S v9" },
       { player: "Marta Kostyuk", racket: "Wilson Ultra 99 Pro v5" },
       { player: "Qinwen Zheng", racket: "Wilson Ultra 99 Pro / 95 QZ" },
@@ -612,9 +622,10 @@ stringEntry("Yonex Poly Tour Pro", {
   stringEntry("Head Hawk Touch", {
     brand: "Head", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "High",
     comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
-    tensionBand: "High 40s", racketFamily: "Head Radical", atpPlayers: ["Alexander Zverev", "Jannik Sinner"], wtaPlayers: [],
+    tensionBand: "High 40s", racketFamily: "Head Radical", atpPlayers: ["Alexander Zverev", "Jannik Sinner", "Nuno Borges"], wtaPlayers: [],
     proRackets: [
-      { player: "Jannik Sinner", racket: "Head Speed MP 2026" }
+      { player: "Jannik Sinner", racket: "Head Speed MP 2026" },
+      { player: "Nuno Borges", racket: "HEAD Radical pro stock (TGT 307)" }
     ],
     armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#d8a56d",
     proTensions: [
@@ -774,9 +785,10 @@ stringEntry("Yonex Poly Tour Pro", {
 stringEntry("Head Hawk", {
   brand: "Head", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "High",
   comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
-  tensionBand: "High 40s", racketFamily: "Head Radical", atpPlayers: ["Alexander Zverev", "Taylor Fritz"], wtaPlayers: [],
+  tensionBand: "High 40s", racketFamily: "Head Radical", atpPlayers: ["Alexander Zverev", "Taylor Fritz", "Matteo Arnaldi"], wtaPlayers: [],
     proRackets: [
-      { player: "Taylor Fritz", racket: "Head Radical MP 2025" }
+      { player: "Taylor Fritz", racket: "Head Radical MP 2025" },
+      { player: "Matteo Arnaldi", racket: "HEAD Radical MP / Graphene 360+ Radical MP pro stock" }
     ],
   armFriendliness: "Low", surface: "Hard Court", priceTier: "Premium", imageTone: "#9caab4",
     summary: "Firm control poly built for precise direction and a tight, stable ball flight.",
@@ -785,8 +797,10 @@ stringEntry("Head Hawk", {
   stringEntry("Yonex Poly Tour Strike", {
     brand: "Yonex", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "Very High", durability: "High",
     comfort: "Low", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
-    tensionBand: "High 40s", racketFamily: "Yonex VCORE", atpPlayers: [], wtaPlayers: ["Caroline Garcia", "Donna Vekic"],
+    tensionBand: "High 40s", racketFamily: "Yonex VCORE", atpPlayers: ["Sebastian Baez"], wtaPlayers: ["Caroline Garcia", "Clara Tauson", "Donna Vekic"],
     proRackets: [
+      { player: "Sebastian Baez", racket: "Yonex VCORE 100" },
+      { player: "Clara Tauson", racket: "Yonex Percept 100 cosmetic / VCORE Pro 100" },
       { player: "Donna Vekic", racket: "Yonex VCORE 100" }
     ],
     stringColor: "Grey",
@@ -797,7 +811,11 @@ stringEntry("Head Hawk", {
 stringEntry("Yonex Poly Tour Fire", {
   brand: "Yonex", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
   comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
-  tensionBand: "High 40s", racketFamily: "Yonex Ezone", atpPlayers: [], wtaPlayers: ["Elena Rybakina"],
+  tensionBand: "High 40s", racketFamily: "Yonex Ezone", atpPlayers: ["Tomas Machac"], wtaPlayers: ["Diana Shnaider", "Elena Rybakina"],
+    proRackets: [
+      { player: "Tomas Machac", racket: "Yonex VCORE 100" },
+      { player: "Diana Shnaider", racket: "Yonex EZONE 100" }
+    ],
     armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#e0624f",
     summary: "Slick, modern Yonex co-poly with livelier response and solid spin support.",
     note: "Useful if you want more pace than Poly Tour Strike."
@@ -1133,7 +1151,10 @@ stringEntry("Yonex Poly Tour Fire", {
   stringEntry("Head Hawk Rough", {
     brand: "Head", type: "Co-Poly", stringShape: "Textured", spin: "High", power: "Low", control: "Very High", durability: "High",
     comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
-    tensionBand: "High 40s", racketFamily: "Head Radical", atpPlayers: [], wtaPlayers: [],
+    tensionBand: "High 40s", racketFamily: "Head Radical", atpPlayers: ["Nuno Borges"], wtaPlayers: [],
+    proRackets: [
+      { player: "Nuno Borges", racket: "HEAD Radical pro stock (TGT 307)" }
+    ],
     armFriendliness: "Low", surface: "Hard Court", priceTier: "Premium", imageTone: "#8a969e",
     summary: "Textured Head control poly with a firmer feel and extra grip on the ball.",
     note: "Best for advanced players who like a lower-powered setup."
@@ -2371,7 +2392,8 @@ function syncClearSearchButton() {
 }
 
 function syncFocusedMode() {
-  const isFocused = popularOnly || proOnly || Boolean(searchQuery) || state.type !== "Any";
+  const selectedPlayer = state.atpPlayer !== "Any" ? state.atpPlayer : state.wtaPlayer !== "Any" ? state.wtaPlayer : "";
+  const isFocused = popularOnly || proOnly || Boolean(searchQuery) || state.type !== "Any" || Boolean(selectedPlayer);
 
   if (heroSection) {
     heroSection.classList.toggle("is-results-focused", isFocused);
@@ -2394,7 +2416,7 @@ function syncFocusedMode() {
 
     activeModeBar.hidden = false;
     activeModeBar.innerHTML = `
-      <span class="active-mode-pill">${popularOnly ? "Showing 20 Most Popular" : proOnly ? "Showing Pro Player Strings" : searchQuery ? `Searching for "${searchQuery}"` : `Showing ${state.type}`}</span>
+      <span class="active-mode-pill">${popularOnly ? "Showing 20 Most Popular" : proOnly ? "Showing Pro Player Strings" : searchQuery ? `Searching for "${searchQuery}"` : selectedPlayer ? `Showing ${selectedPlayer}` : `Showing ${state.type}`}</span>
       <button class="active-mode-clear" type="button">Back to main choices</button>
     `;
 
