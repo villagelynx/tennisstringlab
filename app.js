@@ -2483,7 +2483,7 @@ function renderResults() {
       ...scoreString(entry)
     }))
     .filter((entry) => (!shouldRequirePositiveScore || entry.score > 0) && matchesSearch(entry.string) && matchesPopular(entry.string) && matchesProPlayers(entry.string))
-    .sort((left, right) => right.score - left.score);
+    .sort(compareRankedStrings);
 
   renderTypeDescription();
   syncFocusedMode();
@@ -2662,6 +2662,38 @@ function syncFocusedMode() {
 
 function hasActiveSliderPreferences() {
   return Object.values(sliderPreferences).some((value) => Number(value) !== 5);
+}
+
+function getActiveSliderKeys() {
+  return Object.keys(sliderPreferences).filter((key) => Number(sliderPreferences[key]) !== 5);
+}
+
+function compareRankedStrings(left, right) {
+  const scoreDifference = right.score - left.score;
+  if (Math.abs(scoreDifference) > 0.001) {
+    return scoreDifference;
+  }
+
+  const activeSliderKeys = getActiveSliderKeys();
+  for (const key of activeSliderKeys) {
+    const preferredDirection = Number(sliderPreferences[key]) >= 5 ? "desc" : "asc";
+    const leftValue = getSliderMetricSortValue(left.string, key);
+    const rightValue = getSliderMetricSortValue(right.string, key);
+
+    if (leftValue !== rightValue) {
+      return preferredDirection === "desc" ? rightValue - leftValue : leftValue - rightValue;
+    }
+  }
+
+  return left.string.name.localeCompare(right.string.name);
+}
+
+function getSliderMetricSortValue(entry, key) {
+  if (key === "proPlayers") {
+    return getKnownProPlayerCount(entry);
+  }
+
+  return mapStringLevelToNumeric(entry[key]);
 }
 
 function scrollToResultsOnMobile() {
