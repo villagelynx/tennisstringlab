@@ -2499,13 +2499,17 @@ function renderResults() {
           ? "Search Results"
           : "String Recommendations";
   }
-  resultsCount.textContent = popularOnly
+  const baseResultsText = popularOnly
     ? `${ranked.length} popular strings`
     : proOnly
       ? `${ranked.length} pro-player strings`
       : searchQuery
         ? `${ranked.length} search matches`
         : `${ranked.length} matches`;
+  const hasSliderOnlyFocus = hasActiveSliderPreferences() && !popularOnly && !proOnly && !searchQuery;
+  resultsCount.textContent = hasSliderOnlyFocus
+    ? `${ranked.length} of ${STRINGS.length} matches`
+    : baseResultsText;
   if (sliderResultsSummary) {
     sliderResultsSummary.textContent = `Showing ${ranked.length} of ${STRINGS.length} strings`;
   }
