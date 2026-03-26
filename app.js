@@ -22,6 +22,10 @@ const typeDescriptionCard = document.getElementById("typeDescriptionCard");
 const typeDescriptionEyebrow = document.getElementById("typeDescriptionEyebrow");
 const typeDescriptionTitle = document.getElementById("typeDescriptionTitle");
 const typeDescriptionText = document.getElementById("typeDescriptionText");
+const resultsTypeDescriptionCard = document.getElementById("resultsTypeDescriptionCard");
+const resultsTypeDescriptionEyebrow = document.getElementById("resultsTypeDescriptionEyebrow");
+const resultsTypeDescriptionTitle = document.getElementById("resultsTypeDescriptionTitle");
+const resultsTypeDescriptionText = document.getElementById("resultsTypeDescriptionText");
 const sliderPower = document.getElementById("sliderPower");
 const sliderSpin = document.getElementById("sliderSpin");
 const sliderControl = document.getElementById("sliderControl");
@@ -2544,12 +2548,20 @@ function renderTypeDescription() {
 
   const typeKey = state.type || "Any";
   const content = TYPE_DESCRIPTIONS[typeKey] || TYPE_DESCRIPTIONS.Any;
+  const showDescription = typeKey !== "Any";
 
-  typeDescriptionCard.hidden = typeKey === "Any";
+  typeDescriptionCard.hidden = !showDescription;
 
   typeDescriptionEyebrow.textContent = content.eyebrow;
   typeDescriptionTitle.textContent = content.title;
   typeDescriptionText.textContent = content.text;
+
+  if (resultsTypeDescriptionCard && resultsTypeDescriptionEyebrow && resultsTypeDescriptionTitle && resultsTypeDescriptionText) {
+    resultsTypeDescriptionCard.hidden = !showDescription;
+    resultsTypeDescriptionEyebrow.textContent = content.eyebrow;
+    resultsTypeDescriptionTitle.textContent = content.title;
+    resultsTypeDescriptionText.textContent = content.text;
+  }
 }
 
 function matchesSearch(entry) {
