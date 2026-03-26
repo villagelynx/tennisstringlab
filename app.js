@@ -22,6 +22,14 @@ const typeDescriptionCard = document.getElementById("typeDescriptionCard");
 const typeDescriptionEyebrow = document.getElementById("typeDescriptionEyebrow");
 const typeDescriptionTitle = document.getElementById("typeDescriptionTitle");
 const typeDescriptionText = document.getElementById("typeDescriptionText");
+const sliderPower = document.getElementById("sliderPower");
+const sliderSpin = document.getElementById("sliderSpin");
+const sliderControl = document.getElementById("sliderControl");
+const sliderProPlayers = document.getElementById("sliderProPlayers");
+const sliderPowerValue = document.getElementById("sliderPowerValue");
+const sliderSpinValue = document.getElementById("sliderSpinValue");
+const sliderControlValue = document.getElementById("sliderControlValue");
+const sliderProPlayersValue = document.getElementById("sliderProPlayersValue");
 
 if (mobileFilterToggle) {
   mobileFilterToggle.addEventListener("click", () => {
@@ -219,6 +227,12 @@ const state = Object.fromEntries(FILTERS.map((filter) => [filter.key, "Any"]));
 let searchQuery = "";
 let popularOnly = false;
 let proOnly = false;
+const sliderPreferences = {
+  power: 5,
+  spin: 5,
+  control: 5,
+  proPlayers: 5
+};
 
 // Admin note:
 // To add Amazon affiliate links for a specific string, include these optional fields
@@ -2115,6 +2129,7 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
   renderFilters();
   populateMobileQuickPlayerFilter();
   syncMobileQuickTypeFilter();
+  initializePreferenceSliders();
   syncClearSearchButton();
   renderResults();
 
@@ -2186,6 +2201,28 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
 
   resetButton.addEventListener("click", () => {
     resetToMainChoices();
+  });
+}
+
+function initializePreferenceSliders() {
+  [
+    { input: sliderPower, output: sliderPowerValue, key: "power" },
+    { input: sliderSpin, output: sliderSpinValue, key: "spin" },
+    { input: sliderControl, output: sliderControlValue, key: "control" },
+    { input: sliderProPlayers, output: sliderProPlayersValue, key: "proPlayers" }
+  ].forEach((item) => {
+    if (!item.input || !item.output) {
+      return;
+    }
+
+    item.output.textContent = String(sliderPreferences[item.key]);
+    item.input.value = String(sliderPreferences[item.key]);
+    item.input.addEventListener("input", (event) => {
+      const nextValue = Number(event.currentTarget.value || 5);
+      sliderPreferences[item.key] = nextValue;
+      item.output.textContent = String(nextValue);
+      renderResults();
+    });
   });
 }
 
@@ -2520,7 +2557,8 @@ function syncClearSearchButton() {
 
 function syncFocusedMode() {
   const selectedPlayer = state.atpPlayer !== "Any" ? state.atpPlayer : state.wtaPlayer !== "Any" ? state.wtaPlayer : "";
-  const isFocused = popularOnly || proOnly || Boolean(searchQuery) || state.type !== "Any" || Boolean(selectedPlayer);
+  const hasSliderFocus = hasActiveSliderPreferences();
+  const isFocused = popularOnly || proOnly || Boolean(searchQuery) || state.type !== "Any" || Boolean(selectedPlayer) || hasSliderFocus;
 
   if (heroSection) {
     heroSection.classList.toggle("is-results-focused", isFocused);
@@ -2547,7 +2585,7 @@ function syncFocusedMode() {
 
     activeModeBar.hidden = false;
     activeModeBar.innerHTML = `
-      <span class="active-mode-pill">${popularOnly ? "Showing 20 Most Popular" : proOnly ? "Showing Pro Player Strings" : searchQuery ? `Searching for "${searchQuery}"` : selectedPlayer ? `Showing ${selectedPlayer}` : `Showing ${state.type}`}</span>
+      <span class="active-mode-pill">${popularOnly ? "Showing 20 Most Popular" : proOnly ? "Showing Pro Player Strings" : searchQuery ? `Searching for "${searchQuery}"` : selectedPlayer ? `Showing ${selectedPlayer}` : state.type !== "Any" ? `Showing ${state.type}` : "Using preference sliders"}</span>
       <button class="active-mode-clear" type="button">Back to main choices</button>
     `;
 
@@ -2564,6 +2602,10 @@ function syncFocusedMode() {
   if (isFocused) {
     scrollToResultsOnMobile();
   }
+}
+
+function hasActiveSliderPreferences() {
+  return Object.values(sliderPreferences).some((value) => Number(value) !== 5);
 }
 
 function scrollToResultsOnMobile() {
@@ -2588,6 +2630,19 @@ function resetToMainChoices() {
   searchQuery = "";
   popularOnly = false;
   proOnly = false;
+
+  Object.keys(sliderPreferences).forEach((key) => {
+    sliderPreferences[key] = 5;
+  });
+
+  if (sliderPower) sliderPower.value = "5";
+  if (sliderSpin) sliderSpin.value = "5";
+  if (sliderControl) sliderControl.value = "5";
+  if (sliderProPlayers) sliderProPlayers.value = "5";
+  if (sliderPowerValue) sliderPowerValue.textContent = "5";
+  if (sliderSpinValue) sliderSpinValue.textContent = "5";
+  if (sliderControlValue) sliderControlValue.textContent = "5";
+  if (sliderProPlayersValue) sliderProPlayersValue.textContent = "5";
 
   if (stringSearchInput) {
     stringSearchInput.value = "";
@@ -2638,8 +2693,9 @@ function scoreString(entry) {
   };
 
   if (activeFilters.length === 0) {
+    const sliderBoost = calculateSliderPreferenceScore(entry);
     return {
-      score: 10,
+      score: Math.max(0, Math.min(10, sliderBoost)),
       matchedTags: buildMatchedTags(entry, FILTERS.slice(0, 6))
     };
   }
@@ -2670,10 +2726,68 @@ function scoreString(entry) {
     }
   }
 
+  const baseScore = totalWeight > 0 ? (matchedWeight / totalWeight) * 10 : 0;
+  const sliderBoost = calculateSliderPreferenceScore(entry);
+
   return {
-    score: totalWeight > 0 ? (matchedWeight / totalWeight) * 10 : 0,
+    score: Math.max(0, Math.min(10, baseScore * 0.78 + sliderBoost * 0.22)),
     matchedTags: matchedTags.length > 0 ? matchedTags : buildMatchedTags(entry, FILTERS.slice(0, 5))
   };
+}
+
+function calculateSliderPreferenceScore(entry) {
+  const targets = {
+    power: mapStringLevelToNumeric(entry.power),
+    spin: mapStringLevelToNumeric(entry.spin),
+    control: mapStringLevelToNumeric(entry.control),
+    proPlayers: mapProPlayerCountToNumeric(getKnownProPlayerCount(entry))
+  };
+
+  const desired = {
+    power: mapSliderToTarget(sliderPreferences.power),
+    spin: mapSliderToTarget(sliderPreferences.spin),
+    control: mapSliderToTarget(sliderPreferences.control),
+    proPlayers: mapSliderToTarget(sliderPreferences.proPlayers)
+  };
+
+  const closeness = Object.keys(targets).map((key) => {
+    const difference = Math.abs(targets[key] - desired[key]);
+    return Math.max(0, 1 - difference / 4);
+  });
+
+  const average = closeness.reduce((sum, value) => sum + value, 0) / closeness.length;
+  return average * 10;
+}
+
+function mapSliderToTarget(value) {
+  return (Number(value || 5) / 10) * 4;
+}
+
+function mapStringLevelToNumeric(value) {
+  const scale = {
+    Low: 1,
+    Medium: 2,
+    High: 3,
+    "Very High": 4
+  };
+
+  return scale[value] || 2;
+}
+
+function getKnownProPlayerCount(entry) {
+  const customAssociations = getCustomProAssociations(entry);
+  return mergeUniqueStrings(
+    [...(entry.atpPlayers || []), ...(entry.wtaPlayers || [])],
+    [...customAssociations.atpPlayers, ...customAssociations.wtaPlayers]
+  ).length;
+}
+
+function mapProPlayerCountToNumeric(count) {
+  if (count <= 0) return 0;
+  if (count <= 2) return 1;
+  if (count <= 5) return 2;
+  if (count <= 9) return 3;
+  return 4;
 }
 
 function doesStringMatchFilter(entry, key, selectedValue) {

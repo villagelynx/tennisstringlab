@@ -81,16 +81,47 @@ function renderMasterList() {
       <span>Brand</span>
       <span>Type</span>
       <span>Pro Players</span>
+      <span>Details</span>
     </div>
     ${filtered.map((entry) => `
-      <article class="master-list-row">
-        <div class="master-list-name">
-          <strong>${entry.name}</strong>
+      <details class="master-list-card">
+        <summary class="master-list-row master-list-toggle">
+          <div class="master-list-name">
+            <strong>${entry.name}</strong>
+          </div>
+          <div class="master-list-meta">${entry.brand || "Unknown"}</div>
+          <div class="master-list-meta">${entry.type || "Unknown"}</div>
+          <div class="master-list-meta">${formatProPlayers(entry)}</div>
+          <div class="master-details-action">
+            <span class="details-label">Details</span>
+            <span class="hide-label">Hide</span>
+          </div>
+        </summary>
+        <div class="master-detail-body">
+          <p class="master-detail-copy">${entry.summary || "No summary yet."}</p>
+          <p class="master-detail-copy">${entry.note || ""}</p>
+          <div class="master-detail-grid">
+            <span class="tag"><strong>Spin:</strong> ${entry.spin}</span>
+            <span class="tag"><strong>Power:</strong> ${entry.power}</span>
+            <span class="tag"><strong>Control:</strong> ${entry.control}</span>
+            <span class="tag"><strong>Durability:</strong> ${entry.durability}</span>
+            <span class="tag"><strong>Comfort:</strong> ${entry.comfort}</span>
+            <span class="tag"><strong>Feel:</strong> ${entry.feel}</span>
+            <span class="tag"><strong>Gauge:</strong> ${entry.gauge}</span>
+            <span class="tag"><strong>Color:</strong> ${entry.stringColor}</span>
+            <span class="tag"><strong>Shape:</strong> ${entry.stringShape}</span>
+            <span class="tag"><strong>Racket Fit:</strong> ${entry.racketFamily}</span>
+            <span class="tag"><strong>Set:</strong> ${typeof formatPrice === "function" ? formatPrice(entry.costPerSet) : "Varies"}</span>
+            <span class="tag"><strong>Reel:</strong> ${typeof formatPrice === "function" ? formatPrice(entry.costPerReel) : "Varies"}</span>
+          </div>
+          <div class="master-detail-section">
+            <strong>Pro Players Using</strong>
+            <div class="master-detail-copy">${renderFullProPlayers(entry)}</div>
+          </div>
+          ${renderMasterTensions(entry)}
+          ${renderMasterRackets(entry)}
         </div>
-        <div class="master-list-meta">${entry.brand || "Unknown"}</div>
-        <div class="master-list-meta">${entry.type || "Unknown"}</div>
-        <div class="master-list-meta">${formatProPlayers(entry)}</div>
-      </article>
+      </details>
     `).join("")}
   `;
 }
@@ -113,6 +144,55 @@ function formatProPlayers(entry) {
       <summary class="master-more-players">+${players.length - 3} more</summary>
       <div class="master-more-panel">${escapeHtml(extraPlayers)}</div>
     </details>
+  `;
+}
+
+function renderFullProPlayers(entry) {
+  const customAssociations = typeof getCustomProAssociations === "function" ? getCustomProAssociations(entry) : { atpPlayers: [], wtaPlayers: [] };
+  const atpPlayers = [...new Set([...(entry.atpPlayers || []), ...(customAssociations.atpPlayers || [])])];
+  const wtaPlayers = [...new Set([...(entry.wtaPlayers || []), ...(customAssociations.wtaPlayers || [])])];
+
+  if (!atpPlayers.length && !wtaPlayers.length) {
+    return "None listed";
+  }
+
+  const lines = [];
+  if (atpPlayers.length) {
+    lines.push(`<div><strong>ATP:</strong> ${escapeHtml(atpPlayers.join(", "))}</div>`);
+  }
+  if (wtaPlayers.length) {
+    lines.push(`<div><strong>WTA:</strong> ${escapeHtml(wtaPlayers.join(", "))}</div>`);
+  }
+  return lines.join("");
+}
+
+function renderMasterTensions(entry) {
+  const customAssociations = typeof getCustomProAssociations === "function" ? getCustomProAssociations(entry) : { tensions: [] };
+  const items = [...(entry.proTensions || []), ...(customAssociations.tensions || [])];
+  if (!items.length) {
+    return "";
+  }
+
+  return `
+    <div class="master-detail-section">
+      <strong>Known Pro Tensions</strong>
+      ${items.map((item) => `<div class="master-detail-copy">${escapeHtml(item.player)} | ${escapeHtml(item.tension)} | ${escapeHtml(item.detail || "")}</div>`).join("")}
+    </div>
+  `;
+}
+
+function renderMasterRackets(entry) {
+  const customAssociations = typeof getCustomProAssociations === "function" ? getCustomProAssociations(entry) : { rackets: [] };
+  const items = [...(entry.proRackets || []), ...(customAssociations.rackets || [])];
+  if (!items.length) {
+    return "";
+  }
+
+  return `
+    <div class="master-detail-section">
+      <strong>Known Pro Rackets</strong>
+      ${items.map((item) => `<div class="master-detail-copy">${escapeHtml(item.player)} | ${escapeHtml(item.racket)}</div>`).join("")}
+    </div>
   `;
 }
 

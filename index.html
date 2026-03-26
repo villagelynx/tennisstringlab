@@ -106,6 +106,65 @@
           </span>
         </button>
       </div>
+      <section class="slider-panel" aria-labelledby="sliderPanelTitle">
+        <div class="slider-panel-header">
+          <div>
+            <p class="eyebrow">Preference Sliders</p>
+            <h2 id="sliderPanelTitle">Dial in your ideal string profile</h2>
+          </div>
+          <p class="slider-panel-copy">Move the sliders toward what matters most and the rankings will rebalance live.</p>
+        </div>
+        <div class="slider-grid">
+          <label class="slider-field" for="sliderPower">
+            <span>Power</span>
+            <div class="slider-input-row">
+              <input id="sliderPower" type="range" min="0" max="10" step="1" value="5">
+              <output id="sliderPowerValue" for="sliderPower">5</output>
+            </div>
+            <div class="slider-scale-labels">
+              <span>Low</span>
+              <span>Balanced</span>
+              <span>High</span>
+            </div>
+          </label>
+          <label class="slider-field" for="sliderSpin">
+            <span>Spin</span>
+            <div class="slider-input-row">
+              <input id="sliderSpin" type="range" min="0" max="10" step="1" value="5">
+              <output id="sliderSpinValue" for="sliderSpin">5</output>
+            </div>
+            <div class="slider-scale-labels">
+              <span>Low</span>
+              <span>Balanced</span>
+              <span>High</span>
+            </div>
+          </label>
+          <label class="slider-field" for="sliderControl">
+            <span>Control</span>
+            <div class="slider-input-row">
+              <input id="sliderControl" type="range" min="0" max="10" step="1" value="5">
+              <output id="sliderControlValue" for="sliderControl">5</output>
+            </div>
+            <div class="slider-scale-labels">
+              <span>Low</span>
+              <span>Balanced</span>
+              <span>High</span>
+            </div>
+          </label>
+          <label class="slider-field" for="sliderProPlayers">
+            <span>Pro Players Using</span>
+            <div class="slider-input-row">
+              <input id="sliderProPlayers" type="range" min="0" max="10" step="1" value="5">
+              <output id="sliderProPlayersValue" for="sliderProPlayers">5</output>
+            </div>
+            <div class="slider-scale-labels">
+              <span>Few</span>
+              <span>Balanced</span>
+              <span>Many</span>
+            </div>
+          </label>
+        </div>
+      </section>
       <div class="mobile-quick-player-row">
         <label class="mobile-quick-player-label" for="mobileQuickPlayerFilter">Pro Player</label>
         <select id="mobileQuickPlayerFilter" class="search-input mobile-quick-player-filter">
