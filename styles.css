@@ -157,6 +157,11 @@ body {
   gap: 14px;
 }
 
+.brand-home-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 .brand-text {
   display: flex;
   flex-direction: column;
