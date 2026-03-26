@@ -2,6 +2,7 @@
   const VISITOR_KEY = "tsl_visitor_id_v1";
   const SESSION_PREFIX = "tsl_visit_sent:";
   const TRACK_ENDPOINT = "/.netlify/functions/track-visit";
+  const STATS_ENDPOINT = "/.netlify/functions/visit-stats";
 
   function createVisitorId() {
     return "visitor-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
@@ -65,9 +66,34 @@
     } catch (error) {}
   }
 
+  function formatNumber(value) {
+    return new Intl.NumberFormat("en-US").format(Number(value || 0));
+  }
+
+  async function loadPublicSiteStats() {
+    const target = document.getElementById("publicSiteStats");
+    if (!target || !window.location || window.location.protocol === "file:") return;
+
+    try {
+      const response = await fetch(STATS_ENDPOINT, { method: "GET" });
+      if (!response.ok) {
+        throw new Error("Stats request failed.");
+      }
+      const stats = await response.json();
+      target.textContent = `${formatNumber(stats.uniqueVisitors)} visitors | ${formatNumber(stats.totalViews)} total views`;
+      target.hidden = false;
+    } catch (error) {
+      target.hidden = true;
+    }
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", trackVisit, { once: true });
+    document.addEventListener("DOMContentLoaded", () => {
+      trackVisit();
+      loadPublicSiteStats();
+    }, { once: true });
   } else {
     trackVisit();
+    loadPublicSiteStats();
   }
 })();
