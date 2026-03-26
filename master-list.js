@@ -87,12 +87,14 @@ function renderMasterList() {
       <details class="master-list-card">
         <summary class="master-list-row master-list-toggle">
           <div class="master-list-name">
-            <strong>${entry.name}</strong>
+            <div class="master-list-name-top">
+              <strong>${entry.name}</strong>
+              ${renderMasterProBadge(entry)}
+            </div>
           </div>
           <div class="master-list-meta">${entry.brand || "Unknown"}</div>
           <div class="master-list-meta">${entry.type || "Unknown"}</div>
           <div class="master-list-meta">${formatProPlayers(entry)}</div>
-          <div class="master-list-badge-slot">${renderMasterProBadge(entry)}</div>
           <div class="master-details-action">
             <span class="details-label">Details</span>
             <span class="hide-label">Hide</span>
@@ -177,6 +179,10 @@ function renderMasterProBadge(entry) {
   ])];
   const count = allPlayers.length;
   const title = count ? escapeHtml(allPlayers.join(", ")) : "No pros listed";
+
+  if (count === 0) {
+    return "";
+  }
 
   return `
     <div class="pro-count-badge pro-count-badge-small" aria-label="${count} pro players use this string">

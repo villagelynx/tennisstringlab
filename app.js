@@ -2903,27 +2903,10 @@ function renderStringCard(entry, score, matchedTags) {
   const amazonReelLink = getAmazonReelLink(entry);
 
   return `
-    <article class="result-card">
-      <div class="result-content">
-        <div class="result-top">
-          <div class="result-top-main">
-            <div class="result-title">
-          <h3>${entry.name}</h3>
-          <p class="latin-name">${entry.brand} | ${entry.type} | ${entry.gauge}</p>
-        </div>
-            <div class="result-badge-stack">
-              <div class="pro-count-badge" aria-label="${totalProPlayers} pro players use this string">
-                <span>${totalProPlayers}</span>
-                <small>Pros</small>
-                <div class="pro-count-tooltip">${proBadgeTitle}</div>
-              </div>
-              <div class="score-pill">
-                <span>${score.toFixed(1)}/10</span>
-                <small>Match Score</small>
-              </div>
-            </div>
-          </div>
-          <div class="plant-image">
+    <details class="result-card result-card-collapsible">
+      <summary class="result-summary">
+        <div class="result-summary-main">
+          <div class="plant-image plant-image-compact">
             <img
               src="${entry.image}"
               alt="${entry.name}"
@@ -2931,7 +2914,30 @@ function renderStringCard(entry, score, matchedTags) {
               onerror="this.onerror=null;this.src=this.dataset.fallback;"
             >
           </div>
+          <div class="result-title">
+            <h3>${entry.name}</h3>
+            <p class="latin-name">${entry.brand} | ${entry.type} | ${entry.gauge}</p>
+          </div>
         </div>
+        <div class="result-badge-stack">
+          ${totalProPlayers > 0 ? `
+            <div class="pro-count-badge" aria-label="${totalProPlayers} pro players use this string">
+              <span>${totalProPlayers}</span>
+              <small>Pros</small>
+              <div class="pro-count-tooltip">${proBadgeTitle}</div>
+            </div>
+          ` : ""}
+          <div class="score-pill">
+            <span>${score.toFixed(1)}/10</span>
+            <small>Match Score</small>
+          </div>
+          <div class="result-details-action">
+            <span class="details-label">Details</span>
+            <span class="hide-label">Hide</span>
+          </div>
+        </div>
+      </summary>
+      <div class="result-content">
         <p class="summary-copy">${entry.summary}</p>
         <p class="summary-note">${entry.note}</p>
         <div class="tag-grid">
@@ -2989,7 +2995,7 @@ function renderStringCard(entry, score, matchedTags) {
           ` : ""}
         </div>
       </div>
-    </article>
+    </details>
   `;
 }
 

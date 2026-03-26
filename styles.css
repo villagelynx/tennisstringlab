@@ -617,6 +617,71 @@ h1 {
   display: block;
 }
 
+.result-card-collapsible {
+  overflow: hidden;
+}
+
+.result-summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+}
+
+.result-summary::-webkit-details-marker {
+  display: none;
+}
+
+.result-summary-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.plant-image-compact {
+  min-height: 72px;
+  min-width: 72px;
+  flex-basis: 72px;
+  padding: 6px;
+}
+
+.plant-image-compact img {
+  height: 58px;
+}
+
+.result-card-collapsible .result-content {
+  border-top: 1px solid rgba(10, 77, 132, 0.08);
+}
+
+.result-details-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #dff3ff, #b9e2ff);
+  color: #0d4d7a;
+  font-weight: 800;
+  font-size: 0.84rem;
+}
+
+.result-card-collapsible .hide-label {
+  display: none;
+}
+
+.result-card-collapsible[open] .details-label {
+  display: none;
+}
+
+.result-card-collapsible[open] .hide-label {
+  display: inline;
+}
+
 .plant-image {
   min-height: 132px;
   min-width: 132px;
@@ -947,7 +1012,7 @@ h1 {
 .master-list-head,
 .master-list-row {
   display: grid;
-  grid-template-columns: minmax(200px, 1.25fr) minmax(110px, 0.8fr) minmax(110px, 0.75fr) minmax(210px, 1.2fr) 74px 120px;
+  grid-template-columns: minmax(200px, 1.25fr) minmax(110px, 0.8fr) minmax(110px, 0.75fr) minmax(210px, 1.2fr) 120px;
   gap: 16px;
   align-items: center;
 }
@@ -991,11 +1056,6 @@ h1 {
 
 .master-list-card[open] .hide-label {
   display: inline;
-}
-
-.master-list-badge-slot {
-  display: flex;
-  justify-content: center;
 }
 
 .master-list-toggle {
@@ -1052,6 +1112,13 @@ h1 {
 .master-list-name strong {
   font-size: 1rem;
   color: #0a2e52;
+}
+
+.master-list-name-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .master-list-meta {
@@ -1551,6 +1618,11 @@ h1 {
 
   .result-badge-stack {
     justify-content: flex-start;
+  }
+
+  .result-summary {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .result-content {
