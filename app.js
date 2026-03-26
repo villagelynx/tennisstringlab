@@ -2890,7 +2890,9 @@ function renderStringCard(entry, score, matchedTags) {
   const customAssociations = getCustomProAssociations(entry);
   const atpPlayers = mergeUniqueStrings(entry.atpPlayers || [], customAssociations.atpPlayers);
   const wtaPlayers = mergeUniqueStrings(entry.wtaPlayers || [], customAssociations.wtaPlayers);
-  const totalProPlayers = mergeUniqueStrings(atpPlayers, wtaPlayers).length;
+  const allProPlayers = mergeUniqueStrings(atpPlayers, wtaPlayers);
+  const totalProPlayers = allProPlayers.length;
+  const proBadgeTitle = totalProPlayers ? escapeHtml(allProPlayers.join(", ")) : "No pros listed";
   const proTensions = [...(entry.proTensions || []), ...customAssociations.tensions];
   const proRackets = [...(entry.proRackets || []), ...customAssociations.rackets];
   const compactMatchedTags = matchedTags.filter((tag) => tag.label !== "ATP Player" && tag.label !== "WTA Player");
@@ -2911,6 +2913,7 @@ function renderStringCard(entry, score, matchedTags) {
               <div class="pro-count-badge" aria-label="${totalProPlayers} pro players use this string">
                 <span>${totalProPlayers}</span>
                 <small>Pros</small>
+                <div class="pro-count-tooltip">${proBadgeTitle}</div>
               </div>
               <div class="score-pill">
                 <span>${score.toFixed(1)}/10</span>

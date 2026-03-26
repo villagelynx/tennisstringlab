@@ -92,6 +92,7 @@ function renderMasterList() {
           <div class="master-list-meta">${entry.brand || "Unknown"}</div>
           <div class="master-list-meta">${entry.type || "Unknown"}</div>
           <div class="master-list-meta">${formatProPlayers(entry)}</div>
+          <div class="master-list-badge-slot">${renderMasterProBadge(entry)}</div>
           <div class="master-details-action">
             <span class="details-label">Details</span>
             <span class="hide-label">Hide</span>
@@ -164,6 +165,26 @@ function renderFullProPlayers(entry) {
     lines.push(`<div><strong>WTA:</strong> ${escapeHtml(wtaPlayers.join(", "))}</div>`);
   }
   return lines.join("");
+}
+
+function renderMasterProBadge(entry) {
+  const customAssociations = typeof getCustomProAssociations === "function" ? getCustomProAssociations(entry) : { atpPlayers: [], wtaPlayers: [] };
+  const allPlayers = [...new Set([
+    ...(entry.atpPlayers || []),
+    ...(entry.wtaPlayers || []),
+    ...(customAssociations.atpPlayers || []),
+    ...(customAssociations.wtaPlayers || [])
+  ])];
+  const count = allPlayers.length;
+  const title = count ? escapeHtml(allPlayers.join(", ")) : "No pros listed";
+
+  return `
+    <div class="pro-count-badge pro-count-badge-small" aria-label="${count} pro players use this string">
+      <span>${count}</span>
+      <small>Pros</small>
+      <div class="pro-count-tooltip">${title}</div>
+    </div>
+  `;
 }
 
 function renderMasterTensions(entry) {

@@ -697,9 +697,10 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #fff5f5;
-  border: 2px solid rgba(201, 52, 52, 0.22);
-  color: #c62828;
+  position: relative;
+  background: #f7f0ff;
+  border: 2px solid rgba(117, 63, 178, 0.24);
+  color: #7b2cbf;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
 }
 
@@ -715,6 +716,46 @@ h1 {
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.pro-count-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%);
+  width: 210px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(56, 30, 84, 0.96);
+  color: #ffffff;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  text-align: left;
+  box-shadow: 0 14px 28px rgba(42, 18, 65, 0.24);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+  z-index: 20;
+}
+
+.pro-count-badge:hover .pro-count-tooltip,
+.pro-count-badge:focus-within .pro-count-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.pro-count-badge-small {
+  min-width: 46px;
+  min-height: 46px;
+  padding: 6px;
+}
+
+.pro-count-badge-small span {
+  font-size: 0.94rem;
+}
+
+.pro-count-badge-small small {
+  font-size: 0.56rem;
 }
 
 .score-pill small {
@@ -906,7 +947,7 @@ h1 {
 .master-list-head,
 .master-list-row {
   display: grid;
-  grid-template-columns: minmax(220px, 1.4fr) minmax(120px, 0.85fr) minmax(120px, 0.8fr) minmax(220px, 1.3fr) 120px;
+  grid-template-columns: minmax(200px, 1.25fr) minmax(110px, 0.8fr) minmax(110px, 0.75fr) minmax(210px, 1.2fr) 74px 120px;
   gap: 16px;
   align-items: center;
 }
@@ -950,6 +991,11 @@ h1 {
 
 .master-list-card[open] .hide-label {
   display: inline;
+}
+
+.master-list-badge-slot {
+  display: flex;
+  justify-content: center;
 }
 
 .master-list-toggle {
