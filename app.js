@@ -2799,19 +2799,19 @@ function calculateSliderPreferenceScore(entry) {
     proPlayers: mapProPlayerCountToNumeric(getKnownProPlayerCount(entry))
   };
 
-  const desired = {
-    power: mapSliderToTarget(sliderPreferences.power),
-    spin: mapSliderToTarget(sliderPreferences.spin),
-    control: mapSliderToTarget(sliderPreferences.control),
-    proPlayers: mapSliderToTarget(sliderPreferences.proPlayers)
-  };
+  const activeSliderKeys = Object.keys(sliderPreferences).filter((key) => Number(sliderPreferences[key]) !== 5);
 
-  const closeness = Object.keys(targets).map((key) => {
-    const difference = Math.abs(targets[key] - desired[key]);
+  if (!activeSliderKeys.length) {
+    return 5;
+  }
+
+  const weightedScores = activeSliderKeys.map((key) => {
+    const desired = mapSliderToTarget(sliderPreferences[key]);
+    const difference = Math.abs(targets[key] - desired);
     return Math.max(0, 1 - difference / 4);
   });
 
-  const average = closeness.reduce((sum, value) => sum + value, 0) / closeness.length;
+  const average = weightedScores.reduce((sum, value) => sum + value, 0) / weightedScores.length;
   return average * 10;
 }
 
