@@ -2538,12 +2538,14 @@ function renderResults() {
 }
 
 function renderTypeDescription() {
-  if (!typeDescriptionEyebrow || !typeDescriptionTitle || !typeDescriptionText) {
+  if (!typeDescriptionCard || !typeDescriptionEyebrow || !typeDescriptionTitle || !typeDescriptionText) {
     return;
   }
 
   const typeKey = state.type || "Any";
   const content = TYPE_DESCRIPTIONS[typeKey] || TYPE_DESCRIPTIONS.Any;
+
+  typeDescriptionCard.hidden = typeKey === "Any";
 
   typeDescriptionEyebrow.textContent = content.eyebrow;
   typeDescriptionTitle.textContent = content.title;
@@ -2639,10 +2641,6 @@ function syncFocusedMode() {
 
   if (layoutGrid) {
     layoutGrid.classList.toggle("is-results-focused", isFocused);
-  }
-
-  if (typeDescriptionCard) {
-    typeDescriptionCard.hidden = isFocused;
   }
 
   if (mobileQuickTypeRow) {

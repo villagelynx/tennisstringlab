@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Tennis String Lab Visit Stats</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="site-shell standalone-shell">
+    <section class="hero-card planner-card">
+      <div class="hero-copy">
+        <p class="eyebrow">Counter Dashboard</p>
+        <h1>Visit Stats</h1>
+        <p class="summary-copy">This page shows tracked page views and unique visitors from the Netlify-backed counter.</p>
+      </div>
+      <div class="hero-actions">
+        <a class="hero-link-card master-list-link" href="./index.html">
+          <span class="hero-link-title">Back Home</span>
+          <span class="hero-link-copy">Return to Tennis String Lab.</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="results-panel standalone-panel">
+      <div class="results-header">
+        <div>
+          <p class="eyebrow">Overview</p>
+          <h2>Live Counter Totals</h2>
+        </div>
+        <div class="results-meta">
+          <p id="statsUpdated" class="results-count">Loading stats...</p>
+        </div>
+      </div>
+
+      <div class="summary-grid stats-grid">
+        <article class="summary-box">
+          <strong id="statsTotalViews">0</strong>
+          <span>Total page views</span>
+        </article>
+        <article class="summary-box">
+          <strong id="statsUniqueVisitors">0</strong>
+          <span>Unique visitors</span>
+        </article>
+        <article class="summary-box">
+          <strong id="statsTodayViews">0</strong>
+          <span>Views today</span>
+        </article>
+        <article class="summary-box">
+          <strong id="statsTodayVisitors">0</strong>
+          <span>Unique visitors today</span>
+        </article>
+      </div>
+
+      <div class="results-header compact-section-header">
+        <div>
+          <p class="eyebrow">Top Pages</p>
+          <h2>Tracked Page Breakdown</h2>
+        </div>
+      </div>
+      <div id="statsPageList" class="results-list"></div>
+    </section>
+  </main>
+
+  <script>
+    function formatNumber(value) {
+      return new Intl.NumberFormat("en-US").format(Number(value || 0));
+    }
+
+    function formatDate(value) {
+      if (!value) return "No visits yet";
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? "No visits yet" : "Updated " + date.toLocaleString();
+    }
+
+    async function loadVisitStats() {
+      const response = await fetch("/.netlify/functions/visit-stats");
+      if (!response.ok) {
+        throw new Error("Could not load visit stats.");
+      }
+      return response.json();
+    }
+
+    function renderPageStats(stats) {
+      const pageList = document.getElementById("statsPageList");
+      const pages = Array.isArray(stats.topPages) ? stats.topPages : [];
+      if (!pages.length) {
+        pageList.innerHTML = '<article class="result-card"><p class="result-summary">No tracked page views yet.</p></article>';
+        return;
+      }
+
+      pageList.innerHTML = pages.map((page) => `
+        <article class="result-card">
+          <div class="result-header">
+            <div>
+              <p class="result-brand">${page.title || "Tracked page"}</p>
+              <h3>${page.path}</h3>
+            </div>
+            <div class="result-score">
+              <span>${formatNumber(page.views)}</span>
+              <small>views</small>
+            </div>
+          </div>
+          <p class="result-summary">${formatNumber(page.uniqueVisitors)} unique visitors</p>
+        </article>
+      `).join("");
+    }
+
+    async function initVisitStats() {
+      try {
+        const stats = await loadVisitStats();
+        document.getElementById("statsTotalViews").textContent = formatNumber(stats.totalViews);
+        document.getElementById("statsUniqueVisitors").textContent = formatNumber(stats.uniqueVisitors);
+        document.getElementById("statsTodayViews").textContent = formatNumber(stats.todayViews);
+        document.getElementById("statsTodayVisitors").textContent = formatNumber(stats.todayUniqueVisitors);
+        document.getElementById("statsUpdated").textContent = formatDate(stats.lastVisitAt);
+        renderPageStats(stats);
+      } catch (error) {
+        document.getElementById("statsUpdated").textContent = "Could not load stats yet";
+        document.getElementById("statsPageList").innerHTML = '<article class="result-card"><p class="result-summary">The counter will appear after the Netlify functions are deployed and the first visits are tracked.</p></article>';
+      }
+    }
+
+    initVisitStats();
+  </script>
+</body>
+</html>
