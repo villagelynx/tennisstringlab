@@ -2123,6 +2123,9 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
       searchQuery = event.currentTarget.value.trim().toLowerCase();
       popularOnly = false;
       proOnly = false;
+      if (searchQuery) {
+        clearNonSearchFilters();
+      }
       syncClearSearchButton();
       syncPopularButton();
       syncProButton();
@@ -2256,6 +2259,20 @@ function populateMobileQuickPlayerFilter() {
   });
 
   syncMobileQuickPlayerFilter();
+}
+
+function clearNonSearchFilters() {
+  FILTERS.forEach((filter) => {
+    state[filter.key] = "Any";
+    const select = document.getElementById(`filter-${filter.key}`);
+    if (select) {
+      select.value = "Any";
+    }
+  });
+
+  syncTypeMenu();
+  syncMobileQuickPlayerFilter();
+  syncMobileQuickTypeFilter();
 }
 
 if (mobileQuickTypeFilter) {
