@@ -1000,9 +1000,8 @@ h1 {
 }
 
 .select-any-active {
-  background: #e5f4ff !important;
-  color: #134d82 !important;
-  font-weight: 700;
+  color: #0d5f9a !important;
+  font-weight: 800;
 }
 
 .master-results-panel {
