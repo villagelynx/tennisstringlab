@@ -241,20 +241,6 @@ h1 {
   line-height: 1.55;
 }
 
-.public-site-stats {
-  margin: 12px 0 0;
-  display: inline-flex;
-  align-items: center;
-  min-height: 34px;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: rgba(10, 77, 132, 0.08);
-  border: 1px solid rgba(10, 77, 132, 0.12);
-  color: var(--green-dark);
-  font-size: 0.84rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
 
 .hero-actions,
 .utility-links {
@@ -1513,11 +1499,6 @@ h1 {
     font-size: 0.96rem;
   }
 
-  .public-site-stats {
-    background: rgba(255, 255, 255, 0.14);
-    border-color: rgba(255, 255, 255, 0.16);
-    color: #ffffff;
-  }
 
   .hero-search-row {
     margin-top: 18px;
