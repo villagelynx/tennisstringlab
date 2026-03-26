@@ -36,6 +36,20 @@ function populateMasterFilters() {
   });
 }
 
+function styleSpecialSelectOptions(select) {
+  if (!select) {
+    return;
+  }
+
+  Array.from(select.options).forEach((option) => {
+    if (option.value === "Any") {
+      option.style.background = "#e5f4ff";
+      option.style.color = "#134d82";
+      option.style.fontWeight = "600";
+    }
+  });
+}
+
 function getFilteredMasterStrings() {
   const query = masterSearchInput.value.trim().toLowerCase();
   const brand = masterBrandFilter.value;
@@ -251,4 +265,8 @@ function escapeHtml(value) {
 });
 
 populateMasterFilters();
+styleSpecialSelectOptions(masterBrandFilter);
+styleSpecialSelectOptions(masterTypeFilter);
+styleSpecialSelectOptions(masterPlayerFilter);
+styleSpecialSelectOptions(masterSortSelect);
 renderMasterList();
