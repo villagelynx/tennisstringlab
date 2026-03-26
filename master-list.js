@@ -42,18 +42,19 @@ function getFilteredMasterStrings() {
   const type = masterTypeFilter.value;
   const player = masterPlayerFilter.value;
   const sort = masterSortSelect.value;
+  const useMostPros = player === "__most_pros__";
 
   const filtered = masterStrings.filter((entry) => {
     const matchesQuery = !query || [entry.name, entry.brand, entry.type].filter(Boolean).some((value) => value.toLowerCase().includes(query));
     const matchesBrand = brand === "Any" || entry.brand === brand;
     const matchesType = type === "Any" || entry.type === type;
     const allPlayers = [...(entry.atpPlayers || []), ...(entry.wtaPlayers || [])];
-    const matchesPlayer = player === "Any" || allPlayers.includes(player);
+    const matchesPlayer = useMostPros || player === "Any" || allPlayers.includes(player);
     return matchesQuery && matchesBrand && matchesType && matchesPlayer;
   });
 
   filtered.sort((left, right) => {
-    if (sort === "pros") {
+    if (useMostPros || sort === "pros") {
       return getMasterProCount(right) - getMasterProCount(left) || left.name.localeCompare(right.name);
     }
     const direction = sort === "za" ? -1 : 1;
