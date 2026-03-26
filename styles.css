@@ -1669,3 +1669,22 @@ h1 {
 .stats-grid {
   margin-bottom: 20px;
 }
+
+.type-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.type-guide-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 18px 18px 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+.type-guide-card h3 {
+  margin: 4px 0 10px;
+  font-size: 1.1rem;
+}
