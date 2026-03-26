@@ -999,6 +999,12 @@ h1 {
   appearance: none;
 }
 
+.select-any-active {
+  background: #e5f4ff !important;
+  color: #134d82 !important;
+  font-weight: 700;
+}
+
 .master-results-panel {
   display: grid;
   gap: 18px;

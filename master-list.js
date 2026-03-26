@@ -50,6 +50,15 @@ function styleSpecialSelectOptions(select) {
   });
 }
 
+function syncSelectDefaultState(select) {
+  if (!select) {
+    return;
+  }
+
+  const isAny = select.value === "Any";
+  select.classList.toggle("select-any-active", isAny);
+}
+
 function getFilteredMasterStrings() {
   const query = masterSearchInput.value.trim().toLowerCase();
   const brand = masterBrandFilter.value;
@@ -269,4 +278,13 @@ styleSpecialSelectOptions(masterBrandFilter);
 styleSpecialSelectOptions(masterTypeFilter);
 styleSpecialSelectOptions(masterPlayerFilter);
 styleSpecialSelectOptions(masterSortSelect);
+syncSelectDefaultState(masterBrandFilter);
+syncSelectDefaultState(masterTypeFilter);
+syncSelectDefaultState(masterPlayerFilter);
+syncSelectDefaultState(masterSortSelect);
+
+[masterBrandFilter, masterTypeFilter, masterPlayerFilter, masterSortSelect].forEach((select) => {
+  select?.addEventListener("change", () => syncSelectDefaultState(select));
+});
+
 renderMasterList();
