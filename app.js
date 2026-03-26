@@ -18,6 +18,8 @@ const activeModeBar = document.getElementById("activeModeBar");
 const resultsPanel = document.querySelector(".results-panel");
 const heroMenuButton = document.getElementById("heroMenuButton");
 const heroMenuPanel = document.getElementById("heroMenuPanel");
+const referenceGuideButton = document.getElementById("referenceGuideButton");
+const referenceGuidePanel = document.getElementById("referenceGuidePanel");
 const typeDescriptionCard = document.getElementById("typeDescriptionCard");
 const typeDescriptionEyebrow = document.getElementById("typeDescriptionEyebrow");
 const typeDescriptionTitle = document.getElementById("typeDescriptionTitle");
@@ -47,20 +49,25 @@ if (mobileFilterToggle) {
   });
 }
 
-if (heroMenuButton && heroMenuPanel) {
-  heroMenuButton.addEventListener("click", () => {
-    const isOpen = heroMenuButton.getAttribute("aria-expanded") === "true";
-    heroMenuButton.setAttribute("aria-expanded", isOpen ? "false" : "true");
-    heroMenuPanel.hidden = isOpen;
+function setupDropdownMenu(button, panel, containerSelector) {
+  if (!button || !panel) return;
+
+  button.addEventListener("click", () => {
+    const isOpen = button.getAttribute("aria-expanded") === "true";
+    button.setAttribute("aria-expanded", isOpen ? "false" : "true");
+    panel.hidden = isOpen;
   });
 
   document.addEventListener("click", (event) => {
-    if (!heroMenuPanel.hidden && !event.target.closest(".hero-overflow-menu")) {
-      heroMenuButton.setAttribute("aria-expanded", "false");
-      heroMenuPanel.hidden = true;
+    if (!panel.hidden && !event.target.closest(containerSelector)) {
+      button.setAttribute("aria-expanded", "false");
+      panel.hidden = true;
     }
   });
 }
+
+setupDropdownMenu(heroMenuButton, heroMenuPanel, ".hero-overflow-menu");
+setupDropdownMenu(referenceGuideButton, referenceGuidePanel, ".hero-action-menu");
 
 const IMAGE_STORAGE_PREFIX = "tennisStringPlannerImage:";
 const PRO_PLAYER_STORAGE_KEY = "tennisStringPlannerCustomPros";

@@ -484,6 +484,10 @@ h1 {
   gap: 10px;
 }
 
+.hero-action-menu {
+  position: relative;
+}
+
 .hero-action-copy {
   display: flex;
   flex-direction: column;
@@ -527,6 +531,35 @@ h1 {
 .master-list-hero-link {
   background: linear-gradient(135deg, #dff3ff, #b9e2ff);
   color: #0d4d7a;
+}
+
+.hero-action-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 250px;
+  max-width: min(320px, 90vw);
+  padding: 8px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: var(--shadow);
+  z-index: 12;
+}
+
+.hero-action-panel-link {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: var(--green-dark);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.hero-action-panel-link:hover {
+  background: rgba(10, 77, 132, 0.08);
 }
 
 .layout-grid {
@@ -1529,6 +1562,15 @@ h1 {
     min-height: 74px;
     padding: 15px 16px;
     border-radius: 20px;
+  }
+
+  .hero-action-menu {
+    width: 100%;
+  }
+
+  .hero-action-panel {
+    width: 100%;
+    max-width: 100%;
   }
 
   .hero-action-copy strong {
