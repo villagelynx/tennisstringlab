@@ -2475,12 +2475,14 @@ function getStoredCustomProPlayers() {
 }
 
 function renderResults() {
+  const hasHardFilters = FILTERS.some((filter) => state[filter.key] && state[filter.key] !== "Any");
+  const shouldRequirePositiveScore = hasHardFilters;
   const ranked = STRINGS
     .map((entry) => ({
       string: entry,
       ...scoreString(entry)
     }))
-    .filter((entry) => entry.score > 0 && matchesSearch(entry.string) && matchesPopular(entry.string) && matchesProPlayers(entry.string))
+    .filter((entry) => (!shouldRequirePositiveScore || entry.score > 0) && matchesSearch(entry.string) && matchesPopular(entry.string) && matchesProPlayers(entry.string))
     .sort((left, right) => right.score - left.score);
 
   renderTypeDescription();
