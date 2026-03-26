@@ -2781,6 +2781,13 @@ function scoreString(entry) {
   };
 
   if (activeFilters.length === 0) {
+    if (!hasActiveSliderPreferences()) {
+      return {
+        score: 10,
+        matchedTags: buildMatchedTags(entry, FILTERS.slice(0, 6))
+      };
+    }
+
     const sliderBoost = calculateSliderPreferenceScore(entry);
     return {
       score: Math.max(0, Math.min(10, sliderBoost)),
