@@ -168,6 +168,18 @@ body {
   background: rgba(10, 77, 132, 0.08);
 }
 
+.hero-menu-link-admin {
+  margin-top: 4px;
+  padding-top: 7px;
+  border-top: 1px solid rgba(10, 77, 132, 0.1);
+  font-size: 0.8rem;
+  opacity: 0.72;
+}
+
+.hero-menu-link-admin:hover {
+  opacity: 1;
+}
+
 .brand-lockup {
   display: flex;
   align-items: center;
