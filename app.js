@@ -2890,6 +2890,7 @@ function renderStringCard(entry, score, matchedTags) {
   const customAssociations = getCustomProAssociations(entry);
   const atpPlayers = mergeUniqueStrings(entry.atpPlayers || [], customAssociations.atpPlayers);
   const wtaPlayers = mergeUniqueStrings(entry.wtaPlayers || [], customAssociations.wtaPlayers);
+  const totalProPlayers = mergeUniqueStrings(atpPlayers, wtaPlayers).length;
   const proTensions = [...(entry.proTensions || []), ...customAssociations.tensions];
   const proRackets = [...(entry.proRackets || []), ...customAssociations.rackets];
   const compactMatchedTags = matchedTags.filter((tag) => tag.label !== "ATP Player" && tag.label !== "WTA Player");
@@ -2903,12 +2904,18 @@ function renderStringCard(entry, score, matchedTags) {
         <div class="result-top">
           <div class="result-top-main">
             <div class="result-title">
-              <h3>${entry.name}</h3>
-              <p class="latin-name">${entry.brand} | ${entry.type} | ${entry.gauge}</p>
-            </div>
-            <div class="score-pill">
-              <span>${score.toFixed(1)}/10</span>
-              <small>Match Score</small>
+          <h3>${entry.name}</h3>
+          <p class="latin-name">${entry.brand} | ${entry.type} | ${entry.gauge}</p>
+        </div>
+            <div class="result-badge-stack">
+              <div class="pro-count-badge" aria-label="${totalProPlayers} pro players use this string">
+                <span>${totalProPlayers}</span>
+                <small>Pros</small>
+              </div>
+              <div class="score-pill">
+                <span>${score.toFixed(1)}/10</span>
+                <small>Match Score</small>
+              </div>
             </div>
           </div>
           <div class="plant-image">
