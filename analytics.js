@@ -433,6 +433,100 @@
     }
   };
 
+  const HOMEPAGE_GUIDE_FIXES = {
+    es: {
+      masterListTitle: "Lista maestra",
+      masterListCopy: "Explora todas las cuerdas en un solo lugar",
+      referenceTitle: "Guia de referencia",
+      referenceCopy: "Abrir todas las paginas informativas",
+      popularTitle: "20 mas populares",
+      popularCopy: "Empieza con las cuerdas mas buscadas",
+      prosTitle: "Cuerdas de profesionales",
+      prosCopy: "Ver lo que usan los mejores ATP y WTA",
+      menu: {
+        "./string-types.html": "Descripciones de tipos de cuerda",
+        "./tension-guide.html": "Guia de tension",
+        "./gauge-guide.html": "Guia de calibre",
+        "./hybrid-guide.html": "Guia de hibridos",
+        "./arm-friendly.html": "Cuerdas comodas para el brazo",
+        "./string-shape-guide.html": "Guia de forma de cuerda",
+        "./restring-guide.html": "Cuando reencordar",
+        "./player-type-guide.html": "Mejores cuerdas por jugador",
+        "./best-by-need.html": "Mejores cuerdas por necesidad",
+        "./popular-comparisons.html": "Comparaciones populares",
+        "./proshops.html": "Pro shops"
+      },
+      admin: "Estadisticas admin"
+    },
+    it: {
+      masterListTitle: "Elenco completo",
+      masterListCopy: "Sfoglia tutte le corde in un solo posto",
+      referenceTitle: "Guida di riferimento",
+      referenceCopy: "Apri tutte le pagine informative",
+      popularTitle: "20 piu popolari",
+      popularCopy: "Inizia con le corde piu cercate",
+      prosTitle: "Corde dei professionisti",
+      prosCopy: "Vedi cosa usano i migliori ATP e WTA",
+      menu: {
+        "./string-types.html": "Descrizioni dei tipi di corda",
+        "./tension-guide.html": "Guida alla tensione",
+        "./gauge-guide.html": "Guida al calibro",
+        "./hybrid-guide.html": "Guida ibrida",
+        "./arm-friendly.html": "Corde comfort braccio",
+        "./string-shape-guide.html": "Guida alla forma della corda",
+        "./restring-guide.html": "Quando reincordare",
+        "./player-type-guide.html": "Migliori corde per giocatore",
+        "./best-by-need.html": "Migliori corde per esigenza",
+        "./popular-comparisons.html": "Confronti popolari",
+        "./proshops.html": "Pro shop"
+      },
+      admin: "Statistiche admin"
+    }
+  };
+
+  function getSafeLanguageFlag(language) {
+    const flags = {
+      en: "\uD83C\uDDEC\uD83C\uDDE7",
+      fr: "\uD83C\uDDEB\uD83C\uDDF7",
+      es: "\uD83C\uDDEA\uD83C\uDDF8",
+      it: "\uD83C\uDDEE\uD83C\uDDF9"
+    };
+    return flags[language] || language.toUpperCase();
+  }
+
+  function applyHomepageGuideFixes(language) {
+    const fixes = HOMEPAGE_GUIDE_FIXES[language];
+    if (!fixes) return;
+
+    const masterTitle = document.querySelector('a[href="./master-list.html"] .hero-action-copy strong');
+    const masterCopy = document.querySelector('a[href="./master-list.html"] .hero-action-copy span:last-child');
+    const referenceTitle = document.querySelector("#referenceGuideButton .hero-action-copy strong");
+    const referenceCopy = document.querySelector("#referenceGuideButton .hero-action-copy span:last-child");
+    const popularTitle = document.querySelector("#popularStringsButton .hero-action-copy strong");
+    const popularCopy = document.querySelector("#popularStringsButton .hero-action-copy span:last-child");
+    const prosTitle = document.querySelector("#proPlayersButton .hero-action-copy strong");
+    const prosCopy = document.querySelector("#proPlayersButton .hero-action-copy span:last-child");
+
+    if (masterTitle) masterTitle.textContent = fixes.masterListTitle;
+    if (masterCopy) masterCopy.textContent = fixes.masterListCopy;
+    if (referenceTitle) referenceTitle.textContent = fixes.referenceTitle;
+    if (referenceCopy) referenceCopy.textContent = fixes.referenceCopy;
+    if (popularTitle) popularTitle.textContent = fixes.popularTitle;
+    if (popularCopy) popularCopy.textContent = fixes.popularCopy;
+    if (prosTitle) prosTitle.textContent = fixes.prosTitle;
+    if (prosCopy) prosCopy.textContent = fixes.prosCopy;
+
+    Object.entries(fixes.menu).forEach(([href, text]) => {
+      document.querySelectorAll(`.hero-menu-link[href="${href}"], .hero-action-panel-link[href="${href}"]`).forEach((element) => {
+        element.textContent = text;
+      });
+    });
+
+    document.querySelectorAll(".hero-menu-link-admin").forEach((element) => {
+      element.textContent = fixes.admin;
+    });
+  }
+
   function createVisitorId() {
     return "visitor-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
   }
@@ -538,6 +632,9 @@
     const pageMap = PAGE_TRANSLATIONS[page];
     const entries = (pageMap && (pageMap[language] || pageMap.en)) || [];
     applyEntries(entries);
+    if (page === "index.html") {
+      applyHomepageGuideFixes(language);
+    }
     applyGuideNavTranslations(language);
     document.documentElement.lang = language;
     updateLanguageButtons(language);
@@ -564,7 +661,7 @@
       button.dataset.language = language;
       button.title = LANGUAGE_LABELS[language];
       button.setAttribute("aria-label", LANGUAGE_LABELS[language]);
-      button.innerHTML = `<span class="language-flag" aria-hidden="true">${LANGUAGE_FLAGS[language]}</span>`;
+      button.innerHTML = `<span class="language-flag" aria-hidden="true">${getSafeLanguageFlag(language)}</span>`;
       button.addEventListener("click", () => {
         setSelectedLanguage(language);
         applyLanguage(language);

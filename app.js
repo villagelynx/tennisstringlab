@@ -2642,6 +2642,48 @@ function getFilterLabel(key) {
       es: "Color de cuerda",
       it: "Colore della corda"
     },
+    stringShape: {
+      en: "String Shape",
+      fr: "Forme du cordage",
+      es: "Forma de cuerda",
+      it: "Forma della corda"
+    },
+    spin: {
+      en: "Spin",
+      fr: "Spin",
+      es: "Spin",
+      it: "Spin"
+    },
+    power: {
+      en: "Power",
+      fr: "Puissance",
+      es: "Potencia",
+      it: "Potenza"
+    },
+    control: {
+      en: "Control",
+      fr: "Controle",
+      es: "Control",
+      it: "Controllo"
+    },
+    durability: {
+      en: "Durability",
+      fr: "Durabilite",
+      es: "Durabilidad",
+      it: "Durata"
+    },
+    comfort: {
+      en: "Comfort",
+      fr: "Confort",
+      es: "Comodidad",
+      it: "Comfort"
+    },
+    feel: {
+      en: "Feel",
+      fr: "Sensation",
+      es: "Sensacion",
+      it: "Feeling"
+    },
     gauge: {
       en: "Gauge",
       fr: "Jauge",
@@ -2671,6 +2713,24 @@ function getFilterLabel(key) {
       fr: "Compatibilite raquette",
       es: "Compatibilidad con raqueta",
       it: "Compatibilita con racchetta"
+    },
+    armFriendliness: {
+      en: "Arm Friendliness",
+      fr: "Confort bras",
+      es: "Comodidad para el brazo",
+      it: "Comfort per il braccio"
+    },
+    surface: {
+      en: "Best Court Fit",
+      fr: "Surface ideale",
+      es: "Mejor pista",
+      it: "Superficie ideale"
+    },
+    priceTier: {
+      en: "Price / Value",
+      fr: "Prix / valeur",
+      es: "Precio / valor",
+      it: "Prezzo / valore"
     }
   };
   const language = siteI18n.getLanguage();
