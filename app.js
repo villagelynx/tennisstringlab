@@ -39,6 +39,13 @@ const sliderPowerValue = document.getElementById("sliderPowerValue");
 const sliderSpinValue = document.getElementById("sliderSpinValue");
 const sliderControlValue = document.getElementById("sliderControlValue");
 const sliderProPlayersValue = document.getElementById("sliderProPlayersValue");
+const siteI18n = window.TSL_I18N || { getLanguage: () => "en", t: (_key, fallback, vars) => {
+  let text = fallback || "";
+  Object.entries(vars || {}).forEach(([name, value]) => {
+    text = text.replaceAll(`{${name}}`, String(value));
+  });
+  return text;
+} };
 const sliderPanelToggle = document.getElementById("sliderPanelToggle");
 const sliderPanelBody = document.getElementById("sliderPanelBody");
 const sliderResultsSummary = document.getElementById("sliderResultsSummary");
@@ -2584,31 +2591,31 @@ function renderResults() {
   const resultsTitle = document.getElementById("resultsTitle");
   if (resultsTitle) {
     resultsTitle.textContent = popularOnly
-      ? "Most Popular Strings"
+      ? siteI18n.t("resultsTitlePopular", "Most Popular Strings")
       : proOnly
-        ? "Pro Player Strings"
+        ? siteI18n.t("resultsTitlePros", "Pro Player Strings")
         : searchQuery
-          ? "Search Results"
-          : "String Recommendations";
+          ? siteI18n.t("resultsTitleSearch", "Search Results")
+          : siteI18n.t("resultsTitleDefault", "String Recommendations");
   }
   const baseResultsText = popularOnly
-    ? `${ranked.length} popular strings`
+    ? siteI18n.t("popularStringsCount", "{count} popular strings", { count: ranked.length })
     : proOnly
-      ? `${ranked.length} pro-player strings`
+      ? siteI18n.t("proStringsCount", "{count} pro-player strings", { count: ranked.length })
       : searchQuery
-        ? `${ranked.length} search matches`
-        : `${ranked.length} matches`;
+        ? siteI18n.t("searchMatchesCount", "{count} search matches", { count: ranked.length })
+        : siteI18n.t("matchesCount", "{count} matches", { count: ranked.length });
   resultsCount.textContent = hasSliderOnlyFocus
-    ? `${ranked.length} of ${STRINGS.length} matches`
+    ? siteI18n.t("sliderMatchesCount", "{count} of {total} matches", { count: ranked.length, total: STRINGS.length })
     : baseResultsText;
   if (sliderResultsSummary) {
-    sliderResultsSummary.textContent = `Showing ${ranked.length} of ${STRINGS.length} strings`;
+    sliderResultsSummary.textContent = siteI18n.t("sliderShowingCount", "Showing {count} of {total} strings", { count: ranked.length, total: STRINGS.length });
   }
 
   if (ranked.length === 0) {
     resultsList.innerHTML = `
       <article class="empty-state">
-        No strings matched the current setup. Try relaxing one or two filters to see more options.
+        ${siteI18n.t("emptyResults", "No strings matched the current setup. Try relaxing one or two filters to see more options.")}
       </article>
     `;
     return;
@@ -2630,14 +2637,16 @@ function renderGuideMatches() {
   guideMatchesSection.hidden = !showGuides;
   if (!showGuides) {
     guideMatchesList.innerHTML = "";
-    guideMatchesCount.textContent = "0 guides";
+    guideMatchesCount.textContent = siteI18n.t("guidesZero", "0 guides");
     return;
   }
 
-  guideMatchesCount.textContent = `${matches.length} guide${matches.length === 1 ? "" : "s"}`;
+  guideMatchesCount.textContent = matches.length === 1
+    ? siteI18n.t("guidesCount", "{count} guide", { count: matches.length })
+    : siteI18n.t("guidesCountPlural", "{count} guides", { count: matches.length });
   guideMatchesList.innerHTML = matches.map((guide) => `
     <a class="guide-match-card" href="${guide.href}">
-      <p class="eyebrow">Reference Guide</p>
+      <p class="eyebrow">${siteI18n.t("referenceGuide", "Reference Guide")}</p>
       <h3>${guide.title}</h3>
       <p class="summary-copy">${guide.description}</p>
     </a>
@@ -2812,8 +2821,8 @@ function syncFocusedMode() {
 
     activeModeBar.hidden = false;
     activeModeBar.innerHTML = `
-      <span class="active-mode-pill">${popularOnly ? "Showing 20 Most Popular" : proOnly ? "Showing Pro Player Strings" : searchQuery ? `Searching for "${searchQuery}"` : selectedPlayer ? `Showing ${selectedPlayer}` : state.type !== "Any" ? `Showing ${state.type}` : "Using preference sliders"}</span>
-      <button class="active-mode-clear" type="button">Back to main choices</button>
+      <span class="active-mode-pill">${popularOnly ? siteI18n.t("activePopular", "Showing 20 Most Popular") : proOnly ? siteI18n.t("activePros", "Showing Pro Player Strings") : searchQuery ? siteI18n.t("activeSearch", 'Searching for "{query}"', { query: searchQuery }) : selectedPlayer ? siteI18n.t("activeShowing", "Showing {value}", { value: selectedPlayer }) : state.type !== "Any" ? siteI18n.t("activeShowing", "Showing {value}", { value: state.type }) : siteI18n.t("activeSliders", "Using preference sliders")}</span>
+      <button class="active-mode-clear" type="button">${siteI18n.t("backToMainChoices", "Back to main choices")}</button>
     `;
 
     const clearButton = activeModeBar.querySelector(".active-mode-clear");
@@ -2925,6 +2934,10 @@ function syncTypeMenu() {
     button.classList.toggle("is-active", (button.dataset.type || "Any") === state.type);
   });
 }
+
+document.addEventListener("tsl-language-change", () => {
+  renderResults();
+});
 
 function scoreString(entry) {
   const activeFilters = FILTERS.filter((filter) => state[filter.key] && state[filter.key] !== "Any");

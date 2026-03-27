@@ -10,6 +10,13 @@ const masterTypeDescriptionCard = document.getElementById("masterTypeDescription
 const masterTypeDescriptionEyebrow = document.getElementById("masterTypeDescriptionEyebrow");
 const masterTypeDescriptionTitle = document.getElementById("masterTypeDescriptionTitle");
 const masterTypeDescriptionText = document.getElementById("masterTypeDescriptionText");
+const siteI18n = window.TSL_I18N || { t: (_key, fallback, vars) => {
+  let text = fallback || "";
+  Object.entries(vars || {}).forEach(([name, value]) => {
+    text = text.replaceAll(`{${name}}`, String(value));
+  });
+  return text;
+} };
 
 const masterStrings = Array.isArray(window.TENNIS_STRING_DATA) ? window.TENNIS_STRING_DATA.slice() : [];
 const masterTypeDescriptions = window.TENNIS_STRING_TYPE_DESCRIPTIONS || {};
@@ -96,13 +103,13 @@ function renderMasterList() {
   const filtered = getFilteredMasterStrings();
   renderMasterTypeDescription();
 
-  masterDatabaseCount.textContent = `${masterStrings.length} strings in database`;
-  masterResultsCount.textContent = `${filtered.length} shown`;
+  masterDatabaseCount.textContent = siteI18n.t("masterDatabaseCount", "{count} strings in database", { count: masterStrings.length });
+  masterResultsCount.textContent = siteI18n.t("masterShownCount", "{count} shown", { count: filtered.length });
 
   if (!filtered.length) {
     masterListTable.innerHTML = `
       <div class="master-empty-state">
-        No strings matched that search. Try a different brand, type, or search term.
+        ${siteI18n.t("masterEmpty", "No strings matched that search. Try a different brand, type, or search term.")}
       </div>
     `;
     return;
@@ -110,11 +117,11 @@ function renderMasterList() {
 
   masterListTable.innerHTML = `
     <div class="master-list-head">
-      <span>String Name</span>
-      <span>Brand</span>
-      <span>Type</span>
-      <span>Pro Players</span>
-      <span>Details</span>
+      <span>${siteI18n.t("masterHeadName", "String Name")}</span>
+      <span>${siteI18n.t("masterHeadBrand", "Brand")}</span>
+      <span>${siteI18n.t("masterHeadType", "Type")}</span>
+      <span>${siteI18n.t("masterHeadPros", "Pro Players")}</span>
+      <span>${siteI18n.t("masterHeadDetails", "Details")}</span>
     </div>
     ${filtered.map((entry) => `
       <details class="master-list-card">
@@ -125,12 +132,12 @@ function renderMasterList() {
               ${renderMasterProBadge(entry)}
             </div>
           </div>
-          <div class="master-list-meta">${entry.brand || "Unknown"}</div>
-          <div class="master-list-meta">${entry.type || "Unknown"}</div>
+          <div class="master-list-meta">${entry.brand || siteI18n.t("masterUnknown", "Unknown")}</div>
+          <div class="master-list-meta">${entry.type || siteI18n.t("masterUnknown", "Unknown")}</div>
           <div class="master-list-meta">${formatProPlayers(entry)}</div>
           <div class="master-details-action">
-            <span class="details-label">Details</span>
-            <span class="hide-label">Hide</span>
+            <span class="details-label">${siteI18n.t("masterDetails", "Details")}</span>
+            <span class="hide-label">${siteI18n.t("masterHide", "Hide")}</span>
           </div>
         </summary>
         <div class="master-detail-body">
@@ -147,11 +154,11 @@ function renderMasterList() {
             <span class="tag"><strong>Color:</strong> ${entry.stringColor}</span>
             <span class="tag"><strong>Shape:</strong> ${entry.stringShape}</span>
             <span class="tag"><strong>Racket Fit:</strong> ${entry.racketFamily}</span>
-            <span class="tag"><strong>Set:</strong> ${typeof formatPrice === "function" ? formatPrice(entry.costPerSet) : "Varies"}</span>
-            <span class="tag"><strong>Reel:</strong> ${typeof formatPrice === "function" ? formatPrice(entry.costPerReel) : "Varies"}</span>
+            <span class="tag"><strong>${siteI18n.t("masterSet", "Set:")}</strong> ${typeof formatPrice === "function" ? formatPrice(entry.costPerSet) : "Varies"}</span>
+            <span class="tag"><strong>${siteI18n.t("masterReel", "Reel:")}</strong> ${typeof formatPrice === "function" ? formatPrice(entry.costPerReel) : "Varies"}</span>
           </div>
           <div class="master-detail-section">
-            <strong>Pro Players Using</strong>
+            <strong>${siteI18n.t("masterProsUsing", "Pro Players Using")}</strong>
             <div class="master-detail-copy">${renderFullProPlayers(entry)}</div>
           </div>
           ${renderMasterTensions(entry)}
@@ -184,7 +191,7 @@ function renderMasterTypeDescription() {
 function formatProPlayers(entry) {
   const players = [...new Set([...(entry.atpPlayers || []), ...(entry.wtaPlayers || [])])];
   if (!players.length) {
-    return "None listed";
+    return siteI18n.t("masterNoneListed", "None listed");
   }
 
   if (players.length <= 3) {
@@ -208,7 +215,7 @@ function renderFullProPlayers(entry) {
   const wtaPlayers = [...new Set([...(entry.wtaPlayers || []), ...(customAssociations.wtaPlayers || [])])];
 
   if (!atpPlayers.length && !wtaPlayers.length) {
-    return "None listed";
+    return siteI18n.t("masterNoneListed", "None listed");
   }
 
   const lines = [];
@@ -264,7 +271,7 @@ function renderMasterTensions(entry) {
 
   return `
     <div class="master-detail-section">
-      <strong>Known Pro Tensions</strong>
+      <strong>${siteI18n.t("masterKnownTensions", "Known Pro Tensions")}</strong>
       ${items.map((item) => `<div class="master-detail-copy">${escapeHtml(item.player)} | ${escapeHtml(item.tension)} | ${escapeHtml(item.detail || "")}</div>`).join("")}
     </div>
   `;
@@ -279,7 +286,7 @@ function renderMasterRackets(entry) {
 
   return `
     <div class="master-detail-section">
-      <strong>Known Pro Rackets</strong>
+      <strong>${siteI18n.t("masterKnownRackets", "Known Pro Rackets")}</strong>
       ${items.map((item) => `<div class="master-detail-copy">${escapeHtml(item.player)} | ${escapeHtml(item.racket)}</div>`).join("")}
     </div>
   `;
@@ -313,3 +320,7 @@ syncSelectDefaultState(masterSortSelect);
 });
 
 renderMasterList();
+
+document.addEventListener("tsl-language-change", () => {
+  renderMasterList();
+});

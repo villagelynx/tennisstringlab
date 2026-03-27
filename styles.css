@@ -241,6 +241,49 @@ h1 {
   line-height: 1.55;
 }
 
+.language-switcher {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(10, 77, 132, 0.12);
+  box-shadow: var(--shadow-soft);
+  z-index: 30;
+}
+
+.language-switcher-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--green-dark);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.language-switcher-button.is-active {
+  background: rgba(10, 77, 132, 0.12);
+}
+
+.language-flag {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.language-code {
+  letter-spacing: 0.04em;
+}
+
 
 .hero-actions,
 .utility-links {
@@ -1497,6 +1540,19 @@ h1 {
     color: rgba(255, 255, 255, 0.82);
     max-width: 310px;
     font-size: 0.96rem;
+  }
+
+  .language-switcher {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+
+  .language-switcher-button {
+    color: #ffffff;
+  }
+
+  .language-switcher-button.is-active {
+    background: rgba(255, 255, 255, 0.18);
   }
 
 
