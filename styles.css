@@ -280,11 +280,8 @@ h1 {
 
 .language-flag {
   display: block;
-  width: 22px;
-  height: 15px;
-  border-radius: 1px;
-  box-shadow: none;
-  object-fit: cover;
+  font-size: 1.1rem;
+  line-height: 1;
 }
 
 

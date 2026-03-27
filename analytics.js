@@ -11,10 +11,10 @@
     it: "IT"
   };
   const LANGUAGE_FLAGS = {
-    en: "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 40'%3E%3Crect width='60' height='40' fill='%23012169'/%3E%3Cpath d='M0 0 60 40M60 0 0 40' stroke='%23fff' stroke-width='8'/%3E%3Cpath d='M0 0 60 40M60 0 0 40' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30 0v40M0 20h60' stroke='%23fff' stroke-width='14'/%3E%3Cpath d='M30 0v40M0 20h60' stroke='%23C8102E' stroke-width='8'/%3E%3C/svg%3E",
-    fr: "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 40'%3E%3Crect width='20' height='40' fill='%230055A4'/%3E%3Crect x='20' width='20' height='40' fill='%23FFFFFF'/%3E%3Crect x='40' width='20' height='40' fill='%23EF4135'/%3E%3C/svg%3E",
-    es: "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 40'%3E%3Crect width='60' height='40' fill='%23AA151B'/%3E%3Crect y='10' width='60' height='20' fill='%23F1BF00'/%3E%3C/svg%3E",
-    it: "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 40'%3E%3Crect width='20' height='40' fill='%23009246'/%3E%3Crect x='20' width='20' height='40' fill='%23FFFFFF'/%3E%3Crect x='40' width='20' height='40' fill='%23CE2B37'/%3E%3C/svg%3E"
+    en: "🇬🇧",
+    fr: "🇫🇷",
+    es: "🇪🇸",
+    it: "🇮🇹"
   };
 
   const GUIDE_LINK_TRANSLATIONS = {
@@ -564,7 +564,7 @@
       button.dataset.language = language;
       button.title = LANGUAGE_LABELS[language];
       button.setAttribute("aria-label", LANGUAGE_LABELS[language]);
-      button.innerHTML = `<img class="language-flag" src="${LANGUAGE_FLAGS[language]}" alt="${LANGUAGE_LABELS[language]}">`;
+      button.innerHTML = `<span class="language-flag" aria-hidden="true">${LANGUAGE_FLAGS[language]}</span>`;
       button.addEventListener("click", () => {
         setSelectedLanguage(language);
         applyLanguage(language);
