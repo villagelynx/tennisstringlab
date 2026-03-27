@@ -17,10 +17,10 @@
     it: "Lingua"
   };
   const LANGUAGE_FLAGS = {
-    en: "🇬🇧",
-    fr: "🇫🇷",
-    es: "🇪🇸",
-    it: "🇮🇹"
+    en: "./images/flag-gb.svg",
+    fr: "./images/flag-fr.svg",
+    es: "./images/flag-es.svg",
+    it: "./images/flag-it.svg"
   };
 
   const GUIDE_LINK_TRANSLATIONS = {
@@ -579,7 +579,7 @@
       button.dataset.language = language;
       button.title = LANGUAGE_SWITCHER_LABELS[language] || LANGUAGE_LABELS[language];
       button.setAttribute("aria-label", LANGUAGE_SWITCHER_LABELS[language] || LANGUAGE_LABELS[language]);
-      button.innerHTML = `<span class="language-flag">${LANGUAGE_FLAGS[language]}</span>`;
+      button.innerHTML = `<img class="language-flag" src="${LANGUAGE_FLAGS[language]}" alt="${LANGUAGE_SWITCHER_LABELS[language] || LANGUAGE_LABELS[language]}">`;
       button.addEventListener("click", () => {
         setSelectedLanguage(language);
         applyLanguage(language);

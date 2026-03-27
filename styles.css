@@ -291,8 +291,12 @@ h1 {
 }
 
 .language-flag {
-  font-size: 1.1rem;
-  line-height: 1;
+  display: block;
+  width: 18px;
+  height: 12px;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(10, 77, 132, 0.12);
+  object-fit: cover;
 }
 
 
