@@ -35,6 +35,68 @@ const masterStringsSource = Array.isArray(window.TENNIS_STRING_DATA)
     : [];
 const masterStrings = masterStringsSource.slice();
 const masterTypeDescriptions = window.TENNIS_STRING_TYPE_DESCRIPTIONS || {};
+const masterPageTranslations = {
+  en: {
+    backHome: "Back to Home",
+    eyebrow: "Master Database",
+    title: "Browse every string in the database by name, brand, and type.",
+    copy: "Use the master list to scan the full catalog, search by string name, and sort alphabetically or narrow by brand and string type.",
+    searchPlaceholder: "Search by string name or brand",
+    allBrands: "All Brands",
+    allTypes: "All Types",
+    allPros: "All Pro Players",
+    mostPros: "Most Pros Using",
+    az: "Alphabetical A-Z",
+    za: "Alphabetical Z-A",
+    completeCatalog: "Complete Catalog",
+    masterList: "Master String List"
+  },
+  fr: {
+    backHome: "Retour a l'accueil",
+    eyebrow: "Base complete",
+    title: "Parcourez chaque cordage de la base par nom, marque et type.",
+    copy: "Utilisez la liste complete pour parcourir tout le catalogue, rechercher par nom de cordage et filtrer par marque ou type.",
+    searchPlaceholder: "Rechercher par nom de cordage ou marque",
+    allBrands: "Toutes les marques",
+    allTypes: "Tous les types",
+    allPros: "Tous les pros",
+    mostPros: "Le plus de pros",
+    az: "Alphabetique A-Z",
+    za: "Alphabetique Z-A",
+    completeCatalog: "Catalogue complet",
+    masterList: "Liste complete des cordages"
+  },
+  es: {
+    backHome: "Volver al inicio",
+    eyebrow: "Base maestra",
+    title: "Explora cada cuerda de la base por nombre, marca y tipo.",
+    copy: "Usa la lista maestra para recorrer todo el catalogo, buscar por nombre y filtrar por marca o tipo.",
+    searchPlaceholder: "Buscar por nombre de cuerda o marca",
+    allBrands: "Todas las marcas",
+    allTypes: "Todos los tipos",
+    allPros: "Todos los profesionales",
+    mostPros: "Mas profesionales",
+    az: "Alfabetico A-Z",
+    za: "Alfabetico Z-A",
+    completeCatalog: "Catalogo completo",
+    masterList: "Lista maestra de cuerdas"
+  },
+  it: {
+    backHome: "Torna alla home",
+    eyebrow: "Database completo",
+    title: "Sfoglia ogni corda nel database per nome, marca e tipo.",
+    copy: "Usa l'elenco completo per esplorare tutto il catalogo, cercare per nome e filtrare per marca o tipo.",
+    searchPlaceholder: "Cerca per nome della corda o marca",
+    allBrands: "Tutte le marche",
+    allTypes: "Tutti i tipi",
+    allPros: "Tutti i professionisti",
+    mostPros: "Piu professionisti",
+    az: "Alfabetico A-Z",
+    za: "Alfabetico Z-A",
+    completeCatalog: "Catalogo completo",
+    masterList: "Elenco completo corde"
+  }
+};
 const masterTypeDescriptionTranslations = {
   fr: {
     Any: {
@@ -182,6 +244,39 @@ function populateMasterFilters() {
     option.textContent = player;
     masterPlayerFilter.appendChild(option);
   });
+}
+
+function updateMasterPageStaticText() {
+  const language = siteI18n.getLanguage();
+  const content = masterPageTranslations[language] || masterPageTranslations.en;
+
+  const backLink = document.querySelector(".utility-links a");
+  const heroEyebrow = document.querySelector(".hero > .eyebrow");
+  const heroTitle = document.querySelector(".hero h1");
+  const heroCopy = document.querySelector(".hero .hero-copy");
+  const searchInput = masterSearchInput;
+  const brandAny = masterBrandFilter ? masterBrandFilter.querySelector('option[value="Any"]') : null;
+  const typeAny = masterTypeFilter ? masterTypeFilter.querySelector('option[value="Any"]') : null;
+  const playerAny = masterPlayerFilter ? masterPlayerFilter.querySelector('option[value="Any"]') : null;
+  const playerMost = masterPlayerFilter ? masterPlayerFilter.querySelector('option[value="__most_pros__"]') : null;
+  const sortAz = masterSortSelect ? masterSortSelect.querySelector('option[value="az"]') : null;
+  const sortZa = masterSortSelect ? masterSortSelect.querySelector('option[value="za"]') : null;
+  const resultsEyebrow = document.querySelector(".master-results-panel .results-header .eyebrow");
+  const resultsTitle = document.querySelector(".master-results-panel .results-header h2");
+
+  if (backLink) backLink.textContent = content.backHome;
+  if (heroEyebrow) heroEyebrow.textContent = content.eyebrow;
+  if (heroTitle) heroTitle.textContent = content.title;
+  if (heroCopy) heroCopy.textContent = content.copy;
+  if (searchInput) searchInput.setAttribute("placeholder", content.searchPlaceholder);
+  if (brandAny) brandAny.textContent = content.allBrands;
+  if (typeAny) typeAny.textContent = content.allTypes;
+  if (playerAny) playerAny.textContent = content.allPros;
+  if (playerMost) playerMost.textContent = content.mostPros;
+  if (sortAz) sortAz.textContent = content.az;
+  if (sortZa) sortZa.textContent = content.za;
+  if (resultsEyebrow) resultsEyebrow.textContent = content.completeCatalog;
+  if (resultsTitle) resultsTitle.textContent = content.masterList;
 }
 
 function styleSpecialSelectOptions(select) {
@@ -472,6 +567,7 @@ function initializeMasterList() {
   });
 
   populateMasterFilters();
+  updateMasterPageStaticText();
   styleSpecialSelectOptions(masterBrandFilter);
   styleSpecialSelectOptions(masterTypeFilter);
   styleSpecialSelectOptions(masterPlayerFilter);
@@ -496,6 +592,7 @@ try {
 
 document.addEventListener("tsl-language-change", () => {
   try {
+    updateMasterPageStaticText();
     renderMasterList();
   } catch (error) {
     renderMasterError(`Master List failed to refresh: ${error && error.message ? error.message : "Unknown error"}`);
