@@ -71,20 +71,64 @@
   </main>
 
   <div class="planner-hidden" aria-hidden="true">
+    <div id="heroSection"></div>
+    <div id="layoutGrid"></div>
+    <div id="activeModeBar"></div>
+    <button id="mobileFilterToggle" type="button"></button>
+    <div class="mobile-quick-type-row"></div>
+    <label for="mobileQuickPlayerFilter"></label>
+    <select id="mobileQuickPlayerFilter"></select>
+    <label for="mobileQuickTypeFilter"></label>
+    <select id="mobileQuickTypeFilter"></select>
     <div id="filterGrid"></div>
     <div id="resultsList"></div>
     <div id="resultsCount"></div>
     <div id="databaseCount"></div>
+    <div id="resultsTitle"></div>
     <button id="resetButton" type="button"></button>
     <input id="stringSearchInput" type="search">
+    <button id="clearSearchButton" type="button"></button>
     <button id="popularStringsButton" type="button"></button>
     <button id="proPlayersButton" type="button"></button>
     <div id="typeMenu">
       <button type="button" data-type="Any"></button>
     </div>
-    <div id="typeDescriptionEyebrow"></div>
-    <div id="typeDescriptionTitle"></div>
-    <div id="typeDescriptionText"></div>
+    <div id="heroMenuPanel" hidden></div>
+    <button id="heroMenuButton" type="button"></button>
+    <div id="referenceGuidePanel" hidden></div>
+    <button id="referenceGuideButton" type="button"></button>
+    <article id="typeDescriptionCard" hidden>
+      <div id="typeDescriptionEyebrow"></div>
+      <div id="typeDescriptionTitle"></div>
+      <div id="typeDescriptionText"></div>
+    </article>
+    <article id="resultsTypeDescriptionCard" hidden>
+      <div id="resultsTypeDescriptionEyebrow"></div>
+      <div id="resultsTypeDescriptionTitle"></div>
+      <div id="resultsTypeDescriptionText"></div>
+    </article>
+    <section id="guideMatchesSection" hidden>
+      <div id="guideMatchesCount"></div>
+      <div id="guideMatchesList"></div>
+    </section>
+    <div id="sliderPanelTitle"></div>
+    <div class="slider-panel-copy"></div>
+    <button id="sliderPanelToggle" type="button"></button>
+    <div id="sliderPanelBody">
+      <label class="slider-field"><span></span><input id="sliderPower" type="range" min="0" max="10" value="5"></label>
+      <div class="slider-scale-labels"><span></span><span></span><span></span></div>
+      <output id="sliderPowerValue"></output>
+      <label class="slider-field"><span></span><input id="sliderSpin" type="range" min="0" max="10" value="5"></label>
+      <div class="slider-scale-labels"><span></span><span></span><span></span></div>
+      <output id="sliderSpinValue"></output>
+      <label class="slider-field"><span></span><input id="sliderControl" type="range" min="0" max="10" value="5"></label>
+      <div class="slider-scale-labels"><span></span><span></span><span></span></div>
+      <output id="sliderControlValue"></output>
+      <label class="slider-field"><span></span><input id="sliderProPlayers" type="range" min="0" max="10" value="5"></label>
+      <div class="slider-scale-labels"><span></span><span></span><span></span></div>
+      <output id="sliderProPlayersValue"></output>
+    </div>
+    <div id="sliderResultsSummary"></div>
   </div>
 
   <script src="./analytics.js"></script>

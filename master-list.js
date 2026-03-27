@@ -33,7 +33,11 @@ function populateMasterFilters() {
 
   const brands = [...new Set(masterStrings.map((entry) => entry.brand).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const types = [...new Set(masterStrings.map((entry) => entry.type).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-  const players = [...new Set(masterStrings.flatMap((entry) => [...(entry.atpPlayers || []), ...(entry.wtaPlayers || [])]).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const players = [...new Set(
+    masterStrings
+      .reduce((allPlayers, entry) => allPlayers.concat(entry.atpPlayers || [], entry.wtaPlayers || []), [])
+      .filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b));
 
   brands.forEach((brand) => {
     const option = document.createElement("option");
@@ -322,27 +326,56 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;");
 }
 
-[masterSearchInput, masterBrandFilter, masterTypeFilter, masterPlayerFilter, masterSortSelect].forEach((element) => {
-  element.addEventListener("input", renderMasterList);
-  element.addEventListener("change", renderMasterList);
-});
+function renderMasterError(message) {
+  if (!masterListTable) {
+    return;
+  }
+  masterListTable.innerHTML = `
+    <div class="master-empty-state">
+      ${escapeHtml(message)}
+    </div>
+  `;
+}
 
-populateMasterFilters();
-styleSpecialSelectOptions(masterBrandFilter);
-styleSpecialSelectOptions(masterTypeFilter);
-styleSpecialSelectOptions(masterPlayerFilter);
-styleSpecialSelectOptions(masterSortSelect);
-syncSelectDefaultState(masterBrandFilter);
-syncSelectDefaultState(masterTypeFilter);
-syncSelectDefaultState(masterPlayerFilter);
-syncSelectDefaultState(masterSortSelect);
+function initializeMasterList() {
+  const controls = [masterSearchInput, masterBrandFilter, masterTypeFilter, masterPlayerFilter, masterSortSelect];
+  if (controls.some((element) => !element)) {
+    renderMasterError("Master List controls are missing on this page.");
+    return;
+  }
 
-[masterBrandFilter, masterTypeFilter, masterPlayerFilter, masterSortSelect].forEach((select) => {
-  select?.addEventListener("change", () => syncSelectDefaultState(select));
-});
+  controls.forEach((element) => {
+    element.addEventListener("input", renderMasterList);
+    element.addEventListener("change", renderMasterList);
+  });
 
-renderMasterList();
+  populateMasterFilters();
+  styleSpecialSelectOptions(masterBrandFilter);
+  styleSpecialSelectOptions(masterTypeFilter);
+  styleSpecialSelectOptions(masterPlayerFilter);
+  styleSpecialSelectOptions(masterSortSelect);
+  syncSelectDefaultState(masterBrandFilter);
+  syncSelectDefaultState(masterTypeFilter);
+  syncSelectDefaultState(masterPlayerFilter);
+  syncSelectDefaultState(masterSortSelect);
+
+  [masterBrandFilter, masterTypeFilter, masterPlayerFilter, masterSortSelect].forEach((select) => {
+    select.addEventListener("change", () => syncSelectDefaultState(select));
+  });
+
+  renderMasterList();
+}
+
+try {
+  initializeMasterList();
+} catch (error) {
+  renderMasterError(`Master List failed to load: ${error && error.message ? error.message : "Unknown error"}`);
+}
 
 document.addEventListener("tsl-language-change", () => {
-  renderMasterList();
+  try {
+    renderMasterList();
+  } catch (error) {
+    renderMasterError(`Master List failed to refresh: ${error && error.message ? error.message : "Unknown error"}`);
+  }
 });
