@@ -249,11 +249,11 @@ h1 {
   flex-direction: row;
   align-items: center;
   gap: 6px;
-  padding: 6px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(10, 77, 132, 0.12);
-  box-shadow: var(--shadow-soft);
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
   z-index: 30;
 }
 
@@ -261,11 +261,11 @@ h1 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 40px;
-  min-height: 40px;
-  padding: 6px;
+  min-width: 28px;
+  min-height: 20px;
+  padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: 0;
   background: transparent;
   color: var(--green-dark);
   font: inherit;
@@ -275,15 +275,15 @@ h1 {
 }
 
 .language-switcher-button.is-active {
-  background: rgba(10, 77, 132, 0.12);
+  background: transparent;
 }
 
 .language-flag {
   display: block;
   width: 22px;
   height: 15px;
-  border-radius: 2px;
-  box-shadow: 0 0 0 1px rgba(10, 77, 132, 0.12);
+  border-radius: 1px;
+  box-shadow: none;
   object-fit: cover;
 }
 
@@ -1546,8 +1546,6 @@ h1 {
   }
 
   .language-switcher {
-    background: rgba(255, 255, 255, 0.18);
-    border-color: rgba(255, 255, 255, 0.16);
     right: 56px;
     top: 12px;
   }
@@ -1557,7 +1555,7 @@ h1 {
   }
 
   .language-switcher-button.is-active {
-    background: rgba(255, 255, 255, 0.18);
+    background: transparent;
   }
 
 
