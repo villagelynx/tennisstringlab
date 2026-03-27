@@ -435,7 +435,8 @@
   function applyGuideTranslations() {
     const page = getCurrentGuidePage();
     const language = siteI18n.getLanguage();
-    const content = GUIDE_PAGE_CONTENT[page]?.[language];
+    const pageContent = GUIDE_PAGE_CONTENT[page];
+    const content = pageContent ? pageContent[language] : null;
     if (!content) return;
 
     const heroTitle = document.querySelector(".hero-card h1");
