@@ -3181,6 +3181,10 @@ function syncTypeMenu() {
 }
 
 document.addEventListener("tsl-language-change", () => {
+  if (!(filterGrid && resultsList && resultsCount && databaseCount && resetButton)) {
+    return;
+  }
+
   updateLocalizedUiText();
   renderFilters();
   populateMobileQuickPlayerFilter();
