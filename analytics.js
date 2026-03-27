@@ -646,6 +646,9 @@
       applyHomepageGuideFixes(language);
     }
     applyGuideNavTranslations(language);
+    if (typeof window.TSL_APPLY_GUIDE_TRANSLATIONS === "function") {
+      window.TSL_APPLY_GUIDE_TRANSLATIONS();
+    }
     document.documentElement.lang = language;
     updateLanguageButtons(language);
     document.dispatchEvent(new CustomEvent("tsl-language-change", { detail: { language } }));

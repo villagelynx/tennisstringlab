@@ -461,6 +461,8 @@
     });
   }
 
+  window.TSL_APPLY_GUIDE_TRANSLATIONS = applyGuideTranslations;
+
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", applyGuideTranslations, { once: true });
   } else {
