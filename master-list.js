@@ -35,6 +35,119 @@ const masterStringsSource = Array.isArray(window.TENNIS_STRING_DATA)
     : [];
 const masterStrings = masterStringsSource.slice();
 const masterTypeDescriptions = window.TENNIS_STRING_TYPE_DESCRIPTIONS || {};
+const masterTypeDescriptionTranslations = {
+  fr: {
+    Any: {
+      eyebrow: "Guide des types de cordage",
+      title: "Tous les types de cordage",
+      text: "Comparez les grandes familles de cordage pour trouver le bon melange de spin, confort, controle et puissance pour votre jeu."
+    },
+    Poly: {
+      eyebrow: "Poly",
+      title: "Cordages poly",
+      text: "Les polys privilegient en general le spin, le controle et la durabilite. Ils sont souvent plus fermes et conviennent mieux aux joueurs qui accelerent fort."
+    },
+    "Co-Poly": {
+      eyebrow: "Co-Poly",
+      title: "Cordages co-poly",
+      text: "Les co-polys sont des melanges polyester modernes qui cherchent a garder spin et controle tout en ameliorant le toucher, le confort ou la tenue de tension."
+    },
+    "Synthetic Gut": {
+      eyebrow: "Synthetic Gut",
+      title: "Cordages synthetic gut",
+      text: "Le synthetic gut est l'option classique polyvalente. Il est souvent abordable, net et equilibre, ideal pour beaucoup de joueurs de club."
+    },
+    Multifilament: {
+      eyebrow: "Multifilament",
+      title: "Cordages multifilament",
+      text: "Les multis sont faits pour le confort, le toucher et la puissance facile. Ils conviennent bien aux joueurs qui veulent plus de douceur et de tolerance."
+    },
+    "Natural Gut": {
+      eyebrow: "Boyau naturel",
+      title: "Cordages en boyau naturel",
+      text: "Le boyau naturel offre une puissance, un confort, un toucher et une tenue de tension haut de gamme. C'est l'une des meilleures options pour le confort du bras."
+    },
+    Hybrid: {
+      eyebrow: "Hybride",
+      title: "Montages hybrides",
+      text: "Les hybrides combinent deux types de cordage pour melanger par exemple controle et spin du poly avec confort, toucher ou puissance du boyau ou du multifilament."
+    }
+  },
+  es: {
+    Any: {
+      eyebrow: "Guia de tipos de cuerda",
+      title: "Todos los tipos de cuerda",
+      text: "Compara las principales familias de cuerdas para encontrar la mezcla de spin, comodidad, control y potencia que mejor encaja con tu juego."
+    },
+    Poly: {
+      eyebrow: "Poly",
+      title: "Cuerdas poly",
+      text: "Las polys suelen priorizar spin, control y durabilidad. Normalmente se sienten mas firmes y funcionan mejor para jugadores con swings rapidos."
+    },
+    "Co-Poly": {
+      eyebrow: "Co-Poly",
+      title: "Cuerdas co-poly",
+      text: "Las co-polys son mezclas modernas de poliester que intentan mantener spin y control mejorando tacto, comodidad o mantenimiento de tension."
+    },
+    "Synthetic Gut": {
+      eyebrow: "Synthetic Gut",
+      title: "Cuerdas synthetic gut",
+      text: "El synthetic gut es la opcion clasica y equilibrada. Suele ser asequible, limpia y versatil para muchos jugadores de club."
+    },
+    Multifilament: {
+      eyebrow: "Multifilamento",
+      title: "Cuerdas multifilamento",
+      text: "Los multifilamentos estan pensados para comodidad, tacto y potencia facil. Van muy bien para quien busca una respuesta mas suave y permisiva."
+    },
+    "Natural Gut": {
+      eyebrow: "Natural Gut",
+      title: "Cuerdas de tripa natural",
+      text: "La tripa natural ofrece potencia, comodidad, tacto y mantenimiento de tension de primer nivel. Sigue siendo una de las mejores opciones para el brazo."
+    },
+    Hybrid: {
+      eyebrow: "Hibrido",
+      title: "Montajes hibridos",
+      text: "Los hibridos combinan dos tipos de cuerda para mezclar, por ejemplo, control y spin del poly con la comodidad, el tacto o la potencia del gut o del multifilamento."
+    }
+  },
+  it: {
+    Any: {
+      eyebrow: "Guida ai tipi di corda",
+      title: "Tutti i tipi di corda",
+      text: "Confronta le principali famiglie di corde per trovare il mix di spin, comfort, controllo e potenza piu adatto al tuo gioco."
+    },
+    Poly: {
+      eyebrow: "Poly",
+      title: "Corde poly",
+      text: "Le poly puntano in genere su spin, controllo e durata. Sono spesso piu rigide e funzionano meglio per chi accelera molto lo swing."
+    },
+    "Co-Poly": {
+      eyebrow: "Co-Poly",
+      title: "Corde co-poly",
+      text: "Le co-poly sono miscele moderne di poliestere che cercano di mantenere spin e controllo migliorando feeling, comfort o tenuta di tensione."
+    },
+    "Synthetic Gut": {
+      eyebrow: "Synthetic Gut",
+      title: "Corde synthetic gut",
+      text: "Il synthetic gut e l'opzione classica e versatile. Di solito e accessibile, pulita e bilanciata per molti giocatori di club."
+    },
+    Multifilament: {
+      eyebrow: "Multifilamento",
+      title: "Corde multifilamento",
+      text: "I multifilamenti sono pensati per comfort, tocco e potenza facile. Sono ideali per chi vuole una risposta piu morbida e permissiva."
+    },
+    "Natural Gut": {
+      eyebrow: "Budello naturale",
+      title: "Corde in budello naturale",
+      text: "Il budello naturale offre potenza, comfort, tocco e tenuta di tensione premium. Resta una delle migliori opzioni per la salute del braccio."
+    },
+    Hybrid: {
+      eyebrow: "Ibrido",
+      title: "Setup ibridi",
+      text: "Gli ibridi combinano due tipi di corda per unire, ad esempio, controllo e spin del poly con comfort, feeling o potenza di budello o multifilamento."
+    }
+  }
+};
 
 function populateMasterFilters() {
   if (!masterBrandFilter || !masterTypeFilter || !masterPlayerFilter) {
@@ -211,7 +324,9 @@ function renderMasterTypeDescription() {
   }
 
   const typeKey = masterTypeFilter ? masterTypeFilter.value : "Any";
-  const content = masterTypeDescriptions[typeKey] || masterTypeDescriptions.Any;
+  const language = siteI18n.getLanguage();
+  const translated = masterTypeDescriptionTranslations[language] || {};
+  const content = translated[typeKey] || masterTypeDescriptions[typeKey] || translated.Any || masterTypeDescriptions.Any;
   const showDescription = typeKey !== "Any" && content;
 
   masterTypeDescriptionCard.hidden = !showDescription;

@@ -460,6 +460,11 @@
     });
   }
 
-  applyGuideTranslations();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyGuideTranslations, { once: true });
+  } else {
+    applyGuideTranslations();
+  }
+  window.addEventListener("load", applyGuideTranslations, { once: true });
   document.addEventListener("tsl-language-change", applyGuideTranslations);
 })();
