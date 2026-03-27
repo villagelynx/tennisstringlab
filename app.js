@@ -153,9 +153,133 @@ const UI_TRANSLATIONS = {
   }
 };
 
+const HOME_STATIC_TRANSLATIONS = {
+  en: {
+    masterListTitle: "Master List",
+    masterListCopy: "Browse every string in one place",
+    referenceTitle: "Reference Guide",
+    referenceCopy: "Open all information pages",
+    popularTitle: "20 Most Popular",
+    popularCopy: "Start with the most searched strings",
+    prosTitle: "Pro Player Strings",
+    prosCopy: "See what top ATP and WTA players use",
+    menu: {
+      "./string-types.html": "String Type Descriptions",
+      "./tension-guide.html": "Tension Guide",
+      "./gauge-guide.html": "Gauge Guide",
+      "./hybrid-guide.html": "Hybrid String Guide",
+      "./arm-friendly.html": "Arm-Friendly Strings",
+      "./string-shape-guide.html": "String Shape Guide",
+      "./restring-guide.html": "How Often to Restring",
+      "./player-type-guide.html": "Best Strings by Player Type",
+      "./best-by-need.html": "Best Strings by Need",
+      "./popular-comparisons.html": "Popular String Comparisons",
+      "./proshops.html": "Pro Shops"
+    }
+  },
+  fr: {
+    masterListTitle: "Liste complete",
+    masterListCopy: "Parcourez tous les cordages en un seul endroit",
+    referenceTitle: "Guide de reference",
+    referenceCopy: "Ouvrir toutes les pages d'information",
+    popularTitle: "20 plus populaires",
+    popularCopy: "Commencez par les cordages les plus recherches",
+    prosTitle: "Cordages des pros",
+    prosCopy: "Voir ce qu'utilisent les meilleurs ATP et WTA",
+    menu: {
+      "./string-types.html": "Descriptions des types de cordage",
+      "./tension-guide.html": "Guide de tension",
+      "./gauge-guide.html": "Guide de jauge",
+      "./hybrid-guide.html": "Guide hybride",
+      "./arm-friendly.html": "Cordages confort bras",
+      "./string-shape-guide.html": "Guide de forme du cordage",
+      "./restring-guide.html": "Quand recorder",
+      "./player-type-guide.html": "Meilleurs cordages par joueur",
+      "./best-by-need.html": "Meilleurs cordages par besoin",
+      "./popular-comparisons.html": "Comparaisons populaires",
+      "./proshops.html": "Magasins pro"
+    }
+  },
+  es: {
+    masterListTitle: "Lista maestra",
+    masterListCopy: "Explora todas las cuerdas en un solo lugar",
+    referenceTitle: "Guia de referencia",
+    referenceCopy: "Abrir todas las paginas informativas",
+    popularTitle: "20 mas populares",
+    popularCopy: "Empieza con las cuerdas mas buscadas",
+    prosTitle: "Cuerdas de profesionales",
+    prosCopy: "Ver lo que usan los mejores ATP y WTA",
+    menu: {
+      "./string-types.html": "Descripciones de tipos de cuerda",
+      "./tension-guide.html": "Guia de tension",
+      "./gauge-guide.html": "Guia de calibre",
+      "./hybrid-guide.html": "Guia de hibridos",
+      "./arm-friendly.html": "Cuerdas comodas para el brazo",
+      "./string-shape-guide.html": "Guia de forma de cuerda",
+      "./restring-guide.html": "Cuando reencordar",
+      "./player-type-guide.html": "Mejores cuerdas por jugador",
+      "./best-by-need.html": "Mejores cuerdas por necesidad",
+      "./popular-comparisons.html": "Comparaciones populares",
+      "./proshops.html": "Pro shops"
+    }
+  },
+  it: {
+    masterListTitle: "Elenco completo",
+    masterListCopy: "Sfoglia tutte le corde in un solo posto",
+    referenceTitle: "Guida di riferimento",
+    referenceCopy: "Apri tutte le pagine informative",
+    popularTitle: "20 piu popolari",
+    popularCopy: "Inizia con le corde piu cercate",
+    prosTitle: "Corde dei professionisti",
+    prosCopy: "Vedi cosa usano i migliori ATP e WTA",
+    menu: {
+      "./string-types.html": "Descrizioni dei tipi di corda",
+      "./tension-guide.html": "Guida alla tensione",
+      "./gauge-guide.html": "Guida al calibro",
+      "./hybrid-guide.html": "Guida ibrida",
+      "./arm-friendly.html": "Corde comfort braccio",
+      "./string-shape-guide.html": "Guida alla forma della corda",
+      "./restring-guide.html": "Quando reincordare",
+      "./player-type-guide.html": "Migliori corde per giocatore",
+      "./best-by-need.html": "Migliori corde per esigenza",
+      "./popular-comparisons.html": "Confronti popolari",
+      "./proshops.html": "Pro shop"
+    }
+  }
+};
+
 function getUiText(key, fallback) {
   const language = siteI18n.getLanguage();
   return UI_TRANSLATIONS[language]?.[key] || UI_TRANSLATIONS.en[key] || fallback || key;
+}
+
+function updateHomepageStaticTranslations() {
+  const language = siteI18n.getLanguage();
+  const content = HOME_STATIC_TRANSLATIONS[language] || HOME_STATIC_TRANSLATIONS.en;
+
+  const masterTitle = document.querySelector('a[href="./master-list.html"] .hero-action-copy strong');
+  const masterCopy = document.querySelector('a[href="./master-list.html"] .hero-action-copy span:last-child');
+  const referenceTitle = document.querySelector("#referenceGuideButton .hero-action-copy strong");
+  const referenceCopy = document.querySelector("#referenceGuideButton .hero-action-copy span:last-child");
+  const popularTitle = document.querySelector("#popularStringsButton .hero-action-copy strong");
+  const popularCopy = document.querySelector("#popularStringsButton .hero-action-copy span:last-child");
+  const prosTitle = document.querySelector("#proPlayersButton .hero-action-copy strong");
+  const prosCopy = document.querySelector("#proPlayersButton .hero-action-copy span:last-child");
+
+  if (masterTitle) masterTitle.textContent = content.masterListTitle;
+  if (masterCopy) masterCopy.textContent = content.masterListCopy;
+  if (referenceTitle) referenceTitle.textContent = content.referenceTitle;
+  if (referenceCopy) referenceCopy.textContent = content.referenceCopy;
+  if (popularTitle) popularTitle.textContent = content.popularTitle;
+  if (popularCopy) popularCopy.textContent = content.popularCopy;
+  if (prosTitle) prosTitle.textContent = content.prosTitle;
+  if (prosCopy) prosCopy.textContent = content.prosCopy;
+
+  Object.entries(content.menu).forEach(([href, text]) => {
+    document.querySelectorAll(`.hero-menu-link[href="${href}"], .hero-action-panel-link[href="${href}"]`).forEach((element) => {
+      element.textContent = text;
+    });
+  });
 }
 
 const sliderPanelToggle = document.getElementById("sliderPanelToggle");
@@ -2333,6 +2457,7 @@ window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS = {
 
 if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
   updateLocalizedUiText();
+  updateHomepageStaticTranslations();
   renderFilters();
   populateMobileQuickPlayerFilter();
   syncMobileQuickTypeFilter();
@@ -3246,6 +3371,7 @@ document.addEventListener("tsl-language-change", () => {
   }
 
   updateLocalizedUiText();
+  updateHomepageStaticTranslations();
   renderFilters();
   populateMobileQuickPlayerFilter();
   syncMobileQuickPlayerFilter();

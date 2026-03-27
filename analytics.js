@@ -494,6 +494,16 @@
     return flags[language] || language.toUpperCase();
   }
 
+  function getFlagMarkup(language) {
+    const svgMap = {
+      en: '<svg class="language-flag-svg" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#1f4aa8"/><path d="M0 0l24 16M24 0L0 16" stroke="#fff" stroke-width="4"/><path d="M0 0l24 16M24 0L0 16" stroke="#d91f26" stroke-width="2"/><path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="6"/><path d="M12 0v16M0 8h24" stroke="#d91f26" stroke-width="3"/></svg>',
+      fr: '<svg class="language-flag-svg" viewBox="0 0 24 16" aria-hidden="true"><rect width="8" height="16" x="0" fill="#1f4aa8"/><rect width="8" height="16" x="8" fill="#ffffff"/><rect width="8" height="16" x="16" fill="#d91f26"/></svg>',
+      es: '<svg class="language-flag-svg" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#f2c500"/><rect width="24" height="4" y="0" fill="#c51f28"/><rect width="24" height="4" y="12" fill="#c51f28"/></svg>',
+      it: '<svg class="language-flag-svg" viewBox="0 0 24 16" aria-hidden="true"><rect width="8" height="16" x="0" fill="#169b62"/><rect width="8" height="16" x="8" fill="#ffffff"/><rect width="8" height="16" x="16" fill="#d91f26"/></svg>'
+    };
+    return svgMap[language] || `<span class="language-flag" aria-hidden="true">${getSafeLanguageFlag(language)}</span>`;
+  }
+
   function applyHomepageGuideFixes(language) {
     const fixes = HOMEPAGE_GUIDE_FIXES[language];
     if (!fixes) return;
@@ -661,7 +671,7 @@
       button.dataset.language = language;
       button.title = LANGUAGE_LABELS[language];
       button.setAttribute("aria-label", LANGUAGE_LABELS[language]);
-      button.innerHTML = `<span class="language-flag" aria-hidden="true">${getSafeLanguageFlag(language)}</span>`;
+      button.innerHTML = getFlagMarkup(language);
       button.addEventListener("click", () => {
         setSelectedLanguage(language);
         applyLanguage(language);
