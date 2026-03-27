@@ -10,13 +10,23 @@ const masterTypeDescriptionCard = document.getElementById("masterTypeDescription
 const masterTypeDescriptionEyebrow = document.getElementById("masterTypeDescriptionEyebrow");
 const masterTypeDescriptionTitle = document.getElementById("masterTypeDescriptionTitle");
 const masterTypeDescriptionText = document.getElementById("masterTypeDescriptionText");
-const siteI18n = window.TSL_I18N || { t: (_key, fallback, vars) => {
-  let text = fallback || "";
-  Object.entries(vars || {}).forEach(([name, value]) => {
-    text = text.replaceAll(`{${name}}`, String(value));
-  });
-  return text;
-} };
+const siteI18n = {
+  getLanguage() {
+    return window.TSL_I18N && typeof window.TSL_I18N.getLanguage === "function"
+      ? window.TSL_I18N.getLanguage()
+      : "en";
+  },
+  t(key, fallback, vars) {
+    if (window.TSL_I18N && typeof window.TSL_I18N.t === "function") {
+      return window.TSL_I18N.t(key, fallback, vars);
+    }
+    let text = fallback || key || "";
+    Object.entries(vars || {}).forEach(([name, value]) => {
+      text = text.replaceAll(`{${name}}`, String(value));
+    });
+    return text;
+  }
+};
 
 const masterStringsSource = Array.isArray(window.TENNIS_STRING_DATA)
   ? window.TENNIS_STRING_DATA

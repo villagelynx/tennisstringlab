@@ -267,14 +267,14 @@ function updateHomepageStaticTranslations() {
   const language = siteI18n.getLanguage();
   const content = HOME_STATIC_TRANSLATIONS[language] || HOME_STATIC_TRANSLATIONS.en;
 
-  const masterTitle = document.querySelector('a[href="./master-list.html"] .hero-action-copy strong');
-  const masterCopy = document.querySelector('a[href="./master-list.html"] .hero-action-copy span:last-child');
-  const referenceTitle = document.querySelector("#referenceGuideButton .hero-action-copy strong");
-  const referenceCopy = document.querySelector("#referenceGuideButton .hero-action-copy span:last-child");
-  const popularTitle = document.querySelector("#popularStringsButton .hero-action-copy strong");
-  const popularCopy = document.querySelector("#popularStringsButton .hero-action-copy span:last-child");
-  const prosTitle = document.querySelector("#proPlayersButton .hero-action-copy strong");
-  const prosCopy = document.querySelector("#proPlayersButton .hero-action-copy span:last-child");
+  const masterTitle = document.getElementById("heroMasterListTitle");
+  const masterCopy = document.getElementById("heroMasterListCopy");
+  const referenceTitle = document.getElementById("heroReferenceGuideTitle");
+  const referenceCopy = document.getElementById("heroReferenceGuideCopy");
+  const popularTitle = document.getElementById("heroPopularTitle");
+  const popularCopy = document.getElementById("heroPopularCopy");
+  const prosTitle = document.getElementById("heroProsTitle");
+  const prosCopy = document.getElementById("heroProsCopy");
 
   if (masterTitle) masterTitle.textContent = content.masterListTitle;
   if (masterCopy) masterCopy.textContent = content.masterListCopy;
@@ -285,11 +285,39 @@ function updateHomepageStaticTranslations() {
   if (prosTitle) prosTitle.textContent = content.prosTitle;
   if (prosCopy) prosCopy.textContent = content.prosCopy;
 
+  const menuIdMap = {
+    "./string-types.html": ["menuStringTypes", "guideStringTypes"],
+    "./tension-guide.html": ["menuTensionGuide", "guideTensionGuide"],
+    "./gauge-guide.html": ["menuGaugeGuide", "guideGaugeGuide"],
+    "./hybrid-guide.html": ["menuHybridGuide", "guideHybridGuide"],
+    "./arm-friendly.html": ["menuArmFriendly", "guideArmFriendly"],
+    "./string-shape-guide.html": ["menuShapeGuide", "guideShapeGuide"],
+    "./restring-guide.html": ["menuRestringGuide", "guideRestringGuide"],
+    "./player-type-guide.html": ["menuPlayerTypeGuide", "guidePlayerTypeGuide"],
+    "./best-by-need.html": ["menuBestByNeed", "guideBestByNeed"],
+    "./popular-comparisons.html": ["menuPopularComparisons", "guidePopularComparisons"],
+    "./proshops.html": ["menuProShops"]
+  };
+
   Object.entries(content.menu).forEach(([href, text]) => {
-    document.querySelectorAll(`.hero-menu-link[href="${href}"], .hero-action-panel-link[href="${href}"]`).forEach((element) => {
-      element.textContent = text;
+    (menuIdMap[href] || []).forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.textContent = text;
+      }
     });
   });
+
+  const adminLink = document.getElementById("menuAdminStats");
+  if (adminLink) {
+    adminLink.textContent = language === "fr"
+      ? "Stats admin"
+      : language === "es"
+        ? "Estadisticas admin"
+        : language === "it"
+          ? "Statistiche admin"
+          : "Admin Stats";
+  }
 }
 
 const sliderPanelToggle = document.getElementById("sliderPanelToggle");
