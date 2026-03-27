@@ -470,4 +470,15 @@
   }
   window.addEventListener("load", applyGuideTranslations, { once: true });
   document.addEventListener("tsl-language-change", applyGuideTranslations);
+  document.addEventListener("click", (event) => {
+    const button = event.target && event.target.closest ? event.target.closest(".language-switcher-button") : null;
+    if (!button) return;
+    window.setTimeout(applyGuideTranslations, 0);
+  });
+  if (typeof MutationObserver !== "undefined" && document.documentElement) {
+    const observer = new MutationObserver(() => {
+      applyGuideTranslations();
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+  }
 })();
