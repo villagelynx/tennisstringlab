@@ -200,7 +200,7 @@ function renderMasterTypeDescription() {
     return;
   }
 
-  const typeKey = masterTypeFilter?.value || "Any";
+  const typeKey = masterTypeFilter ? masterTypeFilter.value : "Any";
   const content = masterTypeDescriptions[typeKey] || masterTypeDescriptions.Any;
   const showDescription = typeKey !== "Any" && content;
 
@@ -221,17 +221,14 @@ function formatProPlayers(entry) {
   }
 
   if (players.length <= 3) {
-    return players.join(", ");
+    return escapeHtml(players.join(", "));
   }
 
   const visiblePlayers = players.slice(0, 3).join(", ");
   const extraPlayers = players.slice(3).join(", ");
   return `
-    <span>${visiblePlayers}</span>
-    <details class="master-more-details">
-      <summary class="master-more-players">+${players.length - 3} more</summary>
-      <div class="master-more-panel">${escapeHtml(extraPlayers)}</div>
-    </details>
+    <span>${escapeHtml(visiblePlayers)}</span>
+    <span class="master-more-players" title="${escapeHtml(extraPlayers)}">+${players.length - 3} more</span>
   `;
 }
 
@@ -320,10 +317,10 @@ function renderMasterRackets(entry) {
 
 function escapeHtml(value) {
   return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
+    .split("&").join("&amp;")
+    .split('"').join("&quot;")
+    .split("<").join("&lt;")
+    .split(">").join("&gt;");
 }
 
 function renderMasterError(message) {
