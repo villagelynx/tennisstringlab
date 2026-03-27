@@ -17,10 +17,10 @@
     it: "Lingua"
   };
   const LANGUAGE_FLAGS = {
-    en: "./images/flag-gb.svg",
-    fr: "./images/flag-fr.svg",
-    es: "./images/flag-es.svg",
-    it: "./images/flag-it.svg"
+    en: "/images/flag-gb.svg",
+    fr: "/images/flag-fr.svg",
+    es: "/images/flag-es.svg",
+    it: "/images/flag-it.svg"
   };
 
   const GUIDE_LINK_TRANSLATIONS = {
