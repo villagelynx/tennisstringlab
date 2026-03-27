@@ -244,8 +244,9 @@ h1 {
 .language-switcher {
   position: fixed;
   top: 12px;
-  left: 12px;
+  right: 12px;
   display: inline-flex;
+  align-items: center;
   gap: 6px;
   padding: 6px;
   border-radius: 999px;
@@ -253,6 +254,16 @@ h1 {
   border: 1px solid rgba(10, 77, 132, 0.12);
   box-shadow: var(--shadow-soft);
   z-index: 30;
+}
+
+.language-switcher-label {
+  padding: 0 8px 0 10px;
+  color: var(--green-dark);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .language-switcher-button {
@@ -1545,8 +1556,11 @@ h1 {
   .language-switcher {
     background: rgba(255, 255, 255, 0.18);
     border-color: rgba(255, 255, 255, 0.16);
+    right: 10px;
+    top: 10px;
   }
 
+  .language-switcher-label,
   .language-switcher-button {
     color: #ffffff;
   }
