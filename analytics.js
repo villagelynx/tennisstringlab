@@ -577,9 +577,9 @@
       button.type = "button";
       button.className = "language-switcher-button";
       button.dataset.language = language;
-      button.title = LANGUAGE_LABELS[language];
-      button.setAttribute("aria-label", LANGUAGE_LABELS[language]);
-      button.innerHTML = `<span class="language-flag">${LANGUAGE_FLAGS[language]}</span><span class="language-code">${LANGUAGE_LABELS[language]}</span>`;
+      button.title = LANGUAGE_SWITCHER_LABELS[language] || LANGUAGE_LABELS[language];
+      button.setAttribute("aria-label", LANGUAGE_SWITCHER_LABELS[language] || LANGUAGE_LABELS[language]);
+      button.innerHTML = `<span class="language-flag">${LANGUAGE_FLAGS[language]}</span>`;
       button.addEventListener("click", () => {
         setSelectedLanguage(language);
         applyLanguage(language);

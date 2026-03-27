@@ -246,10 +246,11 @@ h1 {
   top: 12px;
   right: 12px;
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   gap: 6px;
-  padding: 6px;
-  border-radius: 999px;
+  padding: 8px 7px;
+  border-radius: 18px;
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(10, 77, 132, 0.12);
   box-shadow: var(--shadow-soft);
@@ -257,23 +258,26 @@ h1 {
 }
 
 .language-switcher-label {
-  padding: 0 8px 0 10px;
+  padding: 2px 4px 0;
   color: var(--green-dark);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
 }
 
 .language-switcher-button {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  min-height: 34px;
-  padding: 6px 8px;
+  justify-content: center;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 6px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 12px;
   background: transparent;
   color: var(--green-dark);
   font: inherit;
@@ -287,12 +291,8 @@ h1 {
 }
 
 .language-flag {
-  font-size: 1rem;
+  font-size: 1.1rem;
   line-height: 1;
-}
-
-.language-code {
-  letter-spacing: 0.04em;
 }
 
 

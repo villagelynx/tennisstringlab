@@ -46,6 +46,118 @@ const siteI18n = window.TSL_I18N || { getLanguage: () => "en", t: (_key, fallbac
   });
   return text;
 } };
+const UI_TRANSLATIONS = {
+  en: {
+    mobileShowFilters: "Show Filters",
+    mobileHideFilters: "Hide Filters",
+    sliderShow: "Show Sliders",
+    sliderHide: "Hide Sliders",
+    sliderPanelTitle: "Preference Sliders",
+    sliderPanelCopy: "Move the sliders toward what matters most and the rankings will rebalance live.",
+    sliderPower: "Power",
+    sliderSpin: "Spin",
+    sliderControl: "Control",
+    sliderPros: "Pro Players Using",
+    scaleLow: "Low",
+    scaleBalanced: "Balanced",
+    scaleHigh: "High",
+    scaleFew: "Few",
+    mobileQuickPlayer: "Pro Player",
+    mobileQuickType: "String Type",
+    allProPlayers: "All Pro Players",
+    allStringTypes: "All String Types",
+    quickFiltersEyebrow: "Quick Filters",
+    stringFiltersTitle: "String Filters",
+    reset: "Reset",
+    stringTypeGuide: "String Type Guide",
+    allStringTypeTitle: "All String Types",
+    allStringTypeText: "Compare different string families to find the blend of spin, comfort, control, and power that best fits your game."
+  },
+  fr: {
+    mobileShowFilters: "Afficher les filtres",
+    mobileHideFilters: "Masquer les filtres",
+    sliderShow: "Afficher les curseurs",
+    sliderHide: "Masquer les curseurs",
+    sliderPanelTitle: "Curseurs de preference",
+    sliderPanelCopy: "Deplacez les curseurs vers ce qui compte le plus et le classement se reequilibrera en direct.",
+    sliderPower: "Puissance",
+    sliderSpin: "Spin",
+    sliderControl: "Controle",
+    sliderPros: "Pros utilisant",
+    scaleLow: "Faible",
+    scaleBalanced: "Equilibre",
+    scaleHigh: "Eleve",
+    scaleFew: "Peu",
+    mobileQuickPlayer: "Joueur pro",
+    mobileQuickType: "Type de cordage",
+    allProPlayers: "Tous les pros",
+    allStringTypes: "Tous les types de cordage",
+    quickFiltersEyebrow: "Filtres rapides",
+    stringFiltersTitle: "Filtres de cordage",
+    reset: "Reinitialiser",
+    stringTypeGuide: "Guide des types de cordage",
+    allStringTypeTitle: "Tous les types de cordage",
+    allStringTypeText: "Comparez les grandes familles de cordage pour trouver le bon melange de spin, confort, controle et puissance pour votre jeu."
+  },
+  es: {
+    mobileShowFilters: "Mostrar filtros",
+    mobileHideFilters: "Ocultar filtros",
+    sliderShow: "Mostrar deslizadores",
+    sliderHide: "Ocultar deslizadores",
+    sliderPanelTitle: "Deslizadores de preferencia",
+    sliderPanelCopy: "Mueve los deslizadores hacia lo que mas importa y la clasificacion se reequilibrara al instante.",
+    sliderPower: "Potencia",
+    sliderSpin: "Spin",
+    sliderControl: "Control",
+    sliderPros: "Profesionales que la usan",
+    scaleLow: "Bajo",
+    scaleBalanced: "Equilibrado",
+    scaleHigh: "Alto",
+    scaleFew: "Pocos",
+    mobileQuickPlayer: "Jugador pro",
+    mobileQuickType: "Tipo de cuerda",
+    allProPlayers: "Todos los profesionales",
+    allStringTypes: "Todos los tipos de cuerda",
+    quickFiltersEyebrow: "Filtros rapidos",
+    stringFiltersTitle: "Filtros de cuerda",
+    reset: "Restablecer",
+    stringTypeGuide: "Guia de tipos de cuerda",
+    allStringTypeTitle: "Todos los tipos de cuerda",
+    allStringTypeText: "Compara las principales familias de cuerdas para encontrar la mezcla de spin, comodidad, control y potencia que mejor encaja con tu juego."
+  },
+  it: {
+    mobileShowFilters: "Mostra filtri",
+    mobileHideFilters: "Nascondi filtri",
+    sliderShow: "Mostra cursori",
+    sliderHide: "Nascondi cursori",
+    sliderPanelTitle: "Cursori di preferenza",
+    sliderPanelCopy: "Sposta i cursori verso cio che conta di piu e la classifica si riequilibrera in tempo reale.",
+    sliderPower: "Potenza",
+    sliderSpin: "Spin",
+    sliderControl: "Controllo",
+    sliderPros: "Professionisti che la usano",
+    scaleLow: "Basso",
+    scaleBalanced: "Bilanciato",
+    scaleHigh: "Alto",
+    scaleFew: "Pochi",
+    mobileQuickPlayer: "Giocatore pro",
+    mobileQuickType: "Tipo di corda",
+    allProPlayers: "Tutti i professionisti",
+    allStringTypes: "Tutti i tipi di corda",
+    quickFiltersEyebrow: "Filtri rapidi",
+    stringFiltersTitle: "Filtri corde",
+    reset: "Reimposta",
+    stringTypeGuide: "Guida ai tipi di corda",
+    allStringTypeTitle: "Tutti i tipi di corda",
+    allStringTypeText: "Confronta le principali famiglie di corde per trovare il mix di spin, comfort, controllo e potenza piu adatto al tuo gioco."
+  }
+};
+
+function getUiText(key, fallback) {
+  const language = siteI18n.getLanguage();
+  return UI_TRANSLATIONS[language]?.[key] || UI_TRANSLATIONS.en[key] || fallback || key;
+}
+
 const sliderPanelToggle = document.getElementById("sliderPanelToggle");
 const sliderPanelBody = document.getElementById("sliderPanelBody");
 const sliderResultsSummary = document.getElementById("sliderResultsSummary");
@@ -54,7 +166,7 @@ if (mobileFilterToggle) {
   mobileFilterToggle.addEventListener("click", () => {
     const shouldCollapse = !filterGrid.classList.contains("is-collapsed");
     filterGrid.classList.toggle("is-collapsed", shouldCollapse);
-    mobileFilterToggle.textContent = shouldCollapse ? "Show Filters" : "Hide Filters";
+    mobileFilterToggle.textContent = shouldCollapse ? getUiText("mobileShowFilters", "Show Filters") : getUiText("mobileHideFilters", "Hide Filters");
     mobileFilterToggle.setAttribute("aria-expanded", shouldCollapse ? "false" : "true");
   });
 }
@@ -2220,6 +2332,7 @@ window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS = {
 };
 
 if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
+  updateLocalizedUiText();
   renderFilters();
   populateMobileQuickPlayerFilter();
   syncMobileQuickTypeFilter();
@@ -2307,7 +2420,7 @@ function initializeSliderPanelToggle() {
   sliderPanelToggle.addEventListener("click", () => {
     const nextCollapsed = !sliderPanelBody.classList.contains("is-collapsed");
     sliderPanelBody.classList.toggle("is-collapsed", nextCollapsed);
-    sliderPanelToggle.textContent = nextCollapsed ? "Show Sliders" : "Hide Sliders";
+    sliderPanelToggle.textContent = nextCollapsed ? getUiText("sliderShow", "Show Sliders") : getUiText("sliderHide", "Hide Sliders");
     sliderPanelToggle.setAttribute("aria-expanded", nextCollapsed ? "false" : "true");
   });
 }
@@ -2374,7 +2487,7 @@ function renderFilters() {
 
   filterGrid.innerHTML = FILTERS.map((filter) => `
     <div class="field">
-      <label for="filter-${filter.key}">${filter.label}</label>
+      <label for="filter-${filter.key}">${getFilterLabel(filter.key)}</label>
       <select id="filter-${filter.key}" data-key="${filter.key}" class="${filter.key === "atpPlayer" || filter.key === "wtaPlayer" ? "player-filter-select" : ""}">
         ${buildFilterOptions(filter, playerCoverage)}
       </select>
@@ -2412,11 +2525,11 @@ function populateMobileQuickPlayerFilter() {
   const players = [...new Set([...atpPlayers, ...wtaPlayers])].sort((left, right) => left.localeCompare(right));
 
   mobileQuickPlayerFilter.innerHTML = `
-    <option value="Any">All Pro Players</option>
+    <option value="Any">${getUiText("allProPlayers", "All Pro Players")}</option>
     ${players.map((player) => `<option value="${player}">${player}</option>`).join("")}
   `;
 
-  mobileQuickPlayerFilter.addEventListener("change", (event) => {
+  mobileQuickPlayerFilter.onchange = (event) => {
     const selectedPlayer = event.currentTarget.value;
     const isAtpPlayer = atpPlayers.includes(selectedPlayer);
     const isWtaPlayer = wtaPlayers.includes(selectedPlayer);
@@ -2436,7 +2549,7 @@ function populateMobileQuickPlayerFilter() {
     }
 
     renderResults();
-  });
+  };
 
   syncMobileQuickPlayerFilter();
 }
@@ -2497,16 +2610,148 @@ function syncMobileQuickTypeFilter() {
   mobileQuickTypeFilter.value = state.type || "Any";
 }
 
+function getFilterLabel(key) {
+  const labels = {
+    brand: {
+      en: "String Brand",
+      fr: "Marque de cordage",
+      es: "Marca de cuerda",
+      it: "Marca della corda"
+    },
+    type: {
+      en: "Type of String",
+      fr: "Type de cordage",
+      es: "Tipo de cuerda",
+      it: "Tipo di corda"
+    },
+    atpPlayer: {
+      en: "ATP Player",
+      fr: "Joueur ATP",
+      es: "Jugador ATP",
+      it: "Giocatore ATP"
+    },
+    wtaPlayer: {
+      en: "WTA Player",
+      fr: "Joueuse WTA",
+      es: "Jugadora WTA",
+      it: "Giocatrice WTA"
+    },
+    stringColor: {
+      en: "String Color",
+      fr: "Couleur du cordage",
+      es: "Color de cuerda",
+      it: "Colore della corda"
+    },
+    gauge: {
+      en: "Gauge",
+      fr: "Jauge",
+      es: "Calibre",
+      it: "Calibro"
+    },
+    playerLevel: {
+      en: "Player Level",
+      fr: "Niveau du joueur",
+      es: "Nivel del jugador",
+      it: "Livello del giocatore"
+    },
+    gameStyle: {
+      en: "Game Style",
+      fr: "Style de jeu",
+      es: "Estilo de juego",
+      it: "Stile di gioco"
+    },
+    tensionBand: {
+      en: "Tension Feel",
+      fr: "Sensation de tension",
+      es: "Sensacion de tension",
+      it: "Sensazione di tensione"
+    },
+    racketFamily: {
+      en: "Racket Fit",
+      fr: "Compatibilite raquette",
+      es: "Compatibilidad con raqueta",
+      it: "Compatibilita con racchetta"
+    }
+  };
+  const language = siteI18n.getLanguage();
+  return labels[key]?.[language] || labels[key]?.en || key;
+}
+
+function updateLocalizedUiText() {
+  const sliderTitle = document.getElementById("sliderPanelTitle");
+  const sliderCopy = document.querySelector(".slider-panel-copy");
+  const mobileQuickPlayerLabel = document.querySelector('label[for="mobileQuickPlayerFilter"]');
+  const mobileQuickTypeLabel = document.querySelector('label[for="mobileQuickTypeFilter"]');
+  const quickFiltersEyebrow = document.querySelector(".panel-header .eyebrow");
+  const stringFiltersTitle = document.querySelector(".panel-header h2");
+
+  if (sliderTitle) sliderTitle.textContent = getUiText("sliderPanelTitle", "Preference Sliders");
+  if (sliderCopy) sliderCopy.textContent = getUiText("sliderPanelCopy", "Move the sliders toward what matters most and the rankings will rebalance live.");
+  if (mobileQuickPlayerLabel) mobileQuickPlayerLabel.textContent = getUiText("mobileQuickPlayer", "Pro Player");
+  if (mobileQuickTypeLabel) mobileQuickTypeLabel.textContent = getUiText("mobileQuickType", "String Type");
+  if (quickFiltersEyebrow) quickFiltersEyebrow.textContent = getUiText("quickFiltersEyebrow", "Quick Filters");
+  if (stringFiltersTitle) stringFiltersTitle.textContent = getUiText("stringFiltersTitle", "String Filters");
+  if (resetButton) resetButton.textContent = getUiText("reset", "Reset");
+  if (mobileFilterToggle) {
+    const collapsed = filterGrid.classList.contains("is-collapsed");
+    mobileFilterToggle.textContent = collapsed ? getUiText("mobileShowFilters", "Show Filters") : getUiText("mobileHideFilters", "Hide Filters");
+  }
+  if (sliderPanelToggle) {
+    const collapsed = sliderPanelBody?.classList.contains("is-collapsed");
+    sliderPanelToggle.textContent = collapsed ? getUiText("sliderShow", "Show Sliders") : getUiText("sliderHide", "Hide Sliders");
+  }
+
+  if (typeDescriptionEyebrow) typeDescriptionEyebrow.textContent = getUiText("stringTypeGuide", "String Type Guide");
+  if (typeDescriptionTitle && state.type === "Any") typeDescriptionTitle.textContent = getUiText("allStringTypeTitle", "All String Types");
+  if (typeDescriptionText && state.type === "Any") typeDescriptionText.textContent = getUiText("allStringTypeText", "Compare different string families to find the blend of spin, comfort, control, and power that best fits your game.");
+  if (resultsTypeDescriptionEyebrow) resultsTypeDescriptionEyebrow.textContent = getUiText("stringTypeGuide", "String Type Guide");
+  if (resultsTypeDescriptionTitle && state.type === "Any") resultsTypeDescriptionTitle.textContent = getUiText("allStringTypeTitle", "All String Types");
+  if (resultsTypeDescriptionText && state.type === "Any") resultsTypeDescriptionText.textContent = getUiText("allStringTypeText", "Compare different string families to find the blend of spin, comfort, control, and power that best fits your game.");
+
+  const sliderFieldLabels = document.querySelectorAll(".slider-field > span");
+  const sliderScales = document.querySelectorAll(".slider-scale-labels");
+  if (sliderFieldLabels[0]) sliderFieldLabels[0].textContent = getUiText("sliderPower", "Power");
+  if (sliderFieldLabels[1]) sliderFieldLabels[1].textContent = getUiText("sliderSpin", "Spin");
+  if (sliderFieldLabels[2]) sliderFieldLabels[2].textContent = getUiText("sliderControl", "Control");
+  if (sliderFieldLabels[3]) sliderFieldLabels[3].textContent = getUiText("sliderPros", "Pro Players Using");
+  sliderScales.forEach((scale, index) => {
+    const spans = scale.querySelectorAll("span");
+    if (spans.length !== 3) return;
+    if (index === 3) {
+      spans[0].textContent = getUiText("scaleFew", "Few");
+    } else {
+      spans[0].textContent = getUiText("scaleLow", "Low");
+    }
+    spans[1].textContent = getUiText("scaleBalanced", "Balanced");
+    spans[2].textContent = getUiText("scaleHigh", "High");
+  });
+
+  if (mobileQuickPlayerFilter) {
+    const anyOption = mobileQuickPlayerFilter.querySelector('option[value="Any"]');
+    if (anyOption) anyOption.textContent = getUiText("allProPlayers", "All Pro Players");
+  }
+  if (mobileQuickTypeFilter) {
+    const anyTypeOption = mobileQuickTypeFilter.querySelector('option[value="Any"]');
+    if (anyTypeOption) anyTypeOption.textContent = getUiText("allStringTypes", "All String Types");
+  }
+}
+
 function buildFilterOptions(filter, playerCoverage) {
   if (filter.key !== "atpPlayer" && filter.key !== "wtaPlayer") {
-    return filter.options.map((option) => `<option value="${option}">${option}</option>`).join("");
+    return filter.options.map((option) => {
+      let label = option;
+      if (option === "Any" && filter.key === "type") {
+        label = getUiText("allStringTypes", "All String Types");
+      }
+      return `<option value="${option}">${label}</option>`;
+    }).join("");
   }
 
   const coveredPlayers = filter.key === "atpPlayer" ? playerCoverage.atp : playerCoverage.wta;
 
   return filter.options.map((option) => {
     if (option === "Any") {
-      return `<option value="Any">Any</option>`;
+      return `<option value="Any">${filter.key === "atpPlayer" || filter.key === "wtaPlayer" ? getUiText("allProPlayers", "All Pro Players") : "Any"}</option>`;
     }
 
     const isCovered = coveredPlayers.has(option);
@@ -2936,6 +3181,11 @@ function syncTypeMenu() {
 }
 
 document.addEventListener("tsl-language-change", () => {
+  updateLocalizedUiText();
+  renderFilters();
+  populateMobileQuickPlayerFilter();
+  syncMobileQuickPlayerFilter();
+  syncMobileQuickTypeFilter();
   renderResults();
 });
 
