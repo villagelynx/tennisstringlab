@@ -10,17 +10,11 @@
     es: "ES",
     it: "IT"
   };
-  const LANGUAGE_SWITCHER_LABELS = {
-    en: "Language",
-    fr: "Langue",
-    es: "Idioma",
-    it: "Lingua"
-  };
   const LANGUAGE_FLAGS = {
-    en: "/images/flag-gb.svg",
-    fr: "/images/flag-fr.svg",
-    es: "/images/flag-es.svg",
-    it: "/images/flag-it.svg"
+    en: "images/flag-gb.svg",
+    fr: "images/flag-fr.svg",
+    es: "images/flag-es.svg",
+    it: "images/flag-it.svg"
   };
 
   const GUIDE_LINK_TRANSLATIONS = {
@@ -554,10 +548,6 @@
     document.querySelectorAll(".language-switcher-button").forEach((button) => {
       button.classList.toggle("is-active", button.dataset.language === language);
     });
-    const label = document.querySelector(".language-switcher-label");
-    if (label) {
-      label.textContent = LANGUAGE_SWITCHER_LABELS[language] || LANGUAGE_SWITCHER_LABELS.en;
-    }
   }
 
   function createLanguageSwitcher() {
@@ -567,19 +557,15 @@
     switcher.className = "language-switcher";
     switcher.setAttribute("aria-label", "Language switcher");
 
-    const label = document.createElement("span");
-    label.className = "language-switcher-label";
-    label.textContent = LANGUAGE_SWITCHER_LABELS[getSelectedLanguage()] || LANGUAGE_SWITCHER_LABELS.en;
-    switcher.appendChild(label);
-
     SUPPORTED_LANGUAGES.forEach((language) => {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "language-switcher-button";
       button.dataset.language = language;
-      button.title = LANGUAGE_SWITCHER_LABELS[language] || LANGUAGE_LABELS[language];
-      button.setAttribute("aria-label", LANGUAGE_SWITCHER_LABELS[language] || LANGUAGE_LABELS[language]);
-      button.innerHTML = `<img class="language-flag" src="${LANGUAGE_FLAGS[language]}" alt="${LANGUAGE_SWITCHER_LABELS[language] || LANGUAGE_LABELS[language]}">`;
+      const flagSrc = new URL(LANGUAGE_FLAGS[language], window.location.href).href;
+      button.title = LANGUAGE_LABELS[language];
+      button.setAttribute("aria-label", LANGUAGE_LABELS[language]);
+      button.innerHTML = `<img class="language-flag" src="${flagSrc}" alt="${LANGUAGE_LABELS[language]}">`;
       button.addEventListener("click", () => {
         setSelectedLanguage(language);
         applyLanguage(language);
