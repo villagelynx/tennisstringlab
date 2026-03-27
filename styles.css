@@ -243,7 +243,7 @@ h1 {
 
 .language-switcher {
   position: fixed;
-  top: 18px;
+  top: 24px;
   right: 64px;
   display: inline-flex;
   flex-direction: row;
@@ -1552,7 +1552,7 @@ h1 {
 
   .language-switcher {
     right: 56px;
-    top: 12px;
+    top: 18px;
   }
 
   .language-switcher-button {

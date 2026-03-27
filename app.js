@@ -39,13 +39,23 @@ const sliderPowerValue = document.getElementById("sliderPowerValue");
 const sliderSpinValue = document.getElementById("sliderSpinValue");
 const sliderControlValue = document.getElementById("sliderControlValue");
 const sliderProPlayersValue = document.getElementById("sliderProPlayersValue");
-const siteI18n = window.TSL_I18N || { getLanguage: () => "en", t: (_key, fallback, vars) => {
-  let text = fallback || "";
-  Object.entries(vars || {}).forEach(([name, value]) => {
-    text = text.replaceAll(`{${name}}`, String(value));
-  });
-  return text;
-} };
+const siteI18n = {
+  getLanguage() {
+    return window.TSL_I18N && typeof window.TSL_I18N.getLanguage === "function"
+      ? window.TSL_I18N.getLanguage()
+      : "en";
+  },
+  t(key, fallback, vars) {
+    if (window.TSL_I18N && typeof window.TSL_I18N.t === "function") {
+      return window.TSL_I18N.t(key, fallback, vars);
+    }
+    let text = fallback || key || "";
+    Object.entries(vars || {}).forEach(([name, value]) => {
+      text = text.replaceAll(`{${name}}`, String(value));
+    });
+    return text;
+  }
+};
 const UI_TRANSLATIONS = {
   en: {
     mobileShowFilters: "Show Filters",

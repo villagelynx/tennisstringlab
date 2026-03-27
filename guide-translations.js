@@ -1,5 +1,11 @@
 (function () {
-  const siteI18n = window.TSL_I18N || { getLanguage: () => "en" };
+  const siteI18n = {
+    getLanguage() {
+      return window.TSL_I18N && typeof window.TSL_I18N.getLanguage === "function"
+        ? window.TSL_I18N.getLanguage()
+        : "en";
+    }
+  };
 
   const GUIDE_PAGE_CONTENT = {
     "string-types.html": {
