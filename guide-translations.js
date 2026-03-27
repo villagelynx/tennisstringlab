@@ -428,8 +428,18 @@
 
   function getCurrentGuidePage() {
     const path = window.location.pathname || "/";
-    const file = path.split("/").filter(Boolean).pop();
-    return file || "index.html";
+    const file = path.split("/").filter(Boolean).pop() || "index.html";
+    if (GUIDE_PAGE_CONTENT[file]) return file;
+
+    const normalized = file.toLowerCase();
+    if (GUIDE_PAGE_CONTENT[normalized]) return normalized;
+
+    if (!normalized.includes(".")) {
+      const htmlKey = `${normalized}.html`;
+      if (GUIDE_PAGE_CONTENT[htmlKey]) return htmlKey;
+    }
+
+    return normalized || "index.html";
   }
 
   function applyGuideTranslations() {
