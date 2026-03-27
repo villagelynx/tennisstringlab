@@ -18,10 +18,19 @@ const siteI18n = window.TSL_I18N || { t: (_key, fallback, vars) => {
   return text;
 } };
 
-const masterStrings = Array.isArray(window.TENNIS_STRING_DATA) ? window.TENNIS_STRING_DATA.slice() : [];
+const masterStringsSource = Array.isArray(window.TENNIS_STRING_DATA)
+  ? window.TENNIS_STRING_DATA
+  : Array.isArray(window.TENNIS_STRING_PLANNER_STRINGS)
+    ? window.TENNIS_STRING_PLANNER_STRINGS
+    : [];
+const masterStrings = masterStringsSource.slice();
 const masterTypeDescriptions = window.TENNIS_STRING_TYPE_DESCRIPTIONS || {};
 
 function populateMasterFilters() {
+  if (!masterBrandFilter || !masterTypeFilter || !masterPlayerFilter) {
+    return;
+  }
+
   const brands = [...new Set(masterStrings.map((entry) => entry.brand).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const types = [...new Set(masterStrings.map((entry) => entry.type).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const players = [...new Set(masterStrings.flatMap((entry) => [...(entry.atpPlayers || []), ...(entry.wtaPlayers || [])]).filter(Boolean))].sort((a, b) => a.localeCompare(b));
@@ -100,11 +109,24 @@ function getFilteredMasterStrings() {
 }
 
 function renderMasterList() {
+  if (!masterDatabaseCount || !masterResultsCount || !masterListTable) {
+    return;
+  }
+
   const filtered = getFilteredMasterStrings();
   renderMasterTypeDescription();
 
   masterDatabaseCount.textContent = siteI18n.t("masterDatabaseCount", "{count} strings in database", { count: masterStrings.length });
   masterResultsCount.textContent = siteI18n.t("masterShownCount", "{count} shown", { count: filtered.length });
+
+  if (!masterStrings.length) {
+    masterListTable.innerHTML = `
+      <div class="master-empty-state">
+        Master List data is unavailable right now. Refresh the page or reload the latest scripts.
+      </div>
+    `;
+    return;
+  }
 
   if (!filtered.length) {
     masterListTable.innerHTML = `
