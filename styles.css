@@ -2688,14 +2688,14 @@ h1 {
   }
 
   .hero {
-    padding: 18px;
+    padding: 12px 18px 18px;
     border-radius: 24px;
   }
 
   .brand-row {
     align-items: center;
     justify-content: flex-end;
-    min-height: 28px;
+    min-height: 0;
   }
 
   .brand-lockup,
@@ -2713,8 +2713,10 @@ h1 {
 
   .hero-tagline {
     margin-top: 0;
-    padding: 0;
-    background: transparent;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #fff5a8, #d8f4ff);
+    box-shadow: 0 8px 18px rgba(16, 74, 122, 0.08);
     color: #134d82;
     font-size: 1.16rem;
   }
@@ -2728,12 +2730,12 @@ h1 {
     align-items: center;
     justify-content: space-between;
     gap: 14px;
-    margin-top: 12px;
+    margin-top: 2px;
   }
 
   .mobile-home-title-row h1 {
     margin-top: 0;
-    font-size: clamp(3rem, 12vw, 4.2rem);
+    font-size: clamp(3.35rem, 12.8vw, 4.55rem);
     line-height: 0.92;
     font-weight: 900;
     color: #0d4d7a;
@@ -2795,6 +2797,12 @@ h1 {
     text-decoration: none;
   }
 
+  .mobile-home-action-button-tool {
+    background: #dff4de;
+    border-color: rgba(59, 135, 76, 0.22);
+    color: #255d31;
+  }
+
   .hero-actions,
   .tool-workbench {
     display: none !important;
@@ -2816,6 +2824,16 @@ h1 {
     box-shadow: 0 10px 24px rgba(20, 51, 85, 0.05);
   }
 
+  .mobile-home-tool-card-quick {
+    background: linear-gradient(180deg, #f4ecff, #fbf7ff);
+    border-color: rgba(136, 103, 186, 0.18);
+  }
+
+  .mobile-home-tool-card-tension {
+    background: linear-gradient(180deg, #fff0de, #fff8ef);
+    border-color: rgba(210, 140, 64, 0.18);
+  }
+
   .mobile-home-tool-card h2 {
     font-size: 1.7rem;
     line-height: 1.15;
@@ -2835,6 +2853,12 @@ h1 {
     color: #0d4d7a;
   }
 
+  .mobile-home-section-button-tool {
+    background: #dff4de;
+    border-color: rgba(59, 135, 76, 0.22);
+    color: #255d31;
+  }
+
   .tool-page-shell {
     width: min(100%, calc(100% - 20px));
     margin: 12px auto 24px;
@@ -2845,6 +2869,16 @@ h1 {
   .tool-page-card {
     padding: 18px;
     border-radius: 22px;
+  }
+
+  .tool-page-card-quick {
+    background: linear-gradient(180deg, #f4ecff, #fbf7ff);
+    border-color: rgba(136, 103, 186, 0.18);
+  }
+
+  .tool-page-card-tension-page {
+    background: linear-gradient(180deg, #fff0de, #fff8ef);
+    border-color: rgba(210, 140, 64, 0.18);
   }
 
   .tool-page-title-row {
