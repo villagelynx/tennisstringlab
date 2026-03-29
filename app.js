@@ -875,7 +875,7 @@ stringEntry("Luxilon ALU Power", {
       { player: "Beatriz Haddad Maia", racket: "Wilson Steam 100" },
       { player: "Coco Gauff", racket: "HEAD racquet" },
       { player: "Maria Sakkari", racket: "Wilson Ultra 100 v5" },
-      { player: "Novak Djokovic", racket: "Head Speed Pro 2024" },
+      { player: "Novak Djokovic", racket: "Head Speed Pro Legend" },
       { player: "Karen Khachanov", racket: "Wilson Blade 98 18x20 v9" },
       { player: "Aryna Sabalenka", racket: "Wilson Blade 98 18x20 v9" },
       { player: "Jiri Lehecka", racket: "Wilson Pro Staff 97 V14 cosmetic / customized Six One 95" },
@@ -924,7 +924,7 @@ stringEntry("Luxilon ALU Power", {
     comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Pro", gameStyle: "All-Court",
     tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: ["Novak Djokovic", "Roger Federer"], wtaPlayers: ["Iga Swiatek", "Belinda Bencic", "McCartney Kessler", "Anna Blinkova"],
     proRackets: [
-      { player: "Novak Djokovic", racket: "Head Speed Pro 2024" },
+      { player: "Novak Djokovic", racket: "Head Speed Pro Legend" },
       { player: "Roger Federer", racket: "Wilson RF 01 Pro" },
       { player: "Belinda Bencic", racket: "Yonex EZONE 100" },
       { player: "McCartney Kessler", racket: "Wilson Blade 98 16x19 / Blade Pro mold" },
@@ -3817,14 +3817,15 @@ function buildExampleFallbackFilters(example) {
 }
 
 function buildPlannerFiltersFromRecommendation(recommendation) {
+  const entry = recommendation.entry;
   const filters = {
-    type: recommendation.entry.type,
-    gauge: recommendation.entry.gauge,
-    tensionBand: recommendation.entry.tensionBand,
-    racketFamily: recommendation.entry.racketFamily
+    type: entry.type,
+    gauge: entry.gauge,
+    tensionBand: entry.tensionBand,
+    racketFamily: entry.racketFamily
   };
 
-  if (recommendation.style && recommendation.style !== "Any") {
+  if (recommendation.style && recommendation.style !== "Any" && entry.gameStyle === recommendation.style) {
     filters.gameStyle = recommendation.style;
   }
 
@@ -3840,7 +3841,7 @@ function buildPlannerFiltersFromRecommendation(recommendation) {
     filters.control = recommendation.preferences.control;
   }
 
-  if (recommendation.player && recommendation.player !== "Any") {
+  if (recommendation.player && recommendation.player !== "Any" && getAllPlayersForEntry(entry).includes(recommendation.player)) {
     if (isKnownAtpPlayer(recommendation.player)) {
       filters.atpPlayer = recommendation.player;
     } else if (isKnownWtaPlayer(recommendation.player)) {
