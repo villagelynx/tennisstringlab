@@ -3,7 +3,9 @@ const resultsList = document.getElementById("resultsList");
 const resultsCount = document.getElementById("resultsCount");
 const databaseCount = document.getElementById("databaseCount");
 const heroDatabaseButton = document.getElementById("heroDatabaseButton");
+const pageKey = document.body?.dataset?.page || "home";
 const resetButton = document.getElementById("resetButton");
+const hasPlannerSurface = Boolean(filterGrid && resultsList && resultsCount && databaseCount && resetButton);
 const mobileFilterToggle = document.getElementById("mobileFilterToggle");
 const mobileQuickPlayerFilter = document.getElementById("mobileQuickPlayerFilter");
 const mobileQuickTypeFilter = document.getElementById("mobileQuickTypeFilter");
@@ -171,7 +173,7 @@ const UI_TRANSLATIONS = {
 
 const HOME_STATIC_TRANSLATIONS = {
   en: {
-    masterListTitle: "Master List",
+    masterListTitle: "All Strings",
     masterListCopy: "Browse every string in one place",
     referenceTitle: "Reference Guide",
     referenceCopy: "Open all information pages",
@@ -352,12 +354,20 @@ const quickSetupProRacketNote = document.getElementById("quickSetupProRacketNote
 const quickSetupButton = document.getElementById("quickSetupButton");
 const quickSetupApplyButton = document.getElementById("quickSetupApplyButton");
 const quickSetupResult = document.getElementById("quickSetupResult");
+const quickSetupExampleSelect = document.getElementById("quickSetupExampleSelect");
 const tensionCalcType = document.getElementById("tensionCalcType");
 const tensionCalcRacket = document.getElementById("tensionCalcRacket");
 const tensionCalcPreference = document.getElementById("tensionCalcPreference");
 const tensionCalcArm = document.getElementById("tensionCalcArm");
 const tensionCalcButton = document.getElementById("tensionCalcButton");
 const tensionCalcResult = document.getElementById("tensionCalcResult");
+const tensionSourceStorageKey = "tennisStringPlannerTensionSource";
+const hasSetupWorkbenchSurface = Boolean(
+  quickSetupButton
+  || tensionCalcButton
+  || quickSetupExampleSelect
+  || exampleSetupButtons.length
+);
 
 if (mobileFilterToggle) {
   mobileFilterToggle.addEventListener("click", () => {
@@ -666,6 +676,41 @@ let sliderInteractionTimeout = null;
 let latestQuickSetupRecommendation = null;
 let latestTensionCalculatorSource = null;
 let activeQuickSetupExampleIndex = -1;
+
+function persistTensionCalculatorSource(source) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    if (!source) {
+      window.localStorage.removeItem(tensionSourceStorageKey);
+      return;
+    }
+
+    window.localStorage.setItem(tensionSourceStorageKey, JSON.stringify(source));
+  } catch {
+    // Ignore storage failures so the tool still works without persistence.
+  }
+}
+
+function loadStoredTensionCalculatorSource() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  try {
+    const raw = window.localStorage.getItem(tensionSourceStorageKey);
+    if (!raw) {
+      return null;
+    }
+
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
 const QUICK_SETUP_EXAMPLES = [
   {
     buttonLabel: "Example 1/12: Carlos Alcaraz",
@@ -3336,7 +3381,7 @@ window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS = {
   wta: (FILTERS.find((filter) => filter.key === "wtaPlayer")?.options || []).filter((option) => option !== "Any")
 };
 
-if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
+if (hasPlannerSurface) {
   updateLocalizedUiText();
   updateHomepageStaticTranslations();
   renderFilters();
@@ -3454,6 +3499,11 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
   resetButton.addEventListener("click", () => {
     resetToMainChoices();
   });
+}
+
+if (hasSetupWorkbenchSurface && !hasPlannerSurface) {
+  initializeSetupWorkbench();
+  updateDatabaseCountLabels();
 }
 
 function initializeSliderPanelToggle() {
@@ -3612,6 +3662,7 @@ function populateMobileQuickPlayerFilter() {
 function initializeSetupWorkbench() {
   populateQuickSetupControls();
   populateTensionCalculatorControls();
+  populateQuickSetupExampleSelect();
 
   [
     quickSetupStyle,
@@ -3674,12 +3725,24 @@ function initializeSetupWorkbench() {
     });
   }
 
+  if (quickSetupExampleSelect) {
+    quickSetupExampleSelect.addEventListener("change", (event) => {
+      const selectedIndex = Number(event.currentTarget.value || -1);
+      if (selectedIndex >= 0) {
+        applyExampleSetup(selectedIndex);
+      } else {
+        clearActiveQuickSetupExample();
+      }
+    });
+  }
+
   if (tensionCalcButton) {
     tensionCalcButton.addEventListener("click", () => {
       renderTensionCalculatorRecommendation();
     });
   }
 
+  restoreStoredTensionCalculatorSource();
   renderQuickSetupRecommendation(null);
   renderTensionCalculatorRecommendation();
   syncQuickSetupProRacketUi();
@@ -3687,15 +3750,17 @@ function initializeSetupWorkbench() {
 }
 
 function syncExampleSetupButtons() {
-  if (!exampleSetupButtons.length) {
-    return;
+  if (exampleSetupButtons.length) {
+    exampleSetupButtons.forEach((button, index) => {
+      const isActive = index === activeQuickSetupExampleIndex;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
   }
 
-  exampleSetupButtons.forEach((button, index) => {
-    const isActive = index === activeQuickSetupExampleIndex;
-    button.classList.toggle("is-active", isActive);
-    button.setAttribute("aria-pressed", isActive ? "true" : "false");
-  });
+  if (quickSetupExampleSelect) {
+    quickSetupExampleSelect.value = activeQuickSetupExampleIndex >= 0 ? String(activeQuickSetupExampleIndex) : "";
+  }
 }
 
 function clearActiveQuickSetupExample() {
@@ -3761,6 +3826,17 @@ function populateQuickSetupControls() {
   }
 }
 
+function populateQuickSetupExampleSelect() {
+  if (!quickSetupExampleSelect) {
+    return;
+  }
+
+  quickSetupExampleSelect.innerHTML = `
+    <option value="">Choose an example pro setup</option>
+    ${QUICK_SETUP_EXAMPLES.map((example, index) => `<option value="${index}">${example.player}</option>`).join("")}
+  `;
+}
+
 function populateTensionCalculatorControls() {
   if (tensionCalcType) {
     const types = FILTERS.find((filter) => filter.key === "type")?.options.filter((option) => option !== "Any") || [];
@@ -3780,6 +3856,27 @@ function populateTensionCalculatorControls() {
 
   if (tensionCalcArm) {
     tensionCalcArm.value = "Normal";
+  }
+}
+
+function restoreStoredTensionCalculatorSource() {
+  const storedSource = loadStoredTensionCalculatorSource();
+  if (!storedSource) {
+    return;
+  }
+
+  latestTensionCalculatorSource = storedSource;
+
+  if (tensionCalcType && storedSource.type) {
+    tensionCalcType.value = storedSource.type;
+  }
+
+  if (tensionCalcRacket && storedSource.appliedRacketFamily) {
+    tensionCalcRacket.value = storedSource.appliedRacketFamily;
+  }
+
+  if (tensionCalcPreference && storedSource.inferredPreference) {
+    tensionCalcPreference.value = storedSource.inferredPreference;
   }
 }
 
@@ -4289,7 +4386,9 @@ function renderQuickSetupRecommendation(recommendation) {
     quickSetupResult.innerHTML = `<p class="summary-copy">Pick a racket, style, pro, or your preferred spin, power, and control to generate a starting setup.</p>`;
     if (quickSetupApplyButton) {
       quickSetupApplyButton.hidden = true;
-      quickSetupApplyButton.textContent = "Apply Top Pick to Pre-Populate Tension Calculator fields";
+      quickSetupApplyButton.textContent = hasPlannerSurface
+        ? "Apply Top Pick to Pre-Populate Tension Calculator fields"
+        : "Open Top Pick in Tension Calculator";
     }
     return;
   }
@@ -4347,7 +4446,9 @@ function renderQuickSetupRecommendation(recommendation) {
 
   if (quickSetupApplyButton) {
     quickSetupApplyButton.hidden = false;
-    quickSetupApplyButton.textContent = "Apply Top Pick to Pre-Populate Tension Calculator fields";
+    quickSetupApplyButton.textContent = hasPlannerSurface
+      ? "Apply Top Pick to Pre-Populate Tension Calculator fields"
+      : "Open Top Pick in Tension Calculator";
   }
 }
 
@@ -4368,9 +4469,15 @@ function applyQuickSetupRecommendation(optionIndex = 0) {
     playerRacket: selectedOption.playerRacket,
     tensionDisplay: selectedOption.tensionDisplay
   };
-  const filters = buildPlannerFiltersFromRecommendation(appliedRecommendation);
-  applyPlannerSelection(filters);
   applyTensionCalculatorFromQuickSetup(appliedRecommendation);
+  persistTensionCalculatorSource(latestTensionCalculatorSource);
+
+  if (hasPlannerSurface) {
+    const filters = buildPlannerFiltersFromRecommendation(appliedRecommendation);
+    applyPlannerSelection(filters);
+  } else if (pageKey === "quick-setup") {
+    window.location.href = "./tension-calculator.html";
+  }
 }
 
 function applyExampleSetup(exampleIndex = 0) {
@@ -4423,12 +4530,16 @@ function applyExampleSetup(exampleIndex = 0) {
     example.preferredTopEntryName || ""
   );
   renderQuickSetupRecommendation(recommendation);
-  const filters = recommendation
-    ? buildPlannerFiltersFromRecommendation(recommendation)
-    : buildExampleFallbackFilters(example);
-  applyPlannerSelection(filters);
   if (recommendation) {
     applyTensionCalculatorFromQuickSetup(recommendation);
+    persistTensionCalculatorSource(latestTensionCalculatorSource);
+  }
+
+  if (hasPlannerSurface) {
+    const filters = recommendation
+      ? buildPlannerFiltersFromRecommendation(recommendation)
+      : buildExampleFallbackFilters(example);
+    applyPlannerSelection(filters);
   }
 }
 
@@ -5530,7 +5641,10 @@ function applyPlannerSelection(nextFilters = {}) {
   syncTypeMenu();
   syncMobileQuickPlayerFilter();
   syncMobileQuickTypeFilter();
-  renderResults();
+
+  if (hasPlannerSurface) {
+    renderResults();
+  }
 }
 
 function resetToMainChoices() {

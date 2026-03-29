@@ -248,7 +248,7 @@
         { selector: "#stringSearchInput", attr: "placeholder", text: "Search string, brand, ATP player, WTA player, racket, or style" },
         { selector: "#clearSearchButton", text: "Clear" },
         { selector: ".search-help", text: "Search updates instantly as you type." },
-        { selector: 'a[href="./master-list.html"] .hero-action-copy strong', text: "Master List" },
+        { selector: 'a[href="./master-list.html"] .hero-action-copy strong', text: "All Strings" },
         { selector: 'a[href="./master-list.html"] .hero-action-copy span:last-child', text: "Browse every string in one place" },
         { selector: "#referenceGuideButton .hero-action-copy strong", text: "Reference Guide" },
         { selector: "#referenceGuideButton .hero-action-copy span:last-child", text: "Open all information pages" },
