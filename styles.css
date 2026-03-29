@@ -207,6 +207,13 @@ body {
   gap: 4px;
 }
 
+.brand-domains {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
 .brand-mark {
   width: 62px;
   height: 62px;
@@ -225,10 +232,14 @@ body {
 .brand-domain {
   margin: 0;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.04em;
-  color: #8fd645;
+  color: #0d4d7a;
   text-transform: none;
+}
+
+.brand-domain-accent {
+  color: #7fbe3d;
 }
 
 h1,
