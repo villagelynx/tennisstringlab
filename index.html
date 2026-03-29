@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Tennis String Lab">
+  <meta name="apple-mobile-web-app-title" content="Tennis Setup">
   <meta name="theme-color" content="#0a4d84">
-  <title>Tennis String Lab</title>
+  <title>Tennis Setup</title>
   <!-- SEO Meta -->
-  <meta name="description" content="Use Tennis String Lab to compare tennis strings, build a quick string setup, explore pro-inspired examples, and calculate a practical starting tension range.">
+  <meta name="description" content="Use Tennis Setup to search the string database, build a quick setup, explore pro-inspired examples, and calculate a practical starting tension range.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://tennisstringlab.com/">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Tennis String Lab">
-  <meta property="og:title" content="Tennis String Lab">
-  <meta property="og:description" content="Use Tennis String Lab to compare tennis strings, build a quick string setup, explore pro-inspired examples, and calculate a practical starting tension range.">
+  <meta property="og:site_name" content="Tennis Setup">
+  <meta property="og:title" content="Tennis Setup">
+  <meta property="og:description" content="Use Tennis Setup to search the string database, build a quick setup, explore pro-inspired examples, and calculate a practical starting tension range.">
   <meta property="og:url" content="https://tennisstringlab.com/">
   <meta property="og:image" content="https://tennisstringlab.com/android-chrome-192x192.png">
-  <meta property="og:image:alt" content="Tennis String Lab logo">
+  <meta property="og:image:alt" content="Tennis Setup logo">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Tennis String Lab">
-  <meta name="twitter:description" content="Use Tennis String Lab to compare tennis strings, build a quick string setup, explore pro-inspired examples, and calculate a practical starting tension range.">
+  <meta name="twitter:title" content="Tennis Setup">
+  <meta name="twitter:description" content="Use Tennis Setup to search the string database, build a quick setup, explore pro-inspired examples, and calculate a practical starting tension range.">
   <meta name="twitter:image" content="https://tennisstringlab.com/android-chrome-192x192.png">
   <!-- /SEO Meta -->
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
@@ -36,8 +36,8 @@
     "@graph":  [
                    {
                        "url":  "https://tennisstringlab.com/",
-                       "name":  "Tennis String Lab",
-                       "description":  "Use Tennis String Lab to compare tennis strings, build a quick string setup, explore pro-inspired examples, and calculate a practical starting tension range.",
+                       "name":  "Tennis Setup",
+                       "description":  "Use Tennis Setup to search the string database, build a quick setup, explore pro-inspired examples, and calculate a practical starting tension range.",
                        "@type":  "WebSite"
                    },
                    {
@@ -45,12 +45,12 @@
                        "@type":  "WebApplication",
                        "url":  "https://tennisstringlab.com/",
                        "operatingSystem":  "Any",
-                       "name":  "Tennis String Lab",
-                       "description":  "Use Tennis String Lab to compare tennis strings, build a quick string setup, explore pro-inspired examples, and calculate a practical starting tension range.",
+                       "name":  "Tennis Setup",
+                       "description":  "Use Tennis Setup to search the string database, build a quick setup, explore pro-inspired examples, and calculate a practical starting tension range.",
                        "applicationCategory":  "SportsApplication",
                        "publisher":  {
                                          "url":  "https://tennisstringlab.com/",
-                                         "name":  "Tennis String Lab",
+                                         "name":  "Tennis Setup",
                                          "@type":  "Organization"
                                      }
                    }
@@ -59,7 +59,7 @@
   </script>
   <!-- /SEO Structured Data -->
 </head>
-<body>
+<body data-page="home">
   <main class="page-shell">
     <section class="hero" id="heroSection">
       <div class="brand-row">
@@ -95,8 +95,8 @@
             </svg>
           </div>
           <div class="brand-text">
-            <p class="eyebrow">Tennis String Lab</p>
-            <p class="brand-domain">tennisstringlab.com</p>
+            <p class="eyebrow">Tennis Setup</p>
+            <p class="brand-domain">Simple search, setup, and tension tools</p>
           </div>
         </a>
         <div class="hero-overflow-menu">
@@ -128,13 +128,25 @@
       <div class="hero-heading-row">
         <div class="hero-heading-copy">
           <div class="hero-topline">
-            <p class="hero-tagline">Find your perfect setup!</p>
+            <p class="hero-tagline">Find your Perfect String Setup.</p>
             <a id="heroDatabaseButton" class="hero-database-button" href="./master-list.html">0 strings in database</a>
           </div>
-          <h1>Find the best string setup for your game.</h1>
+          <div class="mobile-home-title-row">
+            <h1>Tennis Setup</h1>
+            <a class="mobile-home-circle-link" href="./master-list.html">All Strings</a>
+          </div>
           <p class="hero-copy">
-            Use the Quick String Setup Tool to find a strong starting setup, then use the Tension Calculator to dial in a practical tension range. You can also search by string, player, or racket. Use advanced filters like game style, durability, type, and player level to narrow the results further.
+            Tennis Setup helps players search the string database, build a quick pro-inspired setup, and find a practical starting tension before restringing. Use the buttons below to jump into search, browse the full list, open Quick Setup, or go straight to the Tension Calculator.
           </p>
+          <p class="mobile-home-description">
+            Quick Setup gives you a fast starting recommendation based on feel, racket, style, and optional pro inspiration. The Tension Calculator turns that setup into a smart starting tension range you can actually use.
+          </p>
+          <div class="mobile-home-action-grid">
+            <a class="mobile-home-action-button" href="#stringSearchInput">Search</a>
+            <a class="mobile-home-action-button" href="./master-list.html">Main List</a>
+            <a class="mobile-home-action-button" href="./quick-setup.html">Quick Setup</a>
+            <a class="mobile-home-action-button" href="./tension-calculator.html">Tension Calculator</a>
+          </div>
         </div>
         <div class="hero-search-row">
         <label class="search-shell" for="stringSearchInput">
@@ -150,6 +162,20 @@
         <p class="search-help">Search updates instantly as you type.</p>
         </div>
       </div>
+      <section class="mobile-home-tool-sections" aria-label="Mobile tool links">
+        <article class="mobile-home-tool-card">
+          <p class="eyebrow">Quick Setup</p>
+          <h2>Build a fast starting setup</h2>
+          <p class="summary-copy">Use the Quick Setup page to choose feel, racket, style, and a pro example from a dropdown. It returns a short list of strong string matches without making you work through the full database.</p>
+          <a class="secondary-button mobile-home-section-button" href="./quick-setup.html">Open Quick Setup</a>
+        </article>
+        <article class="mobile-home-tool-card">
+          <p class="eyebrow">Tension Calculator</p>
+          <h2>Dial in a starting tension</h2>
+          <p class="summary-copy">Use the Tension Calculator page to turn your string type, racket family, feel goal, and arm comfort into a clean starting range in pounds and kilograms.</p>
+          <a class="secondary-button mobile-home-section-button" href="./tension-calculator.html">Open Tension Calculator</a>
+        </article>
+      </section>
       <article id="typeDescriptionCard" class="type-description-card type-description-card-inline" hidden>
         <p id="typeDescriptionEyebrow" class="eyebrow">String Type Guide</p>
         <h3 id="typeDescriptionTitle">All String Types</h3>
@@ -411,8 +437,8 @@
     </section>
     <footer class="site-footer">
       <div>
-        <p class="eyebrow">Tennis String Lab</p>
-        <p class="site-footer-copy">A practical setup tool for comparing strings, pro references, and smart starting tension ideas.</p>
+        <p class="eyebrow">Tennis Setup</p>
+        <p class="site-footer-copy">A practical setup tool for searching strings, building quick setups, and finding smart starting tension ideas.</p>
       </div>
       <nav class="site-footer-nav" aria-label="Footer">
         <a class="site-footer-link" href="./about.html">About</a>

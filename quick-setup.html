@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Tennis Setup">
+  <meta name="theme-color" content="#ffffff">
+  <title>Quick Setup | Tennis Setup</title>
+  <meta name="description" content="Use the Quick Setup tool to build a simple starting string setup from feel, racket, playing style, and example pro setups.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://tennisstringlab.com/quick-setup.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Tennis Setup">
+  <meta property="og:title" content="Quick Setup | Tennis Setup">
+  <meta property="og:description" content="Use the Quick Setup tool to build a simple starting string setup from feel, racket, playing style, and example pro setups.">
+  <meta property="og:url" content="https://tennisstringlab.com/quick-setup.html">
+  <meta property="og:image" content="https://tennisstringlab.com/social-share.png">
+  <meta property="og:image:alt" content="Tennis Setup quick string setup tool">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Quick Setup | Tennis Setup">
+  <meta name="twitter:description" content="Use the Quick Setup tool to build a simple starting string setup from feel, racket, playing style, and example pro setups.">
+  <meta name="twitter:image" content="https://tennisstringlab.com/social-share.png">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="tool-page-body" data-page="quick-setup">
+  <main class="tool-page-shell">
+    <section class="tool-page-header">
+      <div class="tool-page-title-row">
+        <div>
+          <p class="eyebrow">Tennis Setup</p>
+          <h1>Quick Setup</h1>
+          <p class="tool-page-copy">Build a fast starting point using feel, racket, playing style, and optional pro inspiration. If you want a guided shortcut, start with the example pro setups dropdown and we will carry the top pick into the Tension Calculator page.</p>
+        </div>
+        <a class="mobile-home-circle-link" href="./master-list.html">All Strings</a>
+      </div>
+      <nav class="tool-page-nav" aria-label="Quick Setup navigation">
+        <a class="tool-page-nav-link" href="./index.html">Home</a>
+        <a class="tool-page-nav-link" href="./master-list.html">Main List</a>
+        <a class="tool-page-nav-link is-primary" href="./quick-setup.html">Quick Setup</a>
+        <a class="tool-page-nav-link" href="./tension-calculator.html">Tension Calculator</a>
+      </nav>
+    </section>
+
+    <section class="tool-page-card">
+      <div class="tool-page-example-picker">
+        <label for="quickSetupExampleSelect">Example Pro Setups</label>
+        <select id="quickSetupExampleSelect" class="search-input">
+          <option value="">Choose an example pro setup</option>
+        </select>
+        <p class="field-note">Choose a pro example if you want a fast tour-style starting point. You can still change any of the fields below.</p>
+      </div>
+
+      <article class="tool-card tool-card-compact">
+        <div>
+          <p class="eyebrow">Quick String Setup Tool</p>
+          <h3>Setup preferences + racket profile</h3>
+          <p class="summary-copy">Pick the feel you want first, then add your racket, playing style, or a pro reference to narrow the results.</p>
+        </div>
+        <div class="tool-form-grid tool-form-grid-compact">
+          <div class="field">
+            <label for="quickSetupSpin">Spin</label>
+            <select id="quickSetupSpin" class="search-input">
+              <option value="Any">Any spin level</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="quickSetupPower">Power</label>
+            <select id="quickSetupPower" class="search-input">
+              <option value="Any">Any power level</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="quickSetupControl">Control</label>
+            <select id="quickSetupControl" class="search-input">
+              <option value="Any">Any control level</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="quickSetupRacket">Racket</label>
+            <select id="quickSetupRacket" class="search-input">
+              <option value="Any">Any racket family</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="quickSetupStyle">Playing Style</label>
+            <select id="quickSetupStyle" class="search-input">
+              <option value="Any">Choose a playing style</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="quickSetupPro">Play Like This Pro</label>
+            <select id="quickSetupPro" class="search-input">
+              <option value="Any">Choose a pro player</option>
+            </select>
+          </div>
+          <div class="field is-wide">
+            <label class="toggle-field" for="quickSetupUseProRacket">
+              <input id="quickSetupUseProRacket" type="checkbox">
+              <span>Also use pro's racket</span>
+            </label>
+            <p id="quickSetupProRacketNote" class="field-note">Pick a pro to narrow results to that pro's strings. Turn this on to also use the pro's racket family.</p>
+          </div>
+        </div>
+        <div class="tool-actions tool-actions-compact">
+          <button id="quickSetupButton" class="secondary-button tool-primary-button" type="button">Build Setup</button>
+          <button id="quickSetupApplyButton" class="secondary-button" type="button" hidden>Open Top Pick in Tension Calculator</button>
+        </div>
+        <div id="quickSetupResult" class="tool-result-panel tool-result-panel-compact">
+          <p class="summary-copy">Pick a racket, style, pro, or your preferred spin, power, and control to generate a starting setup.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="./analytics.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

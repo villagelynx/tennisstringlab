@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Tennis Setup">
+  <meta name="theme-color" content="#ffffff">
+  <title>Tension Calculator | Tennis Setup</title>
+  <meta name="description" content="Use the Tennis Setup Tension Calculator to estimate a practical starting tension based on string type, racket family, feel goal, and arm comfort.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://tennisstringlab.com/tension-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Tennis Setup">
+  <meta property="og:title" content="Tension Calculator | Tennis Setup">
+  <meta property="og:description" content="Use the Tennis Setup Tension Calculator to estimate a practical starting tension based on string type, racket family, feel goal, and arm comfort.">
+  <meta property="og:url" content="https://tennisstringlab.com/tension-calculator.html">
+  <meta property="og:image" content="https://tennisstringlab.com/social-share.png">
+  <meta property="og:image:alt" content="Tennis Setup tension calculator">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Tension Calculator | Tennis Setup">
+  <meta name="twitter:description" content="Use the Tennis Setup Tension Calculator to estimate a practical starting tension based on string type, racket family, feel goal, and arm comfort.">
+  <meta name="twitter:image" content="https://tennisstringlab.com/social-share.png">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="tool-page-body" data-page="tension-calculator">
+  <main class="tool-page-shell">
+    <section class="tool-page-header">
+      <div class="tool-page-title-row">
+        <div>
+          <p class="eyebrow">Tennis Setup</p>
+          <h1>Tension Calculator</h1>
+          <p class="tool-page-copy">Use this page to turn a string type and racket family into a practical starting tension range. If you came from Quick Setup, the selected setup will appear here automatically when that reference is available.</p>
+        </div>
+        <a class="mobile-home-circle-link" href="./master-list.html">All Strings</a>
+      </div>
+      <nav class="tool-page-nav" aria-label="Tension Calculator navigation">
+        <a class="tool-page-nav-link" href="./index.html">Home</a>
+        <a class="tool-page-nav-link" href="./master-list.html">Main List</a>
+        <a class="tool-page-nav-link" href="./quick-setup.html">Quick Setup</a>
+        <a class="tool-page-nav-link is-primary" href="./tension-calculator.html">Tension Calculator</a>
+      </nav>
+    </section>
+
+    <section class="tool-page-card">
+      <article class="tool-card tool-card-tension">
+        <div>
+          <p class="eyebrow">Tension Calculator</p>
+          <h3>Find a smart starting tension</h3>
+          <p class="summary-copy">Choose your string family, racket family, and feel target. The calculator gives a practical starting range in pounds and kilograms, and shows the logic when you want to check the reasoning.</p>
+        </div>
+        <div class="tool-form-grid">
+          <div class="field">
+            <label for="tensionCalcType">String Type</label>
+            <select id="tensionCalcType" class="search-input">
+              <option value="Co-Poly">Co-Poly</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="tensionCalcRacket">Racket Family</label>
+            <select id="tensionCalcRacket" class="search-input">
+              <option value="Control Frame">Control Frame</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="tensionCalcPreference">Feel Goal</label>
+            <select id="tensionCalcPreference" class="search-input">
+              <option value="Balanced">Balanced</option>
+              <option value="Comfort">More Comfort</option>
+              <option value="Control">More Control</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="tensionCalcArm">Arm Comfort</label>
+            <select id="tensionCalcArm" class="search-input">
+              <option value="Normal">Normal</option>
+              <option value="Sensitive">A Little Sensitive</option>
+              <option value="Very Sensitive">Very Sensitive</option>
+            </select>
+          </div>
+        </div>
+        <div class="tool-actions">
+          <button id="tensionCalcButton" class="secondary-button tool-primary-button" type="button">Calculate Tension</button>
+          <a class="secondary-button" href="./tension-logic.html">String Tension Logic</a>
+        </div>
+        <div id="tensionCalcResult" class="tool-result-panel"></div>
+      </article>
+    </section>
+  </main>
+
+  <script src="./analytics.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
