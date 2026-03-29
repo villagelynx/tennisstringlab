@@ -923,6 +923,32 @@ h1 {
   margin-top: 0;
 }
 
+.tool-card-quick-setup .tool-result-panel,
+.tool-page-card-quick .tool-result-panel,
+.tool-page-card-quick .tool-result-panel-compact {
+  background: linear-gradient(135deg, rgba(233, 221, 249, 0.98), rgba(246, 239, 255, 0.94));
+  border-color: rgba(136, 103, 186, 0.22);
+}
+
+.tool-card-tension .tool-result-panel,
+.tool-page-card-tension-page .tool-result-panel,
+.tool-page-card-tension-page .tool-result-panel-compact {
+  background: linear-gradient(135deg, rgba(255, 226, 198, 0.98), rgba(255, 243, 229, 0.94));
+  border-color: rgba(210, 140, 64, 0.22);
+}
+
+.tool-card-quick-setup .tool-stat,
+.tool-page-card-quick .tool-stat {
+  background: rgba(244, 236, 255, 0.92);
+  border-color: rgba(136, 103, 186, 0.18);
+}
+
+.tool-card-tension .tool-stat,
+.tool-page-card-tension-page .tool-stat {
+  background: rgba(255, 238, 219, 0.92);
+  border-color: rgba(210, 140, 64, 0.18);
+}
+
 .tool-result-header {
   display: grid;
   gap: 4px;
