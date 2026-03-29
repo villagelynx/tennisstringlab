@@ -2877,8 +2877,20 @@ h1 {
   .search-input,
   .string-search-input,
   .tool-page-card .search-input,
-  .tool-page-example-picker .search-input {
-    min-height: 60px;
-    font-size: 1.12rem;
-  }
+.tool-page-example-picker .search-input {
+  min-height: 60px;
+  font-size: 1.12rem;
+}
+
+#quickSetupExampleSelect {
+  background: linear-gradient(135deg, #fff3a8, #ffe166);
+  border-color: rgba(176, 138, 18, 0.42);
+  color: #5a4300;
+  box-shadow: 0 10px 22px rgba(176, 138, 18, 0.12);
+}
+
+#quickSetupExampleSelect:focus {
+  outline: 2px solid rgba(176, 138, 18, 0.28);
+  outline-offset: 2px;
+}
 }
