@@ -264,6 +264,8 @@ function populateMasterFilters() {
     return;
   }
 
+  const brandCounts = getMasterBrandCounts();
+  const typeCounts = getMasterTypeCounts();
   const brands = [...new Set(masterStrings.map((entry) => entry.brand).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const types = [...new Set(masterStrings.map((entry) => entry.type).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const players = sortMasterNamesBySurname(
@@ -277,14 +279,14 @@ function populateMasterFilters() {
   brands.forEach((brand) => {
     const option = document.createElement("option");
     option.value = brand;
-    option.textContent = brand;
+    option.textContent = `${brand} (${brandCounts[brand] || 0})`;
     masterBrandFilter.appendChild(option);
   });
 
   types.forEach((type) => {
     const option = document.createElement("option");
     option.value = type;
-    option.textContent = type;
+    option.textContent = `${type} (${typeCounts[type] || 0})`;
     masterTypeFilter.appendChild(option);
   });
 
@@ -294,6 +296,24 @@ function populateMasterFilters() {
     option.textContent = player;
     masterPlayerFilter.appendChild(option);
   });
+}
+
+function getMasterBrandCounts() {
+  return masterStrings.reduce((counts, entry) => {
+    if (entry && entry.brand) {
+      counts[entry.brand] = (counts[entry.brand] || 0) + 1;
+    }
+    return counts;
+  }, {});
+}
+
+function getMasterTypeCounts() {
+  return masterStrings.reduce((counts, entry) => {
+    if (entry && entry.type) {
+      counts[entry.type] = (counts[entry.type] || 0) + 1;
+    }
+    return counts;
+  }, {});
 }
 
 function updateMasterPageStaticText() {

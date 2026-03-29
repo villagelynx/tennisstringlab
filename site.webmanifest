@@ -1,19 +1,22 @@
 {
-  "name": "Tennis String Lab",
-  "short_name": "TSL",
-  "icons": [
-    {
-      "src": "./android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "./apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png"
-    }
-  ],
-  "theme_color": "#0a4d84",
-  "background_color": "#f4f8fc",
-  "display": "standalone"
+    "name":  "Tennis String Lab",
+    "short_name":  "TSL",
+    "icons":  [
+                  {
+                      "src":  "./android-chrome-192x192.png",
+                      "sizes":  "192x192",
+                      "type":  "image/png"
+                  },
+                  {
+                      "src":  "./apple-touch-icon.png",
+                      "sizes":  "180x180",
+                      "type":  "image/png"
+                  }
+              ],
+    "theme_color":  "#0a4d84",
+    "background_color":  "#f4f8fc",
+    "display":  "standalone",
+    "description":  "Tennis String Lab helps players compare tennis strings, explore pro-inspired setups, and calculate practical starting tensions.",
+    "start_url":  "/",
+    "scope":  "/"
 }

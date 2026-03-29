@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin-instructions.html
+Disallow: /proplayers.html
+Disallow: /visit-stats.html
+Disallow: /images.html
+Disallow: /favicon-preview.html
+Disallow: /mobile-app-mockup.html
+Disallow: /mobile-app-mockup-filters.html
+
+Sitemap: https://tennisstringlab.com/sitemap.xml

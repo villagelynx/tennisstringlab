@@ -244,7 +244,7 @@
       en: [
         { selector: "title", text: "Tennis String Lab" },
         { selector: ".hero h1", text: "Find the best string setup for your game." },
-        { selector: ".hero-copy", text: "Search by string, brand, player, or racket, then narrow everything with quick filters for type, spin, feel, durability, and player level." },
+        { selector: ".hero-copy", text: "Use the Quick String Setup Tool to find a strong starting setup, then use the Tension Calculator to dial in a practical tension range. You can also search by string, player, or racket. Use advanced filters like game style, durability, type, and player level to narrow the results further." },
         { selector: "#stringSearchInput", attr: "placeholder", text: "Search string, brand, ATP player, WTA player, racket, or style" },
         { selector: "#clearSearchButton", text: "Clear" },
         { selector: ".search-help", text: "Search updates instantly as you type." },
