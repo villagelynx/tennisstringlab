@@ -211,6 +211,54 @@ const masterTypeDescriptionTranslations = {
   }
 };
 
+function sortMasterNamesBySurname(names) {
+  if (typeof sortNamesBySurname === "function") {
+    return sortNamesBySurname(names);
+  }
+
+  return [...(names || [])].sort((left, right) => {
+    const leftKey = getMasterSurnameSortKey(left);
+    const rightKey = getMasterSurnameSortKey(right);
+
+    if (leftKey !== rightKey) {
+      return leftKey.localeCompare(rightKey);
+    }
+
+    return String(left || "").localeCompare(String(right || ""));
+  });
+}
+
+function getMasterSurnameSortKey(name) {
+  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+  if (parts.length <= 1) {
+    return String(name || "").toLowerCase();
+  }
+
+  const surnameParts = [parts[parts.length - 1]];
+  let index = parts.length - 2;
+  const surnamePrefixes = new Set(["de", "del", "della", "di", "du", "la", "le", "van", "von"]);
+
+  while (index >= 0 && surnamePrefixes.has(parts[index].toLowerCase())) {
+    surnameParts.unshift(parts[index]);
+    index -= 1;
+  }
+
+  return surnameParts.join(" ").toLowerCase();
+}
+
+function getMasterAllPlayers(entry) {
+  const customAssociations = typeof getCustomProAssociations === "function"
+    ? getCustomProAssociations(entry)
+    : { atpPlayers: [], wtaPlayers: [] };
+
+  return [...new Set([
+    ...(entry.atpPlayers || []),
+    ...(entry.wtaPlayers || []),
+    ...(customAssociations.atpPlayers || []),
+    ...(customAssociations.wtaPlayers || [])
+  ])];
+}
+
 function populateMasterFilters() {
   if (!masterBrandFilter || !masterTypeFilter || !masterPlayerFilter) {
     return;
@@ -218,11 +266,13 @@ function populateMasterFilters() {
 
   const brands = [...new Set(masterStrings.map((entry) => entry.brand).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const types = [...new Set(masterStrings.map((entry) => entry.type).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-  const players = [...new Set(
-    masterStrings
-      .reduce((allPlayers, entry) => allPlayers.concat(entry.atpPlayers || [], entry.wtaPlayers || []), [])
-      .filter(Boolean)
-  )].sort((a, b) => a.localeCompare(b));
+  const players = sortMasterNamesBySurname(
+    [...new Set(
+      masterStrings
+        .reduce((allPlayers, entry) => allPlayers.concat(getMasterAllPlayers(entry)), [])
+        .filter(Boolean)
+    )]
+  );
 
   brands.forEach((brand) => {
     const option = document.createElement("option");
@@ -314,7 +364,7 @@ function getFilteredMasterStrings() {
     const matchesQuery = !query || [entry.name, entry.brand, entry.type].filter(Boolean).some((value) => value.toLowerCase().includes(query));
     const matchesBrand = brand === "Any" || entry.brand === brand;
     const matchesType = type === "Any" || entry.type === type;
-    const allPlayers = [...(entry.atpPlayers || []), ...(entry.wtaPlayers || [])];
+    const allPlayers = getMasterAllPlayers(entry);
     const matchesPlayer = useMostPros || player === "Any" || allPlayers.includes(player);
     return matchesQuery && matchesBrand && matchesType && matchesPlayer;
   });
@@ -435,7 +485,7 @@ function renderMasterTypeDescription() {
 }
 
 function formatProPlayers(entry) {
-  const players = [...new Set([...(entry.atpPlayers || []), ...(entry.wtaPlayers || [])])];
+  const players = sortMasterNamesBySurname(getMasterAllPlayers(entry));
   if (!players.length) {
     return siteI18n.t("masterNoneListed", "None listed");
   }
@@ -454,8 +504,8 @@ function formatProPlayers(entry) {
 
 function renderFullProPlayers(entry) {
   const customAssociations = typeof getCustomProAssociations === "function" ? getCustomProAssociations(entry) : { atpPlayers: [], wtaPlayers: [] };
-  const atpPlayers = [...new Set([...(entry.atpPlayers || []), ...(customAssociations.atpPlayers || [])])];
-  const wtaPlayers = [...new Set([...(entry.wtaPlayers || []), ...(customAssociations.wtaPlayers || [])])];
+  const atpPlayers = sortMasterNamesBySurname([...new Set([...(entry.atpPlayers || []), ...(customAssociations.atpPlayers || [])])]);
+  const wtaPlayers = sortMasterNamesBySurname([...new Set([...(entry.wtaPlayers || []), ...(customAssociations.wtaPlayers || [])])]);
 
   if (!atpPlayers.length && !wtaPlayers.length) {
     return siteI18n.t("masterNoneListed", "None listed");
@@ -472,13 +522,7 @@ function renderFullProPlayers(entry) {
 }
 
 function renderMasterProBadge(entry) {
-  const customAssociations = typeof getCustomProAssociations === "function" ? getCustomProAssociations(entry) : { atpPlayers: [], wtaPlayers: [] };
-  const allPlayers = [...new Set([
-    ...(entry.atpPlayers || []),
-    ...(entry.wtaPlayers || []),
-    ...(customAssociations.atpPlayers || []),
-    ...(customAssociations.wtaPlayers || [])
-  ])];
+  const allPlayers = sortMasterNamesBySurname(getMasterAllPlayers(entry));
   const count = allPlayers.length;
   const title = count ? escapeHtml(allPlayers.join(", ")) : "No pros listed";
 
@@ -507,7 +551,8 @@ function getMasterProCount(entry) {
 
 function renderMasterTensions(entry) {
   const customAssociations = typeof getCustomProAssociations === "function" ? getCustomProAssociations(entry) : { tensions: [] };
-  const items = [...(entry.proTensions || []), ...(customAssociations.tensions || [])];
+  const items = [...(entry.proTensions || []), ...(customAssociations.tensions || [])]
+    .sort((left, right) => getMasterSurnameSortKey(left.player).localeCompare(getMasterSurnameSortKey(right.player)) || String(left.player || "").localeCompare(String(right.player || "")));
   if (!items.length) {
     return "";
   }
@@ -522,7 +567,8 @@ function renderMasterTensions(entry) {
 
 function renderMasterRackets(entry) {
   const customAssociations = typeof getCustomProAssociations === "function" ? getCustomProAssociations(entry) : { rackets: [] };
-  const items = [...(entry.proRackets || []), ...(customAssociations.rackets || [])];
+  const items = [...(entry.proRackets || []), ...(customAssociations.rackets || [])]
+    .sort((left, right) => getMasterSurnameSortKey(left.player).localeCompare(getMasterSurnameSortKey(right.player)) || String(left.player || "").localeCompare(String(right.player || "")));
   if (!items.length) {
     return "";
   }

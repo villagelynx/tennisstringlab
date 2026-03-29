@@ -65,6 +65,7 @@
               <div id="heroMenuPanel" class="hero-menu-panel" hidden>
                 <a id="menuStringTypes" class="hero-menu-link" href="./string-types.html">String Type Descriptions</a>
                 <a id="menuTensionGuide" class="hero-menu-link" href="./tension-guide.html">Tension Guide</a>
+                <a id="menuTensionLogic" class="hero-menu-link" href="./tension-logic.html">Tension Calculator Logic</a>
                 <a id="menuGaugeGuide" class="hero-menu-link" href="./gauge-guide.html">Gauge Guide</a>
                 <a id="menuHybridGuide" class="hero-menu-link" href="./hybrid-guide.html">Hybrid String Guide</a>
                 <a id="menuArmFriendly" class="hero-menu-link" href="./arm-friendly.html">Arm-Friendly Strings</a>
@@ -78,6 +79,7 @@
               </div>
             </div>
           </div>
+          <p class="hero-tagline">Find your perfect setup!</p>
           <h1>Find the best string setup for your game.</h1>
           <p class="hero-copy">
             Search by string, brand, player, or racket, then narrow everything with quick filters for type, spin, feel, durability, and player level.
@@ -121,6 +123,7 @@
           <div id="referenceGuidePanel" class="hero-action-panel" hidden>
             <a id="guideStringTypes" class="hero-action-panel-link" href="./string-types.html">String Type Descriptions</a>
             <a id="guideTensionGuide" class="hero-action-panel-link" href="./tension-guide.html">Tension Guide</a>
+            <a id="guideTensionLogic" class="hero-action-panel-link" href="./tension-logic.html">Tension Calculator Logic</a>
             <a id="guideGaugeGuide" class="hero-action-panel-link" href="./gauge-guide.html">Gauge Guide</a>
             <a id="guideHybridGuide" class="hero-action-panel-link" href="./hybrid-guide.html">Hybrid String Guide</a>
             <a id="guideArmFriendly" class="hero-action-panel-link" href="./arm-friendly.html">Arm-Friendly Strings</a>
@@ -143,70 +146,9 @@
             <span id="heroProsCopy">See what top ATP and WTA players use</span>
           </span>
         </button>
+        <a id="heroHomeButton" class="secondary-button hero-top-home-button" href="./index.html?home=1" hidden>Home</a>
       </div>
-      <section class="slider-panel" aria-labelledby="sliderPanelTitle">
-        <div class="slider-panel-header">
-          <div>
-            <p class="eyebrow">Preference Sliders</p>
-            <h2 id="sliderPanelTitle">Dial in your ideal string profile</h2>
-          </div>
-          <button id="sliderPanelToggle" class="secondary-button slider-panel-toggle" type="button" aria-expanded="true">Hide Sliders</button>
-          <p class="slider-panel-copy">Move the sliders toward what matters most and the rankings will rebalance live.</p>
-        </div>
-        <div id="sliderPanelBody" class="slider-panel-body">
-        <div class="slider-grid">
-          <label class="slider-field" for="sliderPower">
-            <span>Power</span>
-            <div class="slider-input-row">
-              <input id="sliderPower" type="range" min="0" max="10" step="1" value="5">
-              <output id="sliderPowerValue" for="sliderPower">5</output>
-            </div>
-            <div class="slider-scale-labels">
-              <span>Low</span>
-              <span>Balanced</span>
-              <span>High</span>
-            </div>
-          </label>
-          <label class="slider-field" for="sliderSpin">
-            <span>Spin</span>
-            <div class="slider-input-row">
-              <input id="sliderSpin" type="range" min="0" max="10" step="1" value="5">
-              <output id="sliderSpinValue" for="sliderSpin">5</output>
-            </div>
-            <div class="slider-scale-labels">
-              <span>Low</span>
-              <span>Balanced</span>
-              <span>High</span>
-            </div>
-          </label>
-          <label class="slider-field" for="sliderControl">
-            <span>Control</span>
-            <div class="slider-input-row">
-              <input id="sliderControl" type="range" min="0" max="10" step="1" value="5">
-              <output id="sliderControlValue" for="sliderControl">5</output>
-            </div>
-            <div class="slider-scale-labels">
-              <span>Low</span>
-              <span>Balanced</span>
-              <span>High</span>
-            </div>
-          </label>
-          <label class="slider-field" for="sliderProPlayers">
-            <span>Pro Players Using</span>
-            <div class="slider-input-row">
-              <input id="sliderProPlayers" type="range" min="0" max="10" step="1" value="5">
-              <output id="sliderProPlayersValue" for="sliderProPlayers">5</output>
-            </div>
-            <div class="slider-scale-labels">
-              <span>Few</span>
-              <span>Balanced</span>
-              <span>Many</span>
-            </div>
-          </label>
-        </div>
-        <p id="sliderResultsSummary" class="slider-results-summary">Showing 0 of 0 strings</p>
-        </div>
-      </section>
+      <div id="activeModeBar" class="active-mode-bar" hidden></div>
       <div class="mobile-quick-player-row">
         <label class="mobile-quick-player-label" for="mobileQuickPlayerFilter">Pro Player</label>
         <select id="mobileQuickPlayerFilter" class="search-input mobile-quick-player-filter">
@@ -225,7 +167,137 @@
           <option value="Hybrid">Hybrid</option>
         </select>
       </div>
-      <div id="activeModeBar" class="active-mode-bar" hidden></div>
+      <div id="toolWorkbenchToggleRow" class="tool-workbench-toggle-row">
+        <button id="toolWorkbenchToggleButton" class="secondary-button tool-workbench-toggle-button" type="button">Hide Tools</button>
+      </div>
+      <section class="tool-workbench" aria-labelledby="toolWorkbenchTitle">
+        <div class="tool-workbench-header">
+          <div>
+            <p class="eyebrow">Setup Tools</p>
+            <h2 id="toolWorkbenchTitle">Start fast, then fine-tune</h2>
+            <p class="summary-copy">Use the Quick String Setup Tool to get a fast string recommendation based on your target feel, racket, playing style, and optional pro inspiration. Then use the Tension Calculator to turn that setup into a practical starting tension range before you string your racquet.</p>
+          </div>
+          <div class="tool-workbench-header-actions">
+            <p class="eyebrow">Example Setups of the Tennis Pros</p>
+            <div class="example-setup-buttons">
+              <button class="secondary-button tool-workbench-button example-setup-button" type="button" data-example-index="0" title="Load Carlos Alcaraz example">Carlos Alcaraz</button>
+              <button class="secondary-button tool-workbench-button example-setup-button" type="button" data-example-index="1" title="Load Jannik Sinner example">Jannik Sinner</button>
+              <button class="secondary-button tool-workbench-button example-setup-button" type="button" data-example-index="2" title="Load Aryna Sabalenka example">Aryna Sabalenka</button>
+              <button class="secondary-button tool-workbench-button example-setup-button" type="button" data-example-index="3" title="Load Taylor Fritz example">Taylor Fritz</button>
+              <button class="secondary-button tool-workbench-button example-setup-button" type="button" data-example-index="4" title="Load Ben Shelton example">Ben Shelton</button>
+              <button class="secondary-button tool-workbench-button example-setup-button" type="button" data-example-index="5" title="Load Iga Swiatek example">Iga Swiatek</button>
+              <button class="secondary-button tool-workbench-button example-setup-button" type="button" data-example-index="6" title="Load Novak Djokovic example">Novak Djokovic</button>
+              <button class="secondary-button tool-workbench-button example-setup-button" type="button" data-example-index="7" title="Load Alexander Zverev example">Alexander Zverev</button>
+              <button class="secondary-button tool-workbench-button example-setup-button" type="button" data-example-index="8" title="Load Coco Gauff example">Coco Gauff</button>
+              <button class="secondary-button tool-workbench-button example-setup-button" type="button" data-example-index="9" title="Load Tommy Paul example">Tommy Paul</button>
+              <button class="secondary-button tool-workbench-button example-setup-button" type="button" data-example-index="10" title="Load Paula Badosa example">Paula Badosa</button>
+              <button class="secondary-button tool-workbench-button example-setup-button" type="button" data-example-index="11" title="Load Elena Rybakina example">Elena Rybakina</button>
+            </div>
+          </div>
+        </div>
+        <div class="tool-grid">
+          <article class="tool-card tool-card-compact tool-card-quick-setup">
+            <div>
+              <p class="eyebrow">Quick String Setup Tool</p>
+              <h3>Setup preferences + racket profile</h3>
+              <p class="summary-copy">Pick your target feel first, then add racket, style, or an optional pro reference.</p>
+            </div>
+            <div class="tool-form-grid tool-form-grid-compact">
+              <div class="field">
+                <label for="quickSetupSpin">Spin</label>
+                <select id="quickSetupSpin" class="search-input">
+                  <option value="Any">Any spin level</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="quickSetupPower">Power</label>
+                <select id="quickSetupPower" class="search-input">
+                  <option value="Any">Any power level</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="quickSetupControl">Control</label>
+                <select id="quickSetupControl" class="search-input">
+                  <option value="Any">Any control level</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="quickSetupRacket">Racket</label>
+                <select id="quickSetupRacket" class="search-input">
+                  <option value="Any">Any racket family</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="quickSetupStyle">Playing Style</label>
+                <select id="quickSetupStyle" class="search-input">
+                  <option value="Any">Choose a playing style</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="quickSetupPro">Play Like This Pro</label>
+                <select id="quickSetupPro" class="search-input">
+                  <option value="Any">Choose a pro player</option>
+                </select>
+              </div>
+              <div class="field is-wide">
+                <label class="toggle-field" for="quickSetupUseProRacket">
+                  <input id="quickSetupUseProRacket" type="checkbox">
+                  <span>Also use pro's racket</span>
+                </label>
+                <p id="quickSetupProRacketNote" class="field-note">Pick a pro to narrow results to that pro's strings. Turn this on to also use the pro's racket family.</p>
+              </div>
+            </div>
+            <div class="tool-actions tool-actions-compact">
+              <button id="quickSetupButton" class="secondary-button tool-primary-button" type="button">Build Setup</button>
+              <button id="quickSetupApplyButton" class="secondary-button" type="button" hidden>Apply Top Pick to Pre-Populate Tension Calculator fields</button>
+            </div>
+            <div id="quickSetupResult" class="tool-result-panel tool-result-panel-compact">
+              <p class="summary-copy">Pick a racket, style, pro, or your preferred spin, power, and control to generate a starting setup.</p>
+            </div>
+          </article>
+          <article class="tool-card tool-card-tension">
+            <div>
+              <p class="eyebrow">Tension Calculator</p>
+              <h3>Find a smart starting tension</h3>
+              <p class="summary-copy">Choose your string family, racket family, and feel target. The calculator gives a practical starting range in pounds and kilograms.</p>
+            </div>
+            <div class="tool-form-grid">
+              <div class="field">
+                <label for="tensionCalcType">String Type</label>
+                <select id="tensionCalcType" class="search-input">
+                  <option value="Co-Poly">Co-Poly</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="tensionCalcRacket">Racket Family</label>
+                <select id="tensionCalcRacket" class="search-input">
+                  <option value="Control Frame">Control Frame</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="tensionCalcPreference">Feel Goal</label>
+                <select id="tensionCalcPreference" class="search-input">
+                  <option value="Balanced">Balanced</option>
+                  <option value="Comfort">More Comfort</option>
+                  <option value="Control">More Control</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="tensionCalcArm">Arm Comfort</label>
+                <select id="tensionCalcArm" class="search-input">
+                  <option value="Normal">Normal</option>
+                  <option value="Sensitive">A Little Sensitive</option>
+                  <option value="Very Sensitive">Very Sensitive</option>
+                </select>
+              </div>
+            </div>
+            <div class="tool-actions">
+              <button id="tensionCalcButton" class="secondary-button tool-primary-button" type="button">Calculate Tension</button>
+            </div>
+            <div id="tensionCalcResult" class="tool-result-panel"></div>
+          </article>
+        </div>
+      </section>
     </section>
 
     <section class="layout-grid" id="layoutGrid">
@@ -279,6 +351,18 @@
         <div class="results-list" id="resultsList"></div>
       </section>
     </section>
+    <footer class="site-footer">
+      <div>
+        <p class="eyebrow">Tennis String Lab</p>
+        <p class="site-footer-copy">A practical setup tool for comparing strings, pro references, and smart starting tension ideas.</p>
+      </div>
+      <nav class="site-footer-nav" aria-label="Footer">
+        <a class="site-footer-link" href="./about.html">About</a>
+        <a class="site-footer-link" href="./contact.html">Contact</a>
+        <a class="site-footer-link" href="./terms.html">Terms</a>
+        <a class="site-footer-link" href="./privacy.html">Privacy</a>
+      </nav>
+    </footer>
   </main>
 
   <script src="./analytics.js"></script>

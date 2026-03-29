@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How the Tension Calculator Works | Tennis String Lab</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="site-shell standalone-shell">
+    <section class="hero-card planner-card">
+      <div class="hero-copy">
+        <p class="eyebrow">Reference Guide</p>
+        <h1>How the Tension Calculator Works</h1>
+        <p class="summary-copy">This page explains the current starting-tension formula used in Tennis String Lab. It is designed to be transparent: base tension by string type, plus simple adjustments for racket family, feel goal, arm comfort, and the displayed result window.</p>
+      </div>
+    </section>
+
+    <nav class="info-page-nav" aria-label="Information pages">
+      <a class="info-page-nav-link" href="./index.html">Home Page</a>
+      <a class="info-page-nav-link" href="./string-types.html">String Types</a>
+      <a class="info-page-nav-link" href="./tension-guide.html">Tension Guide</a>
+      <a class="info-page-nav-link is-active" href="./tension-logic.html">Tension Calculator Logic</a>
+      <a class="info-page-nav-link" href="./gauge-guide.html">Gauge Guide</a>
+      <a class="info-page-nav-link" href="./hybrid-guide.html">Hybrid Guide</a>
+      <a class="info-page-nav-link" href="./arm-friendly.html">Arm-Friendly</a>
+      <a class="info-page-nav-link" href="./string-shape-guide.html">String Shape</a>
+      <a class="info-page-nav-link" href="./restring-guide.html">How Often to Restring</a>
+      <a class="info-page-nav-link" href="./player-type-guide.html">Player Type Guide</a>
+      <a class="info-page-nav-link" href="./best-by-need.html">Best by Need</a>
+      <a class="info-page-nav-link" href="./popular-comparisons.html">Comparisons</a>
+    </nav>
+
+    <section class="results-panel standalone-panel">
+      <div class="results-header">
+        <div>
+          <p class="eyebrow">Formula Overview</p>
+          <h2>What the calculator adds together</h2>
+        </div>
+      </div>
+      <div class="type-guide-grid">
+        <article class="type-guide-card">
+          <p class="eyebrow">Step 1</p>
+          <h3>Base tension by string type</h3>
+          <p class="summary-copy"><strong>Poly:</strong> 48.5 lbs<br><strong>Co-Poly:</strong> 49 lbs<br><strong>Synthetic Gut:</strong> 55 lbs<br><strong>Multifilament:</strong> 54 lbs<br><strong>Natural Gut:</strong> 55.5 lbs<br><strong>Hybrid:</strong> 52.5 lbs</p>
+        </article>
+        <article class="type-guide-card">
+          <p class="eyebrow">Step 2</p>
+          <h3>Racket family adjustment</h3>
+          <p class="summary-copy"><strong>Pure Drive / Clash / Power Frame:</strong> +1.5 lbs<br><strong>Ezone:</strong> +1 lb<br><strong>Blade / Pro Staff / Head Speed / Head Radical / Control Frame:</strong> +0.5 lbs<br><strong>Pure Aero / VCORE / Spin Frame:</strong> +0 lbs</p>
+        </article>
+        <article class="type-guide-card">
+          <p class="eyebrow">Step 3</p>
+          <h3>Feel goal adjustment</h3>
+          <p class="summary-copy"><strong>Comfort:</strong> -2 lbs<br><strong>Balanced:</strong> 0 lbs<br><strong>Control:</strong> +2 lbs</p>
+        </article>
+        <article class="type-guide-card">
+          <p class="eyebrow">Step 4</p>
+          <h3>Arm comfort adjustment</h3>
+          <p class="summary-copy"><strong>Normal:</strong> 0 lbs<br><strong>Sensitive:</strong> -1.5 lbs<br><strong>Very Sensitive:</strong> -3 lbs</p>
+        </article>
+        <article class="type-guide-card">
+          <p class="eyebrow">Step 5</p>
+          <h3>Clamp and displayed range</h3>
+          <p class="summary-copy">The target number is capped between <strong>42</strong> and <strong>58 lbs</strong>. After that, the tool shows a practical window of <strong>target +/- 1.5 lbs</strong> and converts that range to kilograms.</p>
+        </article>
+        <article class="type-guide-card">
+          <p class="eyebrow">Step 6</p>
+          <h3>Nearby string references</h3>
+          <p class="summary-copy">The result also pulls in nearby references from the database. It looks for entries with the same string type and the closest stored tension band so the user sees realistic comparison points, not just raw formula output.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="results-panel standalone-panel">
+      <div class="results-header">
+        <div>
+          <p class="eyebrow">Worked Example</p>
+          <h2>How one recommendation is built</h2>
+        </div>
+      </div>
+      <div class="type-guide-grid">
+        <article class="type-guide-card">
+          <p class="eyebrow">Inputs</p>
+          <h3>Example setup</h3>
+          <p class="summary-copy"><strong>String Type:</strong> Co-Poly<br><strong>Racket Family:</strong> Control Frame<br><strong>Feel Goal:</strong> Balanced<br><strong>Arm Comfort:</strong> Normal</p>
+        </article>
+        <article class="type-guide-card">
+          <p class="eyebrow">Math</p>
+          <h3>Formula result</h3>
+          <p class="summary-copy"><strong>49</strong> base + <strong>0.5</strong> racket + <strong>0</strong> feel + <strong>0</strong> arm = <strong>49.5 lbs</strong> target</p>
+        </article>
+        <article class="type-guide-card">
+          <p class="eyebrow">Display</p>
+          <h3>What the user sees</h3>
+          <p class="summary-copy">That 49.5 lbs target displays as roughly <strong>48-51 lbs</strong>, plus the kilogram equivalent, because the tool shows a small practical range rather than pretending to know one perfect number.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="results-panel standalone-panel">
+      <div class="results-header">
+        <div>
+          <p class="eyebrow">Important Context</p>
+          <h2>What this number is and is not</h2>
+        </div>
+      </div>
+      <div class="type-guide-grid">
+        <article class="type-guide-card">
+          <p class="eyebrow">Starting Point</p>
+          <h3>Useful, not absolute</h3>
+          <p class="summary-copy">The calculator gives a practical starting zone, not an exact personalized answer. It is there to help a player get into the right ballpark before they fine-tune on court.</p>
+        </article>
+        <article class="type-guide-card">
+          <p class="eyebrow">What still matters</p>
+          <h3>Real setup variables go beyond this formula</h3>
+          <p class="summary-copy">Gauge, weather, string age, string pattern, ball type, machine calibration, and player feel can all move the right answer a little higher or lower than the starting estimate.</p>
+        </article>
+        <article class="type-guide-card">
+          <p class="eyebrow">Best Use</p>
+          <h3>Test in small steps</h3>
+          <p class="summary-copy">Once you have a starting range, change tension in small steps like 1-2 lbs. That makes it easier to learn what you actually respond to without losing the character of the setup.</p>
+        </article>
+        <article class="type-guide-card">
+          <p class="eyebrow">With Quick Setup</p>
+          <h3>Better when used together</h3>
+          <p class="summary-copy">If you apply a recommendation from the Quick String Setup Tool, the Tension Calculator can pre-populate the matching string type and racket family. That gives the calculator a more relevant starting context right away.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="./analytics.js"></script>
+</body>
+</html>

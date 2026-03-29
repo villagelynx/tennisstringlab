@@ -14,7 +14,11 @@ const proPlayersButton = document.getElementById("proPlayersButton");
 const typeMenu = document.getElementById("typeMenu");
 const heroSection = document.getElementById("heroSection");
 const layoutGrid = document.getElementById("layoutGrid");
+const heroHomeButton = document.getElementById("heroHomeButton");
 const activeModeBar = document.getElementById("activeModeBar");
+const toolWorkbenchToggleRow = document.getElementById("toolWorkbenchToggleRow");
+const toolWorkbenchToggleButton = document.getElementById("toolWorkbenchToggleButton");
+const toolWorkbench = document.querySelector(".tool-workbench");
 const resultsPanel = document.querySelector(".results-panel");
 const heroMenuButton = document.getElementById("heroMenuButton");
 const heroMenuPanel = document.getElementById("heroMenuPanel");
@@ -176,6 +180,7 @@ const HOME_STATIC_TRANSLATIONS = {
     menu: {
       "./string-types.html": "String Type Descriptions",
       "./tension-guide.html": "Tension Guide",
+      "./tension-logic.html": "Tension Calculator Logic",
       "./gauge-guide.html": "Gauge Guide",
       "./hybrid-guide.html": "Hybrid String Guide",
       "./arm-friendly.html": "Arm-Friendly Strings",
@@ -199,6 +204,7 @@ const HOME_STATIC_TRANSLATIONS = {
     menu: {
       "./string-types.html": "Descriptions des types de cordage",
       "./tension-guide.html": "Guide de tension",
+      "./tension-logic.html": "Logique du calculateur de tension",
       "./gauge-guide.html": "Guide de jauge",
       "./hybrid-guide.html": "Guide des hybrides",
       "./arm-friendly.html": "Confort du bras",
@@ -222,6 +228,7 @@ const HOME_STATIC_TRANSLATIONS = {
     menu: {
       "./string-types.html": "Descripciones de tipos de cuerda",
       "./tension-guide.html": "Guia de tension",
+      "./tension-logic.html": "Logica del calculador de tension",
       "./gauge-guide.html": "Guia de calibre",
       "./hybrid-guide.html": "Guia de hibridos",
       "./arm-friendly.html": "Brazo y confort",
@@ -245,6 +252,7 @@ const HOME_STATIC_TRANSLATIONS = {
     menu: {
       "./string-types.html": "Descrizioni dei tipi di corda",
       "./tension-guide.html": "Guida alla tensione",
+      "./tension-logic.html": "Logica del calcolatore di tensione",
       "./gauge-guide.html": "Guida al calibro",
       "./hybrid-guide.html": "Guida agli ibridi",
       "./arm-friendly.html": "Comfort del braccio",
@@ -288,6 +296,7 @@ function updateHomepageStaticTranslations() {
   const menuIdMap = {
     "./string-types.html": ["menuStringTypes", "guideStringTypes"],
     "./tension-guide.html": ["menuTensionGuide", "guideTensionGuide"],
+    "./tension-logic.html": ["menuTensionLogic", "guideTensionLogic"],
     "./gauge-guide.html": ["menuGaugeGuide", "guideGaugeGuide"],
     "./hybrid-guide.html": ["menuHybridGuide", "guideHybridGuide"],
     "./arm-friendly.html": ["menuArmFriendly", "guideArmFriendly"],
@@ -323,6 +332,24 @@ function updateHomepageStaticTranslations() {
 const sliderPanelToggle = document.getElementById("sliderPanelToggle");
 const sliderPanelBody = document.getElementById("sliderPanelBody");
 const sliderResultsSummary = document.getElementById("sliderResultsSummary");
+const exampleSetupButtons = Array.from(document.querySelectorAll(".example-setup-button"));
+const quickSetupStyle = document.getElementById("quickSetupStyle");
+const quickSetupPro = document.getElementById("quickSetupPro");
+const quickSetupSpin = document.getElementById("quickSetupSpin");
+const quickSetupPower = document.getElementById("quickSetupPower");
+const quickSetupControl = document.getElementById("quickSetupControl");
+const quickSetupRacket = document.getElementById("quickSetupRacket");
+const quickSetupUseProRacket = document.getElementById("quickSetupUseProRacket");
+const quickSetupProRacketNote = document.getElementById("quickSetupProRacketNote");
+const quickSetupButton = document.getElementById("quickSetupButton");
+const quickSetupApplyButton = document.getElementById("quickSetupApplyButton");
+const quickSetupResult = document.getElementById("quickSetupResult");
+const tensionCalcType = document.getElementById("tensionCalcType");
+const tensionCalcRacket = document.getElementById("tensionCalcRacket");
+const tensionCalcPreference = document.getElementById("tensionCalcPreference");
+const tensionCalcArm = document.getElementById("tensionCalcArm");
+const tensionCalcButton = document.getElementById("tensionCalcButton");
+const tensionCalcResult = document.getElementById("tensionCalcResult");
 
 if (mobileFilterToggle) {
   mobileFilterToggle.addEventListener("click", () => {
@@ -515,6 +542,12 @@ const GUIDE_PAGES = [
     keywords: ["tension", "lbs", "pounds", "low tension", "high tension", "string tension"]
   },
   {
+    title: "Tension Calculator Logic",
+    href: "./tension-logic.html",
+    description: "See exactly how the calculator combines string type, racket family, feel goal, arm comfort, and displayed range.",
+    keywords: ["tension calculator", "calculator logic", "how tension works", "stringing formula", "lbs", "kg", "feel goal", "arm comfort"]
+  },
+  {
     title: "Gauge Guide",
     href: "./gauge-guide.html",
     description: "See how string thickness affects feel, durability, spin, and liveliness.",
@@ -592,6 +625,7 @@ const state = Object.fromEntries(FILTERS.map((filter) => [filter.key, "Any"]));
 let searchQuery = "";
 let popularOnly = false;
 let proOnly = false;
+let toolsHiddenForPrimaryModes = false;
 const sliderPreferences = {
   power: 5,
   spin: 5,
@@ -601,6 +635,206 @@ const sliderPreferences = {
 let sliderRenderTimeout = null;
 let sliderInteractionActive = false;
 let sliderInteractionTimeout = null;
+let latestQuickSetupRecommendation = null;
+let latestTensionCalculatorSource = null;
+let activeQuickSetupExampleIndex = -1;
+const QUICK_SETUP_EXAMPLES = [
+  {
+    buttonLabel: "Example 1/12: Carlos Alcaraz",
+    style: "Aggressive Baseliner",
+    player: "Carlos Alcaraz",
+    preferredTopEntryName: "Babolat RPM Blast",
+    racketFamily: "Babolat Pure Aero",
+    useProRacket: true,
+    preferences: {
+      spin: "Very High",
+      power: "Medium",
+      control: "High"
+    }
+  },
+  {
+    buttonLabel: "Example 2/12: Jannik Sinner",
+    style: "Aggressive Baseliner",
+    player: "Jannik Sinner",
+    preferredTopEntryName: "Head Hawk Touch",
+    racketFamily: "Head Speed",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "Medium",
+      control: "Very High"
+    }
+  },
+  {
+    buttonLabel: "Example 3/12: Aryna Sabalenka",
+    style: "Aggressive Baseliner",
+    player: "Aryna Sabalenka",
+    preferredTopEntryName: "Luxilon ALU Power",
+    racketFamily: "Wilson Blade",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "High",
+      control: "High"
+    }
+  },
+  {
+    buttonLabel: "Example 4/12: Taylor Fritz",
+    style: "Aggressive Baseliner",
+    player: "Taylor Fritz",
+    preferredTopEntryName: "Head Hawk",
+    racketFamily: "Head Radical",
+    useProRacket: true,
+    preferences: {
+      spin: "Medium",
+      power: "Low",
+      control: "Very High"
+    }
+  },
+  {
+    buttonLabel: "Example 5/12: Ben Shelton",
+    style: "Aggressive Baseliner",
+    player: "Ben Shelton",
+    preferredTopEntryName: "Yonex Poly Tour Pro",
+    racketFamily: "Yonex Ezone",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "Medium",
+      control: "High"
+    }
+  },
+  {
+    buttonLabel: "Example 6/12: Iga Swiatek",
+    style: "Aggressive Baseliner",
+    player: "Iga Swiatek",
+    preferredTopEntryName: "Tecnifibre Razor Code",
+    racketFamily: "Control Frame",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "Medium",
+      control: "Very High"
+    }
+  },
+  {
+    buttonLabel: "Example 7/12: Novak Djokovic",
+    style: "All-Court",
+    player: "Novak Djokovic",
+    preferredTopEntryName: "Babolat VS Touch",
+    racketFamily: "Control Frame",
+    useProRacket: true,
+    preferences: {
+      spin: "Medium",
+      power: "High",
+      control: "High"
+    }
+  },
+  {
+    buttonLabel: "Example 8/12: Alexander Zverev",
+    style: "Flat Hitter",
+    player: "Alexander Zverev",
+    preferredTopEntryName: "Head Hawk Touch",
+    racketFamily: "Head Radical",
+    useProRacket: true,
+    preferences: {
+      spin: "Medium",
+      power: "Low",
+      control: "Very High"
+    }
+  },
+  {
+    buttonLabel: "Example 9/12: Coco Gauff",
+    style: "Aggressive Baseliner",
+    player: "Coco Gauff",
+    preferredTopEntryName: "Luxilon ALU Power",
+    racketFamily: "Wilson Blade",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "Medium",
+      control: "High"
+    }
+  },
+  {
+    buttonLabel: "Example 10/12: Tommy Paul",
+    style: "Heavy Topspin",
+    player: "Tommy Paul",
+    preferredTopEntryName: "Solinco Tour Bite",
+    racketFamily: "Spin Frame",
+    useProRacket: true,
+    preferences: {
+      spin: "Very High",
+      power: "Low",
+      control: "Very High"
+    }
+  },
+  {
+    buttonLabel: "Example 11/12: Paula Badosa",
+    style: "Aggressive Baseliner",
+    player: "Paula Badosa",
+    preferredTopEntryName: "Luxilon ALU Power",
+    racketFamily: "Wilson Blade",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "Medium",
+      control: "High"
+    }
+  },
+  {
+    buttonLabel: "Example 12/12: Elena Rybakina",
+    style: "Aggressive Baseliner",
+    player: "Elena Rybakina",
+    preferredTopEntryName: "Yonex Poly Tour Fire",
+    racketFamily: "Yonex Ezone",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "Medium",
+      control: "High"
+    }
+  }
+];
+const TENSION_BAND_DETAILS = {
+  "Low 40s": { min: 43, max: 46, center: 44.5, lbs: "43-46 lbs" },
+  "Mid 40s": { min: 46, max: 48, center: 47, lbs: "46-48 lbs" },
+  "High 40s": { min: 48, max: 50, center: 49, lbs: "48-50 lbs" },
+  "Low 50s": { min: 50, max: 53, center: 51.5, lbs: "50-53 lbs" },
+  "Mid 50s": { min: 54, max: 56, center: 55, lbs: "54-56 lbs" }
+};
+const TENSION_TYPE_BASE = {
+  Poly: 48.5,
+  "Co-Poly": 49,
+  "Synthetic Gut": 55,
+  Multifilament: 54,
+  "Natural Gut": 55.5,
+  Hybrid: 52.5
+};
+const TENSION_RACKET_ADJUSTMENTS = {
+  "Babolat Pure Aero": 0,
+  "Babolat Pure Drive": 1.5,
+  "Wilson Blade": 0.5,
+  "Wilson Clash": 1.5,
+  "Wilson Pro Staff": 0.5,
+  "Yonex Ezone": 1,
+  "Yonex VCORE": 0,
+  "Head Speed": 0.5,
+  "Head Radical": 0.5,
+  "Control Frame": 0.5,
+  "Power Frame": 1.5,
+  "Spin Frame": 0
+};
+const TENSION_FEEL_ADJUSTMENTS = {
+  Comfort: -2,
+  Balanced: 0,
+  Control: 2
+};
+const TENSION_ARM_ADJUSTMENTS = {
+  Normal: 0,
+  Sensitive: -1.5,
+  "Very Sensitive": -3
+};
 
 // Admin note:
 // To add Amazon affiliate links for a specific string, include these optional fields
@@ -2499,8 +2733,7 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
   renderFilters();
   populateMobileQuickPlayerFilter();
   syncMobileQuickTypeFilter();
-  initializePreferenceSliders();
-  initializeSliderPanelToggle();
+  initializeSetupWorkbench();
   syncClearSearchButton();
   renderResults();
 
@@ -2509,6 +2742,7 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
       searchQuery = event.currentTarget.value.trim().toLowerCase();
       popularOnly = false;
       proOnly = false;
+      toolsHiddenForPrimaryModes = false;
       if (searchQuery) {
         clearNonSearchFilters();
       }
@@ -2531,25 +2765,41 @@ if (filterGrid && resultsList && resultsCount && databaseCount && resetButton) {
 
   if (popularStringsButton) {
     popularStringsButton.addEventListener("click", () => {
-      popularOnly = !popularOnly;
+      const nextPopularOnly = !popularOnly;
+      if (nextPopularOnly) {
+        clearPrimaryMenuModeInputs();
+      }
+      popularOnly = nextPopularOnly;
       if (popularOnly) {
         proOnly = false;
       }
+      toolsHiddenForPrimaryModes = popularOnly;
       syncPopularButton();
       syncProButton();
       renderResults();
     });
   }
-
   if (proPlayersButton) {
     proPlayersButton.addEventListener("click", () => {
-      proOnly = !proOnly;
+      const nextProOnly = !proOnly;
+      if (nextProOnly) {
+        clearPrimaryMenuModeInputs();
+      }
+      proOnly = nextProOnly;
       if (proOnly) {
         popularOnly = false;
       }
+      toolsHiddenForPrimaryModes = proOnly;
       syncProButton();
       syncPopularButton();
       renderResults();
+    });
+  }
+
+  if (toolWorkbenchToggleButton) {
+    toolWorkbenchToggleButton.addEventListener("click", () => {
+      toolsHiddenForPrimaryModes = !toolsHiddenForPrimaryModes;
+      syncFocusedMode();
     });
   }
 
@@ -2613,6 +2863,17 @@ function initializePreferenceSliders() {
       flushSliderRender();
     });
   });
+}
+
+function syncSliderControls() {
+  if (sliderPower) sliderPower.value = String(sliderPreferences.power);
+  if (sliderSpin) sliderSpin.value = String(sliderPreferences.spin);
+  if (sliderControl) sliderControl.value = String(sliderPreferences.control);
+  if (sliderProPlayers) sliderProPlayers.value = String(sliderPreferences.proPlayers);
+  if (sliderPowerValue) sliderPowerValue.textContent = String(sliderPreferences.power);
+  if (sliderSpinValue) sliderSpinValue.textContent = String(sliderPreferences.spin);
+  if (sliderControlValue) sliderControlValue.textContent = String(sliderPreferences.control);
+  if (sliderProPlayersValue) sliderProPlayersValue.textContent = String(sliderPreferences.proPlayers);
 }
 
 function scheduleSliderRender() {
@@ -2685,7 +2946,7 @@ function populateMobileQuickPlayerFilter() {
 
   const atpPlayers = FILTERS.find((filter) => filter.key === "atpPlayer")?.options.filter((option) => option !== "Any") || [];
   const wtaPlayers = FILTERS.find((filter) => filter.key === "wtaPlayer")?.options.filter((option) => option !== "Any") || [];
-  const players = [...new Set([...atpPlayers, ...wtaPlayers])].sort((left, right) => left.localeCompare(right));
+  const players = sortNamesBySurname([...new Set([...atpPlayers, ...wtaPlayers])]);
 
   mobileQuickPlayerFilter.innerHTML = `
     <option value="Any">${getUiText("allProPlayers", "All Pro Players")}</option>
@@ -2717,6 +2978,1191 @@ function populateMobileQuickPlayerFilter() {
   syncMobileQuickPlayerFilter();
 }
 
+function initializeSetupWorkbench() {
+  populateQuickSetupControls();
+  populateTensionCalculatorControls();
+
+  [
+    quickSetupStyle,
+    quickSetupPro,
+    quickSetupSpin,
+    quickSetupPower,
+    quickSetupControl,
+    quickSetupRacket,
+    quickSetupUseProRacket
+  ].forEach((control) => {
+    if (!control) {
+      return;
+    }
+
+    control.addEventListener("change", () => {
+      clearActiveQuickSetupExample();
+    });
+  });
+
+  if (quickSetupPro) {
+    quickSetupPro.addEventListener("change", () => {
+      syncQuickSetupProRacketUi();
+    });
+  }
+
+  if (quickSetupUseProRacket) {
+    quickSetupUseProRacket.addEventListener("change", () => {
+      syncQuickSetupProRacketUi();
+    });
+  }
+
+  if (quickSetupButton) {
+    quickSetupButton.addEventListener("click", () => {
+      const recommendation = buildQuickSetupRecommendation(
+        quickSetupStyle?.value || "Any",
+        quickSetupPro?.value || "Any",
+        {
+          spin: quickSetupSpin?.value || "Any",
+          power: quickSetupPower?.value || "Any",
+          control: quickSetupControl?.value || "Any",
+          racketFamily: quickSetupRacket?.value || "Any",
+          useProRacket: quickSetupUseProRacket?.checked || false
+        }
+      );
+      renderQuickSetupRecommendation(recommendation);
+    });
+  }
+
+  if (quickSetupApplyButton) {
+    quickSetupApplyButton.addEventListener("click", () => {
+      applyQuickSetupRecommendation();
+    });
+  }
+
+  if (exampleSetupButtons.length) {
+    exampleSetupButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        applyExampleSetup(Number(button.dataset.exampleIndex || 0));
+      });
+    });
+  }
+
+  if (tensionCalcButton) {
+    tensionCalcButton.addEventListener("click", () => {
+      renderTensionCalculatorRecommendation();
+    });
+  }
+
+  renderQuickSetupRecommendation(null);
+  renderTensionCalculatorRecommendation();
+  syncQuickSetupProRacketUi();
+  syncExampleSetupButtons();
+}
+
+function syncExampleSetupButtons() {
+  if (!exampleSetupButtons.length) {
+    return;
+  }
+
+  exampleSetupButtons.forEach((button, index) => {
+    const isActive = index === activeQuickSetupExampleIndex;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
+}
+
+function clearActiveQuickSetupExample() {
+  if (activeQuickSetupExampleIndex === -1) {
+    return;
+  }
+
+  activeQuickSetupExampleIndex = -1;
+  syncExampleSetupButtons();
+}
+
+function populateQuickSetupControls() {
+  if (quickSetupStyle) {
+    const styles = FILTERS.find((filter) => filter.key === "gameStyle")?.options.filter((option) => option !== "Any") || [];
+    quickSetupStyle.innerHTML = `
+      <option value="Any">Choose a playing style</option>
+      ${styles.map((style) => `<option value="${style}">${style}</option>`).join("")}
+    `;
+  }
+
+  if (quickSetupPro) {
+    const players = getCoveredQuickSetupPlayers();
+    quickSetupPro.innerHTML = `
+      <option value="Any">Choose a pro player</option>
+      ${players.map((player) => `<option value="${player}">${player}</option>`).join("")}
+    `;
+  }
+
+  if (quickSetupSpin) {
+    const spinLevels = FILTERS.find((filter) => filter.key === "spin")?.options || ["Any"];
+    quickSetupSpin.innerHTML = spinLevels.map((value) => `
+      <option value="${value}">${value === "Any" ? "Any spin level" : value}</option>
+    `).join("");
+    quickSetupSpin.value = "Any";
+  }
+
+  if (quickSetupPower) {
+    const powerLevels = FILTERS.find((filter) => filter.key === "power")?.options || ["Any"];
+    quickSetupPower.innerHTML = powerLevels.map((value) => `
+      <option value="${value}">${value === "Any" ? "Any power level" : value}</option>
+    `).join("");
+    quickSetupPower.value = "Any";
+  }
+
+  if (quickSetupControl) {
+    const controlLevels = FILTERS.find((filter) => filter.key === "control")?.options || ["Any"];
+    quickSetupControl.innerHTML = controlLevels.map((value) => `
+      <option value="${value}">${value === "Any" ? "Any control level" : value}</option>
+    `).join("");
+    quickSetupControl.value = "Any";
+  }
+
+  if (quickSetupRacket) {
+    const racketFamilies = FILTERS.find((filter) => filter.key === "racketFamily")?.options || ["Any"];
+    quickSetupRacket.innerHTML = racketFamilies.map((value) => `
+      <option value="${value}">${value === "Any" ? "Any racket family" : value}</option>
+    `).join("");
+    quickSetupRacket.value = "Any";
+  }
+
+  if (quickSetupUseProRacket) {
+    quickSetupUseProRacket.checked = false;
+  }
+}
+
+function populateTensionCalculatorControls() {
+  if (tensionCalcType) {
+    const types = FILTERS.find((filter) => filter.key === "type")?.options.filter((option) => option !== "Any") || [];
+    tensionCalcType.innerHTML = types.map((type) => `<option value="${type}">${type}</option>`).join("");
+    tensionCalcType.value = "Co-Poly";
+  }
+
+  if (tensionCalcRacket) {
+    const rackets = FILTERS.find((filter) => filter.key === "racketFamily")?.options.filter((option) => option !== "Any") || [];
+    tensionCalcRacket.innerHTML = rackets.map((family) => `<option value="${family}">${family}</option>`).join("");
+    tensionCalcRacket.value = "Control Frame";
+  }
+
+  if (tensionCalcPreference) {
+    tensionCalcPreference.value = "Balanced";
+  }
+
+  if (tensionCalcArm) {
+    tensionCalcArm.value = "Normal";
+  }
+}
+
+function getCoveredQuickSetupPlayers() {
+  const coverage = getPlayerCoverage();
+  const atpPlayers = (window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS?.atp || []).filter((player) => coverage.atp.has(player));
+  const wtaPlayers = (window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS?.wta || []).filter((player) => coverage.wta.has(player));
+  return sortNamesBySurname([...new Set([...atpPlayers, ...wtaPlayers])]);
+}
+
+function buildQuickSetupRecommendation(styleValue, playerValue, preferenceValues = {}, forcedTopEntryName = "") {
+  const selectedStyle = styleValue || "Any";
+  const selectedPlayer = playerValue || "Any";
+  const requestedRacketFamily = preferenceValues.racketFamily || "Any";
+  const wantsProRacket = Boolean(preferenceValues.useProRacket) && selectedPlayer !== "Any";
+  const resolvedProRacketFamily = wantsProRacket ? resolveQuickSetupPlayerRacketFamily(selectedPlayer) : "";
+  const selectedPreferences = {
+    spin: preferenceValues.spin || "Any",
+    power: preferenceValues.power || "Any",
+    control: preferenceValues.control || "Any"
+  };
+  const selectedRacketFamily = resolvedProRacketFamily || requestedRacketFamily;
+
+  const hasPreferenceFilters = Object.values(selectedPreferences).some((value) => value !== "Any");
+  if (selectedStyle === "Any" && selectedPlayer === "Any" && selectedRacketFamily === "Any" && !hasPreferenceFilters) {
+    return null;
+  }
+
+  let pool = [...STRINGS];
+
+  if (selectedPlayer !== "Any") {
+    const playerPool = pool.filter((entry) => getAllPlayersForEntry(entry).includes(selectedPlayer));
+    if (!playerPool.length) {
+      return null;
+    }
+    pool = playerPool;
+  }
+
+  if (selectedStyle !== "Any" && selectedPlayer === "Any") {
+    const stylePool = pool.filter((entry) => entry.gameStyle === selectedStyle);
+    if (stylePool.length) {
+      pool = stylePool;
+    }
+  }
+
+  if (selectedRacketFamily !== "Any" && selectedPlayer === "Any") {
+    const exactRacketPool = pool.filter((entry) => entry.racketFamily === selectedRacketFamily);
+    if (exactRacketPool.length) {
+      pool = exactRacketPool;
+    } else {
+      const groupedRacketPool = pool.filter((entry) => getRacketFamilyGroup(entry.racketFamily) === getRacketFamilyGroup(selectedRacketFamily));
+      if (groupedRacketPool.length) {
+        pool = groupedRacketPool;
+      }
+    }
+  }
+
+  const ranked = pool
+    .map((entry) => {
+      const playerTension = findPlayerTensionForEntry(entry, selectedPlayer);
+      const playerRacket = findPlayerRacketForEntry(entry, selectedPlayer);
+      const proReferenceStrength = getQuickSetupProReferenceStrength(playerTension, playerRacket);
+      let score = calculateQuickSetupFitScore(entry, selectedStyle, selectedPreferences, selectedRacketFamily);
+
+      if (selectedPlayer !== "Any") {
+        score += 3.5;
+      }
+
+      if (playerTension) {
+        score += 2.5;
+      }
+
+      if (entry.type === "Hybrid") {
+        score -= 0.35;
+      }
+
+      score += Math.min(getKnownProPlayerCount(entry), 10) * 0.08;
+
+      return {
+        entry,
+        playerTension,
+        playerRacket,
+        proReferenceStrength,
+        score
+      };
+    })
+    .sort((left, right) => {
+      if (selectedPlayer !== "Any" && right.proReferenceStrength !== left.proReferenceStrength) {
+        return right.proReferenceStrength - left.proReferenceStrength;
+      }
+
+      if (right.score !== left.score) {
+        return right.score - left.score;
+      }
+
+      const leftHasExactTension = left.playerTension ? 1 : 0;
+      const rightHasExactTension = right.playerTension ? 1 : 0;
+      if (rightHasExactTension !== leftHasExactTension) {
+        return rightHasExactTension - leftHasExactTension;
+      }
+
+      const proDifference = getKnownProPlayerCount(right.entry) - getKnownProPlayerCount(left.entry);
+      if (proDifference !== 0) {
+        return proDifference;
+      }
+
+      return left.entry.name.localeCompare(right.entry.name);
+    });
+
+  if (!ranked.length) {
+    return null;
+  }
+
+  const pinnedRanked = pinQuickSetupOption(ranked, forcedTopEntryName);
+  const hasForcedTopMatch = Boolean(forcedTopEntryName) && pinnedRanked[0]?.entry?.name === forcedTopEntryName;
+  const hasPinnedProSetup = selectedPlayer !== "Any" && ranked.some((item) => item.proReferenceStrength > 0);
+  const options = selectQuickSetupOptions(pinnedRanked, 5, 3).map((item, index) => ({
+    entry: item.entry,
+    playerTension: item.playerTension,
+    playerRacket: item.playerRacket,
+    tensionDisplay: buildQuickSetupTensionDisplay(item.entry, item.playerTension),
+    rankLabel: index === 0
+      ? hasForcedTopMatch
+        ? "Example Pick"
+        : "Top Match"
+      : `Option ${index + 1}`
+  }));
+  const best = options[0];
+  const reasonParts = [];
+
+  if (hasForcedTopMatch) {
+    reasonParts.push(`Pinned example string: ${forcedTopEntryName}.`);
+  }
+
+  if (selectedStyle !== "Any") {
+    reasonParts.push(`Matches a ${selectedStyle.toLowerCase()} profile.`);
+  }
+
+  if (selectedPlayer !== "Any") {
+    reasonParts.push(best.playerTension
+      ? `Includes a documented ${selectedPlayer} tension reference.`
+      : `Uses a string associated with ${selectedPlayer}.`);
+  }
+
+  if (wantsProRacket) {
+    reasonParts.push(resolvedProRacketFamily
+      ? `Using ${selectedPlayer}'s racket family: ${resolvedProRacketFamily}.`
+      : requestedRacketFamily !== "Any"
+        ? `No saved racket family found for ${selectedPlayer}, so your selected racket stayed in place.`
+        : `No saved racket family found for ${selectedPlayer}, so racket fit stayed open.`);
+  }
+
+  if (selectedRacketFamily !== "Any") {
+    reasonParts.push(best.entry.racketFamily === selectedRacketFamily
+      ? `Aligned to your ${selectedRacketFamily.toLowerCase()} frame.`
+      : `Closest racket-family fit to ${selectedRacketFamily.toLowerCase()}.`);
+  }
+
+  if (selectedPreferences.spin !== "Any") {
+    reasonParts.push(`Biased toward ${selectedPreferences.spin.toLowerCase()} spin.`);
+  }
+
+  if (selectedPreferences.power !== "Any") {
+    reasonParts.push(`Biased toward ${selectedPreferences.power.toLowerCase()} power.`);
+  }
+
+  if (selectedPreferences.control !== "Any") {
+    reasonParts.push(`Biased toward ${selectedPreferences.control.toLowerCase()} control.`);
+  }
+
+  if (!reasonParts.length) {
+    reasonParts.push("Closest in-database fit for a fast starting point.");
+  }
+
+  const logic = buildQuickSetupLogicSummary({
+    selectedPlayer,
+    selectedStyle,
+    selectedPreferences,
+    selectedRacketFamily,
+    hasPinnedProSetup,
+    hasForcedTopMatch,
+    forcedTopEntryName,
+    wantsProRacket,
+    resolvedProRacketFamily
+  });
+
+  return {
+    style: selectedStyle,
+    player: selectedPlayer,
+    requestedRacketFamily,
+    racketFamily: selectedRacketFamily,
+    useProRacket: wantsProRacket,
+    proRacketFamily: resolvedProRacketFamily,
+    preferences: selectedPreferences,
+    options,
+    entry: best.entry,
+    playerTension: best.playerTension,
+    playerRacket: best.playerRacket,
+    tensionDisplay: best.tensionDisplay,
+    logic,
+    reason: reasonParts.join(" ")
+  };
+}
+
+function getQuickSetupProReferenceStrength(playerTension, playerRacket) {
+  if (playerTension && playerRacket) {
+    return 3;
+  }
+
+  if (playerTension) {
+    return 2;
+  }
+
+  if (playerRacket) {
+    return 1;
+  }
+
+  return 0;
+}
+
+function pinQuickSetupOption(ranked, forcedTopEntryName = "") {
+  if (!Array.isArray(ranked) || !ranked.length || !forcedTopEntryName) {
+    return ranked;
+  }
+
+  const forcedIndex = ranked.findIndex((item) => item?.entry?.name === forcedTopEntryName);
+  if (forcedIndex <= 0) {
+    return ranked;
+  }
+
+  return [ranked[forcedIndex], ...ranked.slice(0, forcedIndex), ...ranked.slice(forcedIndex + 1)];
+}
+
+function buildQuickSetupLogicSummary({
+  selectedPlayer,
+  selectedStyle,
+  selectedPreferences,
+  selectedRacketFamily,
+  hasPinnedProSetup,
+  hasForcedTopMatch,
+  forcedTopEntryName,
+  wantsProRacket,
+  resolvedProRacketFamily
+}) {
+  const parts = [];
+
+  if (hasForcedTopMatch && forcedTopEntryName) {
+    parts.push(`${forcedTopEntryName} pinned first`);
+  }
+
+  if (selectedPlayer !== "Any") {
+    parts.push(`${selectedPlayer} string pool`);
+    if (hasPinnedProSetup) {
+      parts.push("documented pro setup first");
+    }
+  }
+
+  if (selectedStyle !== "Any") {
+    parts.push(`${selectedStyle} fit`);
+  }
+
+  if (selectedRacketFamily !== "Any") {
+    const racketLabel = wantsProRacket && resolvedProRacketFamily
+      ? `${resolvedProRacketFamily} racket family`
+      : `${selectedRacketFamily} racket fit`;
+    parts.push(racketLabel);
+  }
+
+  const preferenceLabels = [
+    selectedPreferences.spin !== "Any" ? `${selectedPreferences.spin} spin` : "",
+    selectedPreferences.power !== "Any" ? `${selectedPreferences.power} power` : "",
+    selectedPreferences.control !== "Any" ? `${selectedPreferences.control} control` : ""
+  ].filter(Boolean);
+
+  if (preferenceLabels.length) {
+    parts.push(preferenceLabels.join(" / "));
+  }
+
+  return parts.length ? parts.join(" -> ") : "Closest in-database fit";
+}
+
+function resolveQuickSetupPlayerRacketFamily(player) {
+  if (!player || player === "Any") {
+    return "";
+  }
+
+  const counts = new Map();
+
+  STRINGS.forEach((entry) => {
+    if (!getAllPlayersForEntry(entry).includes(player) || !entry.racketFamily) {
+      return;
+    }
+
+    const hasDirectRacketReference = Boolean(findPlayerRacketForEntry(entry, player));
+    const weight = hasDirectRacketReference ? 3 : 1;
+    counts.set(entry.racketFamily, (counts.get(entry.racketFamily) || 0) + weight);
+  });
+
+  return [...counts.entries()]
+    .sort((left, right) => {
+      if (right[1] !== left[1]) {
+        return right[1] - left[1];
+      }
+      return left[0].localeCompare(right[0]);
+    })[0]?.[0] || "";
+}
+
+function syncQuickSetupProRacketUi() {
+  const selectedPlayer = quickSetupPro?.value || "Any";
+  const hasPlayer = selectedPlayer !== "Any";
+  const resolvedRacketFamily = hasPlayer ? resolveQuickSetupPlayerRacketFamily(selectedPlayer) : "";
+  const useProRacket = Boolean(quickSetupUseProRacket?.checked);
+
+  if (quickSetupUseProRacket) {
+    quickSetupUseProRacket.disabled = !hasPlayer;
+    if (!hasPlayer) {
+      quickSetupUseProRacket.checked = false;
+    }
+  }
+
+  if (quickSetupProRacketNote) {
+    quickSetupProRacketNote.textContent = !hasPlayer
+      ? "Pick a pro to narrow results to that pro's strings. Turn this on to also use the pro's racket family."
+      : resolvedRacketFamily
+        ? useProRacket
+          ? `${selectedPlayer} now narrows results by both string and racket family: ${resolvedRacketFamily}.`
+          : `${selectedPlayer} already narrows results to that pro's strings. Turn this on to also use ${selectedPlayer}'s racket family: ${resolvedRacketFamily}.`
+        : `${selectedPlayer} already narrows results to that pro's strings, but no racket family is saved yet.`;
+  }
+}
+
+function selectQuickSetupOptions(ranked, desiredCount = 5, minimumBrandCount = 3) {
+  if (!Array.isArray(ranked) || ranked.length === 0) {
+    return [];
+  }
+
+  const targetCount = Math.max(1, desiredCount);
+  const availableBrandCount = new Set(ranked.map((item) => item.entry.brand).filter(Boolean)).size;
+  const targetBrandCount = Math.min(minimumBrandCount, availableBrandCount, targetCount);
+  const selected = [];
+  const selectedNames = new Set();
+  const selectedBrands = new Set();
+
+  const addOption = (item) => {
+    if (!item || selectedNames.has(item.entry.name)) {
+      return false;
+    }
+
+    selected.push(item);
+    selectedNames.add(item.entry.name);
+    if (item.entry.brand) {
+      selectedBrands.add(item.entry.brand);
+    }
+    return true;
+  };
+
+  addOption(ranked[0]);
+
+  if (selectedBrands.size < targetBrandCount) {
+    ranked.forEach((item) => {
+      if (selected.length >= targetCount || selectedBrands.size >= targetBrandCount) {
+        return;
+      }
+
+      if (!item.entry.brand || selectedBrands.has(item.entry.brand)) {
+        return;
+      }
+
+      addOption(item);
+    });
+  }
+
+  ranked.forEach((item) => {
+    if (selected.length >= targetCount) {
+      return;
+    }
+
+    addOption(item);
+  });
+
+  return selected;
+}
+
+function calculateQuickSetupFitScore(entry, selectedStyle, selectedPreferences = {}, selectedRacketFamily = "Any") {
+  if (!selectedStyle || selectedStyle === "Any") {
+    const preferenceOnlyScore = calculateQuickSetupPreferenceScore(entry, selectedPreferences);
+    const racketScore = calculateQuickSetupRacketScore(entry, selectedRacketFamily);
+    return (preferenceOnlyScore > 0 ? preferenceOnlyScore : 3) + racketScore;
+  }
+
+  const styleWeights = {
+    "Aggressive Baseliner": { spin: 2.2, control: 2, power: 1.2, durability: 1.2, comfort: 0.4 },
+    Counterpuncher: { control: 2, comfort: 1.6, durability: 1.4, spin: 1.1, power: 0.6 },
+    "All-Court": { comfort: 1.6, power: 1.5, control: 1.4, durability: 0.8, spin: 0.8 },
+    "Serve and Volley": { power: 1.7, comfort: 1.5, control: 1.4, durability: 0.6, spin: 0.4 },
+    "Flat Hitter": { control: 2.2, power: 1.1, durability: 1.4, spin: 0.6, comfort: 0.6 },
+    "Heavy Topspin": { spin: 2.4, control: 1.7, durability: 1.5, power: 0.8, comfort: 0.4 }
+  };
+
+  const weights = styleWeights[selectedStyle];
+  if (!weights) {
+    return 3;
+  }
+
+  const totalWeight = Object.values(weights).reduce((sum, value) => sum + value, 0);
+  if (!totalWeight) {
+    return 3;
+  }
+
+  const weightedValue =
+    mapStringLevelToNumeric(entry.spin) * (weights.spin || 0) +
+    mapStringLevelToNumeric(entry.control) * (weights.control || 0) +
+    mapStringLevelToNumeric(entry.power) * (weights.power || 0) +
+    mapStringLevelToNumeric(entry.durability) * (weights.durability || 0) +
+    mapStringLevelToNumeric(entry.comfort) * (weights.comfort || 0);
+
+  const normalized = weightedValue / totalWeight;
+  return normalized * 2
+    + calculateQuickSetupPreferenceScore(entry, selectedPreferences)
+    + calculateQuickSetupRacketScore(entry, selectedRacketFamily);
+}
+
+function calculateQuickSetupPreferenceScore(entry, selectedPreferences = {}) {
+  const affinityWeights = {
+    spin: 1.6,
+    power: 1.2,
+    control: 1.6
+  };
+
+  return Object.entries(affinityWeights).reduce((sum, [key, weight]) => {
+    const desired = selectedPreferences[key];
+    if (!desired || desired === "Any") {
+      return sum;
+    }
+
+    const difference = Math.abs(mapStringLevelToNumeric(entry[key]) - mapStringLevelToNumeric(desired));
+    const closeness = Math.max(0, 1 - difference / 3);
+    return sum + closeness * weight;
+  }, 0);
+}
+
+function calculateQuickSetupRacketScore(entry, selectedRacketFamily = "Any") {
+  if (!selectedRacketFamily || selectedRacketFamily === "Any") {
+    return 0;
+  }
+
+  if (entry.racketFamily === selectedRacketFamily) {
+    return 2.25;
+  }
+
+  if (getRacketFamilyGroup(entry.racketFamily) === getRacketFamilyGroup(selectedRacketFamily)) {
+    return 0.9;
+  }
+
+  return 0;
+}
+
+function getAllPlayersForEntry(entry) {
+  const customAssociations = getCustomProAssociations(entry);
+  return mergeUniqueStrings(
+    [...(entry.atpPlayers || []), ...(entry.wtaPlayers || [])],
+    [...customAssociations.atpPlayers, ...customAssociations.wtaPlayers]
+  );
+}
+
+function findPlayerTensionForEntry(entry, player) {
+  if (!player || player === "Any") {
+    return null;
+  }
+
+  const customAssociations = getCustomProAssociations(entry);
+  return [...(entry.proTensions || []), ...customAssociations.tensions].find((item) => item.player === player) || null;
+}
+
+function findPlayerRacketForEntry(entry, player) {
+  if (!player || player === "Any") {
+    return null;
+  }
+
+  const customAssociations = getCustomProAssociations(entry);
+  return [...(entry.proRackets || []), ...customAssociations.rackets].find((item) => item.player === player) || null;
+}
+
+function buildQuickSetupTensionDisplay(entry, playerTension) {
+  if (playerTension) {
+    return {
+      label: playerTension.tension,
+      detail: playerTension.detail
+    };
+  }
+
+  const band = TENSION_BAND_DETAILS[entry.tensionBand];
+  return {
+    label: band ? band.lbs : entry.tensionBand,
+    detail: `${entry.tensionBand} starting range`
+  };
+}
+
+function renderQuickSetupRecommendation(recommendation) {
+  latestQuickSetupRecommendation = recommendation;
+
+  if (!quickSetupResult) {
+    return;
+  }
+
+  if (!recommendation) {
+    quickSetupResult.innerHTML = `<p class="summary-copy">Pick a racket, style, pro, or your preferred spin, power, and control to generate a starting setup.</p>`;
+    if (quickSetupApplyButton) {
+      quickSetupApplyButton.hidden = true;
+      quickSetupApplyButton.textContent = "Apply Top Pick to Pre-Populate Tension Calculator fields";
+    }
+    return;
+  }
+
+  const { options, reason, logic } = recommendation;
+  const matchLabel = options.length === 1 ? "1 strong match" : `${options.length} strong matches`;
+  quickSetupResult.innerHTML = `
+    <div class="tool-result-header">
+      <p class="eyebrow">Recommended Setups</p>
+      <h3 class="tool-recommendation-name">${matchLabel}</h3>
+      <p class="tool-note">${reason}</p>
+      <p class="tool-mini-line"><strong>Logic:</strong> ${logic}</p>
+    </div>
+    <div class="quick-setup-option-list">
+      ${options.map((option, index) => `
+        <article class="quick-setup-option${index === 0 ? " is-primary" : ""}">
+          <div class="quick-setup-option-header">
+            <div>
+              <p class="eyebrow">${option.rankLabel}</p>
+              <h4 class="quick-setup-option-name">${option.entry.name}</h4>
+            </div>
+            <button class="secondary-button compact-button quick-setup-option-apply" type="button" data-index="${index}">Use This Setup</button>
+          </div>
+          <div class="tool-stat-grid quick-setup-option-stats">
+            <div class="tool-stat">
+              <span class="tool-stat-label">String Type</span>
+              <strong>${option.entry.type}</strong>
+            </div>
+            <div class="tool-stat">
+              <span class="tool-stat-label">Gauge</span>
+              <strong>${option.entry.gauge}</strong>
+            </div>
+            <div class="tool-stat">
+              <span class="tool-stat-label">Tension</span>
+              <strong>${option.tensionDisplay.label}</strong>
+            </div>
+            <div class="tool-stat">
+              <span class="tool-stat-label">Racket Fit</span>
+              <strong>${option.entry.racketFamily}</strong>
+            </div>
+          </div>
+          <p class="tool-note tool-note-compact">${option.entry.summary}</p>
+          <p class="tool-note tool-note-compact">Reference: ${option.tensionDisplay.detail}${option.playerRacket ? ` | ${option.playerRacket.player} uses ${option.playerRacket.racket}` : ""}</p>
+        </article>
+      `).join("")}
+    </div>
+  `;
+
+  quickSetupResult.querySelectorAll(".quick-setup-option-apply").forEach((button) => {
+    button.addEventListener("click", () => {
+      const optionIndex = Number(button.dataset.index || 0);
+      applyQuickSetupRecommendation(optionIndex);
+    });
+  });
+
+  if (quickSetupApplyButton) {
+    quickSetupApplyButton.hidden = false;
+    quickSetupApplyButton.textContent = "Apply Top Pick to Pre-Populate Tension Calculator fields";
+  }
+}
+
+function applyQuickSetupRecommendation(optionIndex = 0) {
+  if (!latestQuickSetupRecommendation) {
+    return;
+  }
+
+  const selectedOption = latestQuickSetupRecommendation.options?.[optionIndex] || latestQuickSetupRecommendation.options?.[0];
+  if (!selectedOption) {
+    return;
+  }
+
+  const appliedRecommendation = {
+    ...latestQuickSetupRecommendation,
+    entry: selectedOption.entry,
+    playerTension: selectedOption.playerTension,
+    playerRacket: selectedOption.playerRacket,
+    tensionDisplay: selectedOption.tensionDisplay
+  };
+  const filters = buildPlannerFiltersFromRecommendation(appliedRecommendation);
+  applyPlannerSelection(filters);
+  applyTensionCalculatorFromQuickSetup(appliedRecommendation);
+}
+
+function applyExampleSetup(exampleIndex = 0) {
+  const example = QUICK_SETUP_EXAMPLES[exampleIndex] || QUICK_SETUP_EXAMPLES[0];
+  if (!example) {
+    return;
+  }
+
+  activeQuickSetupExampleIndex = exampleIndex;
+  syncExampleSetupButtons();
+
+  if (quickSetupStyle) {
+    quickSetupStyle.value = example.style;
+  }
+
+  if (quickSetupPro) {
+    quickSetupPro.value = example.player;
+  }
+
+  if (quickSetupSpin) {
+    quickSetupSpin.value = example.preferences.spin;
+  }
+
+  if (quickSetupPower) {
+    quickSetupPower.value = example.preferences.power;
+  }
+
+  if (quickSetupControl) {
+    quickSetupControl.value = example.preferences.control;
+  }
+
+  if (quickSetupRacket) {
+    quickSetupRacket.value = example.racketFamily;
+  }
+
+  if (quickSetupUseProRacket) {
+    quickSetupUseProRacket.checked = Boolean(example.useProRacket);
+  }
+
+  syncQuickSetupProRacketUi();
+
+  const recommendation = buildQuickSetupRecommendation(
+    example.style,
+    example.player,
+    {
+      ...example.preferences,
+      racketFamily: example.racketFamily,
+      useProRacket: example.useProRacket
+    },
+    example.preferredTopEntryName || ""
+  );
+  renderQuickSetupRecommendation(recommendation);
+  const filters = recommendation
+    ? buildPlannerFiltersFromRecommendation(recommendation)
+    : buildExampleFallbackFilters(example);
+  applyPlannerSelection(filters);
+  if (recommendation) {
+    applyTensionCalculatorFromQuickSetup(recommendation);
+  }
+}
+
+function buildExampleFallbackFilters(example) {
+  const filters = {
+    racketFamily: example.racketFamily,
+    gameStyle: example.style
+  };
+
+  if (isKnownAtpPlayer(example.player)) {
+    filters.atpPlayer = example.player;
+  } else if (isKnownWtaPlayer(example.player)) {
+    filters.wtaPlayer = example.player;
+  }
+
+  return filters;
+}
+
+function buildPlannerFiltersFromRecommendation(recommendation) {
+  const filters = {
+    type: recommendation.entry.type,
+    gauge: recommendation.entry.gauge,
+    tensionBand: recommendation.entry.tensionBand,
+    racketFamily: recommendation.entry.racketFamily
+  };
+
+  if (recommendation.style && recommendation.style !== "Any") {
+    filters.gameStyle = recommendation.style;
+  }
+
+  if (recommendation.preferences?.spin && recommendation.preferences.spin !== "Any") {
+    filters.spin = recommendation.preferences.spin;
+  }
+
+  if (recommendation.preferences?.power && recommendation.preferences.power !== "Any") {
+    filters.power = recommendation.preferences.power;
+  }
+
+  if (recommendation.preferences?.control && recommendation.preferences.control !== "Any") {
+    filters.control = recommendation.preferences.control;
+  }
+
+  if (recommendation.player && recommendation.player !== "Any") {
+    if (isKnownAtpPlayer(recommendation.player)) {
+      filters.atpPlayer = recommendation.player;
+    } else if (isKnownWtaPlayer(recommendation.player)) {
+      filters.wtaPlayer = recommendation.player;
+    }
+  }
+
+  return filters;
+}
+
+function applyTensionCalculatorFromQuickSetup(recommendation) {
+  if (!recommendation) {
+    return;
+  }
+
+  const nextType = recommendation.entry?.type || tensionCalcType?.value || "Co-Poly";
+  const nextRacketFamily = recommendation.racketFamily && recommendation.racketFamily !== "Any"
+    ? recommendation.racketFamily
+    : recommendation.entry?.racketFamily || tensionCalcRacket?.value || "Control Frame";
+  const nextPreference = inferTensionPreferenceFromQuickSetup(recommendation);
+  latestTensionCalculatorSource = buildTensionCalculatorSource(recommendation, nextPreference, nextRacketFamily);
+
+  if (tensionCalcType) {
+    tensionCalcType.value = nextType;
+  }
+
+  if (tensionCalcRacket && nextRacketFamily) {
+    tensionCalcRacket.value = nextRacketFamily;
+  }
+
+  if (tensionCalcPreference) {
+    tensionCalcPreference.value = nextPreference;
+  }
+
+  renderTensionCalculatorRecommendation();
+}
+
+function buildTensionCalculatorSource(recommendation, inferredPreference, appliedRacketFamily) {
+  if (!recommendation?.entry) {
+    return null;
+  }
+
+  return {
+    name: recommendation.entry.name,
+    gauge: recommendation.entry.gauge,
+    type: recommendation.entry.type,
+    entryRacketFamily: recommendation.entry.racketFamily,
+    appliedRacketFamily,
+    inferredPreference,
+    player: recommendation.player || "Any",
+    tensionDisplay: recommendation.tensionDisplay || buildQuickSetupTensionDisplay(recommendation.entry, recommendation.playerTension),
+    playerTension: recommendation.playerTension || null,
+    playerRacket: recommendation.playerRacket || null
+  };
+}
+
+function inferTensionPreferenceFromQuickSetup(recommendation) {
+  const selectedPower = recommendation.preferences?.power;
+  const selectedControl = recommendation.preferences?.control;
+  const powerScore = !selectedPower || selectedPower === "Any"
+    ? 0
+    : mapStringLevelToNumeric(selectedPower);
+  const controlScore = !selectedControl || selectedControl === "Any"
+    ? 0
+    : mapStringLevelToNumeric(selectedControl);
+
+  if (!powerScore && !controlScore) {
+    return "Balanced";
+  }
+
+  if (powerScore === controlScore) {
+    return "Balanced";
+  }
+
+  return controlScore > powerScore ? "Control" : "Comfort";
+}
+
+function isKnownAtpPlayer(player) {
+  return (window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS?.atp || []).includes(player);
+}
+
+function isKnownWtaPlayer(player) {
+  return (window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS?.wta || []).includes(player);
+}
+
+function renderTensionCalculatorRecommendation() {
+  if (!tensionCalcResult) {
+    return;
+  }
+
+  const recommendation = buildTensionCalculatorRecommendation({
+    type: tensionCalcType?.value || "Co-Poly",
+    racketFamily: tensionCalcRacket?.value || "Control Frame",
+    preference: tensionCalcPreference?.value || "Balanced",
+    armComfort: tensionCalcArm?.value || "Normal",
+    source: latestTensionCalculatorSource
+  });
+
+  if (!recommendation) {
+    tensionCalcResult.innerHTML = `<p class="summary-copy">Choose a string type and racket family to calculate a starting range.</p>`;
+    return;
+  }
+
+  const typeDescription = TYPE_DESCRIPTIONS[recommendation.type] || null;
+
+  tensionCalcResult.innerHTML = `
+    <div class="tool-result-header">
+      <p class="eyebrow">Starting Tension</p>
+      <h3 class="tool-recommendation-name">${recommendation.lbsRange}</h3>
+      <p class="tool-note">${recommendation.kgRange}</p>
+    </div>
+    <div class="tool-stat-grid">
+      ${recommendation.source ? `
+        <div class="tool-stat">
+          <span class="tool-stat-label">Selected String</span>
+          <strong>${recommendation.source.name} ${recommendation.source.gauge}</strong>
+        </div>
+      ` : ""}
+      ${recommendation.proReference ? `
+        <div class="tool-stat">
+          <span class="tool-stat-label">Pro Tension</span>
+          <strong>${recommendation.proReference.tension}</strong>
+          <span class="tool-stat-note">${recommendation.proReference.player}${recommendation.proReference.detail ? ` | ${recommendation.proReference.detail}` : ""}</span>
+        </div>
+      ` : ""}
+      <div class="tool-stat">
+        <span class="tool-stat-label">String Type</span>
+        <strong>${recommendation.type}</strong>
+      </div>
+      <div class="tool-stat">
+        <span class="tool-stat-label">Racket Family</span>
+        <strong>${recommendation.racketFamily}</strong>
+      </div>
+      <div class="tool-stat">
+        <span class="tool-stat-label">Feel Goal</span>
+        <strong>${recommendation.preference}</strong>
+      </div>
+      <div class="tool-stat">
+        <span class="tool-stat-label">Arm Comfort</span>
+        <strong>${recommendation.armComfort}</strong>
+      </div>
+    </div>
+    ${recommendation.sourceNote ? `<p class="tool-note tool-note-compact">${recommendation.sourceNote}</p>` : ""}
+    <p class="tool-mini-line">${recommendation.explanation}</p>
+    ${typeDescription ? `
+      <article class="type-description-card tool-type-description-card">
+        <p class="eyebrow">${typeDescription.eyebrow}</p>
+        <h3>${typeDescription.title}</h3>
+        <p class="summary-copy">${typeDescription.text}</p>
+      </article>
+    ` : ""}
+    ${recommendation.hybridNote ? `<p class="tool-note">${recommendation.hybridNote}</p>` : ""}
+    <details class="tool-logic-details">
+      <summary class="secondary-button compact-button tension-logic-toggle">String Tension Logic</summary>
+      <div class="tool-logic-panel">
+        <p class="tool-note tool-note-compact"><strong>Formula:</strong> ${recommendation.logic.formula}</p>
+        <p class="tool-note tool-note-compact">Range shown: ${recommendation.logic.rangeExplanation}</p>
+        ${recommendation.logic.clampNote ? `<p class="tool-note tool-note-compact">${recommendation.logic.clampNote}</p>` : ""}
+      </div>
+    </details>
+    ${recommendation.references.length > 0 ? `
+      <div class="tool-reference-list">
+        ${recommendation.references.map((entry) => `
+          <div class="tool-reference-item">
+            <strong>${entry.name}</strong>
+            <span>${entry.tensionBand} | ${formatTensionBandRange(entry.tensionBand)}</span>
+          </div>
+        `).join("")}
+      </div>
+    ` : ""}
+  `;
+}
+
+function buildTensionCalculatorRecommendation({ type, racketFamily, preference, armComfort, source = null }) {
+  const base = TENSION_TYPE_BASE[type];
+  if (!base) {
+    return null;
+  }
+
+  const racketAdjustment = TENSION_RACKET_ADJUSTMENTS[racketFamily] || 0;
+  const preferenceAdjustment = TENSION_FEEL_ADJUSTMENTS[preference] || 0;
+  const armAdjustment = TENSION_ARM_ADJUSTMENTS[armComfort] || 0;
+  const rawTargetPounds = base + racketAdjustment + preferenceAdjustment + armAdjustment;
+  const targetPounds = clampNumber(
+    rawTargetPounds,
+    42,
+    58
+  );
+  const min = clampNumber(targetPounds - 1.5, 42, 58);
+  const max = clampNumber(targetPounds + 1.5, 42, 58);
+  const explanationParts = [];
+
+  explanationParts.push((type === "Poly" || type === "Co-Poly")
+    ? `${type} setups usually start lower than softer strings.`
+    : `${type} setups usually start a little higher than stiff poly beds.`);
+  explanationParts.push(preference === "Comfort"
+    ? "Your comfort target pulls the starting point down."
+    : preference === "Control"
+      ? "Your control target nudges the starting point higher."
+      : "Balanced keeps the range near the middle.");
+
+  if (armComfort !== "Normal") {
+    explanationParts.push("Extra arm comfort lowers the recommendation a bit.");
+  }
+
+  const sourceMatchesCurrentFields = Boolean(source)
+    && source.type === type
+    && source.appliedRacketFamily === racketFamily;
+  const proReference = source?.playerTension
+    ? {
+        player: source.playerTension.player || source.player,
+        tension: source.playerTension.tension,
+        detail: source.playerTension.detail || ""
+      }
+    : null;
+  const sourceNote = !source
+    ? ""
+    : sourceMatchesCurrentFields
+      ? source.playerTension
+        ? `From Quick String Setup Tool: ${source.player === "Any" ? source.name : `${source.player}'s ${source.name}`} with a documented reference of ${source.tensionDisplay.label}.`
+        : `From Quick String Setup Tool: ${source.name} ${source.gauge} using ${source.appliedRacketFamily}.`
+      : `Quick String Setup source: ${source.name} ${source.gauge}. The current calculator fields have been adjusted from the original handoff.`;
+
+  return {
+    type,
+    racketFamily,
+    preference,
+    armComfort,
+    source,
+    proReference,
+    sourceNote,
+    lbsRange: formatPoundsRange(min, max),
+    kgRange: formatKilogramRange(min, max),
+    explanation: explanationParts.join(" "),
+    logic: {
+      formula: `${formatDecimalNumber(base)} base ${formatSignedAdjustment(racketAdjustment)} racket ${formatSignedAdjustment(preferenceAdjustment)} feel ${formatSignedAdjustment(armAdjustment)} arm = ${formatDecimalNumber(targetPounds)} lbs target`,
+      rangeExplanation: `${formatPoundsRange(min, max)} is shown as a simple starting window around the ${formatDecimalNumber(targetPounds)} lbs target.`,
+      clampNote: rawTargetPounds !== targetPounds
+        ? `The raw result was capped to keep calculator outputs between 42 and 58 lbs.`
+        : ""
+    },
+    hybridNote: type === "Hybrid"
+      ? "Hybrid tip: if you use a softer main with a poly cross, a common starting point is to string the cross 2 lbs lower."
+      : "",
+    references: getClosestTensionExamples(type, racketFamily, targetPounds, source)
+  };
+}
+
+function getClosestTensionExamples(type, racketFamily, targetPounds, source = null) {
+  const sameType = STRINGS.filter((entry) => doesEntryMatchCalculatorType(entry.type, type));
+  const exactFamily = sameType.filter((entry) => entry.racketFamily === racketFamily);
+  const groupedFamily = sameType.filter((entry) => getRacketFamilyGroup(entry.racketFamily) === getRacketFamilyGroup(racketFamily));
+  const candidatePool = exactFamily.length ? exactFamily : groupedFamily.length ? groupedFamily : sameType;
+  const selectedEntry = source?.name ? STRINGS.find((entry) => entry.name === source.name) : null;
+  const ordered = candidatePool
+    .slice()
+    .sort((left, right) => {
+      const leftDifference = Math.abs(getTensionBandCenter(left.tensionBand) - targetPounds);
+      const rightDifference = Math.abs(getTensionBandCenter(right.tensionBand) - targetPounds);
+      if (leftDifference !== rightDifference) {
+        return leftDifference - rightDifference;
+      }
+      return left.name.localeCompare(right.name);
+    });
+
+  if (!selectedEntry) {
+    return ordered.slice(0, 3);
+  }
+
+  const withoutSelected = ordered.filter((entry) => entry.name !== selectedEntry.name);
+  return [selectedEntry, ...withoutSelected].slice(0, 3);
+}
+
+function doesEntryMatchCalculatorType(entryType, selectedType) {
+  if (selectedType === "Poly" || selectedType === "Co-Poly") {
+    return entryType === "Poly" || entryType === "Co-Poly";
+  }
+
+  return entryType === selectedType;
+}
+
+function getRacketFamilyGroup(racketFamily) {
+  if (["Babolat Pure Aero", "Yonex VCORE", "Spin Frame"].includes(racketFamily)) {
+    return "spin";
+  }
+
+  if (["Babolat Pure Drive", "Wilson Clash", "Yonex Ezone", "Power Frame"].includes(racketFamily)) {
+    return "power";
+  }
+
+  return "control";
+}
+
+function getTensionBandCenter(tensionBand) {
+  return TENSION_BAND_DETAILS[tensionBand]?.center || 51;
+}
+
+function formatTensionBandRange(tensionBand) {
+  return TENSION_BAND_DETAILS[tensionBand]?.lbs || tensionBand;
+}
+
+function formatPoundsRange(min, max) {
+  return `${Math.round(min)}-${Math.round(max)} lbs`;
+}
+
+function formatDecimalNumber(value) {
+  return Number(value).toFixed(1);
+}
+
+function formatSignedAdjustment(value) {
+  return `${value >= 0 ? "+" : "-"} ${formatDecimalNumber(Math.abs(value))}`;
+}
+
+function formatKilogramRange(min, max) {
+  const poundsToKg = (value) => (value * 0.45359237).toFixed(1);
+  return `${poundsToKg(min)}-${poundsToKg(max)} kg`;
+}
+
+function clampNumber(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
 function clearNonSearchFilters() {
   FILTERS.forEach((filter) => {
     state[filter.key] = "Any";
@@ -2729,6 +4175,17 @@ function clearNonSearchFilters() {
   syncTypeMenu();
   syncMobileQuickPlayerFilter();
   syncMobileQuickTypeFilter();
+}
+
+function clearPrimaryMenuModeInputs() {
+  clearNonSearchFilters();
+  searchQuery = "";
+
+  if (stringSearchInput) {
+    stringSearchInput.value = "";
+  }
+
+  syncClearSearchButton();
 }
 
 if (mobileQuickTypeFilter) {
@@ -2971,8 +4428,9 @@ function buildFilterOptions(filter, playerCoverage) {
   }
 
   const coveredPlayers = filter.key === "atpPlayer" ? playerCoverage.atp : playerCoverage.wta;
+  const orderedOptions = ["Any", ...sortNamesBySurname(filter.options.filter((option) => option !== "Any"))];
 
-  return filter.options.map((option) => {
+  return orderedOptions.map((option) => {
     if (option === "Any") {
       return `<option value="Any">${filter.key === "atpPlayer" || filter.key === "wtaPlayer" ? getUiText("allProPlayers", "All Pro Players") : "Any"}</option>`;
     }
@@ -3169,7 +4627,7 @@ function renderTypeDescription() {
 
   const typeKey = state.type || "Any";
   const content = TYPE_DESCRIPTIONS[typeKey] || TYPE_DESCRIPTIONS.Any;
-  const showDescription = typeKey !== "Any";
+  const showDescription = typeKey !== "Any" && activeQuickSetupExampleIndex === -1;
 
   typeDescriptionCard.hidden = !showDescription;
 
@@ -3267,6 +4725,23 @@ function syncFocusedMode() {
   const selectedPlayer = state.atpPlayer !== "Any" ? state.atpPlayer : state.wtaPlayer !== "Any" ? state.wtaPlayer : "";
   const hasSliderFocus = hasActiveSliderPreferences();
   const isFocused = popularOnly || proOnly || Boolean(searchQuery) || state.type !== "Any" || Boolean(selectedPlayer) || hasSliderFocus;
+  const hasPrimaryMainMode = popularOnly || proOnly;
+  const hasActiveExampleFocus = activeQuickSetupExampleIndex !== -1
+    && QUICK_SETUP_EXAMPLES[activeQuickSetupExampleIndex]?.player === selectedPlayer;
+  const showStandaloneToolsToggle = !hasPrimaryMainMode;
+  const modeLabel = popularOnly
+    ? siteI18n.t("activePopular", "Showing 20 Most Popular")
+    : proOnly
+      ? siteI18n.t("activePros", "Showing Pro Player Strings")
+      : searchQuery
+        ? siteI18n.t("activeSearch", 'Searching for "{query}"', { query: searchQuery })
+        : selectedPlayer
+          ? siteI18n.t("activeShowing", "Showing {value}", { value: selectedPlayer })
+          : state.type !== "Any"
+            ? siteI18n.t("activeShowing", "Showing {value}", { value: state.type })
+            : siteI18n.t("activeSliders", "Using preference sliders");
+  const showModePill = !(hasPrimaryMainMode && !toolsHiddenForPrimaryModes) && !hasActiveExampleFocus;
+  const hasActiveModeControls = showModePill || hasPrimaryMainMode;
 
   if (heroSection) {
     heroSection.classList.toggle("is-results-focused", isFocused);
@@ -3280,43 +4755,67 @@ function syncFocusedMode() {
     mobileQuickTypeRow.hidden = Boolean(selectedPlayer);
   }
 
+  if (toolWorkbench) {
+    toolWorkbench.hidden = toolsHiddenForPrimaryModes;
+  }
+
+  if (toolWorkbenchToggleRow) {
+    toolWorkbenchToggleRow.hidden = !showStandaloneToolsToggle;
+  }
+
+  if (toolWorkbenchToggleButton) {
+    toolWorkbenchToggleButton.textContent = toolsHiddenForPrimaryModes
+      ? siteI18n.t("showTools", "Show Tools")
+      : siteI18n.t("hideTools", "Hide Tools");
+  }
+
+  if (heroHomeButton) {
+    heroHomeButton.hidden = !isFocused;
+  }
+
   if (activeModeBar) {
-    if (!isFocused) {
+    if (!isFocused || !hasActiveModeControls) {
       activeModeBar.hidden = true;
       activeModeBar.innerHTML = "";
-      return;
-    }
+    } else {
+      activeModeBar.hidden = false;
+      activeModeBar.innerHTML = `
+        ${showModePill ? `<span class="active-mode-pill">${modeLabel}</span>` : ""}
+        ${hasPrimaryMainMode ? `<button class="active-mode-clear active-mode-tools-toggle" type="button">${toolsHiddenForPrimaryModes ? siteI18n.t("showTools", "Show Tools") : siteI18n.t("hideTools", "Hide Tools")}</button>` : ""}
+      `;
 
-    activeModeBar.hidden = false;
-    activeModeBar.innerHTML = `
-      <span class="active-mode-pill">${popularOnly ? siteI18n.t("activePopular", "Showing 20 Most Popular") : proOnly ? siteI18n.t("activePros", "Showing Pro Player Strings") : searchQuery ? siteI18n.t("activeSearch", 'Searching for "{query}"', { query: searchQuery }) : selectedPlayer ? siteI18n.t("activeShowing", "Showing {value}", { value: selectedPlayer }) : state.type !== "Any" ? siteI18n.t("activeShowing", "Showing {value}", { value: state.type }) : siteI18n.t("activeSliders", "Using preference sliders")}</span>
-      <button class="active-mode-clear" type="button">${siteI18n.t("backToMainChoices", "Back to main choices")}</button>
-    `;
-
-    const clearButton = activeModeBar.querySelector(".active-mode-clear");
-    if (clearButton) {
-      clearButton.addEventListener("click", () => {
-        if (typeof window !== "undefined") {
-          window.location.href = "./index.html?home=1";
-        }
-      });
+      const toolsToggleButton = activeModeBar.querySelector(".active-mode-tools-toggle");
+      if (toolsToggleButton) {
+        toolsToggleButton.addEventListener("click", () => {
+          toolsHiddenForPrimaryModes = !toolsHiddenForPrimaryModes;
+          syncFocusedMode();
+        });
+      }
     }
   }
 
-  if (isFocused) {
+  const shouldAutoScrollResults = isFocused && !searchQuery;
+  if (shouldAutoScrollResults) {
     scrollToResultsOnMobile();
   }
 }
 
 function hasActiveSliderPreferences() {
-  return Object.values(sliderPreferences).some((value) => Number(value) !== 5);
+  return false;
 }
 
 function getActiveSliderKeys() {
-  return Object.keys(sliderPreferences).filter((key) => Number(sliderPreferences[key]) !== 5);
+  return [];
 }
 
 function compareRankedStrings(left, right) {
+  if (proOnly) {
+    const proCountDifference = getKnownProPlayerCount(right.string) - getKnownProPlayerCount(left.string);
+    if (proCountDifference !== 0) {
+      return proCountDifference;
+    }
+  }
+
   const scoreDifference = right.score - left.score;
   if (Math.abs(scoreDifference) > 0.001) {
     return scoreDifference;
@@ -3354,31 +4853,19 @@ function scrollToResultsOnMobile() {
   });
 }
 
-function resetToMainChoices() {
+function applyPlannerSelection(nextFilters = {}) {
   FILTERS.forEach((filter) => {
-    state[filter.key] = "Any";
+    state[filter.key] = nextFilters[filter.key] || "Any";
     const select = document.getElementById(`filter-${filter.key}`);
     if (select) {
-      select.value = "Any";
+      select.value = state[filter.key];
     }
   });
 
   searchQuery = "";
   popularOnly = false;
   proOnly = false;
-
-  Object.keys(sliderPreferences).forEach((key) => {
-    sliderPreferences[key] = 5;
-  });
-
-  if (sliderPower) sliderPower.value = "5";
-  if (sliderSpin) sliderSpin.value = "5";
-  if (sliderControl) sliderControl.value = "5";
-  if (sliderProPlayers) sliderProPlayers.value = "5";
-  if (sliderPowerValue) sliderPowerValue.textContent = "5";
-  if (sliderSpinValue) sliderSpinValue.textContent = "5";
-  if (sliderControlValue) sliderControlValue.textContent = "5";
-  if (sliderProPlayersValue) sliderProPlayersValue.textContent = "5";
+  toolsHiddenForPrimaryModes = false;
 
   if (stringSearchInput) {
     stringSearchInput.value = "";
@@ -3391,6 +4878,10 @@ function resetToMainChoices() {
   syncMobileQuickPlayerFilter();
   syncMobileQuickTypeFilter();
   renderResults();
+}
+
+function resetToMainChoices() {
+  applyPlannerSelection();
 }
 
 function syncTypeMenu() {
@@ -3443,16 +4934,8 @@ function scoreString(entry) {
   };
 
   if (activeFilters.length === 0) {
-    if (!hasActiveSliderPreferences()) {
-      return {
-        score: 10,
-        matchedTags: buildMatchedTags(entry, FILTERS.slice(0, 6))
-      };
-    }
-
-    const sliderBoost = calculateSliderPreferenceScore(entry);
     return {
-      score: Math.max(0, Math.min(10, sliderBoost)),
+      score: 10,
       matchedTags: buildMatchedTags(entry, FILTERS.slice(0, 6))
     };
   }
@@ -3484,10 +4967,9 @@ function scoreString(entry) {
   }
 
   const baseScore = totalWeight > 0 ? (matchedWeight / totalWeight) * 10 : 0;
-  const sliderBoost = calculateSliderPreferenceScore(entry);
 
   return {
-    score: Math.max(0, Math.min(10, baseScore * 0.78 + sliderBoost * 0.22)),
+    score: Math.max(0, Math.min(10, baseScore)),
     matchedTags: matchedTags.length > 0 ? matchedTags : buildMatchedTags(entry, FILTERS.slice(0, 5))
   };
 }
@@ -3576,12 +5058,12 @@ function getFilterDisplayValue(entry, key) {
   const customAssociations = getCustomProAssociations(entry);
 
   if (key === "atpPlayer") {
-    const atpPlayers = mergeUniqueStrings(entry.atpPlayers || [], customAssociations.atpPlayers);
+    const atpPlayers = sortNamesBySurname(mergeUniqueStrings(entry.atpPlayers || [], customAssociations.atpPlayers));
     return atpPlayers.length > 0 ? atpPlayers.join(", ") : "No ATP player noted yet";
   }
 
   if (key === "wtaPlayer") {
-    const wtaPlayers = mergeUniqueStrings(entry.wtaPlayers || [], customAssociations.wtaPlayers);
+    const wtaPlayers = sortNamesBySurname(mergeUniqueStrings(entry.wtaPlayers || [], customAssociations.wtaPlayers));
     return wtaPlayers.length > 0 ? wtaPlayers.join(", ") : "No WTA player noted yet";
   }
 
@@ -3591,9 +5073,9 @@ function getFilterDisplayValue(entry, key) {
 function renderStringCard(entry, score, matchedTags) {
   const fallbackImage = entry.fallbackImage || createStringImage(entry.name, entry.imageTone);
   const customAssociations = getCustomProAssociations(entry);
-  const atpPlayers = mergeUniqueStrings(entry.atpPlayers || [], customAssociations.atpPlayers);
-  const wtaPlayers = mergeUniqueStrings(entry.wtaPlayers || [], customAssociations.wtaPlayers);
-  const allProPlayers = mergeUniqueStrings(atpPlayers, wtaPlayers);
+  const atpPlayers = sortNamesBySurname(mergeUniqueStrings(entry.atpPlayers || [], customAssociations.atpPlayers));
+  const wtaPlayers = sortNamesBySurname(mergeUniqueStrings(entry.wtaPlayers || [], customAssociations.wtaPlayers));
+  const allProPlayers = sortNamesBySurname(mergeUniqueStrings(atpPlayers, wtaPlayers));
   const totalProPlayers = allProPlayers.length;
   const proBadgeTitle = totalProPlayers ? escapeHtml(allProPlayers.join(", ")) : "No pros listed";
   const proTensions = [...(entry.proTensions || []), ...customAssociations.tensions];
@@ -3731,6 +5213,37 @@ function getCustomProPlayers() {
 
 function mergeUniqueStrings(primary, secondary) {
   return [...new Set([...(primary || []), ...(secondary || [])])];
+}
+
+function sortNamesBySurname(names) {
+  return [...(names || [])].sort((left, right) => {
+    const leftKey = getSurnameSortKey(left);
+    const rightKey = getSurnameSortKey(right);
+
+    if (leftKey !== rightKey) {
+      return leftKey.localeCompare(rightKey);
+    }
+
+    return String(left || "").localeCompare(String(right || ""));
+  });
+}
+
+function getSurnameSortKey(name) {
+  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+  if (parts.length <= 1) {
+    return String(name || "").toLowerCase();
+  }
+
+  const surnameParts = [parts[parts.length - 1]];
+  let index = parts.length - 2;
+  const surnamePrefixes = new Set(["de", "del", "della", "di", "du", "la", "le", "van", "von"]);
+
+  while (index >= 0 && surnamePrefixes.has(parts[index].toLowerCase())) {
+    surnameParts.unshift(parts[index]);
+    index -= 1;
+  }
+
+  return surnameParts.join(" ").toLowerCase();
 }
 
 function escapeHtml(value) {
@@ -3971,3 +5484,4 @@ function createStringImage(name, tone, stringColor, brand) {
 
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
+
