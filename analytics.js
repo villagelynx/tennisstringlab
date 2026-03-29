@@ -243,8 +243,8 @@
     "index.html": {
       en: [
         { selector: "title", text: "Tennis Setup" },
-        { selector: ".hero h1", text: "Tennis Setup" },
-        { selector: ".hero-copy", text: "Tennis Setup helps players search the string database, build a quick pro-inspired setup, and find a practical starting tension before restringing. Use the buttons below to jump into search, browse the full list, open Quick Setup, or go straight to the Tension Calculator." },
+        { selector: ".hero h1", text: "TennisSetup" },
+        { selector: ".hero-copy", text: "Use Quick Setup and Tension Calculator tools to build a quick pro-inspired setup." },
         { selector: "#stringSearchInput", attr: "placeholder", text: "Search string, brand, ATP player, WTA player, racket, or style" },
         { selector: "#clearSearchButton", text: "Clear" },
         { selector: ".search-help", text: "Search updates instantly as you type." },
