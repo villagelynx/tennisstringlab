@@ -485,6 +485,12 @@ h1 {
   gap: 7px;
 }
 
+.planner-search-row {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
 .search-shell {
   display: flex;
   align-items: center;
@@ -514,12 +520,14 @@ h1 {
 
 .string-search-input {
   width: 100%;
-  min-height: 48px;
+  min-height: 54px;
   border: 0;
   background: transparent;
   padding-left: 0;
   padding-right: 0;
   box-shadow: none;
+  font-size: 1.06rem;
+  font-weight: 600;
 }
 
 .string-search-input:focus {
@@ -531,7 +539,7 @@ h1 {
   background: rgba(10, 77, 132, 0.1);
   color: var(--green-dark);
   border-radius: 999px;
-  min-height: 34px;
+  min-height: 40px;
   padding: 0 12px;
   font: inherit;
   font-weight: 700;
@@ -1171,13 +1179,14 @@ h1 {
 .field select,
 .search-input {
   width: 100%;
-  min-height: 42px;
+  min-height: 50px;
   padding: 10px 12px;
   border-radius: 14px;
   border: 1px solid rgba(19, 77, 130, 0.16);
   background: rgba(255, 255, 255, 0.95);
   color: var(--text);
   font: inherit;
+  font-size: 1.02rem;
 }
 
 .player-filter-select {
@@ -2488,24 +2497,8 @@ h1 {
 
 .mobile-home-title-row h1 {
   margin-top: 0;
-}
-
-.tool-page-header .mobile-home-circle-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 104px;
-  height: 104px;
-  padding: 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(15, 77, 122, 0.16);
-  background: #f3f8fc;
-  color: #0d4d7a;
-  font-size: 1rem;
-  font-weight: 800;
-  line-height: 1.1;
-  text-align: center;
-  text-decoration: none;
+  font-size: clamp(2.8rem, 7vw, 4.2rem);
+  line-height: 0.95;
 }
 
 .tool-page-body {
@@ -2534,13 +2527,13 @@ h1 {
 .tool-page-title-row {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 16px;
 }
 
 .tool-page-title-row h1 {
   margin-top: 8px;
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
 }
 
 .tool-page-copy {
@@ -2548,7 +2541,7 @@ h1 {
   max-width: 720px;
   color: #44637f;
   line-height: 1.6;
-  font-size: 1rem;
+  font-size: 1.08rem;
 }
 
 .tool-page-nav {
@@ -2568,7 +2561,7 @@ h1 {
   border: 1px solid rgba(15, 77, 122, 0.16);
   background: #f4f9fd;
   color: #0d4d7a;
-  font-size: 1rem;
+  font-size: 1.02rem;
   font-weight: 700;
   text-decoration: none;
 }
@@ -2598,20 +2591,20 @@ h1 {
 .tool-page-card .tool-note,
 .tool-page-card .tool-mini-line,
 .tool-page-card .field-note {
-  font-size: 1rem;
+  font-size: 1.06rem;
   line-height: 1.55;
 }
 
 .tool-page-card label,
 .tool-page-card .tool-stat-label {
-  font-size: 0.92rem;
+  font-size: 0.98rem;
 }
 
 .tool-page-card .search-input,
 .tool-page-card .secondary-button,
 .tool-page-card .compact-button {
   min-height: 54px;
-  font-size: 1rem;
+  font-size: 1.06rem;
 }
 
 .tool-page-card .tool-form-grid,
@@ -2633,7 +2626,7 @@ h1 {
 
 .tool-page-example-picker .search-input {
   min-height: 56px;
-  font-size: 1rem;
+  font-size: 1.08rem;
 }
 
 @media (max-width: 820px) {
@@ -2711,8 +2704,8 @@ h1 {
 
   .mobile-home-title-row h1 {
     margin-top: 0;
-    font-size: clamp(2rem, 9vw, 2.7rem);
-    line-height: 1;
+    font-size: clamp(3rem, 12vw, 4.2rem);
+    line-height: 0.92;
   }
 
   .mobile-home-circle-link {
@@ -2768,11 +2761,6 @@ h1 {
     font-size: 1rem;
     font-weight: 800;
     text-decoration: none;
-  }
-
-  .hero-search-row {
-    width: 100%;
-    margin-top: 18px;
   }
 
   .hero-actions,
@@ -2833,7 +2821,7 @@ h1 {
   .tool-page-card .tool-note,
   .tool-page-card .tool-mini-line,
   .tool-page-card .field-note {
-    font-size: 1.02rem;
+    font-size: 1.08rem;
   }
 
   .tool-page-card .tool-form-grid,
@@ -2843,5 +2831,13 @@ h1 {
 
   .tool-page-card .tool-stat-grid {
     grid-template-columns: 1fr;
+  }
+
+  .search-input,
+  .string-search-input,
+  .tool-page-card .search-input,
+  .tool-page-example-picker .search-input {
+    min-height: 58px;
+    font-size: 1.08rem;
   }
 }

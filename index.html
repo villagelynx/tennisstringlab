@@ -142,24 +142,11 @@
             Quick Setup gives you a fast starting recommendation based on feel, racket, style, and optional pro inspiration. The Tension Calculator turns that setup into a smart starting tension range you can actually use.
           </p>
           <div class="mobile-home-action-grid">
-            <a class="mobile-home-action-button" href="#stringSearchInput">Search</a>
+            <a class="mobile-home-action-button" href="#plannerSearchSection">Search</a>
             <a class="mobile-home-action-button" href="./master-list.html">Main List</a>
             <a class="mobile-home-action-button" href="./quick-setup.html">Quick Setup</a>
             <a class="mobile-home-action-button" href="./tension-calculator.html">Tension Calculator</a>
           </div>
-        </div>
-        <div class="hero-search-row">
-        <label class="search-shell" for="stringSearchInput">
-          <span class="search-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" role="presentation">
-              <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"></circle>
-              <path d="M16 16l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-            </svg>
-          </span>
-          <input id="stringSearchInput" class="string-search-input" type="search" placeholder="Search string, brand, ATP player, WTA player, racket, or style">
-          <button id="clearSearchButton" class="clear-search-button" type="button" hidden>Clear</button>
-        </label>
-        <p class="search-help">Search updates instantly as you type.</p>
         </div>
       </div>
       <section class="mobile-home-tool-sections" aria-label="Mobile tool links">
@@ -395,6 +382,19 @@
             <button id="mobileFilterToggle" class="secondary-button mobile-filter-toggle" type="button" aria-expanded="true">Hide Filters</button>
             <button id="resetButton" class="secondary-button" type="button">Reset</button>
           </div>
+        </div>
+        <div id="plannerSearchSection" class="planner-search-row">
+          <label class="search-shell" for="stringSearchInput">
+            <span class="search-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                <path d="M16 16l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+              </svg>
+            </span>
+            <input id="stringSearchInput" class="string-search-input" type="search" placeholder="Search string, brand, ATP player, WTA player, racket, or style">
+            <button id="clearSearchButton" class="clear-search-button" type="button" hidden>Clear</button>
+          </label>
+          <p class="search-help">Search by string, brand, player, racket, or style.</p>
         </div>
         <div class="filter-grid" id="filterGrid"></div>
       </aside>
