@@ -3628,7 +3628,7 @@ body[data-page="compare-strings"] .compare-tool-report-card .tool-stat-label {
 
   body[data-page="home"] #toolsMenuButton {
     position: relative;
-    top: -3px;
+    top: -2px;
   }
 
   body[data-page="home"] .hero-action-card {
