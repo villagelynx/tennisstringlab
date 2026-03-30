@@ -47,6 +47,9 @@ const sliderPowerValue = document.getElementById("sliderPowerValue");
 const sliderSpinValue = document.getElementById("sliderSpinValue");
 const sliderControlValue = document.getElementById("sliderControlValue");
 const sliderProPlayersValue = document.getElementById("sliderProPlayersValue");
+
+normalizeHomeLinksForLocalFiles();
+
 const siteI18n = {
   getLanguage() {
     return window.TSL_I18N && typeof window.TSL_I18N.getLanguage === "function"
@@ -64,6 +67,17 @@ const siteI18n = {
     return text;
   }
 };
+
+function normalizeHomeLinksForLocalFiles() {
+  if (!window.location || window.location.protocol !== "file:") {
+    return;
+  }
+
+  document.querySelectorAll('a[href="/"]').forEach((link) => {
+    link.setAttribute("href", "./index.html");
+  });
+}
+
 const UI_TRANSLATIONS = {
   en: {
     mobileShowFilters: "Show Filters",
@@ -350,6 +364,7 @@ const quickSetupPower = document.getElementById("quickSetupPower");
 const quickSetupControl = document.getElementById("quickSetupControl");
 const quickSetupRacket = document.getElementById("quickSetupRacket");
 const quickSetupUseProRacket = document.getElementById("quickSetupUseProRacket");
+const quickSetupProRacketHelp = document.getElementById("quickSetupProRacketHelp");
 const quickSetupProRacketNote = document.getElementById("quickSetupProRacketNote");
 const quickSetupButton = document.getElementById("quickSetupButton");
 const quickSetupApplyButton = document.getElementById("quickSetupApplyButton");
@@ -381,18 +396,71 @@ if (mobileFilterToggle) {
 function setupDropdownMenu(button, panel, containerSelector) {
   if (!button || !panel) return;
 
+  const container = button.closest(containerSelector) || document.querySelector(containerSelector);
+  let closeTimer = null;
+  const canHoverOpen = () => window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  const openMenu = () => {
+    if (closeTimer) {
+      window.clearTimeout(closeTimer);
+      closeTimer = null;
+    }
+    button.setAttribute("aria-expanded", "true");
+    panel.hidden = false;
+  };
+
+  const closeMenu = () => {
+    if (closeTimer) {
+      window.clearTimeout(closeTimer);
+      closeTimer = null;
+    }
+    button.setAttribute("aria-expanded", "false");
+    panel.hidden = true;
+  };
+
+  const scheduleCloseMenu = () => {
+    if (closeTimer) {
+      window.clearTimeout(closeTimer);
+    }
+    closeTimer = window.setTimeout(() => {
+      closeMenu();
+    }, 90);
+  };
+
   button.addEventListener("click", () => {
     const isOpen = button.getAttribute("aria-expanded") === "true";
-    button.setAttribute("aria-expanded", isOpen ? "false" : "true");
-    panel.hidden = isOpen;
+    if (isOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
   });
 
   document.addEventListener("click", (event) => {
     if (!panel.hidden && !event.target.closest(containerSelector)) {
-      button.setAttribute("aria-expanded", "false");
-      panel.hidden = true;
+      closeMenu();
     }
   });
+
+  if (container) {
+    container.addEventListener("mouseenter", () => {
+      if (canHoverOpen()) {
+        openMenu();
+      }
+    });
+
+    container.addEventListener("mouseleave", () => {
+      if (canHoverOpen()) {
+        scheduleCloseMenu();
+      }
+    });
+
+    container.addEventListener("focusout", (event) => {
+      if (!container.contains(event.relatedTarget)) {
+        closeMenu();
+      }
+    });
+  }
 }
 
 setupDropdownMenu(heroMenuButton, heroMenuPanel, ".hero-overflow-menu");
@@ -4198,13 +4266,18 @@ function syncQuickSetupProRacketUi() {
   }
 
   if (quickSetupProRacketNote) {
-    quickSetupProRacketNote.textContent = !hasPlayer
+    const helpText = !hasPlayer
       ? "Pick a pro to narrow results to that pro's strings. Turn this on to also use the pro's racket family."
       : resolvedRacketFamily
         ? useProRacket
           ? `${selectedPlayer} now narrows results by both string and racket family: ${resolvedRacketFamily}.`
           : `${selectedPlayer} already narrows results to that pro's strings. Turn this on to also use ${selectedPlayer}'s racket family: ${resolvedRacketFamily}.`
         : `${selectedPlayer} already narrows results to that pro's strings, but no racket family is saved yet.`;
+    quickSetupProRacketNote.textContent = helpText;
+    if (quickSetupProRacketHelp) {
+      quickSetupProRacketHelp.setAttribute("aria-label", helpText);
+      quickSetupProRacketHelp.setAttribute("title", helpText);
+    }
   }
 }
 

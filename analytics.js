@@ -17,6 +17,18 @@
     it: "🇮🇹"
   };
 
+  normalizeHomeLinksForLocalFiles();
+
+  function normalizeHomeLinksForLocalFiles() {
+    if (!window.location || window.location.protocol !== "file:") {
+      return;
+    }
+
+    document.querySelectorAll('a[href="/"]').forEach((link) => {
+      link.setAttribute("href", "./index.html");
+    });
+  }
+
   const GUIDE_LINK_TRANSLATIONS = {
     en: {
       home: "Home Page",

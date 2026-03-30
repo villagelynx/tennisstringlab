@@ -63,7 +63,7 @@
   <main class="page-shell">
     <section class="hero" id="heroSection">
       <div class="brand-row">
-        <a class="brand-lockup brand-home-link" href="./index.html?home=1" aria-label="Go to Tennis String Lab home">
+        <a class="brand-lockup brand-home-link" href="/" aria-label="Go to Tennis String Lab home">
           <div class="brand-mark" aria-hidden="true">
             <svg viewBox="0 0 88 88" role="presentation">
               <defs>
@@ -212,7 +212,7 @@
             <span id="heroProsCopy">See what top ATP and WTA players use</span>
           </span>
         </button>
-        <a id="heroHomeButton" class="secondary-button hero-top-home-button" href="./index.html?home=1" hidden>Home</a>
+        <a id="heroHomeButton" class="secondary-button hero-top-home-button" href="/" hidden>Home</a>
       </div>
       <div id="activeModeBar" class="active-mode-bar" hidden></div>
       <div class="mobile-quick-player-row">
@@ -241,7 +241,7 @@
         <div class="tool-workbench-header">
           <div>
             <p class="eyebrow">Setup Tools</p>
-            <h2 id="toolWorkbenchTitle">Start fast, then fine-tune</h2>
+            <p id="toolWorkbenchTitle" class="summary-copy">Use Quick Setup and Tension Calculator tools to build a quick pro-inspired setup.</p>
             <p class="summary-copy">Use the Quick String Setup Tool to get a fast string recommendation based on your target feel, racket, playing style, and optional pro inspiration. Then use the Tension Calculator to turn that setup into a practical starting tension range before you string your racquet.</p>
           </div>
           <div class="tool-workbench-header-actions">
@@ -310,11 +310,15 @@
                 </select>
               </div>
               <div class="field is-wide">
-                <label class="toggle-field" for="quickSetupUseProRacket">
-                  <input id="quickSetupUseProRacket" type="checkbox">
-                  <span>Also use pro's racket</span>
-                </label>
-                <p id="quickSetupProRacketNote" class="field-note">Pick a pro to narrow results to that pro's strings. Turn this on to also use the pro's racket family.</p>
+                <div class="toggle-field-row">
+                  <label class="toggle-field" for="quickSetupUseProRacket">
+                    <input id="quickSetupUseProRacket" type="checkbox">
+                    <span>Also use pro's racket</span>
+                  </label>
+                  <span id="quickSetupProRacketHelp" class="inline-help-badge" tabindex="0" aria-label="Pick a pro to narrow results to that pro's strings. Turn this on to also use the pro's racket family.">?
+                    <span id="quickSetupProRacketNote" class="inline-help-tooltip" role="tooltip">Pick a pro to narrow results to that pro's strings. Turn this on to also use the pro's racket family.</span>
+                  </span>
+                </div>
               </div>
             </div>
             <div class="tool-actions tool-actions-compact">
@@ -325,7 +329,7 @@
               <p class="summary-copy">Pick a racket, style, pro, or your preferred spin, power, and control to generate a starting setup.</p>
             </div>
           </article>
-          <article class="tool-card tool-card-tension">
+          <article class="tool-card tool-card-compact tool-card-tension">
             <div>
               <p class="eyebrow">Tension Calculator</p>
               <h3>Find a smart starting tension</h3>
@@ -361,10 +365,10 @@
                 </select>
               </div>
             </div>
-            <div class="tool-actions">
+            <div class="tool-actions tool-actions-compact">
               <button id="tensionCalcButton" class="secondary-button tool-primary-button" type="button">Calculate Tension</button>
             </div>
-            <div id="tensionCalcResult" class="tool-result-panel"></div>
+            <div id="tensionCalcResult" class="tool-result-panel tool-result-panel-compact"></div>
           </article>
         </div>
       </section>
