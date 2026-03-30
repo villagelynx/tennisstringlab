@@ -3565,7 +3565,7 @@ body[data-page="tension-calculator"] .tool-reference-item {
   }
 
   body[data-page="home"] .tool-section-label-row {
-    margin: 0 0 6px;
+    margin: 0 0 2px;
     gap: 12px;
   }
 
@@ -3592,6 +3592,7 @@ body[data-page="tension-calculator"] .tool-reference-item {
 
   body[data-page="home"] .tool-grid {
     gap: 10px;
+    margin-top: -2px;
   }
 
   body[data-page="home"] .tool-card,
