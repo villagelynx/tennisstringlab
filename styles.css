@@ -3398,7 +3398,7 @@ body[data-page="tension-calculator"] .tool-reference-item {
   body[data-page="home"] .hero-topline {
     flex: 0 0 auto;
     gap: 8px;
-    margin-top: 0;
+    margin-top: -19px;
     flex-wrap: nowrap;
   }
 
