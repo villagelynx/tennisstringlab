@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Tennis Setup">
+  <meta name="theme-color" content="#ffffff">
+  <title>Analyze Your Current Setup | Tennis Setup</title>
+  <meta name="description" content="Analyze your current racket, string, gauge, and tension to see what the setup is likely doing well, what may be holding you back, and what to try next.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://tennisstringlab.com/analyze-current-setup.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Tennis Setup">
+  <meta property="og:title" content="Analyze Your Current Setup | Tennis Setup">
+  <meta property="og:description" content="Analyze your current racket, string, gauge, and tension to see what the setup is likely doing well, what may be holding you back, and what to try next.">
+  <meta property="og:url" content="https://tennisstringlab.com/analyze-current-setup.html">
+  <meta property="og:image" content="https://tennisstringlab.com/social-share.png">
+  <meta property="og:image:alt" content="Tennis Setup current setup analyzer">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Analyze Your Current Setup | Tennis Setup">
+  <meta name="twitter:description" content="Analyze your current racket, string, gauge, and tension to see what the setup is likely doing well, what may be holding you back, and what to try next.">
+  <meta name="twitter:image" content="https://tennisstringlab.com/social-share.png">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="application/ld+json">
+{
+    "headline":  "Analyze Your Current Setup",
+    "@type":  "WebPage",
+    "url":  "https://tennisstringlab.com/analyze-current-setup.html",
+    "name":  "Analyze Your Current Setup | Tennis Setup",
+    "description":  "Analyze your current racket, string, gauge, and tension to see what the setup is likely doing well, what may be holding you back, and what to try next.",
+    "@context":  "https://schema.org",
+    "publisher":  {
+                      "url":  "https://tennisstringlab.com/",
+                      "name":  "Tennis Setup",
+                      "@type":  "Organization"
+                  },
+    "isPartOf":  {
+                     "url":  "https://tennisstringlab.com/",
+                     "name":  "Tennis Setup",
+                     "@type":  "WebSite"
+                 }
+}
+  </script>
+</head>
+<body class="tool-page-body" data-page="setup-analyzer">
+  <main class="tool-page-shell">
+    <section class="tool-page-header">
+      <div class="tool-page-title-row">
+        <div>
+          <p class="eyebrow">Tennis Setup</p>
+          <h1>Analyze Your Current Setup</h1>
+          <p class="tool-page-copy">Start with the racket, string, gauge, and tension you actually use now. This report is built to explain what your current setup is likely doing well, where it may be holding you back, and what to try next without turning the advice into a spreadsheet.</p>
+        </div>
+      </div>
+      <nav class="tool-page-nav" aria-label="Current setup analyzer navigation">
+        <a class="tool-page-nav-link" href="/">Home</a>
+        <a class="tool-page-nav-link" href="./quick-setup.html">Quick String Setup</a>
+        <a class="tool-page-nav-link" href="./tension-calculator.html">Tension Calculator</a>
+      </nav>
+    </section>
+
+    <section class="tool-page-card tool-page-card-setup-analyzer">
+      <div class="setup-analyzer-layout">
+        <article class="tool-card setup-analyzer-form-card">
+          <div>
+            <p class="eyebrow">Current Setup Report</p>
+            <h3>Enter what you use now</h3>
+            <p class="summary-copy">Start with your current setup, then choose one main goal. The report gives you a quick snapshot, key tradeoffs, and next-step setup ideas.</p>
+          </div>
+
+          <section class="setup-analyzer-group" aria-labelledby="setupAnalyzerCurrentSetupHeading">
+            <div class="setup-analyzer-group-header">
+              <p class="eyebrow">Current Setup</p>
+              <h4 id="setupAnalyzerCurrentSetupHeading">Racket, string, gauge, and tension</h4>
+            </div>
+            <div class="tool-form-grid tool-form-grid-compact">
+              <div class="field">
+                <label for="setupAnalyzerRacket">Racket</label>
+                <select id="setupAnalyzerRacket" class="search-input">
+                  <option value="">Choose your racket family</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="setupAnalyzerGauge">Gauge</label>
+                <select id="setupAnalyzerGauge" class="search-input">
+                  <option value="">Choose your gauge</option>
+                </select>
+              </div>
+              <div class="field is-wide">
+                <label for="setupAnalyzerString">String</label>
+                <input id="setupAnalyzerString" class="search-input" type="text" list="setupAnalyzerStringList" placeholder="Start typing your current string">
+                <datalist id="setupAnalyzerStringList"></datalist>
+                <p id="setupAnalyzerStringNote" class="field-note">Start typing a string from the database. If we recognize it, we can auto-fill the common gauge listing.</p>
+              </div>
+              <div class="field">
+                <label for="setupAnalyzerTension">Current Tension</label>
+                <input id="setupAnalyzerTension" class="search-input" type="number" min="35" max="70" step="0.5" inputmode="decimal" value="50" placeholder="e.g. 52">
+              </div>
+            </div>
+          </section>
+
+          <section class="setup-analyzer-group" aria-labelledby="setupAnalyzerGoalHeading">
+            <div class="setup-analyzer-group-header">
+              <p class="eyebrow">What You Want More Of</p>
+              <h4 id="setupAnalyzerGoalHeading">Choose one main goal</h4>
+            </div>
+            <div class="tool-form-grid tool-form-grid-compact">
+              <div class="field is-wide">
+                <label for="setupAnalyzerGoal">Main Goal</label>
+                <select id="setupAnalyzerGoal" class="search-input">
+                  <option value="Balanced">Keep this setup balanced</option>
+                  <option value="Spin">More Spin</option>
+                  <option value="Comfort">More Comfort</option>
+                  <option value="Power">More Power</option>
+                  <option value="Control">More Control</option>
+                  <option value="Durability">More Durability</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <section class="setup-analyzer-group" aria-labelledby="setupAnalyzerComfortHeading">
+            <div class="setup-analyzer-group-header">
+              <p class="eyebrow">Comfort Check</p>
+              <h4 id="setupAnalyzerComfortHeading">Add arm context</h4>
+            </div>
+            <div class="toggle-field-row setup-analyzer-toggle-row">
+              <label class="toggle-field" for="setupAnalyzerArm">
+                <input id="setupAnalyzerArm" type="checkbox">
+                <span>I am noticing some arm discomfort with this setup</span>
+              </label>
+            </div>
+            <p class="field-note">This helps the report lean a little more conservative when comfort looks like part of the problem.</p>
+          </section>
+
+          <div class="tool-actions tool-actions-compact">
+            <button id="setupAnalyzerButton" class="secondary-button tool-primary-button" type="button">Analyze Setup</button>
+          </div>
+          <p class="field-note">This is practical coaching-style guidance built from the current string database and setup heuristics. It is meant to be useful, not over-technical.</p>
+        </article>
+
+        <div id="setupAnalyzerReport" class="setup-analyzer-report-shell">
+          <section class="setup-analyzer-report-card setup-analyzer-report-card-empty">
+            <p class="eyebrow">Current Setup Report</p>
+            <h3>See what your setup is likely doing</h3>
+            <p class="summary-copy">Enter your current racket, string, gauge, and tension to get a readable report with likely strengths, watch-outs, one best first adjustment, and three recommended next setups.</p>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./analytics.js"></script>
+  <script src="./app.js"></script>
+  <script src="./setup-analyzer.js"></script>
+</body>
+</html>
