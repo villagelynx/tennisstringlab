@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Tennis Setup">
+  <meta name="theme-color" content="#ffffff">
+  <title>Compare Pro Setups | Tennis Setup</title>
+  <meta name="description" content="Compare 2 curated pro-inspired setups side by side for racket fit, string choice, tension reference, style, and likely setup profile.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://tennisstringlab.com/compare-pro-setups.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Tennis Setup">
+  <meta property="og:title" content="Compare Pro Setups | Tennis Setup">
+  <meta property="og:description" content="Compare 2 curated pro-inspired setups side by side for racket fit, string choice, tension reference, style, and likely setup profile.">
+  <meta property="og:url" content="https://tennisstringlab.com/compare-pro-setups.html">
+  <meta property="og:image" content="https://tennisstringlab.com/social-share.png">
+  <meta property="og:image:alt" content="Tennis Setup compare pro setups tool">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Compare Pro Setups | Tennis Setup">
+  <meta name="twitter:description" content="Compare 2 curated pro-inspired setups side by side for racket fit, string choice, tension reference, style, and likely setup profile.">
+  <meta name="twitter:image" content="https://tennisstringlab.com/social-share.png">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="tool-page-body" data-page="compare-pro-setups">
+  <main class="tool-page-shell">
+    <section class="tool-page-header">
+      <div class="tool-page-title-row">
+        <div>
+          <p class="eyebrow">Tennis Setup</p>
+          <h1>Compare Pro Setups</h1>
+          <p class="tool-page-copy">Compare 2 curated pro-inspired example setups side by side. This tool is built from the same example profiles used in Quick String Setup, then matched with the current string database for racket fit, string type, gauge, and tension references.</p>
+        </div>
+      </div>
+      <nav class="tool-page-nav" aria-label="Compare Pro Setups navigation">
+        <a class="tool-page-nav-link" href="/">Home</a>
+        <a class="tool-page-nav-link" href="./analyze-current-setup.html">Analyze Current Setup</a>
+        <a class="tool-page-nav-link" href="./compare-strings.html">Compare Strings</a>
+        <a class="tool-page-nav-link" href="./quick-setup.html">Quick String Setup</a>
+        <a class="tool-page-nav-link" href="./tension-calculator.html">Tension Calculator</a>
+      </nav>
+    </section>
+
+    <section class="tool-page-card tool-page-card-compare tool-page-card-pro-compare">
+      <div class="compare-tool-layout">
+        <article class="tool-card compare-tool-form-card">
+          <div>
+            <p class="eyebrow">Compare Pro Setups Tool</p>
+            <h3>Choose 2 pro examples to compare</h3>
+            <p class="summary-copy">Pick 2 example pros from the site's curated setup list. The comparison shows the likely setup identity, string choice, frame fit, and which direction each example leans more strongly.</p>
+          </div>
+          <div class="tool-form-grid tool-form-grid-compact">
+            <div class="field is-wide">
+              <label for="compareProSetupA">Pro Setup A</label>
+              <select id="compareProSetupA" class="search-input">
+                <option value="">Choose the first pro setup</option>
+              </select>
+            </div>
+            <div class="field is-wide">
+              <label for="compareProSetupB">Pro Setup B</label>
+              <select id="compareProSetupB" class="search-input">
+                <option value="">Choose the second pro setup</option>
+              </select>
+            </div>
+          </div>
+          <div class="tool-actions tool-actions-compact">
+            <button id="compareProSetupsButton" class="secondary-button tool-primary-button" type="button">Compare Pro Setups</button>
+          </div>
+          <p class="field-note">This compares the site's current pro example setups. It is meant to be a practical side-by-side guide, not a complete live tour equipment audit.</p>
+        </article>
+
+        <div id="compareProSetupsReport" class="compare-tool-report-shell">
+          <section class="compare-tool-report-card compare-tool-report-card-empty">
+            <p class="eyebrow">Pro Matchup</p>
+            <h3>See 2 pro-inspired setups side by side</h3>
+            <p class="summary-copy">Choose 2 pros to compare the example setup direction, racket fit, string choice, tension reference, and likely spin, control, comfort, power, and durability profile.</p>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./analytics.js"></script>
+  <script src="./strings-data.js"></script>
+  <script src="./compare-pro-setups.js"></script>
+</body>
+</html>
