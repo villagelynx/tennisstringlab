@@ -725,10 +725,40 @@
     } catch (error) {}
   }
 
+  async function trackAnalyticsEvent(eventName, eventLabel = "", extra = {}) {
+    if (!window.location || window.location.protocol === "file:") return;
+    if (!eventName) return;
+
+    const payload = {
+      visitorId: getVisitorId(),
+      path: window.location.pathname || "/",
+      title: document.title || "",
+      referrer: document.referrer || "",
+      screen: window.screen ? `${window.screen.width}x${window.screen.height}` : "",
+      eventName,
+      eventLabel,
+      ...extra
+    };
+
+    try {
+      await fetch(TRACK_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload),
+        keepalive: true
+      });
+    } catch (error) {}
+  }
+
   function init() {
     window.TSL_I18N = {
       getLanguage: getSelectedLanguage,
       t: translate
+    };
+    window.TSL_ANALYTICS = {
+      trackEvent: trackAnalyticsEvent
     };
     createLanguageSwitcher();
     applyLanguage(getSelectedLanguage());

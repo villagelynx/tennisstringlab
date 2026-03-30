@@ -78,6 +78,17 @@ function normalizeHomeLinksForLocalFiles() {
   });
 }
 
+function trackToolUsage(eventName, eventLabel, extra = {}) {
+  if (!window.TSL_ANALYTICS || typeof window.TSL_ANALYTICS.trackEvent !== "function") {
+    return;
+  }
+
+  window.TSL_ANALYTICS.trackEvent(eventName, eventLabel, {
+    eventCategory: "tool_usage",
+    ...extra
+  });
+}
+
 const UI_TRANSLATIONS = {
   en: {
     mobileShowFilters: "Show Filters",
@@ -190,19 +201,23 @@ const HOME_STATIC_TRANSLATIONS = {
     masterListTitle: "All Strings",
     masterListCopy: "Browse every string in one place",
     referenceTitle: "Reference Guide",
-    referenceCopy: "Open all information pages",
+    referenceCopy: "Browse the full string library",
     popularTitle: "20 Most Popular",
     popularCopy: "Start with the most searched strings",
     prosTitle: "Pro Player Strings",
     prosCopy: "See what top ATP and WTA players use",
     menu: {
+      "./string-library.html": "String Library",
       "./string-types.html": "String Type Descriptions",
+      "./string-materials-guide.html": "String Materials Guide",
+      "./how-tennis-string-is-made.html": "How Tennis Strings Are Made",
       "./tension-guide.html": "Tension Guide",
       "./tension-logic.html": "Tension Calculator Logic",
       "./gauge-guide.html": "Gauge Guide",
       "./hybrid-guide.html": "Hybrid String Guide",
       "./arm-friendly.html": "Arm-Friendly Strings",
       "./string-shape-guide.html": "String Shape Guide",
+      "./string-dampeners-guide.html": "String Dampeners: Do They Work?",
       "./restring-guide.html": "How Often to Restring",
       "./player-type-guide.html": "Best Strings by Player Type",
       "./best-by-need.html": "Best Strings by Need",
@@ -214,19 +229,23 @@ const HOME_STATIC_TRANSLATIONS = {
     masterListTitle: "Liste complete",
     masterListCopy: "Parcourez tous les cordages en un seul endroit",
     referenceTitle: "Guide de reference",
-    referenceCopy: "Ouvrir toutes les pages d'information",
+    referenceCopy: "Parcourir toute la bibliotheque de guides",
     popularTitle: "20 plus populaires",
     popularCopy: "Commencez par les cordages les plus recherches",
     prosTitle: "Cordages des pros",
     prosCopy: "Voir ce qu'utilisent les meilleurs ATP et WTA",
     menu: {
+      "./string-library.html": "Bibliotheque de cordages",
       "./string-types.html": "Descriptions des types de cordage",
+      "./string-materials-guide.html": "Guide des materiaux de cordage",
+      "./how-tennis-string-is-made.html": "Comment les cordages de tennis sont fabriques",
       "./tension-guide.html": "Guide de tension",
       "./tension-logic.html": "Logique du calculateur de tension",
       "./gauge-guide.html": "Guide de jauge",
       "./hybrid-guide.html": "Guide des hybrides",
       "./arm-friendly.html": "Confort du bras",
       "./string-shape-guide.html": "Guide de forme du cordage",
+      "./string-dampeners-guide.html": "Les antivibrateurs fonctionnent-ils",
       "./restring-guide.html": "Quand recorder",
       "./player-type-guide.html": "Meilleurs cordages par profil",
       "./best-by-need.html": "Meilleurs cordages par besoin",
@@ -238,19 +257,23 @@ const HOME_STATIC_TRANSLATIONS = {
     masterListTitle: "Lista maestra",
     masterListCopy: "Explora todas las cuerdas en un solo lugar",
     referenceTitle: "Guia de referencia",
-    referenceCopy: "Abrir todas las paginas informativas",
+    referenceCopy: "Explora la biblioteca completa de guias",
     popularTitle: "20 mas populares",
     popularCopy: "Empieza con las cuerdas mas buscadas",
     prosTitle: "Cuerdas de profesionales",
     prosCopy: "Ver lo que usan los mejores ATP y WTA",
     menu: {
+      "./string-library.html": "Biblioteca de cuerdas",
       "./string-types.html": "Descripciones de tipos de cuerda",
+      "./string-materials-guide.html": "Guia de materiales de cuerda",
+      "./how-tennis-string-is-made.html": "Como se fabrican las cuerdas de tenis",
       "./tension-guide.html": "Guia de tension",
       "./tension-logic.html": "Logica del calculador de tension",
       "./gauge-guide.html": "Guia de calibre",
       "./hybrid-guide.html": "Guia de hibridos",
       "./arm-friendly.html": "Brazo y confort",
       "./string-shape-guide.html": "Guia de forma de cuerda",
+      "./string-dampeners-guide.html": "Los antivibradores funcionan",
       "./restring-guide.html": "Cuando reencordar",
       "./player-type-guide.html": "Mejores cuerdas por perfil",
       "./best-by-need.html": "Mejores cuerdas por necesidad",
@@ -262,19 +285,23 @@ const HOME_STATIC_TRANSLATIONS = {
     masterListTitle: "Elenco completo",
     masterListCopy: "Sfoglia tutte le corde in un solo posto",
     referenceTitle: "Guida di riferimento",
-    referenceCopy: "Apri tutte le pagine informative",
+    referenceCopy: "Sfoglia l'intera libreria di guide",
     popularTitle: "20 piu popolari",
     popularCopy: "Inizia con le corde piu cercate",
     prosTitle: "Corde dei professionisti",
     prosCopy: "Vedi cosa usano i migliori ATP e WTA",
     menu: {
+      "./string-library.html": "Libreria corde",
       "./string-types.html": "Descrizioni dei tipi di corda",
+      "./string-materials-guide.html": "Guida ai materiali delle corde",
+      "./how-tennis-string-is-made.html": "Come vengono prodotte le corde da tennis",
       "./tension-guide.html": "Guida alla tensione",
       "./tension-logic.html": "Logica del calcolatore di tensione",
       "./gauge-guide.html": "Guida al calibro",
       "./hybrid-guide.html": "Guida agli ibridi",
       "./arm-friendly.html": "Comfort del braccio",
       "./string-shape-guide.html": "Guida alla forma della corda",
+      "./string-dampeners-guide.html": "Gli antivibrazioni funzionano",
       "./restring-guide.html": "Quando reincordare",
       "./player-type-guide.html": "Migliori corde per profilo",
       "./best-by-need.html": "Migliori corde per esigenza",
@@ -318,13 +345,17 @@ function updateHomepageStaticTranslations() {
   if (prosCopy) prosCopy.textContent = content.prosCopy;
 
   const menuIdMap = {
+    "./string-library.html": ["menuStringLibrary"],
     "./string-types.html": ["menuStringTypes", "guideStringTypes"],
+    "./string-materials-guide.html": ["menuStringMaterials", "guideStringMaterials"],
+    "./how-tennis-string-is-made.html": ["menuStringManufacturing", "guideStringManufacturing"],
     "./tension-guide.html": ["menuTensionGuide", "guideTensionGuide"],
     "./tension-logic.html": ["menuTensionLogic", "guideTensionLogic"],
     "./gauge-guide.html": ["menuGaugeGuide", "guideGaugeGuide"],
     "./hybrid-guide.html": ["menuHybridGuide", "guideHybridGuide"],
     "./arm-friendly.html": ["menuArmFriendly", "guideArmFriendly"],
     "./string-shape-guide.html": ["menuShapeGuide", "guideShapeGuide"],
+    "./string-dampeners-guide.html": ["menuDampenersGuide"],
     "./restring-guide.html": ["menuRestringGuide", "guideRestringGuide"],
     "./player-type-guide.html": ["menuPlayerTypeGuide", "guidePlayerTypeGuide"],
     "./best-by-need.html": ["menuBestByNeed", "guideBestByNeed"],
@@ -616,10 +647,28 @@ if (typeof window !== "undefined") {
 
 const GUIDE_PAGES = [
   {
+    title: "String Library",
+    href: "./string-library.html",
+    description: "Browse the full Tennis String Lab article library, grouped into fundamentals, setup guides, player-fit pages, comparisons, and resources.",
+    keywords: ["string library", "reference guide", "guides", "articles", "library", "tennis string guides"]
+  },
+  {
     title: "String Type Descriptions",
     href: "./string-types.html",
     description: "Compare the main string families and understand how they differ in spin, comfort, power, control, and durability.",
     keywords: ["string type", "string types", "types", "poly", "co-poly", "multifilament", "natural gut", "synthetic gut", "hybrid"]
+  },
+  {
+    title: "String Materials Guide",
+    href: "./string-materials-guide.html",
+    description: "Learn what tennis strings are made from, including natural gut, nylon, multifilament, polyester, co-poly, and aramid constructions.",
+    keywords: ["string materials", "materials", "nylon", "polyester", "co-poly", "natural gut", "aramid", "kevlar", "multifilament"]
+  },
+  {
+    title: "How Tennis Strings Are Made",
+    href: "./how-tennis-string-is-made.html",
+    description: "See how tennis strings are manufactured, from natural gut twisting to polyester extrusion and multifilament bonding.",
+    keywords: ["how strings are made", "manufacturing", "extrusion", "multifilament", "synthetic gut", "natural gut", "polyester", "co-poly"]
   },
   {
     title: "Tension Guide",
@@ -656,6 +705,12 @@ const GUIDE_PAGES = [
     href: "./string-shape-guide.html",
     description: "Compare round, shaped, and textured strings and how they influence feel and spin.",
     keywords: ["shape", "shaped", "round", "textured", "spin shape", "string shape"]
+  },
+  {
+    title: "String Dampeners: Do They Work?",
+    href: "./string-dampeners-guide.html",
+    description: "Learn what tennis string dampeners actually change, what they do not fix, and whether a dampener is worth using.",
+    keywords: ["string dampener", "dampener", "vibration dampener", "do dampeners work", "tennis dampener", "muted feel", "ping sound"]
   },
   {
     title: "How Often to Restring",
@@ -3776,6 +3831,7 @@ function initializeSetupWorkbench() {
         }
       );
       renderQuickSetupRecommendation(recommendation);
+      trackToolUsage("quick_setup_build", "Build Setup");
     });
   }
 
@@ -3807,6 +3863,7 @@ function initializeSetupWorkbench() {
   if (tensionCalcButton) {
     tensionCalcButton.addEventListener("click", () => {
       renderTensionCalculatorRecommendation();
+      trackToolUsage("tension_calculator_calculate", "Calculate Tension");
     });
   }
 
@@ -4535,6 +4592,15 @@ function applyQuickSetupRecommendation(optionIndex = 0) {
     return;
   }
 
+  trackToolUsage(
+    optionIndex === 0 ? "quick_setup_apply_top_pick" : "quick_setup_apply_option",
+    optionIndex === 0 ? "Apply Top Pick" : "Use This Setup",
+    {
+      optionIndex,
+      recommendedString: selectedOption.entry?.name || ""
+    }
+  );
+
   const appliedRecommendation = {
     ...latestQuickSetupRecommendation,
     entry: selectedOption.entry,
@@ -4558,6 +4624,11 @@ function applyExampleSetup(exampleIndex = 0) {
   if (!example) {
     return;
   }
+
+  trackToolUsage("quick_setup_example", "Example Pro Setup", {
+    player: example.player || "",
+    exampleIndex
+  });
 
   activeQuickSetupExampleIndex = exampleIndex;
   syncExampleSetupButtons();

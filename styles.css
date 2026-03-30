@@ -1344,6 +1344,85 @@ h1 {
   transform: translateY(-1px);
 }
 
+.guide-article-page .hero-copy,
+.guide-article-page .info-page-nav {
+  padding-left: 12px;
+}
+
+.guide-article-page .results-panel {
+  padding-left: 32px;
+}
+
+.string-library-page .results-panel {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  border-radius: 0;
+  padding: 8px 0 12px 12px;
+}
+
+.string-library-page .results-header {
+  margin-bottom: 6px;
+  gap: 12px;
+}
+
+.string-library-page .results-header h2 {
+  font-size: 1rem;
+  margin: 0;
+  color: var(--green-dark);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.string-library-page .guide-matches-list {
+  gap: 2px;
+}
+
+.string-library-page .guide-match-card {
+  padding: 7px 0 9px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  border-bottom: 1px solid rgba(10, 77, 132, 0.1);
+}
+
+.string-library-page .guide-match-card:last-child {
+  border-bottom: 0;
+}
+
+.string-library-page .guide-match-card h3 {
+  margin: 2px 0 3px;
+  font-size: 0.88rem;
+  color: #0d4d7a;
+}
+
+.string-library-page .guide-match-card .eyebrow {
+  font-size: 0.58rem;
+}
+
+.string-library-page .guide-match-card .summary-copy {
+  margin-top: 0;
+  font-size: 0.78rem;
+  line-height: 1.32;
+}
+
+.string-library-page .guide-match-card:hover {
+  transform: none;
+  background: transparent;
+}
+
+.string-library-page .info-page-nav {
+  gap: 8px;
+}
+
+.string-library-page .info-page-nav-link {
+  min-height: 34px;
+  padding: 6px 11px;
+  font-size: 0.8rem;
+}
+
 .standalone-panel {
   padding-top: 22px;
 }
