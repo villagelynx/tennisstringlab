@@ -767,6 +767,18 @@ const GUIDE_PAGES = [
     keywords: ["string library", "reference guide", "guides", "articles", "library", "tennis string guides"]
   },
   {
+    title: "Popular Tennis Stringing Machines",
+    href: "./popular-tennis-stringing-machines.html",
+    description: "A practical guide to current popular tennis stringing machines, including entry-level drop-weight machines, premium tabletop models, crank machines, and travel options.",
+    keywords: ["popular stringing machines", "tennis stringing machines", "best tennis stringing machine", "drop weight machine", "crank stringing machine"]
+  },
+  {
+    title: "Portable Tennis Stringing Machines",
+    href: "./portable-tennis-stringing-machines.html",
+    description: "A practical guide to portable and travel-friendly tennis stringing machines, including true carry-on machines and lighter tabletop options.",
+    keywords: ["portable stringing machines", "travel stringing machine", "portable tennis stringing machine", "Pro Stringer", "tabletop stringing machine"]
+  },
+  {
     title: "String Type Descriptions",
     href: "./string-types.html",
     description: "Compare the main string families and understand how they differ in spin, comfort, power, control, and durability.",
