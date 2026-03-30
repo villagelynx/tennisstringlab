@@ -1,5 +1,5 @@
 (() => {
-  const api = window.TENNIS_SETUP_ANALYZER_API;
+  const api = window.TENNIS_SETUP_ANALYZER_API || buildFallbackApi();
   if (!api) return;
 
   const elements = {
@@ -38,6 +38,241 @@
     renderReport(buildReport());
     api.trackToolUsage?.("setup_analyzer_analyze", "Analyze Setup");
   });
+
+  function buildFallbackApi() {
+    const strings = Array.isArray(window.TENNIS_STRING_DATA)
+      ? window.TENNIS_STRING_DATA
+      : Array.isArray(window.TENNIS_STRING_PLANNER_STRINGS)
+        ? window.TENNIS_STRING_PLANNER_STRINGS
+        : [];
+
+    if (!strings.length) {
+      return null;
+    }
+
+    const TENSION_TYPE_BASE = {
+      Poly: 48.5,
+      "Co-Poly": 49,
+      "Synthetic Gut": 55,
+      Multifilament: 54,
+      "Natural Gut": 55.5,
+      Hybrid: 52.5
+    };
+
+    const TENSION_RACKET_ADJUSTMENTS = {
+      "Babolat Pure Aero": 0,
+      "Babolat Pure Drive": 1.5,
+      "Wilson Blade": 0.5,
+      "Wilson Clash": 1.5,
+      "Wilson Pro Staff": 0.5,
+      "Yonex Ezone": 1,
+      "Yonex VCORE": 0,
+      "Head Speed": 0.5,
+      "Head Radical": 0.5,
+      "Control Frame": 0.5,
+      "Power Frame": 1.5,
+      "Spin Frame": 0
+    };
+
+    const TENSION_FEEL_ADJUSTMENTS = {
+      Comfort: -2,
+      Balanced: 0,
+      Control: 2
+    };
+
+    const TENSION_ARM_ADJUSTMENTS = {
+      Normal: 0,
+      Sensitive: -1.5,
+      "Very Sensitive": -3
+    };
+
+    const FILTERS = [
+      {
+        key: "racketFamily",
+        options: [
+          "Any",
+          ...getOrderedOptions(
+            strings.map((entry) => entry.racketFamily),
+            [
+              "Babolat Pure Aero",
+              "Babolat Pure Drive",
+              "Wilson Blade",
+              "Wilson Clash",
+              "Wilson Pro Staff",
+              "Yonex Ezone",
+              "Yonex VCORE",
+              "Head Speed",
+              "Head Radical",
+              "Control Frame",
+              "Power Frame",
+              "Spin Frame"
+            ]
+          )
+        ]
+      },
+      {
+        key: "gauge",
+        options: [
+          "Any",
+          ...getOrderedOptions(
+            strings.map((entry) => entry.gauge),
+            ["15L", "16", "16L", "17", "17L", "18"]
+          )
+        ]
+      }
+    ];
+
+    return {
+      STRINGS: strings,
+      FILTERS,
+      TENSION_TYPE_BASE,
+      TENSION_RACKET_ADJUSTMENTS,
+      TENSION_FEEL_ADJUSTMENTS,
+      TENSION_ARM_ADJUSTMENTS,
+      mapStringLevelToNumeric,
+      getRacketFamilyGroup,
+      clampNumber,
+      formatDecimalNumber,
+      doesEntryMatchCalculatorType,
+      buildTensionCalculatorRecommendation,
+      persistTensionCalculatorSource,
+      trackToolUsage,
+      openMailDraft
+    };
+
+    function getOrderedOptions(values, preferredOrder = []) {
+      const seen = new Set();
+      const cleaned = values
+        .map((value) => String(value || "").trim())
+        .filter((value) => value && value !== "Any")
+        .filter((value) => {
+          if (seen.has(value)) {
+            return false;
+          }
+          seen.add(value);
+          return true;
+        });
+
+      const preferred = preferredOrder.filter((value) => seen.has(value));
+      const remaining = cleaned
+        .filter((value) => !preferred.includes(value))
+        .sort((left, right) => left.localeCompare(right));
+
+      return [...preferred, ...remaining];
+    }
+
+    function clampNumber(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function formatDecimalNumber(value) {
+      return Number(value).toFixed(1);
+    }
+
+    function buildMailtoLink({ to = "", subject = "", body = "" }) {
+      const params = [];
+      if (subject) {
+        params.push(`subject=${encodeURIComponent(subject)}`);
+      }
+      if (body) {
+        params.push(`body=${encodeURIComponent(body)}`);
+      }
+
+      const query = params.join("&");
+      return `mailto:${String(to || "").trim()}${query ? `?${query}` : ""}`;
+    }
+
+    function openMailDraft({ to = "", subject = "", body = "" }) {
+      if (typeof window === "undefined") {
+        return;
+      }
+
+      window.location.href = buildMailtoLink({ to, subject, body });
+    }
+
+    function formatPoundsRange(min, max) {
+      return `${Math.round(min)}-${Math.round(max)} lbs`;
+    }
+
+    function formatKilogramRange(min, max) {
+      const poundsToKg = (value) => (value * 0.45359237).toFixed(1);
+      return `${poundsToKg(min)}-${poundsToKg(max)} kg`;
+    }
+
+    function mapStringLevelToNumeric(value) {
+      const scale = {
+        Low: 1,
+        Medium: 2,
+        High: 3,
+        "Very High": 4
+      };
+
+      return scale[value] || 2;
+    }
+
+    function getRacketFamilyGroup(racketFamily) {
+      if (["Babolat Pure Aero", "Yonex VCORE", "Spin Frame"].includes(racketFamily)) {
+        return "spin";
+      }
+
+      if (["Babolat Pure Drive", "Wilson Clash", "Yonex Ezone", "Power Frame"].includes(racketFamily)) {
+        return "power";
+      }
+
+      return "control";
+    }
+
+    function doesEntryMatchCalculatorType(entryType, selectedType) {
+      if (selectedType === "Poly" || selectedType === "Co-Poly") {
+        return entryType === "Poly" || entryType === "Co-Poly";
+      }
+
+      return entryType === selectedType;
+    }
+
+    function buildTensionCalculatorRecommendation({ type, racketFamily, preference, armComfort }) {
+      const base = TENSION_TYPE_BASE[type];
+      if (!base) {
+        return null;
+      }
+
+      const racketAdjustment = TENSION_RACKET_ADJUSTMENTS[racketFamily] || 0;
+      const preferenceAdjustment = TENSION_FEEL_ADJUSTMENTS[preference] || 0;
+      const armAdjustment = TENSION_ARM_ADJUSTMENTS[armComfort] || 0;
+      const rawTargetPounds = base + racketAdjustment + preferenceAdjustment + armAdjustment;
+      const targetPounds = clampNumber(rawTargetPounds, 42, 58);
+      const min = clampNumber(targetPounds - 1.5, 42, 58);
+      const max = clampNumber(targetPounds + 1.5, 42, 58);
+
+      return {
+        type,
+        racketFamily,
+        preference,
+        armComfort,
+        lbsRange: formatPoundsRange(min, max),
+        kgRange: formatKilogramRange(min, max)
+      };
+    }
+
+    function persistTensionCalculatorSource(source) {
+      try {
+        window.localStorage.setItem("tennisStringPlannerTensionSource", JSON.stringify(source));
+      } catch {
+        // Ignore storage issues on locked-down browsers.
+      }
+    }
+
+    function trackToolUsage(eventName, eventLabel, extra = {}) {
+      if (!window.TSL_ANALYTICS || typeof window.TSL_ANALYTICS.trackEvent !== "function") {
+        return;
+      }
+
+      window.TSL_ANALYTICS.trackEvent(eventName, eventLabel, {
+        eventCategory: "tool_usage",
+        ...extra
+      });
+    }
+  }
 
   function populateControls() {
     const rackets = (api.FILTERS.find((filter) => filter.key === "racketFamily")?.options || []).filter((value) => value !== "Any");
@@ -146,6 +381,9 @@
           </div>
         </div>
         <p class="tool-mini-line">${escapeHtml(report.tensionContextLine)}</p>
+        <div class="tool-inline-actions">
+          <button class="secondary-button compact-button setup-analyzer-email-stringer" type="button">Email Report to Stringer</button>
+        </div>
       </section>
 
       <section class="setup-analyzer-report-card">
@@ -240,6 +478,11 @@
     elements.report.querySelectorAll(".setup-analyzer-open-tension").forEach((button) => {
       button.addEventListener("click", () => openRecommendationInTensionCalculator(Number(button.dataset.index || 0)));
     });
+
+    const emailReportButton = elements.report.querySelector(".setup-analyzer-email-stringer");
+    if (emailReportButton) {
+      emailReportButton.addEventListener("click", () => emailCurrentSetupReportToStringer());
+    }
   }
 
   function buildReport() {
@@ -1016,6 +1259,52 @@
     });
 
     window.location.href = "./tension-calculator.html";
+  }
+
+  function emailCurrentSetupReportToStringer() {
+    const report = state.latestReport;
+    if (!report || report.error) {
+      return;
+    }
+
+    const lines = [
+      "Hi,",
+      "",
+      "Could you please take a look at my current setup and the suggested next options?",
+      "",
+      "Current setup:",
+      `Racket: ${report.racketFamily}`,
+      `String: ${report.entry.name}`,
+      `String type: ${report.entry.type}`,
+      `Gauge: ${report.gauge}`,
+      `Current tension: ${api.formatDecimalNumber(report.currentTension)} lbs`,
+      `Main goal: ${report.goal}`,
+      `Arm discomfort noted: ${report.armSensitive ? "Yes" : "No"}`,
+      "",
+      "Snapshot:",
+      report.snapshotSummary,
+      `Tension check: ${report.tensionPosition.label}${report.tensionPosition.detail ? ` (${report.tensionPosition.detail})` : ""}`,
+      "",
+      "Best first adjustment:",
+      `${report.adjustment.title} - ${report.adjustment.text}`,
+      report.adjustment.note || "",
+      "",
+      "Recommended next setups:",
+      ...report.recommendations.map((option, index) => `${index + 1}. ${option.label}: ${option.entry.name} ${option.displayGauge} | ${option.tensionRecommendation ? option.tensionRecommendation.lbsRange : "Use Tension Calculator"} | ${option.reason}`),
+      "",
+      "Generated with TennisSetup.com"
+    ].filter(Boolean);
+
+    api.trackToolUsage?.("setup_analyzer_email_stringer", "Email Analyzer Report", {
+      currentString: report.entry.name,
+      racketFamily: report.racketFamily,
+      goal: report.goal
+    });
+
+    api.openMailDraft?.({
+      subject: `Current setup report: ${report.entry.name} ${report.gauge} @ ${api.formatDecimalNumber(report.currentTension)} lbs`,
+      body: lines.join("\n")
+    });
   }
 
   function escapeHtml(value) {

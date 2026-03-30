@@ -39,7 +39,9 @@
         </div>
       </div>
       <nav class="tool-page-nav" aria-label="Quick Setup navigation">
-        <a class="tool-page-nav-link" href="./index.html">Home</a>
+        <a class="tool-page-nav-link" href="/">Home</a>
+        <a class="tool-page-nav-link" href="./analyze-current-setup.html">Analyze Current Setup</a>
+        <a class="tool-page-nav-link" href="./compare-strings.html">Compare Strings</a>
         <a class="tool-page-nav-link" href="./tension-calculator.html">Tension Calculator</a>
       </nav>
     </section>
@@ -121,11 +123,15 @@
             </select>
           </div>
           <div class="field is-wide">
-            <label class="toggle-field" for="quickSetupUseProRacket">
-              <input id="quickSetupUseProRacket" type="checkbox">
-              <span>Also use pro's racket</span>
-            </label>
-            <p id="quickSetupProRacketNote" class="field-note">Pick a pro to narrow results to that pro's strings. Turn this on to also use the pro's racket family.</p>
+            <div class="toggle-field-row">
+              <label class="toggle-field" for="quickSetupUseProRacket">
+                <input id="quickSetupUseProRacket" type="checkbox">
+                <span>Also use pro's racket</span>
+              </label>
+              <span id="quickSetupProRacketHelp" class="inline-help-badge" tabindex="0" aria-label="Pick a pro to narrow results to that pro's strings. Turn this on to also use the pro's racket family.">?
+                <span id="quickSetupProRacketNote" class="inline-help-tooltip" role="tooltip">Pick a pro to narrow results to that pro's strings. Turn this on to also use the pro's racket family.</span>
+              </span>
+            </div>
           </div>
         </div>
         <div class="tool-actions tool-actions-compact">

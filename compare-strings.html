@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Tennis Setup">
+  <meta name="theme-color" content="#ffffff">
+  <title>Compare Strings | Tennis Setup</title>
+  <meta name="description" content="Compare two tennis strings head to head for spin, control, comfort, power, durability, and racket fit.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://tennisstringlab.com/compare-strings.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Tennis Setup">
+  <meta property="og:title" content="Compare Strings | Tennis Setup">
+  <meta property="og:description" content="Compare two tennis strings head to head for spin, control, comfort, power, durability, and racket fit.">
+  <meta property="og:url" content="https://tennisstringlab.com/compare-strings.html">
+  <meta property="og:image" content="https://tennisstringlab.com/social-share.png">
+  <meta property="og:image:alt" content="Tennis Setup compare strings tool">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Compare Strings | Tennis Setup">
+  <meta name="twitter:description" content="Compare two tennis strings head to head for spin, control, comfort, power, durability, and racket fit.">
+  <meta name="twitter:image" content="https://tennisstringlab.com/social-share.png">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="tool-page-body" data-page="compare-strings">
+  <main class="tool-page-shell">
+    <section class="tool-page-header">
+      <div class="tool-page-title-row">
+        <div>
+          <p class="eyebrow">Tennis Setup</p>
+          <h1>Compare Strings</h1>
+          <p class="tool-page-copy">Put two strings side by side to compare their likely spin, control, comfort, power, durability, and overall fit. Add a racket family if you want the comparison framed around a specific type of racquet.</p>
+        </div>
+      </div>
+      <nav class="tool-page-nav" aria-label="Compare Strings navigation">
+        <a class="tool-page-nav-link" href="/">Home</a>
+        <a class="tool-page-nav-link" href="./analyze-current-setup.html">Analyze Current Setup</a>
+        <a class="tool-page-nav-link" href="./quick-setup.html">Quick String Setup</a>
+        <a class="tool-page-nav-link" href="./tension-calculator.html">Tension Calculator</a>
+      </nav>
+    </section>
+
+    <section class="tool-page-card tool-page-card-compare">
+      <div class="compare-tool-layout">
+        <article class="tool-card compare-tool-form-card">
+          <div>
+            <p class="eyebrow">Compare Strings Tool</p>
+            <h3>Choose 2 strings to compare</h3>
+            <p class="summary-copy">Start typing two strings from the database. If you add a racket family, the tool also shows a practical balanced starting tension for each string in that kind of frame.</p>
+          </div>
+          <div class="tool-form-grid tool-form-grid-compact">
+            <div class="field is-wide">
+              <label for="compareStringA">String A</label>
+              <input id="compareStringA" class="search-input" type="text" list="compareStringList" placeholder="Start typing the first string">
+            </div>
+            <div class="field is-wide">
+              <label for="compareStringB">String B</label>
+              <input id="compareStringB" class="search-input" type="text" list="compareStringList" placeholder="Start typing the second string">
+            </div>
+            <div class="field is-wide">
+              <label for="compareRacketFamily">Optional Racket Family</label>
+              <select id="compareRacketFamily" class="search-input">
+                <option value="">Any racket family</option>
+              </select>
+            </div>
+          </div>
+          <datalist id="compareStringList"></datalist>
+          <div class="tool-actions tool-actions-compact">
+            <button id="compareStringsButton" class="secondary-button tool-primary-button" type="button">Compare Strings</button>
+          </div>
+          <p class="field-note">This is a practical head-to-head comparison from the current database. It is meant to help you narrow the choice, not replace actual on-court testing.</p>
+        </article>
+
+        <div id="compareStringsReport" class="compare-tool-report-shell">
+          <section class="compare-tool-report-card compare-tool-report-card-empty">
+            <p class="eyebrow">String Matchup</p>
+            <h3>See a side-by-side comparison</h3>
+            <p class="summary-copy">Choose two strings from the database to compare their profile, likely tradeoffs, and which one looks stronger for spin, control, comfort, power, and durability.</p>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./analytics.js"></script>
+  <script src="./strings-data.js"></script>
+  <script src="./compare-strings.js"></script>
+</body>
+</html>
