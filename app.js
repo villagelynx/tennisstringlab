@@ -26,6 +26,8 @@ const toolWorkbench = document.querySelector(".tool-workbench");
 const resultsPanel = document.querySelector(".results-panel");
 const heroMenuButton = document.getElementById("heroMenuButton");
 const heroMenuPanel = document.getElementById("heroMenuPanel");
+const toolsMenuButton = document.getElementById("toolsMenuButton");
+const toolsMenuPanel = document.getElementById("toolsMenuPanel");
 const referenceGuideButton = document.getElementById("referenceGuideButton");
 const referenceGuidePanel = document.getElementById("referenceGuidePanel");
 const typeDescriptionCard = document.getElementById("typeDescriptionCard");
@@ -87,6 +89,99 @@ function trackToolUsage(eventName, eventLabel, extra = {}) {
     eventCategory: "tool_usage",
     ...extra
   });
+}
+
+function buildMailtoLink({ to = "", subject = "", body = "" }) {
+  const params = [];
+  if (subject) {
+    params.push(`subject=${encodeURIComponent(subject)}`);
+  }
+  if (body) {
+    params.push(`body=${encodeURIComponent(body)}`);
+  }
+
+  const query = params.join("&");
+  return `mailto:${String(to || "").trim()}${query ? `?${query}` : ""}`;
+}
+
+function openMailDraft({ to = "", subject = "", body = "" }) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.location.href = buildMailtoLink({ to, subject, body });
+}
+
+function buildQuickSetupStringerEmailDraft(recommendation, optionIndex = 0) {
+  const option = recommendation?.options?.[optionIndex] || recommendation?.options?.[0];
+  if (!option?.entry) {
+    return null;
+  }
+
+  const appliedRacketFamily = recommendation?.racketFamily && recommendation.racketFamily !== "Any"
+    ? recommendation.racketFamily
+    : option.entry.racketFamily;
+  const referenceLine = option.playerRacket
+    ? `${option.playerRacket.player} uses ${option.playerRacket.racket}`
+    : "";
+  const lines = [
+    "Hi,",
+    "",
+    "Could you please string this setup for me?",
+    "",
+    `String: ${option.entry.name}`,
+    `Type: ${option.entry.type}`,
+    `Gauge: ${option.entry.gauge}`,
+    `Suggested tension: ${option.tensionDisplay?.label || "Use the Tension Calculator"}`,
+    `Racket: ${appliedRacketFamily || option.entry.racketFamily}`,
+    option.tensionDisplay?.detail ? `Tension note: ${option.tensionDisplay.detail}` : "",
+    referenceLine ? `Reference: ${referenceLine}` : "",
+    recommendation?.reason ? `Why this setup: ${recommendation.reason}` : "",
+    option.entry.summary ? `String note: ${option.entry.summary}` : "",
+    "",
+    "Generated with TennisSetup.com"
+  ].filter(Boolean);
+
+  return {
+    subject: `String setup request: ${option.entry.name} ${option.entry.gauge}`.trim(),
+    body: lines.join("\n")
+  };
+}
+
+function buildTensionCalculatorStringerEmailDraft(recommendation) {
+  if (!recommendation) {
+    return null;
+  }
+
+  const selectedString = recommendation.source
+    ? `${recommendation.source.name} ${recommendation.source.gauge || ""}`.trim()
+    : "";
+  const subjectLabel = selectedString || `${recommendation.type} setup`;
+  const referenceLine = recommendation.proReference
+    ? `${recommendation.proReference.player} ${recommendation.proReference.tension}${recommendation.proReference.detail ? ` | ${recommendation.proReference.detail}` : ""}`
+    : "";
+  const lines = [
+    "Hi,",
+    "",
+    "Could you please string this setup for me?",
+    "",
+    selectedString ? `String: ${selectedString}` : "",
+    `String type: ${recommendation.type}`,
+    `Requested tension range: ${recommendation.lbsRange} (${recommendation.kgRange})`,
+    `Racket family: ${recommendation.racketFamily}`,
+    `Feel goal: ${recommendation.preference}`,
+    `Arm comfort: ${recommendation.armComfort}`,
+    referenceLine ? `Reference: ${referenceLine}` : "",
+    recommendation.sourceNote ? `Setup note: ${recommendation.sourceNote}` : "",
+    recommendation.explanation ? `Calculator note: ${recommendation.explanation}` : "",
+    "",
+    "Generated with TennisSetup.com"
+  ].filter(Boolean);
+
+  return {
+    subject: `Stringing request: ${subjectLabel} @ ${recommendation.lbsRange}`,
+    body: lines.join("\n")
+  };
 }
 
 const UI_TRANSLATIONS = {
@@ -495,6 +590,7 @@ function setupDropdownMenu(button, panel, containerSelector) {
 }
 
 setupDropdownMenu(heroMenuButton, heroMenuPanel, ".hero-overflow-menu");
+setupDropdownMenu(toolsMenuButton, toolsMenuPanel, ".tools-action-menu");
 setupDropdownMenu(referenceGuideButton, referenceGuidePanel, ".hero-action-menu");
 
 const IMAGE_STORAGE_PREFIX = "tennisStringPlannerImage:";
@@ -646,6 +742,12 @@ if (typeof window !== "undefined") {
 }
 
 const GUIDE_PAGES = [
+  {
+    title: "Compare Strings",
+    href: "./compare-strings.html",
+    description: "Compare two tennis strings side by side for spin, control, comfort, power, durability, and racket fit.",
+    keywords: ["compare strings", "string comparison", "compare tennis strings", "tennis string comparison", "string matchup"]
+  },
   {
     title: "String Library",
     href: "./string-library.html",
@@ -4597,6 +4699,11 @@ function renderQuickSetupRecommendation(recommendation) {
       <h3 class="tool-recommendation-name">${matchLabel}</h3>
       <p class="tool-note">${reason}</p>
       <p class="tool-mini-line"><strong>Logic:</strong> ${logic}</p>
+      ${options[0] ? `
+        <div class="tool-inline-actions">
+          <button class="secondary-button compact-button quick-setup-email-stringer" type="button">Email Top Pick to Stringer</button>
+        </div>
+      ` : ""}
     </div>
     <div class="quick-setup-option-list">
       ${options.map((option, index) => `
@@ -4639,6 +4746,21 @@ function renderQuickSetupRecommendation(recommendation) {
       applyQuickSetupRecommendation(optionIndex);
     });
   });
+
+  const quickSetupEmailButton = quickSetupResult.querySelector(".quick-setup-email-stringer");
+  if (quickSetupEmailButton) {
+    quickSetupEmailButton.addEventListener("click", () => {
+      const draft = buildQuickSetupStringerEmailDraft(recommendation, 0);
+      if (!draft) {
+        return;
+      }
+
+      trackToolUsage("quick_setup_email_stringer", "Email Top Pick to Stringer", {
+        recommendedString: recommendation.options?.[0]?.entry?.name || ""
+      });
+      openMailDraft(draft);
+    });
+  }
 
   if (quickSetupApplyButton) {
     quickSetupApplyButton.hidden = false;
@@ -4905,6 +5027,9 @@ function renderTensionCalculatorRecommendation() {
       <p class="eyebrow">Starting Tension</p>
       <h3 class="tool-recommendation-name">${recommendation.lbsRange}</h3>
       <p class="tool-note">${recommendation.kgRange}</p>
+      <div class="tool-inline-actions">
+        <button class="secondary-button compact-button tension-calc-email-stringer" type="button">Email Setup to Stringer</button>
+      </div>
     </div>
     <div class="tool-stat-grid">
       ${recommendation.source ? `
@@ -4966,6 +5091,22 @@ function renderTensionCalculatorRecommendation() {
       </div>
     ` : ""}
   `;
+
+  const tensionEmailButton = tensionCalcResult.querySelector(".tension-calc-email-stringer");
+  if (tensionEmailButton) {
+    tensionEmailButton.addEventListener("click", () => {
+      const draft = buildTensionCalculatorStringerEmailDraft(recommendation);
+      if (!draft) {
+        return;
+      }
+
+      trackToolUsage("tension_calculator_email_stringer", "Email Setup to Stringer", {
+        selectedString: recommendation.source?.name || "",
+        stringType: recommendation.type
+      });
+      openMailDraft(draft);
+    });
+  }
 }
 
 function buildTensionCalculatorRecommendation({ type, racketFamily, preference, armComfort, source = null }) {
@@ -6481,6 +6622,7 @@ if (typeof window !== "undefined") {
     doesEntryMatchCalculatorType,
     buildTensionCalculatorRecommendation,
     persistTensionCalculatorSource,
-    trackToolUsage
+    trackToolUsage,
+    openMailDraft
   };
 }
