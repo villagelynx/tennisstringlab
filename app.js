@@ -671,6 +671,18 @@ const GUIDE_PAGES = [
     keywords: ["how strings are made", "manufacturing", "extrusion", "multifilament", "synthetic gut", "natural gut", "polyester", "co-poly"]
   },
   {
+    title: "Poly vs Co-Poly",
+    href: "./poly-vs-co-poly.html",
+    description: "Learn the practical difference between poly and co-poly strings, including why the terms are often used loosely.",
+    keywords: ["poly vs co-poly", "poly", "co-poly", "polyester", "difference between poly and co-poly", "poly string"]
+  },
+  {
+    title: "Natural Gut vs Multifilament",
+    href: "./natural-gut-vs-multifilament.html",
+    description: "Compare natural gut and multifilament for comfort, power, feel, tension maintenance, and price.",
+    keywords: ["natural gut vs multifilament", "natural gut", "multifilament", "comfort strings", "soft strings", "gut vs multi"]
+  },
+  {
     title: "Tension Guide",
     href: "./tension-guide.html",
     description: "Learn how lower and higher tension change comfort, power, control, and overall response.",
@@ -711,6 +723,24 @@ const GUIDE_PAGES = [
     href: "./string-dampeners-guide.html",
     description: "Learn what tennis string dampeners actually change, what they do not fix, and whether a dampener is worth using.",
     keywords: ["string dampener", "dampener", "vibration dampener", "do dampeners work", "tennis dampener", "muted feel", "ping sound"]
+  },
+  {
+    title: "When Poly Goes Dead",
+    href: "./when-poly-goes-dead.html",
+    description: "Learn the signs that polyester strings have gone dead and when it is time to restring instead of playing through it.",
+    keywords: ["dead poly", "when poly goes dead", "polyester strings", "old poly", "restring poly", "dead strings"]
+  },
+  {
+    title: "Best Strings for Beginners",
+    href: "./best-strings-for-beginners.html",
+    description: "Find the best string directions for beginners, including comfortable, affordable, and easy-to-use setups.",
+    keywords: ["best strings for beginners", "beginner tennis strings", "starter strings", "beginner setup", "first tennis strings"]
+  },
+  {
+    title: "Do Tennis Strings Lose Tension If You Don't Play?",
+    href: "./do-tennis-strings-lose-tension-if-you-dont-play.html",
+    description: "Learn why strings can still lose tension while sitting unused and why age matters even without much play.",
+    keywords: ["lose tension if you don't play", "string tension over time", "unused strings", "old strings", "do strings lose tension", "time-based restringing"]
   },
   {
     title: "How Often to Restring",
