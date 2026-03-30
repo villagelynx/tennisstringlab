@@ -3608,6 +3608,12 @@ body[data-page="compare-strings"] .compare-tool-report-card .tool-stat-label {
     padding-left: 4px;
   }
 
+  body[data-page="home"] .hero-action-menu,
+  body[data-page="home"] .tools-action-menu {
+    display: flex;
+    align-items: center;
+  }
+
   body[data-page="home"] .hero-link,
   body[data-page="home"] .hero-button {
     min-height: 0;
@@ -3618,6 +3624,11 @@ body[data-page="compare-strings"] .compare-tool-report-card .tool-stat-label {
     color: #0d4d7a;
     box-shadow: none;
     justify-content: flex-start;
+  }
+
+  body[data-page="home"] #toolsMenuButton {
+    position: relative;
+    top: -6px;
   }
 
   body[data-page="home"] .hero-action-card {
