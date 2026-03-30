@@ -683,6 +683,12 @@ const GUIDE_PAGES = [
     keywords: ["natural gut vs multifilament", "natural gut", "multifilament", "comfort strings", "soft strings", "gut vs multi"]
   },
   {
+    title: "Full Bed vs Hybrid",
+    href: "./full-bed-vs-hybrid.html",
+    description: "Learn the practical difference between a full bed and a hybrid setup, and which players usually benefit from each.",
+    keywords: ["full bed vs hybrid", "hybrid", "mains and crosses", "same string both ways", "poly hybrid", "gut hybrid"]
+  },
+  {
     title: "Tension Guide",
     href: "./tension-guide.html",
     description: "Learn how lower and higher tension change comfort, power, control, and overall response.",
@@ -737,10 +743,40 @@ const GUIDE_PAGES = [
     keywords: ["best strings for beginners", "beginner tennis strings", "starter strings", "beginner setup", "first tennis strings"]
   },
   {
+    title: "Best Strings for Intermediate Players",
+    href: "./best-strings-for-intermediate-players.html",
+    description: "Find the best string directions for intermediate players who want a better balance of control, comfort, spin, and value.",
+    keywords: ["best strings for intermediate players", "intermediate tennis strings", "balanced setup", "control and comfort", "intermediate setup"]
+  },
+  {
+    title: "How Much Can a Good String Setup Improve Your Tennis Game?",
+    href: "./how-much-can-a-good-string-setup-improve-your-tennis-game.html",
+    description: "Learn how much a good tennis string setup can improve consistency, comfort, control, and confidence for different types of players.",
+    keywords: ["how much can strings improve your game", "string setup improvement", "tennis string performance", "better string setup", "consistency", "confidence"]
+  },
+  {
+    title: "What Strings Help Beginners Improve Most?",
+    href: "./what-strings-help-beginners-improve-most.html",
+    description: "Learn which string types help beginners most and why synthetic gut and softer multifilaments are often better early choices than poly.",
+    keywords: ["what strings help beginners", "beginner improvement", "beginner tennis strings", "synthetic gut", "soft multifilament", "starter strings"]
+  },
+  {
+    title: "What Setup Changes Help Intermediate Players Most?",
+    href: "./what-setup-changes-help-intermediate-players-most.html",
+    description: "Learn which setup changes help intermediate players most, including tension changes, softer polys, hybrid logic, and fresher strings.",
+    keywords: ["intermediate setup changes", "what helps intermediates most", "tennis string setup changes", "tension changes", "softer poly", "hybrid"]
+  },
+  {
     title: "Do Tennis Strings Lose Tension If You Don't Play?",
     href: "./do-tennis-strings-lose-tension-if-you-dont-play.html",
     description: "Learn why strings can still lose tension while sitting unused and why age matters even without much play.",
     keywords: ["lose tension if you don't play", "string tension over time", "unused strings", "old strings", "do strings lose tension", "time-based restringing"]
+  },
+  {
+    title: "How Weather Affects String Tension",
+    href: "./how-weather-affects-string-tension.html",
+    description: "Learn how heat, cold, humidity, and seasonal conditions can make the same racket setup feel different.",
+    keywords: ["weather affects string tension", "hot weather tension", "cold weather tension", "summer tension", "winter tension", "humidity string tension"]
   },
   {
     title: "How Often to Restring",
@@ -4801,6 +4837,7 @@ function buildTensionCalculatorSource(recommendation, inferredPreference, applie
   }
 
   return {
+    sourceLabel: "Quick String Setup Tool",
     name: recommendation.entry.name,
     gauge: recommendation.entry.gauge,
     type: recommendation.entry.type,
@@ -4973,13 +5010,14 @@ function buildTensionCalculatorRecommendation({ type, racketFamily, preference, 
         detail: source.playerTension.detail || ""
       }
     : null;
+  const sourceLabel = source?.sourceLabel || "Quick String Setup Tool";
   const sourceNote = !source
     ? ""
     : sourceMatchesCurrentFields
       ? source.playerTension
-        ? `From Quick String Setup Tool: ${source.player === "Any" ? source.name : `${source.player}'s ${source.name}`} with a documented reference of ${source.tensionDisplay.label}.`
-        : `From Quick String Setup Tool: ${source.name} ${source.gauge} using ${source.appliedRacketFamily}.`
-      : `Quick String Setup source: ${source.name} ${source.gauge}. The current calculator fields have been adjusted from the original handoff.`;
+        ? `From ${sourceLabel}: ${source.player === "Any" ? source.name : `${source.player}'s ${source.name}`} with a documented reference of ${source.tensionDisplay.label}.`
+        : `From ${sourceLabel}: ${source.name} ${source.gauge} using ${source.appliedRacketFamily}.`
+      : `${sourceLabel} source: ${source.name} ${source.gauge}. The current calculator fields have been adjusted from the original handoff.`;
 
   return {
     type,
@@ -6426,3 +6464,23 @@ function createStringImage(name, tone, stringColor, brand) {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
+
+
+if (typeof window !== "undefined") {
+  window.TENNIS_SETUP_ANALYZER_API = {
+    STRINGS,
+    FILTERS,
+    TENSION_TYPE_BASE,
+    TENSION_RACKET_ADJUSTMENTS,
+    TENSION_FEEL_ADJUSTMENTS,
+    TENSION_ARM_ADJUSTMENTS,
+    mapStringLevelToNumeric,
+    getRacketFamilyGroup,
+    clampNumber,
+    formatDecimalNumber,
+    doesEntryMatchCalculatorType,
+    buildTensionCalculatorRecommendation,
+    persistTensionCalculatorSource,
+    trackToolUsage
+  };
+}
