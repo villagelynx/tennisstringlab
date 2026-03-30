@@ -749,6 +749,18 @@ const GUIDE_PAGES = [
     keywords: ["compare strings", "string comparison", "compare tennis strings", "tennis string comparison", "string matchup"]
   },
   {
+    title: "Compare Pro Setups",
+    href: "./compare-pro-setups.html",
+    description: "Compare two curated pro-inspired tennis setups side by side for racket fit, string choice, tension reference, and likely setup profile.",
+    keywords: ["compare pro setups", "pro setups", "compare pro tennis setups", "pro setup comparison", "compare pros"]
+  },
+  {
+    title: "Hybrid String Builder",
+    href: "./hybrid-builder.html",
+    description: "Build a mains and crosses hybrid using the string database, then get a practical profile, starting split, pro hybrid examples, and popular hybrid setup ideas.",
+    keywords: ["hybrid string builder", "hybrid builder", "build a hybrid", "string hybrid", "mains and crosses", "tennis hybrid setup", "hybrid strings"]
+  },
+  {
     title: "String Library",
     href: "./string-library.html",
     description: "Browse the full Tennis String Lab article library, grouped into fundamentals, setup guides, player-fit pages, comparisons, and resources.",

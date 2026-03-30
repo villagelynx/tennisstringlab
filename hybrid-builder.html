@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Tennis Setup">
+  <meta name="theme-color" content="#ffffff">
+  <title>Hybrid String Builder | Tennis Setup</title>
+  <meta name="description" content="Build a tennis string hybrid using your chosen mains, crosses, racket family, and goal. See pro hybrid examples, popular hybrid setups, and a practical starting split.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://tennisstringlab.com/hybrid-builder.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Tennis Setup">
+  <meta property="og:title" content="Hybrid String Builder | Tennis Setup">
+  <meta property="og:description" content="Build a tennis string hybrid using your chosen mains, crosses, racket family, and goal. See pro hybrid examples, popular hybrid setups, and a practical starting split.">
+  <meta property="og:url" content="https://tennisstringlab.com/hybrid-builder.html">
+  <meta property="og:image" content="https://tennisstringlab.com/social-share.png">
+  <meta property="og:image:alt" content="Tennis Setup hybrid builder tool">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hybrid String Builder | Tennis Setup">
+  <meta name="twitter:description" content="Build a tennis string hybrid using your chosen mains, crosses, racket family, and goal. See pro hybrid examples, popular hybrid setups, and a practical starting split.">
+  <meta name="twitter:image" content="https://tennisstringlab.com/social-share.png">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="tool-page-body" data-page="hybrid-builder">
+  <main class="tool-page-shell">
+    <section class="tool-page-header">
+      <div class="tool-page-title-row">
+        <div>
+          <p class="eyebrow">Tennis Setup</p>
+          <h1>Hybrid String Builder</h1>
+          <p class="tool-page-copy">Choose your mains, crosses, racket family, and hybrid goal. The builder gives you a practical setup identity, a starting mains / crosses split, likely strengths, likely tradeoffs, and below that 3 pro hybrid references plus 5 popular hybrid setup ideas.</p>
+        </div>
+      </div>
+      <nav class="tool-page-nav" aria-label="Hybrid String Builder navigation">
+        <a class="tool-page-nav-link" href="/">Home</a>
+        <a class="tool-page-nav-link" href="./analyze-current-setup.html">Analyze Current Setup</a>
+        <a class="tool-page-nav-link" href="./compare-strings.html">Compare Strings</a>
+        <a class="tool-page-nav-link" href="./quick-setup.html">Quick String Setup</a>
+        <a class="tool-page-nav-link" href="./tension-calculator.html">Tension Calculator</a>
+      </nav>
+    </section>
+
+    <section class="tool-page-card tool-page-card-compare tool-page-card-hybrid-builder">
+      <div class="compare-tool-layout">
+        <article class="tool-card compare-tool-form-card">
+          <div>
+            <p class="eyebrow">Hybrid String Builder Tool</p>
+            <h3>Choose mains, crosses, and goal</h3>
+            <p class="summary-copy">Mains usually drive more of the feel, shape, and launch. Crosses usually tune the comfort window, firmness, and overall response. Build the pair you actually want to try, then use the report as your starting point.</p>
+          </div>
+          <div class="tool-form-grid tool-form-grid-compact">
+            <div class="field is-wide">
+              <label for="hybridMainString">Main String</label>
+              <input id="hybridMainString" class="search-input" type="text" list="hybridStringList" placeholder="Start typing the mains string">
+            </div>
+            <div class="field is-wide">
+              <label for="hybridCrossString">Cross String</label>
+              <input id="hybridCrossString" class="search-input" type="text" list="hybridStringList" placeholder="Start typing the crosses string">
+            </div>
+            <div class="field">
+              <label for="hybridRacketFamily">Racket Family</label>
+              <select id="hybridRacketFamily" class="search-input">
+                <option value="">Choose a racket family</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="hybridGoal">Hybrid Goal</label>
+              <select id="hybridGoal" class="search-input">
+                <option value="Balanced">Balanced blend</option>
+                <option value="Comfort">More comfort</option>
+                <option value="Spin">More spin</option>
+                <option value="Control">More control</option>
+                <option value="Power">More power</option>
+                <option value="Durability">More durability</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="hybridArmComfort">Arm Comfort</label>
+              <select id="hybridArmComfort" class="search-input">
+                <option value="Normal">Normal</option>
+                <option value="Sensitive">A little sensitive</option>
+                <option value="Very Sensitive">Very sensitive</option>
+              </select>
+            </div>
+          </div>
+          <datalist id="hybridStringList"></datalist>
+          <div class="tool-actions tool-actions-compact">
+            <button id="hybridBuilderButton" class="secondary-button tool-primary-button" type="button">Build Hybrid</button>
+          </div>
+          <p class="field-note">This is a practical builder, not a lab model. Use it to get the setup direction and a sensible starting split, then adjust after the first hit if the bed feels too firm, too lively, or not pocketing enough.</p>
+        </article>
+
+        <div id="hybridBuilderReport" class="setup-analyzer-report-shell">
+          <section class="setup-analyzer-report-card setup-analyzer-report-card-empty">
+            <p class="eyebrow">Hybrid Snapshot</p>
+            <h3>Build a mains / crosses setup</h3>
+            <p class="summary-copy">Choose 2 strings, a racket family, and one main goal. The builder will show what the hybrid is trying to do, where it may help, where it may carry tradeoffs, and a simple starting mains / crosses split.</p>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="tool-page-card tool-page-card-hybrid-builder-reference">
+      <div class="hybrid-builder-reference-block">
+        <div class="setup-analyzer-card-header">
+          <p class="eyebrow">Pro Hybrid Examples</p>
+          <h3>3 pro-inspired hybrid reference points</h3>
+          <p class="summary-copy">These are useful reference setups because they show three different premium hybrid directions: classic all-court gut/poly, firmer low-tension control, and heavier spin-oriented gut/poly.</p>
+        </div>
+        <div class="compare-tool-summary-grid hybrid-builder-reference-grid hybrid-builder-reference-grid-pro">
+          <article class="compare-tool-string-card hybrid-builder-reference-card">
+            <div>
+              <p class="eyebrow">Roger Federer</p>
+              <h4>Wilson Champion's Choice (Wilson Natural Gut + Luxilon ALU Power Rough)</h4>
+              <p class="summary-copy">Classic gut/poly reference hybrid for touch, connected feel, and broad all-court range, built around natural gut feel and ALU Rough control.</p>
+            </div>
+            <ul class="setup-analyzer-point-list hybrid-builder-point-list">
+              <li>Why it stands out: premium pocketing and feel without giving up clean directional response.</li>
+              <li>Typical reference tension: 48.5 / 45 lbs.</li>
+              <li>Best fit: all-court players who want touch, power, and control in one bed.</li>
+            </ul>
+          </article>
+          <article class="compare-tool-string-card hybrid-builder-reference-card">
+            <div>
+              <p class="eyebrow">Alex de Minaur</p>
+              <h4>Luxilon Natural Gut / 4G Rough Hybrid</h4>
+              <p class="summary-copy">Premium gut and firmer poly blend that keeps feel in the bed while staying disciplined at lower tensions.</p>
+            </div>
+            <ul class="setup-analyzer-point-list hybrid-builder-point-list">
+              <li>Why it stands out: controlled launch and tension stability without losing gut touch.</li>
+              <li>Typical reference tension: 46-51 lbs.</li>
+              <li>Best fit: fast-swinging players who still want some comfort and connection.</li>
+            </ul>
+          </article>
+          <article class="compare-tool-string-card hybrid-builder-reference-card">
+            <div>
+              <p class="eyebrow">Carlos Alcaraz</p>
+              <h4>Babolat Touch VS / RPM Blast Hybrid</h4>
+              <p class="summary-copy">Gut plus shaped poly hybrid that leans more toward heavy-ball spin and aggressive baseline play.</p>
+            </div>
+            <ul class="setup-analyzer-point-list hybrid-builder-point-list">
+              <li>Why it stands out: shaped-poly bite with more complete feel than a full firm poly bed.</li>
+              <li>Setup idea: useful when you want a bigger performance window, not just more raw control.</li>
+              <li>Best fit: advanced players chasing spin, pop, and a livelier pocketing feel.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="tool-page-card tool-page-card-hybrid-builder-reference">
+      <div class="hybrid-builder-reference-block">
+        <div class="setup-analyzer-card-header">
+          <p class="eyebrow">Popular Hybrid Setups</p>
+          <h3>5 premium hybrid directions players keep coming back to</h3>
+          <p class="summary-copy">These are popular because each one solves a clear problem: more touch, more comfort, more spin, or a better blend of gut feel with modern poly control.</p>
+        </div>
+        <div class="compare-tool-summary-grid hybrid-builder-reference-grid">
+          <article class="compare-tool-string-card hybrid-builder-reference-card">
+            <div>
+              <p class="eyebrow">Popular Hybrid 1</p>
+              <h4>Wilson Champion's Choice (Wilson Natural Gut + Luxilon ALU Power Rough)</h4>
+              <p class="summary-copy">Why players like it: one of the cleanest all-court gut/poly references for players who want feel, power, and trust on bigger swings, with gut in the mains and ALU Rough in the crosses as the classic reference build.</p>
+            </div>
+          </article>
+          <article class="compare-tool-string-card hybrid-builder-reference-card">
+            <div>
+              <p class="eyebrow">Popular Hybrid 2</p>
+              <h4>Luxilon Natural Gut / ALU Hybrid</h4>
+              <p class="summary-copy">Why players like it: classic premium gut-and-ALU recipe for a livelier response than full poly without losing the connected Luxilon feel.</p>
+            </div>
+          </article>
+          <article class="compare-tool-string-card hybrid-builder-reference-card">
+            <div>
+              <p class="eyebrow">Popular Hybrid 3</p>
+              <h4>Babolat Touch VS / RPM Blast Hybrid</h4>
+              <p class="summary-copy">Why players like it: shaped-poly bite plus gut pocketing makes this one attractive for players who want heavier shape and more complete performance.</p>
+            </div>
+          </article>
+          <article class="compare-tool-string-card hybrid-builder-reference-card">
+            <div>
+              <p class="eyebrow">Popular Hybrid 4</p>
+              <h4>Yonex Poly Tour Air / Babolat VS Touch Hybrid</h4>
+              <p class="summary-copy">Why players like it: softer premium hybrid option when comfort matters more and you still want gut feel with controlled spin.</p>
+            </div>
+          </article>
+          <article class="compare-tool-string-card hybrid-builder-reference-card">
+            <div>
+              <p class="eyebrow">Popular Hybrid 5</p>
+              <h4>Head Hawk Touch / Babolat VS Touch Hybrid</h4>
+              <p class="summary-copy">Why players like it: more precision-leaning hybrid for players who want a firmer, cleaner directional response without abandoning touch.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./analytics.js"></script>
+  <script src="./strings-data.js"></script>
+  <script src="./hybrid-builder.js"></script>
+</body>
+</html>

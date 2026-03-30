@@ -3474,7 +3474,8 @@ body[data-page="tension-calculator"] .tool-reference-item {
 }
 
 body[data-page="compare-strings"] .tool-page-title-row h1,
-body[data-page="compare-pro-setups"] .tool-page-title-row h1 {
+body[data-page="compare-pro-setups"] .tool-page-title-row h1,
+body[data-page="hybrid-builder"] .tool-page-title-row h1 {
   font-size: clamp(2.15rem, 4.5vw, 2.85rem);
 }
 
@@ -3487,13 +3488,19 @@ body[data-page="compare-pro-setups"] .tool-page-copy,
 body[data-page="compare-pro-setups"] .tool-page-card .summary-copy,
 body[data-page="compare-pro-setups"] .tool-page-card .tool-note,
 body[data-page="compare-pro-setups"] .tool-page-card .tool-mini-line,
-body[data-page="compare-pro-setups"] .tool-page-card .field-note {
+body[data-page="compare-pro-setups"] .tool-page-card .field-note,
+body[data-page="hybrid-builder"] .tool-page-copy,
+body[data-page="hybrid-builder"] .tool-page-card .summary-copy,
+body[data-page="hybrid-builder"] .tool-page-card .tool-note,
+body[data-page="hybrid-builder"] .tool-page-card .tool-mini-line,
+body[data-page="hybrid-builder"] .tool-page-card .field-note {
   font-size: 0.9rem;
   line-height: 1.4;
 }
 
 body[data-page="compare-strings"] .tool-page-nav-link,
-body[data-page="compare-pro-setups"] .tool-page-nav-link {
+body[data-page="compare-pro-setups"] .tool-page-nav-link,
+body[data-page="hybrid-builder"] .tool-page-nav-link {
   min-height: 32px;
   padding: 0 10px;
   font-size: 0.74rem;
@@ -3501,14 +3508,17 @@ body[data-page="compare-pro-setups"] .tool-page-nav-link {
 }
 
 body[data-page="compare-strings"] .tool-page-card .tool-card h3,
-body[data-page="compare-pro-setups"] .tool-page-card .tool-card h3 {
+body[data-page="compare-pro-setups"] .tool-page-card .tool-card h3,
+body[data-page="hybrid-builder"] .tool-page-card .tool-card h3 {
   font-size: 1.18rem;
 }
 
 body[data-page="compare-strings"] .tool-page-card label,
 body[data-page="compare-strings"] .tool-page-card .tool-stat-label,
 body[data-page="compare-pro-setups"] .tool-page-card label,
-body[data-page="compare-pro-setups"] .tool-page-card .tool-stat-label {
+body[data-page="compare-pro-setups"] .tool-page-card .tool-stat-label,
+body[data-page="hybrid-builder"] .tool-page-card label,
+body[data-page="hybrid-builder"] .tool-page-card .tool-stat-label {
   font-size: 0.8rem;
 }
 
@@ -3517,13 +3527,17 @@ body[data-page="compare-strings"] .tool-page-card .secondary-button,
 body[data-page="compare-strings"] .tool-page-card .compact-button,
 body[data-page="compare-pro-setups"] .tool-page-card .search-input,
 body[data-page="compare-pro-setups"] .tool-page-card .secondary-button,
-body[data-page="compare-pro-setups"] .tool-page-card .compact-button {
+body[data-page="compare-pro-setups"] .tool-page-card .compact-button,
+body[data-page="hybrid-builder"] .tool-page-card .search-input,
+body[data-page="hybrid-builder"] .tool-page-card .secondary-button,
+body[data-page="hybrid-builder"] .tool-page-card .compact-button {
   min-height: 38px;
   font-size: 0.82rem;
 }
 
 body[data-page="compare-strings"] .compare-tool-form-card .search-input,
-body[data-page="compare-pro-setups"] .compare-tool-form-card .search-input {
+body[data-page="compare-pro-setups"] .compare-tool-form-card .search-input,
+body[data-page="hybrid-builder"] .compare-tool-form-card .search-input {
   min-height: 34px;
   padding-top: 3px;
   padding-bottom: 3px;
@@ -3533,28 +3547,71 @@ body[data-page="compare-pro-setups"] .compare-tool-form-card .search-input {
 }
 
 body[data-page="compare-strings"] #compareStringsButton,
-body[data-page="compare-pro-setups"] #compareProSetupsButton {
+body[data-page="compare-pro-setups"] #compareProSetupsButton,
+body[data-page="hybrid-builder"] #hybridBuilderButton {
   min-height: 32px;
   padding: 0 10px;
   font-size: 0.74rem;
 }
 
 body[data-page="compare-strings"] .compare-tool-report-card .tool-recommendation-name,
-body[data-page="compare-pro-setups"] .compare-tool-report-card .tool-recommendation-name {
+body[data-page="compare-pro-setups"] .compare-tool-report-card .tool-recommendation-name,
+body[data-page="hybrid-builder"] .setup-analyzer-report-card .tool-recommendation-name {
   font-size: 1rem;
   line-height: 1.1;
 }
 
 body[data-page="compare-strings"] .compare-tool-report-card .tool-stat,
-body[data-page="compare-pro-setups"] .compare-tool-report-card .tool-stat {
+body[data-page="compare-pro-setups"] .compare-tool-report-card .tool-stat,
+body[data-page="hybrid-builder"] .setup-analyzer-report-card .tool-stat,
+body[data-page="hybrid-builder"] .compare-tool-report-card .tool-stat {
   gap: 3px;
   padding: 8px;
   border-radius: 14px;
 }
 
 body[data-page="compare-strings"] .compare-tool-report-card .tool-stat-label,
-body[data-page="compare-pro-setups"] .compare-tool-report-card .tool-stat-label {
+body[data-page="compare-pro-setups"] .compare-tool-report-card .tool-stat-label,
+body[data-page="hybrid-builder"] .setup-analyzer-report-card .tool-stat-label,
+body[data-page="hybrid-builder"] .compare-tool-report-card .tool-stat-label {
   font-size: 0.68rem;
+}
+
+body[data-page="hybrid-builder"] .tool-page-card-hybrid-builder-reference {
+  padding: 16px;
+}
+
+body[data-page="hybrid-builder"] .hybrid-builder-reference-block {
+  display: grid;
+  gap: 12px;
+}
+
+body[data-page="hybrid-builder"] .hybrid-builder-reference-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body[data-page="hybrid-builder"] .hybrid-builder-reference-grid-pro {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+body[data-page="hybrid-builder"] .hybrid-builder-reference-card {
+  gap: 10px;
+}
+
+body[data-page="hybrid-builder"] .hybrid-builder-reference-card h4 {
+  font-size: 0.98rem;
+  line-height: 1.18;
+}
+
+body[data-page="hybrid-builder"] .hybrid-builder-point-list {
+  margin-top: 0;
+}
+
+@media (max-width: 820px) {
+  body[data-page="hybrid-builder"] .hybrid-builder-reference-grid,
+  body[data-page="hybrid-builder"] .hybrid-builder-reference-grid-pro {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (min-width: 821px) {
@@ -4256,7 +4313,8 @@ body[data-page="compare-pro-setups"] .compare-tool-report-card .tool-stat-label 
   body[data-page="setup-analyzer"] .tool-page-title-row h1,
   body[data-page="tension-calculator"] .tool-page-title-row h1,
   body[data-page="compare-strings"] .tool-page-title-row h1,
-  body[data-page="compare-pro-setups"] .tool-page-title-row h1 {
+  body[data-page="compare-pro-setups"] .tool-page-title-row h1,
+  body[data-page="hybrid-builder"] .tool-page-title-row h1 {
     font-size: clamp(2.3rem, 9vw, 3rem);
   }
 
@@ -4276,17 +4334,23 @@ body[data-page="compare-pro-setups"] .compare-tool-report-card .tool-stat-label 
   body[data-page="compare-strings"] .tool-page-card .tool-note,
   body[data-page="compare-strings"] .tool-page-card .tool-mini-line,
   body[data-page="compare-strings"] .tool-page-card .field-note,
+  body[data-page="hybrid-builder"] .tool-page-copy,
   body[data-page="compare-pro-setups"] .tool-page-card .summary-copy,
   body[data-page="compare-pro-setups"] .tool-page-card .tool-note,
   body[data-page="compare-pro-setups"] .tool-page-card .tool-mini-line,
-  body[data-page="compare-pro-setups"] .tool-page-card .field-note {
+  body[data-page="compare-pro-setups"] .tool-page-card .field-note,
+  body[data-page="hybrid-builder"] .tool-page-card .summary-copy,
+  body[data-page="hybrid-builder"] .tool-page-card .tool-note,
+  body[data-page="hybrid-builder"] .tool-page-card .tool-mini-line,
+  body[data-page="hybrid-builder"] .tool-page-card .field-note {
     font-size: 0.98rem;
   }
 
   body[data-page="setup-analyzer"] .tool-page-nav-link,
   body[data-page="tension-calculator"] .tool-page-nav-link,
   body[data-page="compare-strings"] .tool-page-nav-link,
-  body[data-page="compare-pro-setups"] .tool-page-nav-link {
+  body[data-page="compare-pro-setups"] .tool-page-nav-link,
+  body[data-page="hybrid-builder"] .tool-page-nav-link {
     min-height: 42px;
     font-size: 0.94rem;
   }
@@ -4298,7 +4362,9 @@ body[data-page="compare-pro-setups"] .compare-tool-report-card .tool-stat-label 
   body[data-page="compare-strings"] .tool-page-card label,
   body[data-page="compare-strings"] .tool-page-card .tool-stat-label,
   body[data-page="compare-pro-setups"] .tool-page-card label,
-  body[data-page="compare-pro-setups"] .tool-page-card .tool-stat-label {
+  body[data-page="compare-pro-setups"] .tool-page-card .tool-stat-label,
+  body[data-page="hybrid-builder"] .tool-page-card label,
+  body[data-page="hybrid-builder"] .tool-page-card .tool-stat-label {
     font-size: 0.94rem;
   }
 
