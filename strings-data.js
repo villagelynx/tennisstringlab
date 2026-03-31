@@ -2499,6 +2499,114 @@ stringEntry("Yonex Poly Tour Fire", {
     armFriendliness: "High", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#98d448",
     summary: "Extra-thin square co-poly that delivers sharp spin, easy pace, and a softer ride than most spin-first polys.",
     note: "A strong choice for players who want arm-friendly spin and do not need maximum durability."
+  }),
+  stringEntry("Wilson NXT Soft", {
+    brand: "Wilson", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Blue",
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#b8d8ea",
+    summary: "Comfort-first NXT variant with softer fibers, easier power, and a more forgiving impact feel than the original.",
+    note: "A strong fit for players who want maximum comfort without leaving the premium multi category."
+  }),
+  stringEntry("Wilson Synthetic Gut Power", {
+    brand: "Wilson", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Gold",
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#e7c86d",
+    summary: "Classic nylon synthetic gut that blends crisp response, easy power, and solid value for everyday restringing.",
+    note: "Useful for rec players wanting a lively all-around setup without jumping into polyester."
+  }),
+  stringEntry("Babolat Tonic+ Ball Feel", {
+    brand: "Babolat", type: "Natural Gut", stringShape: "Round", spin: "Medium", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Advanced", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Natural",
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#e7d2a8",
+    summary: "More approachable Babolat natural gut option that keeps the power, feel, and comfort profile gut lovers want.",
+    note: "A smart entry point into natural gut for players who want premium feel without paying full VS prices."
+  }),
+  stringEntry("Prince Tour XT", {
+    brand: "Prince", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "18", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Grey",
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#cfd5dc",
+    summary: "Thin Prince tour poly that leans into spin, feel, and easier pocketing rather than maximum stiffness or launch suppression.",
+    note: "Best for players who like thinner gauges and want a livelier response than deadest control polys."
+  }),
+  stringEntry("Gamma Ocho XP", {
+    brand: "Gamma", type: "Multifilament", stringShape: "Shaped", spin: "Medium", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Natural",
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#e8d7b0",
+    summary: "Octagonal Gamma multifilament built to add more spin and bite than a traditional comfort-first multi.",
+    note: "A nice bridge option for players who want multi comfort without giving up all their spin help."
+  }),
+  stringEntry("Gamma Glide Cross String", {
+    brand: "Gamma", type: "Hybrid", stringShape: "Round", spin: "High", power: "Medium", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Clear",
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#d9eef4",
+    summary: "Specialty low-friction cross string designed to unlock more snapback, spin, and comfort in custom hybrids.",
+    note: "Best treated as a hybrid building block rather than a normal full-bed string."
+  }),
+  stringEntry("Gamma Live Wire Professional", {
+    brand: "Gamma", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Natural",
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#efdfbd",
+    summary: "Premium Gamma multi with easy depth, softer shock absorption, and a cleaner response than entry-level comfort strings.",
+    note: "A good fit for players who want premium multi performance with a bit more structure than mushy comfort strings."
+  }),
+  stringEntry("ISOSPEED V18", {
+    brand: "IsoSpeed", type: "Co-Poly", stringShape: "Round", spin: "Very High", power: "Medium", control: "High", durability: "Low",
+    comfort: "Low", feel: "Crisp", gauge: "18", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Yellow",
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#f1dc4a",
+    summary: "Ultra-thin co-poly aimed at fast swingers who want extra spin, livelier rebound, and thin-gauge precision.",
+    note: "Best for players who value bite and feel more than durability."
+  }),
+  stringEntry("Tourna Silver 7 Tour", {
+    brand: "Tourna", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Silver",
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#c7cdd4",
+    summary: "Firm seven-sided Tourna poly that prioritizes control, spin definition, and a locked-in response on big swings.",
+    note: "A clear fit for experienced poly users who want firmer feedback and lower launch."
+  }),
+  stringEntry("Weiss Cannon Mosquito Bite", {
+    brand: "Weiss Cannon", type: "Co-Poly", stringShape: "Round", spin: "Very High", power: "Medium", control: "High", durability: "Low",
+    comfort: "Medium", feel: "Responsive", gauge: "18", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Red",
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#d4665f",
+    summary: "Ultra-thin German co-poly with quick snapback, strong feel, and surprising spin from a very narrow gauge.",
+    note: "A fun option for advanced players who want touch and spin without a thick, boardy string bed."
+  }),
+  stringEntry("MSV Focus HEX Ultra", {
+    brand: "MSV", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Neon Yellow",
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Budget", imageTone: "#dbe84a",
+    summary: "Hexagonal MSV co-poly with sharp snapback, strong control, and better tension stability than many bargain spin strings.",
+    note: "Good for players who want a spin-first poly without paying premium-tour pricing."
+  }),
+  stringEntry("Dunlop Explosive Red", {
+    brand: "Dunlop", type: "Poly", stringShape: "Round", spin: "Medium", power: "High", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Red",
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#d84c4f",
+    summary: "Dunlop monofilament with a smoother, more power-friendly response than many stiff control-first polyester strings.",
+    note: "Useful for players who want poly-style precision with a little more energy and feel."
   })
 ];
 
