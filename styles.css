@@ -1871,10 +1871,47 @@ h1 {
   font-size: 1.05rem;
 }
 
+.shop-context-banner {
+  margin-top: 16px;
+}
+
+.shop-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.shop-card-header h3 {
+  margin: 0;
+}
+
 .shop-meta {
   margin-top: 6px;
   color: var(--muted);
   font-size: 0.94rem;
+}
+
+.shop-distance {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(19, 77, 130, 0.08);
+  border: 1px solid rgba(19, 77, 130, 0.14);
+  color: #0d4f85;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.shop-distance-near {
+  background: rgba(95, 174, 45, 0.14);
+  border-color: rgba(66, 125, 28, 0.24);
+  color: #295d0d;
 }
 
 .shop-actions {
@@ -2192,7 +2229,7 @@ h1 {
 }
 
 .result-actions .result-buy-link,
-.result-actions .amazon-buy-button {
+.result-actions .shop-listing-button {
   background: linear-gradient(135deg, #8fd645, #5fae2d);
   border-color: rgba(66, 125, 28, 0.28);
   color: #113216;

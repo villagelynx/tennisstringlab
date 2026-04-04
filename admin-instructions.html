@@ -50,15 +50,13 @@
         </article>
 
         <article class="type-description-card">
-          <p class="eyebrow">Affiliate Links</p>
-          <h3>How to add Amazon affiliate links</h3>
+          <p class="eyebrow">Shop Listings</p>
+          <h3>How the string shop link works</h3>
           <p class="summary-copy">
-            Open <a href="./app.js">app.js</a> and find the string you want to update. Add these fields inside that string entry:
+            String result cards now open <a href="./proshops.html">proshops.html</a>, where nearby shops rise to the top when visitor location is available.
           </p>
-          <pre class="admin-code-block"><code>amazonSetUrl: "https://www.amazon.com/dp/SETLINK?tag=yourtag-20",
-amazonReelUrl: "https://www.amazon.com/dp/REELLINK?tag=yourtag-20"</code></pre>
           <p class="summary-copy">
-            If you leave those blank, the site automatically falls back to an Amazon search for that string.
+            To add or update a shop, edit <a href="./proshops.js">proshops.js</a> and update the shop name, city, state or province, region, website, notes, and coordinates.
           </p>
         </article>
 
@@ -110,6 +108,9 @@ amazonReelUrl: "https://www.amazon.com/dp/REELLINK?tag=yourtag-20"</code></pre>
             2. Connect that repository to Netlify or Cloudflare Pages.<br>
             3. Publish the site and point your domain <strong>tennisstringlab.com</strong> to the host.<br>
             4. Re-upload or redeploy each time you update the site files.
+          </p>
+          <p class="summary-copy">
+            Analytics note: the visit stats page now expects Supabase-backed analytics. Run <a href="./supabase-analytics.sql">supabase-analytics.sql</a> in Supabase first, then add <strong>SUPABASE_URL</strong> and <strong>SUPABASE_SERVICE_ROLE_KEY</strong> to your Netlify environment variables before testing <a href="./visit-stats.html">visit-stats.html</a>.
           </p>
           <p class="summary-copy">
             Important note: browser-saved images and custom local admin records do not automatically move to the live site. Those are stored locally in your browser unless you later build a real backend or file-storage system.
