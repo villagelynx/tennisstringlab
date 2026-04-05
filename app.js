@@ -6388,7 +6388,7 @@ function renderStringCard(entry, score, matchedTags) {
         </div>
         <div class="result-actions">
           ${officialLink ? `<a class="secondary-button compact-button official-brand-button" href="${officialLink}" target="_blank" rel="noopener noreferrer">Official Brand Page</a>` : ""}
-          <a class="secondary-button compact-button result-buy-link shop-listing-button" href="${shopListingLink}">String Shop Listing</a>
+          <a class="secondary-button compact-button result-buy-link shop-listing-button" href="${shopListingLink}">Closest Pro Shops</a>
         </div>
         <div class="pro-player-panel">
           <div class="pro-player-tag">
