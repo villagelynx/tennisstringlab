@@ -297,6 +297,8 @@ const HOME_STATIC_TRANSLATIONS = {
     masterListCopy: "Browse every string in one place",
     referenceTitle: "Reference Guide",
     referenceCopy: "Browse the full string library",
+    proShopsTitle: "Pro Shops",
+    proShopsCopy: "Find nearby stringing shops",
     popularTitle: "20 Most Popular",
     popularCopy: "Start with the most searched strings",
     prosTitle: "Pro Player Strings",
@@ -325,6 +327,8 @@ const HOME_STATIC_TRANSLATIONS = {
     masterListCopy: "Parcourez tous les cordages en un seul endroit",
     referenceTitle: "Guide de reference",
     referenceCopy: "Parcourir toute la bibliotheque de guides",
+    proShopsTitle: "Magasins pro",
+    proShopsCopy: "Trouver des magasins de cordage proches",
     popularTitle: "20 plus populaires",
     popularCopy: "Commencez par les cordages les plus recherches",
     prosTitle: "Cordages des pros",
@@ -353,6 +357,8 @@ const HOME_STATIC_TRANSLATIONS = {
     masterListCopy: "Explora todas las cuerdas en un solo lugar",
     referenceTitle: "Guia de referencia",
     referenceCopy: "Explora la biblioteca completa de guias",
+    proShopsTitle: "Pro shops",
+    proShopsCopy: "Encuentra tiendas de encordado cercanas",
     popularTitle: "20 mas populares",
     popularCopy: "Empieza con las cuerdas mas buscadas",
     prosTitle: "Cuerdas de profesionales",
@@ -381,6 +387,8 @@ const HOME_STATIC_TRANSLATIONS = {
     masterListCopy: "Sfoglia tutte le corde in un solo posto",
     referenceTitle: "Guida di riferimento",
     referenceCopy: "Sfoglia l'intera libreria di guide",
+    proShopsTitle: "Pro shop",
+    proShopsCopy: "Trova negozi di incordatura vicini",
     popularTitle: "20 piu popolari",
     popularCopy: "Inizia con le corde piu cercate",
     prosTitle: "Corde dei professionisti",
@@ -425,6 +433,8 @@ function updateHomepageStaticTranslations() {
   const masterCopy = document.getElementById("heroMasterListCopy");
   const referenceTitle = document.getElementById("heroReferenceGuideTitle");
   const referenceCopy = document.getElementById("heroReferenceGuideCopy");
+  const proShopsTitle = document.getElementById("heroProShopsTitle");
+  const proShopsCopy = document.getElementById("heroProShopsCopy");
   const popularTitle = document.getElementById("heroPopularTitle");
   const popularCopy = document.getElementById("heroPopularCopy");
   const prosTitle = document.getElementById("heroProsTitle");
@@ -434,6 +444,8 @@ function updateHomepageStaticTranslations() {
   if (masterCopy) masterCopy.textContent = content.masterListCopy;
   if (referenceTitle) referenceTitle.textContent = content.referenceTitle;
   if (referenceCopy) referenceCopy.textContent = content.referenceCopy;
+  if (proShopsTitle) proShopsTitle.textContent = content.proShopsTitle;
+  if (proShopsCopy) proShopsCopy.textContent = content.proShopsCopy;
   if (popularTitle) popularTitle.textContent = content.popularTitle;
   if (popularCopy) popularCopy.textContent = content.popularCopy;
   if (prosTitle) prosTitle.textContent = content.prosTitle;
