@@ -1225,11 +1225,9 @@ const TENSION_ARM_ADJUSTMENTS = {
 };
 
 // Admin note:
-// To add Amazon affiliate links for a specific string, include these optional fields
-// inside that stringEntry(...) object:
-// amazonSetUrl: "https://www.amazon.com/dp/SETLINK?tag=yourtag-20",
-// amazonReelUrl: "https://www.amazon.com/dp/REELLINK?tag=yourtag-20"
-// If left blank, the app falls back to an Amazon search link for that string.
+// String result cards now link to the shop finder page.
+// Add or update shops in proshops.js and include coordinates so nearby
+// locations can be ranked first for each visitor.
 
 const STRINGS = [
   stringEntry("Babolat RPM Blast", {
@@ -6334,8 +6332,7 @@ function renderStringCard(entry, score, matchedTags) {
   const proRackets = [...(entry.proRackets || []), ...customAssociations.rackets];
   const compactMatchedTags = matchedTags.filter((tag) => tag.label !== "ATP Player" && tag.label !== "WTA Player");
   const officialLink = getOfficialStringLink(entry);
-  const amazonSetLink = getAmazonSetLink(entry);
-  const amazonReelLink = getAmazonReelLink(entry);
+  const shopListingLink = buildShopListingUrl(entry);
 
   return `
     <details class="result-card result-card-collapsible">
@@ -6391,8 +6388,7 @@ function renderStringCard(entry, score, matchedTags) {
         </div>
         <div class="result-actions">
           ${officialLink ? `<a class="secondary-button compact-button official-brand-button" href="${officialLink}" target="_blank" rel="noopener noreferrer">Official Brand Page</a>` : ""}
-          <a class="secondary-button compact-button result-buy-link amazon-buy-button" href="${amazonSetLink}" target="_blank" rel="noopener noreferrer">Buy Set</a>
-          <a class="secondary-button compact-button amazon-buy-button" href="${amazonReelLink}" target="_blank" rel="noopener noreferrer">Buy Reel</a>
+          <a class="secondary-button compact-button result-buy-link shop-listing-button" href="${shopListingLink}">String Shop Listing</a>
         </div>
         <div class="pro-player-panel">
           <div class="pro-player-tag">
@@ -6517,8 +6513,6 @@ function stringEntry(name, attributes) {
     costPerReel: attributes.costPerReel ?? estimatedPricing.costPerReel,
     stringColor: attributes.stringColor || resolveStringColor(name, attributes),
     officialUrl: attributes.officialUrl || "",
-    amazonSetUrl: attributes.amazonSetUrl || "",
-    amazonReelUrl: attributes.amazonReelUrl || "",
     ...attributes
   };
   const resolvedImage = resolveStringImage(name, normalizedAttributes);
@@ -6540,26 +6534,17 @@ function getOfficialStringLink(entry) {
   return OFFICIAL_BRAND_PAGES[entry.brand] || "";
 }
 
-function getAmazonSetLink(entry) {
-  if (entry.amazonSetUrl) {
-    return entry.amazonSetUrl;
+function buildShopListingUrl(entry) {
+  const params = new URLSearchParams();
+  params.set("string", entry.name);
+
+  if (entry.brand) {
+    params.set("brand", entry.brand);
   }
 
-  return buildAmazonSearchUrl(entry, "set");
-}
+  params.set("source", "database");
 
-function getAmazonReelLink(entry) {
-  if (entry.amazonReelUrl) {
-    return entry.amazonReelUrl;
-  }
-
-  return buildAmazonSearchUrl(entry, "reel");
-}
-
-function buildAmazonSearchUrl(entry, format) {
-  const suffix = format === "reel" ? " reel tennis string" : " set tennis string";
-  const query = `${entry.brand} ${entry.name}${suffix}`;
-  return `https://www.amazon.com/s?k=${encodeURIComponent(query)}`;
+  return `./proshops.html?${params.toString()}`;
 }
 
 function estimateStringPricing(attributes) {
