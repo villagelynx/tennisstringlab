@@ -1872,7 +1872,20 @@ h1 {
 }
 
 .shop-context-banner {
+  margin-top: 0;
+  flex: 1 1 320px;
+}
+
+.shop-context-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
   margin-top: 16px;
+}
+
+.shop-location-button {
+  flex: 0 0 auto;
 }
 
 .shop-card-header {
@@ -2233,6 +2246,11 @@ h1 {
   background: linear-gradient(135deg, #8fd645, #5fae2d);
   border-color: rgba(66, 125, 28, 0.28);
   color: #113216;
+}
+
+.shop-location-button:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
 }
 
 .site-footer {
