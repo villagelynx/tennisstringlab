@@ -1,12 +1,17 @@
 const shopSearchInput = document.getElementById("shopSearchInput");
 const shopRegionSelect = document.getElementById("shopRegionSelect");
+const shopLocationSelect = document.getElementById("shopLocationSelect");
 const shopList = document.getElementById("shopList");
 const shopCount = document.getElementById("shopCount");
 const shopContextBanner = document.getElementById("shopContextBanner");
 const shopLocationButton = document.getElementById("shopLocationButton");
 
+const ALL_LOCATIONS_VALUE = "";
+const BROWSER_LOCATION_VALUE = "__browser__";
 const SHOP_GEO_CACHE_KEY = "tsl-shop-browser-geo-v1";
 const SHOP_GEO_CACHE_TTL_MS = 1000 * 60 * 60 * 6;
+const AUTO_FILTER_RADIUS_KM = 80;
+const CLOSEST_FALLBACK_LIMIT = 8;
 const NEARBY_DISTANCE_KM = 40;
 
 const SHOPS = [
@@ -45,21 +50,31 @@ const SHOPS = [
   { name: "Racquets Pro Shop & Stringing Centre", city: "Winnipeg", state: "MB", country: "Canada", region: "Canada", latitude: 49.8951, longitude: -97.1384, website: "https://www.racquetsproshop.ca", notes: "Long-running Winnipeg racquet retailer and stringing centre with tennis strings and service." }
 ];
 
+const MANUAL_LOCATION_OPTIONS = buildManualLocationOptions();
+const MANUAL_LOCATION_MAP = new Map(MANUAL_LOCATION_OPTIONS.map((location) => [location.key, location]));
+
 const shopState = {
   requestedString: "",
   requestedBrand: "",
-  visitorLocation: null,
-  locationStatus: "idle"
+  browserLocation: null,
+  selectedLocationKey: ALL_LOCATIONS_VALUE,
+  locationStatus: "idle",
+  locationErrorCode: null,
+  renderMode: "all",
+  renderCount: 0
 };
 
-if (shopSearchInput && shopRegionSelect && shopList && shopCount) {
+if (shopSearchInput && shopRegionSelect && shopLocationSelect && shopList && shopCount) {
   initializeShopFinder();
 }
 
 function initializeShopFinder() {
   readShopContextFromUrl();
+  renderLocationSelect();
+
   shopSearchInput.addEventListener("input", renderShops);
   shopRegionSelect.addEventListener("change", renderShops);
+  shopLocationSelect.addEventListener("change", handleLocationSelectionChange);
 
   if (shopLocationButton) {
     shopLocationButton.addEventListener("click", () => {
@@ -68,8 +83,73 @@ function initializeShopFinder() {
   }
 
   renderShops();
-  updateShopContextBanner();
   hydrateVisitorLocation();
+}
+
+function buildManualLocationOptions() {
+  const uniqueLocations = new Map();
+
+  SHOPS.forEach((shop) => {
+    const key = `${shop.city}|${shop.state}`;
+    if (uniqueLocations.has(key)) {
+      return;
+    }
+
+    uniqueLocations.set(key, {
+      key,
+      label: `${shop.city}, ${shop.state}`,
+      latitude: shop.latitude,
+      longitude: shop.longitude
+    });
+  });
+
+  return [...uniqueLocations.values()].sort((left, right) => left.label.localeCompare(right.label));
+}
+
+function renderLocationSelect() {
+  if (!shopLocationSelect) {
+    return;
+  }
+
+  const options = [
+    `<option value="${ALL_LOCATIONS_VALUE}">All Locations</option>`
+  ];
+
+  if (shopState.browserLocation) {
+    options.push(`<option value="${BROWSER_LOCATION_VALUE}">Nearby to You</option>`);
+  }
+
+  MANUAL_LOCATION_OPTIONS.forEach((location) => {
+    options.push(`<option value="${escapeHtml(location.key)}">${escapeHtml(location.label)}</option>`);
+  });
+
+  shopLocationSelect.innerHTML = options.join("");
+
+  const selectedValue = optionsContainValue(shopLocationSelect, shopState.selectedLocationKey)
+    ? shopState.selectedLocationKey
+    : ALL_LOCATIONS_VALUE;
+
+  shopState.selectedLocationKey = selectedValue;
+  shopLocationSelect.value = selectedValue;
+  shopLocationSelect.title = "Choose a city to auto-filter nearby pro shops. Select All Locations to show the full shop database.";
+  shopLocationSelect.setAttribute("aria-label", "Choose a city to auto-filter nearby pro shops");
+}
+
+function optionsContainValue(selectElement, value) {
+  return [...selectElement.options].some((option) => option.value === value);
+}
+
+function handleLocationSelectionChange() {
+  const nextValue = shopLocationSelect.value;
+
+  if (nextValue === BROWSER_LOCATION_VALUE && !shopState.browserLocation) {
+    requestVisitorLocation(false);
+    return;
+  }
+
+  shopState.selectedLocationKey = nextValue;
+  renderLocationSelect();
+  renderShops();
 }
 
 function readShopContextFromUrl() {
@@ -83,17 +163,20 @@ function readShopContextFromUrl() {
 }
 
 async function hydrateVisitorLocation() {
-  const cachedLocation = readCachedVisitorLocation();
+  const cachedLocation = readCachedBrowserLocation();
   if (cachedLocation) {
-    shopState.visitorLocation = cachedLocation;
+    shopState.browserLocation = cachedLocation;
     shopState.locationStatus = "ready";
-    updateShopContextBanner();
+    shopState.locationErrorCode = null;
+    shopState.selectedLocationKey = BROWSER_LOCATION_VALUE;
+    renderLocationSelect();
     renderShops();
     return;
   }
 
   if (!supportsBrowserGeolocation()) {
     shopState.locationStatus = "unsupported";
+    shopState.locationErrorCode = null;
     updateShopContextBanner();
     return;
   }
@@ -102,6 +185,7 @@ async function hydrateVisitorLocation() {
 
   if (permissionState === "denied") {
     shopState.locationStatus = "denied";
+    shopState.locationErrorCode = 1;
     updateShopContextBanner();
     return;
   }
@@ -112,6 +196,7 @@ async function hydrateVisitorLocation() {
   }
 
   shopState.locationStatus = "idle";
+  shopState.locationErrorCode = null;
   updateShopContextBanner();
 }
 
@@ -150,40 +235,72 @@ function requestVisitorLocation(forceFreshPosition) {
   }
 
   shopState.locationStatus = "loading";
+  shopState.locationErrorCode = null;
   updateShopContextBanner();
+
+  const attempts = [
+    {
+      enableHighAccuracy: false,
+      timeout: 20000,
+      maximumAge: forceFreshPosition ? 0 : SHOP_GEO_CACHE_TTL_MS
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 30000,
+      maximumAge: 0
+    }
+  ];
+
+  runGeolocationAttempt(attempts, 0);
+}
+
+function runGeolocationAttempt(attempts, index) {
+  const options = attempts[index];
+  if (!options) {
+    shopState.locationStatus = "unavailable";
+    updateShopContextBanner();
+    return;
+  }
 
   navigator.geolocation.getCurrentPosition(
     (position) => {
-      const visitorLocation = normalizeVisitorLocation({
+      const browserLocation = normalizeBrowserLocation({
         latitude: position?.coords?.latitude,
         longitude: position?.coords?.longitude
       });
 
-      if (!visitorLocation) {
+      if (!browserLocation) {
         shopState.locationStatus = "unavailable";
+        shopState.locationErrorCode = 2;
         updateShopContextBanner();
         return;
       }
 
-      shopState.visitorLocation = visitorLocation;
+      shopState.browserLocation = browserLocation;
       shopState.locationStatus = "ready";
-      cacheVisitorLocation(visitorLocation);
-      updateShopContextBanner();
+      shopState.locationErrorCode = null;
+      shopState.selectedLocationKey = BROWSER_LOCATION_VALUE;
+      cacheBrowserLocation(browserLocation);
+      renderLocationSelect();
       renderShops();
     },
     (error) => {
-      shopState.locationStatus = error?.code === 1 ? "denied" : "unavailable";
+      const errorCode = Number(error?.code || 0);
+
+      if (errorCode === 3 && index < attempts.length - 1) {
+        runGeolocationAttempt(attempts, index + 1);
+        return;
+      }
+
+      shopState.locationErrorCode = errorCode || null;
+      shopState.locationStatus = errorCode === 1 ? "denied" : "unavailable";
       updateShopContextBanner();
     },
-    {
-      enableHighAccuracy: false,
-      timeout: 10000,
-      maximumAge: forceFreshPosition ? 0 : SHOP_GEO_CACHE_TTL_MS
-    }
+    options
   );
 }
 
-function readCachedVisitorLocation() {
+function readCachedBrowserLocation() {
   try {
     if (typeof window === "undefined" || !window.sessionStorage) {
       return null;
@@ -204,13 +321,13 @@ function readCachedVisitorLocation() {
       return null;
     }
 
-    return normalizeVisitorLocation(parsed.location);
+    return normalizeBrowserLocation(parsed.location);
   } catch {
     return null;
   }
 }
 
-function cacheVisitorLocation(location) {
+function cacheBrowserLocation(location) {
   try {
     if (typeof window === "undefined" || !window.sessionStorage) {
       return;
@@ -223,7 +340,7 @@ function cacheVisitorLocation(location) {
   } catch {}
 }
 
-function normalizeVisitorLocation(location) {
+function normalizeBrowserLocation(location) {
   if (!location || typeof location !== "object") {
     return null;
   }
@@ -236,44 +353,111 @@ function normalizeVisitorLocation(location) {
   }
 
   return {
+    label: "your current location",
     latitude,
     longitude
   };
 }
 
+function getActiveLocation() {
+  if (shopState.selectedLocationKey === BROWSER_LOCATION_VALUE) {
+    return shopState.browserLocation;
+  }
+
+  return MANUAL_LOCATION_MAP.get(shopState.selectedLocationKey) || null;
+}
+
+function getActiveLocationSource() {
+  if (shopState.selectedLocationKey === BROWSER_LOCATION_VALUE && shopState.browserLocation) {
+    return "browser";
+  }
+
+  if (MANUAL_LOCATION_MAP.has(shopState.selectedLocationKey)) {
+    return "manual";
+  }
+
+  return "";
+}
+
+function getActiveLocationLabel() {
+  const activeLocation = getActiveLocation();
+  if (!activeLocation) {
+    return "";
+  }
+
+  return activeLocation.label || "your current location";
+}
+
 function renderShops() {
   const query = shopSearchInput.value.trim().toLowerCase();
   const region = shopRegionSelect.value;
+  const hasExplicitFilters = Boolean(query) || region !== "All";
 
-  const filtered = SHOPS
+  const ranked = SHOPS
     .filter((shop) => {
       const matchesRegion = region === "All" || shop.region === region;
       const haystack = `${shop.name} ${shop.city} ${shop.state} ${shop.country} ${shop.region} ${shop.notes}`.toLowerCase();
       return matchesRegion && (!query || haystack.includes(query));
     })
-    .map((shop, index) => {
-      const distanceKm = getDistanceKm(shop);
-      return {
-        ...shop,
-        distanceKm,
-        isNearYou: Number.isFinite(distanceKm) && distanceKm <= NEARBY_DISTANCE_KM,
-        originalIndex: index
-      };
-    })
+    .map((shop, index) => ({
+      ...shop,
+      distanceKm: getDistanceKm(shop),
+      originalIndex: index
+    }))
     .sort(compareShops);
 
-  shopCount.textContent = `${filtered.length} shops`;
+  const locationFiltered = applyLocationFilter(ranked, hasExplicitFilters);
+  const visibleShops = locationFiltered.shops;
 
-  if (filtered.length === 0) {
+  shopState.renderMode = locationFiltered.mode;
+  shopState.renderCount = visibleShops.length;
+  shopCount.textContent = buildShopCountLabel(visibleShops.length, locationFiltered.mode);
+
+  if (visibleShops.length === 0) {
     shopList.innerHTML = `
       <article class="empty-state">
-        No pro shops matched that search. Try a broader city or region.
+        ${escapeHtml(buildEmptyStateMessage())}
       </article>
     `;
+    updateShopContextBanner();
     return;
   }
 
-  shopList.innerHTML = filtered.map((shop) => renderShopCard(shop)).join("");
+  shopList.innerHTML = visibleShops.map((shop) => renderShopCard(shop)).join("");
+  updateShopContextBanner();
+}
+
+function applyLocationFilter(shops, hasExplicitFilters) {
+  const activeLocation = getActiveLocation();
+  if (!activeLocation) {
+    return {
+      shops,
+      mode: "all"
+    };
+  }
+
+  const nearbyShops = shops.filter((shop) => Number.isFinite(shop.distanceKm) && shop.distanceKm <= AUTO_FILTER_RADIUS_KM);
+  if (nearbyShops.length > 0) {
+    return {
+      shops: nearbyShops,
+      mode: "nearby"
+    };
+  }
+
+  if (!hasExplicitFilters) {
+    const closestShops = shops.filter((shop) => Number.isFinite(shop.distanceKm)).slice(0, CLOSEST_FALLBACK_LIMIT);
+    if (closestShops.length > 0) {
+      return {
+        shops: closestShops,
+        mode: "closest"
+      };
+    }
+  }
+
+  return {
+    shops: [],
+    mode: "nearby-empty"
+  };
 }
 
 function compareShops(left, right) {
@@ -288,7 +472,8 @@ function compareShops(left, right) {
 }
 
 function getDistanceKm(shop) {
-  if (!shopState.visitorLocation) {
+  const activeLocation = getActiveLocation();
+  if (!activeLocation) {
     return null;
   }
 
@@ -297,8 +482,8 @@ function getDistanceKm(shop) {
   }
 
   return haversineDistanceKm(
-    shopState.visitorLocation.latitude,
-    shopState.visitorLocation.longitude,
+    activeLocation.latitude,
+    activeLocation.longitude,
     shop.latitude,
     shop.longitude
   );
@@ -323,15 +508,16 @@ function toRadians(value) {
 }
 
 function renderShopCard(shop) {
+  const isNearYou = Number.isFinite(shop.distanceKm) && shop.distanceKm <= NEARBY_DISTANCE_KM;
   const distanceLabel = Number.isFinite(shop.distanceKm)
-    ? (shop.isNearYou ? "Near you" : `${formatDistance(shop.distanceKm)} away`)
+    ? (isNearYou ? "Near you" : `${formatDistance(shop.distanceKm)} away`)
     : "";
 
   return `
     <article class="shop-card">
       <div class="shop-card-header">
         <h3>${escapeHtml(shop.name)}</h3>
-        ${distanceLabel ? `<span class="shop-distance${shop.isNearYou ? " shop-distance-near" : ""}">${escapeHtml(distanceLabel)}</span>` : ""}
+        ${distanceLabel ? `<span class="shop-distance${isNearYou ? " shop-distance-near" : ""}">${escapeHtml(distanceLabel)}</span>` : ""}
       </div>
       <p class="shop-meta">${escapeHtml(shop.city)}, ${escapeHtml(shop.state)} | ${escapeHtml(shop.region)}</p>
       <p class="summary-copy">${escapeHtml(shop.notes)}</p>
@@ -342,35 +528,63 @@ function renderShopCard(shop) {
   `;
 }
 
+function buildShopCountLabel(count, mode) {
+  if (mode === "nearby" || mode === "nearby-empty") {
+    return `${count} nearby shops`;
+  }
+
+  if (mode === "closest") {
+    return `${count} closest shops`;
+  }
+
+  return `${count} shops`;
+}
+
+function buildEmptyStateMessage() {
+  const activeLocationSource = getActiveLocationSource();
+
+  if (activeLocationSource === "manual") {
+    return `No nearby pro shops matched that search near ${getActiveLocationLabel()}. Choose another city or switch back to All Locations.`;
+  }
+
+  if (activeLocationSource === "browser") {
+    return "No nearby pro shops matched that search near your current location. Choose a city from the menu or switch back to All Locations.";
+  }
+
+  return "No pro shops matched that search. Try a broader city or region.";
+}
+
 function updateShopContextBanner() {
   if (!shopContextBanner) {
     return;
   }
 
-  const requestedStringLabel = getRequestedStringLabel();
-  let message = "Allow browser location to sort the string shop listing by the closest shops first.";
+  const requestedPrefix = getRequestedStringLabel()
+    ? `For ${getRequestedStringLabel()}, `
+    : "";
+  const activeLocationSource = getActiveLocationSource();
+  const activeLocationLabel = getActiveLocationLabel();
+  let message = `${requestedPrefix}use My Location or choose a city from the location menu to auto-filter nearby string shops.`;
 
-  if (requestedStringLabel && shopState.locationStatus === "ready") {
-    message = `Looking for ${requestedStringLabel}? Showing the closest string shops to your current location first.`;
-  } else if (requestedStringLabel && shopState.locationStatus === "loading") {
-    message = `Looking for ${requestedStringLabel}? Checking your browser location now.`;
-  } else if (requestedStringLabel && shopState.locationStatus === "denied") {
-    message = `Looking for ${requestedStringLabel}? Location access is blocked in your browser, so allow it from the address bar or use search and region filters instead.`;
-  } else if (requestedStringLabel) {
-    message = `Looking for ${requestedStringLabel}? Allow browser location to move the nearest string shops to the top.`;
-  } else if (shopState.locationStatus === "ready") {
-    message = "Showing the closest string shops to your current location first.";
+  if (activeLocationSource === "manual" && shopState.renderMode === "nearby") {
+    message = `${requestedPrefix}showing nearby string shops around ${activeLocationLabel}. Switch the city menu or choose All Locations to browse the full shop database.`;
+  } else if (activeLocationSource === "manual" && shopState.renderMode === "closest") {
+    message = `${requestedPrefix}no shops landed inside the nearby radius for ${activeLocationLabel}, so showing the closest available pro shops instead.`;
+  } else if (activeLocationSource === "browser" && shopState.renderMode === "nearby") {
+    message = `${requestedPrefix}showing nearby string shops around your current location. Choose a city from the menu or switch to All Locations to browse every shop.`;
+  } else if (activeLocationSource === "browser" && shopState.renderMode === "closest") {
+    message = `${requestedPrefix}no shops landed inside the nearby radius for your current location, so showing the closest available pro shops instead.`;
   } else if (shopState.locationStatus === "loading") {
-    message = "Checking your browser location to sort the closest string shops first.";
+    message = `${requestedPrefix}checking your browser location now. This can take a few seconds. If it fails, use the city menu as a backup.`;
   } else if (shopState.locationStatus === "denied") {
-    message = "Location access is blocked in your browser. Allow it from the address bar, or use search and region filters to find the best local string shop.";
+    message = `${requestedPrefix}location access is blocked in your browser. Allow it from the address bar, or use the city menu to auto-filter nearby shops without browser permissions.`;
   } else if (shopState.locationStatus === "unsupported") {
-    message = "Browser location is not available here. Make sure the site is loaded over HTTPS, or use search and region filters instead.";
+    message = `${requestedPrefix}browser location is not available here. Make sure the site is loaded over HTTPS, or choose a city from the menu instead.`;
   } else if (shopState.locationStatus === "unavailable") {
-    message = "We could not read your browser location. You can still search by city or region.";
+    message = `${requestedPrefix}${getUnavailableLocationMessage()} Choose a city from the menu if you want nearby shops right away.`;
   }
 
-  shopContextBanner.textContent = message;
+  shopContextBanner.textContent = capitalizeFirstLetter(message);
   shopContextBanner.classList.remove("planner-hidden");
   updateLocationButton();
 }
@@ -386,7 +600,7 @@ function updateLocationButton() {
   if (shopState.locationStatus === "loading") {
     label = "Locating...";
     disabled = true;
-  } else if (shopState.locationStatus === "ready") {
+  } else if (shopState.selectedLocationKey === BROWSER_LOCATION_VALUE && shopState.locationStatus === "ready") {
     label = "Refresh My Location";
   } else if (shopState.locationStatus === "denied") {
     label = "Enable Location";
@@ -399,10 +613,48 @@ function updateLocationButton() {
 
   shopLocationButton.textContent = label;
   shopLocationButton.disabled = disabled;
+  shopLocationButton.title = getLocationButtonTooltip(label);
+  shopLocationButton.setAttribute("aria-label", getLocationButtonTooltip(label));
+}
+
+function getLocationButtonTooltip(label) {
+  if (label === "Refresh My Location") {
+    return "Use your browser location again and refresh the nearby pro shop filter.";
+  }
+
+  if (label === "Enable Location") {
+    return "Your browser is blocking location for this site. Allow location in your browser settings, or choose a city from the menu as a backup.";
+  }
+
+  if (label === "Try My Location") {
+    return "Retry browser location. If it still fails, choose a city from the menu to filter nearby shops.";
+  }
+
+  if (label === "Location Unavailable") {
+    return "Browser location is not available here. Use the city menu to filter nearby shops instead.";
+  }
+
+  if (label === "Locating...") {
+    return "The site is checking your browser location now.";
+  }
+
+  return "Use your browser location to auto-filter nearby pro shops. If location is blocked, choose a city from the menu instead.";
 }
 
 function getRequestedStringLabel() {
   return shopState.requestedString || shopState.requestedBrand || "";
+}
+
+function getUnavailableLocationMessage() {
+  if (shopState.locationErrorCode === 2) {
+    return "Your browser could not determine a location. Try again, turn off any VPN, or use search and region filters.";
+  }
+
+  if (shopState.locationErrorCode === 3) {
+    return "Location lookup timed out. Try My Location again, or use the city menu if your device is slow to respond.";
+  }
+
+  return "We could not read your browser location.";
 }
 
 function formatDistance(distanceKm) {
@@ -411,6 +663,11 @@ function formatDistance(distanceKm) {
   }
 
   return `${Math.round(distanceKm)} km`;
+}
+
+function capitalizeFirstLetter(value) {
+  const text = String(value || "");
+  return text ? `${text.charAt(0).toUpperCase()}${text.slice(1)}` : "";
 }
 
 function escapeHtml(value) {

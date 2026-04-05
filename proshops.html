@@ -63,7 +63,7 @@
       <p class="eyebrow">Pro Shops</p>
       <h1>Find pro shops and stores that string rackets.</h1>
       <p class="hero-copy">
-        Search by city, state or province, or shop name to find tennis retailers and pro shops that offer restringing and setup help. If you allow browser location, nearby shops rise to the top automatically.
+        Search by city, state or province, or shop name to find tennis retailers and pro shops that offer restringing and setup help. Use your browser location for automatic nearby filtering, or pick a city from the backup location menu.
       </p>
       <div class="hero-actions">
         <input id="shopSearchInput" class="search-input hero-search-control" type="search" placeholder="Search city, shop, state, or province">
@@ -78,9 +78,12 @@
         </select>
       </div>
       <div class="shop-context-row">
-        <div id="shopContextBanner" class="library-note-card shop-context-banner planner-hidden" aria-live="polite"></div>
-        <button id="shopLocationButton" class="secondary-button compact-button shop-location-button" type="button">Use My Location</button>
+        <button id="shopLocationButton" class="secondary-button compact-button shop-location-button" type="button" title="Use your browser location to auto-filter nearby pro shops. If browser location is blocked, choose a city from the menu instead.">Use My Location</button>
+        <select id="shopLocationSelect" class="search-input hero-search-control shop-location-select" title="Choose a city to auto-filter nearby pro shops without browser permissions. Select All Locations to browse every shop.">
+          <option value="">All Locations</option>
+        </select>
       </div>
+      <div id="shopContextBanner" class="library-note-card shop-context-banner planner-hidden" aria-live="polite"></div>
     </section>
 
     <section class="results-panel standalone-panel">
