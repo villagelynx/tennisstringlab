@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img" aria-labelledby="title desc">
+  <title id="title">Tennis string being tensioned</title>
+  <desc id="desc">A small illustration of a tennis racquet string bed with one string being pulled to tension.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f7fbff"/>
+      <stop offset="100%" stop-color="#e8f2f8"/>
+    </linearGradient>
+    <linearGradient id="frame" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#27486d"/>
+      <stop offset="100%" stop-color="#17314d"/>
+    </linearGradient>
+    <linearGradient id="pull" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f2a53d"/>
+      <stop offset="100%" stop-color="#d77a14"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#1a334f" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect width="320" height="220" rx="28" fill="url(#bg)"/>
+
+  <g filter="url(#shadow)">
+    <ellipse cx="112" cy="104" rx="72" ry="88" fill="none" stroke="url(#frame)" stroke-width="12"/>
+    <path d="M152 170l30 30" fill="none" stroke="url(#frame)" stroke-linecap="round" stroke-width="12"/>
+  </g>
+
+  <g stroke="#9bb6cc" stroke-linecap="round">
+    <path d="M74 42v124" stroke-width="3.5"/>
+    <path d="M92 34v140" stroke-width="3.5"/>
+    <path d="M130 34v140" stroke-width="3.5"/>
+    <path d="M148 42v124" stroke-width="3.5"/>
+    <path d="M56 74h112" stroke-width="3.5"/>
+    <path d="M49 96h126" stroke-width="3.5"/>
+    <path d="M49 118h126" stroke-width="3.5"/>
+    <path d="M56 140h112" stroke-width="3.5"/>
+  </g>
+
+  <g>
+    <path d="M111 28v152" fill="none" stroke="url(#pull)" stroke-linecap="round" stroke-width="6"/>
+    <path d="M111 103h88" fill="none" stroke="url(#pull)" stroke-linecap="round" stroke-width="5"/>
+    <path d="M186 91l22 12-22 12" fill="none" stroke="url(#pull)" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="206" y="82" width="54" height="42" rx="12" fill="#ffffff" stroke="#bdd0de" stroke-width="2"/>
+    <rect x="217" y="93" width="18" height="20" rx="5" fill="#2f5578"/>
+    <rect x="237" y="92" width="12" height="22" rx="4" fill="#dbe8f0"/>
+    <path d="M208 103h-10" fill="none" stroke="#f0a13c" stroke-linecap="round" stroke-width="4"/>
+  </g>
+
+  <text x="210" y="149" fill="#516c83" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">tension pull</text>
+</svg>
