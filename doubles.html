@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TennisTacticsIQ Doubles</title>
+  <meta
+    name="description"
+    content="Build doubles tactics for two-player teams with serve targets, return patterns, poach cues, and team communication plans."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="styles.css?v=20260408a">
+  <script src="nav-dropdowns.js?v=20260407-account" defer></script>
+</head>
+<body class="builder-page">
+  <div class="page-shell">
+    <div class="background-orb background-orb-a"></div>
+    <div class="background-orb background-orb-b"></div>
+    <div class="court-lines court-lines-a"></div>
+    <div class="court-lines court-lines-b"></div>
+
+    <header class="hero">
+      <div class="brand-row">
+        <div class="brand-mark">TennisTacticsIQ</div>
+        <div class="brand-pill">Team tactics for league and tournament doubles</div>
+      </div>
+
+      <div class="top-page-nav" aria-label="TennisTacticsIQ pages">
+        <a class="top-page-link" href="index.html">Home</a>
+        <a class="top-page-link" href="singles.html">Build Singles Tactic Plan</a>
+        <a class="top-page-link top-page-link-active" href="doubles.html">Build Doubles Tactic Plan</a>
+        <a class="top-page-link" href="defend-tactics.html">Counter Tactics</a>
+        <details class="top-page-dropdown">
+          <summary class="top-page-link">Patterns</summary>
+          <div class="top-page-dropdown-menu">
+            <a class="top-page-dropdown-link" href="patterns.html">Singles Patterns</a>
+            <a class="top-page-dropdown-link" href="doubles-patterns.html">Doubles Patterns</a>
+            <a class="top-page-dropdown-link" href="all-patterns.html">Master List</a>
+          </div>
+        </details>
+        <a class="top-page-link" href="tactics-library.html">Tactics Library</a>
+        <details class="top-page-dropdown">
+          <summary class="top-page-link">Captain's Corner</summary>
+          <div class="top-page-dropdown-menu">
+            <a class="top-page-dropdown-link" href="captains-corner.html">Captain's Corner Home</a>
+            <a class="top-page-dropdown-link" href="lineup-prep.html">Lineup Prep Tool</a>
+            <a class="top-page-dropdown-link" href="team-members-master-list.html">Team Members Master List</a>
+            <a class="top-page-dropdown-link" href="match-results.html">Match Results Pages</a>
+            <a class="top-page-dropdown-link" href="captain-subscription.html">Subscription Page</a>
+          </div>
+        </details>
+        <a class="top-page-link" href="video-library.html">Video Library</a>
+        <a class="top-page-link" href="captain-subscription.html">Subscribe</a>
+      </div>
+
+      <div class="hero-grid">
+        <section class="hero-copy">
+          <p class="eyebrow">Doubles Intelligence</p>
+          <h1>Build the team plan before the lineup walks on court.</h1>
+          <p class="hero-text">
+            Build a doubles plan around serve targets, return lanes, poach triggers, and how to protect the weaker player without getting predictable.
+          </p>
+
+          <div class="hero-tags">
+            <span>Serve + return patterns</span>
+            <span>Poach and net triggers</span>
+          </div>
+        </section>
+
+        <aside class="hero-preview panel">
+          <p class="preview-copy">
+            Get a clear target player, middle-ball rule, and communication plan before the match starts.
+          </p>
+
+          <div class="preview-strips">
+            <div>
+              <span class="strip-label">Plan A</span>
+              <p>Serve at the weaker returner, close middle, and poach off the floating reply.</p>
+            </div>
+            <div>
+              <span class="strip-label">Plan B</span>
+              <p>Use safer body serves, lower returns, more lobs, and simplify who owns the middle ball.</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </header>
+
+    <main class="app-grid">
+      <section class="panel control-panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Doubles Builder</p>
+            <h2>Build the team matchup</h2>
+          </div>
+          <p class="panel-note">Set up both teams, then generate a doubles-specific tactical blueprint.</p>
+        </div>
+
+        <div id="doublesPresetNote" class="preset-note" hidden>
+          <p id="doublesPresetNoteTitle" class="preset-note-title">Demo preset loaded</p>
+          <p id="doublesPresetNoteText" class="preset-note-text">
+            This doubles page opens on a demo preset. You can edit the four players, both teams, and the match context at any time.
+          </p>
+        </div>
+
+        <form id="doublesForm" class="matchup-form">
+          <div class="form-section compact-section">
+            <div class="section-heading">
+              <h3>Doubles Presets</h3>
+              <span class="section-caption">Start from league or pro-inspired examples</span>
+            </div>
+
+            <div class="preset-row">
+              <label class="field preset-field">
+                <span>Choose preset</span>
+                <select id="doublesPresetSelect" name="doublesPresetSelect"></select>
+              </label>
+              <div class="preset-actions">
+                <button type="button" id="loadDoublesPresetButton" class="btn btn-preset">Load Pro Preset</button>
+                <button type="button" id="resetDoublesPresetButton" class="btn btn-ghost">Reset</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="section-heading">
+              <h3>Your Team</h3>
+              <span class="section-caption">Style, pair identity, and partner strengths</span>
+            </div>
+
+            <div class="compact-grid">
+              <label class="field">
+                <span>Your doubles team style</span>
+                <select id="teamAStyle" name="teamAStyle"></select>
+              </label>
+
+              <label class="field">
+                <span>Team priority</span>
+                <select id="doublesPriority" name="doublesPriority">
+                  <option value="balanced">Balanced doubles plan</option>
+                  <option value="protect-serve">Protect our serve games</option>
+                  <option value="attack-weaker-returner">Attack the weaker returner</option>
+                  <option value="neutralize-poacher">Neutralize the poacher</option>
+                  <option value="own-middle">Own the middle first</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="field-stack">
+              <div class="field-head">
+                <span>Your team strengths</span>
+                <small id="teamAStrengthCount">0 selected</small>
+              </div>
+              <div id="teamAStrengths" class="chip-grid" aria-label="Your team strengths"></div>
+            </div>
+
+            <div class="field-stack">
+              <div class="field-head">
+                <span>Your team weaknesses</span>
+                <small id="teamAWeaknessCount">0 selected</small>
+              </div>
+              <div id="teamAWeaknesses" class="chip-grid" aria-label="Your team weaknesses"></div>
+            </div>
+
+            <div class="team-card-grid">
+              <article class="player-mini-card">
+                <div class="mini-card-head">
+                  <div>
+                    <h4>Player 1</h4>
+                    <p class="player-role-caption">Your team</p>
+                  </div>
+                </div>
+                <label class="field">
+                  <span>Name</span>
+                  <input id="teamAPlayer1Name" class="text-input" type="text" placeholder="Player 1">
+                </label>
+                <div class="compact-grid">
+                  <label class="field">
+                    <span>Role</span>
+                    <select id="teamAPlayer1Role"></select>
+                  </label>
+                  <label class="field">
+                    <span>Preferred side</span>
+                    <select id="teamAPlayer1Side"></select>
+                  </label>
+                </div>
+                <div id="teamAPlayer1Ratings" class="rating-grid-compact"></div>
+              </article>
+
+              <article class="player-mini-card">
+                <div class="mini-card-head">
+                  <div>
+                    <h4>Player 2</h4>
+                    <p class="player-role-caption">Your team</p>
+                  </div>
+                </div>
+                <label class="field">
+                  <span>Name</span>
+                  <input id="teamAPlayer2Name" class="text-input" type="text" placeholder="Partner">
+                </label>
+                <div class="compact-grid">
+                  <label class="field">
+                    <span>Role</span>
+                    <select id="teamAPlayer2Role"></select>
+                  </label>
+                  <label class="field">
+                    <span>Preferred side</span>
+                    <select id="teamAPlayer2Side"></select>
+                  </label>
+                </div>
+                <div id="teamAPlayer2Ratings" class="rating-grid-compact"></div>
+              </article>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="section-heading">
+              <h3>Opponent Team</h3>
+              <span class="section-caption">How the other pair wins and where they leak</span>
+            </div>
+
+            <label class="field">
+              <span>Opponent doubles team style</span>
+              <select id="teamBStyle" name="teamBStyle"></select>
+            </label>
+
+            <div class="field-stack">
+              <div class="field-head">
+                <span>Opponent team strengths</span>
+                <small id="teamBStrengthCount">0 selected</small>
+              </div>
+              <div id="teamBStrengths" class="chip-grid" aria-label="Opponent team strengths"></div>
+            </div>
+
+            <div class="field-stack">
+              <div class="field-head">
+                <span>Opponent team weaknesses</span>
+                <small id="teamBWeaknessCount">0 selected</small>
+              </div>
+              <div id="teamBWeaknesses" class="chip-grid" aria-label="Opponent team weaknesses"></div>
+            </div>
+
+            <div class="team-card-grid">
+              <article class="player-mini-card">
+                <div class="mini-card-head">
+                  <div>
+                    <h4>Opponent 1</h4>
+                    <p class="player-role-caption">Opponent team</p>
+                  </div>
+                </div>
+                <label class="field">
+                  <span>Name</span>
+                  <input id="teamBPlayer1Name" class="text-input" type="text" placeholder="Opponent 1">
+                </label>
+                <div class="compact-grid">
+                  <label class="field">
+                    <span>Role</span>
+                    <select id="teamBPlayer1Role"></select>
+                  </label>
+                  <label class="field">
+                    <span>Preferred side</span>
+                    <select id="teamBPlayer1Side"></select>
+                  </label>
+                </div>
+                <div id="teamBPlayer1Ratings" class="rating-grid-compact"></div>
+              </article>
+
+              <article class="player-mini-card">
+                <div class="mini-card-head">
+                  <div>
+                    <h4>Opponent 2</h4>
+                    <p class="player-role-caption">Opponent team</p>
+                  </div>
+                </div>
+                <label class="field">
+                  <span>Name</span>
+                  <input id="teamBPlayer2Name" class="text-input" type="text" placeholder="Opponent 2">
+                </label>
+                <div class="compact-grid">
+                  <label class="field">
+                    <span>Role</span>
+                    <select id="teamBPlayer2Role"></select>
+                  </label>
+                  <label class="field">
+                    <span>Preferred side</span>
+                    <select id="teamBPlayer2Side"></select>
+                  </label>
+                </div>
+                <div id="teamBPlayer2Ratings" class="rating-grid-compact"></div>
+              </article>
+            </div>
+          </div>
+
+          <div class="form-section compact-section">
+            <div class="section-heading">
+              <h3>Match Context</h3>
+              <span class="section-caption">Surface and league rhythm matter in doubles</span>
+            </div>
+
+            <div class="compact-grid">
+              <label class="field">
+                <span>Surface</span>
+                <select id="doublesSurface" name="doublesSurface"></select>
+              </label>
+
+              <label class="field">
+                <span>Match type</span>
+                <select id="matchType" name="matchType">
+                  <option value="ladies-league">Ladies League / Club Doubles</option>
+                  <option value="tournament">Tournament Doubles</option>
+                  <option value="practice">Practice Match</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button type="submit" class="btn btn-primary">Generate Tactics Plan</button>
+            <button type="button" id="loadDefaultDoublesDemo" class="btn btn-secondary">Load Ladies League Demo</button>
+            <button type="button" id="resetDoublesButton" class="btn btn-ghost">Reset</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="result-column">
+        <section class="panel strategy-summary">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Doubles Blueprint</p>
+              <h2 id="doublesHeadline">Ready to build a doubles plan?</h2>
+            </div>
+            <div class="panel-actions">
+              <button type="button" id="demoDoublesSummaryButton" class="btn btn-secondary btn-compact">Demo</button>
+              <span class="copy-help-inline" aria-hidden="true">Loads the built-in demo doubles matchup so you can see how the team plan engine works.</span>
+              <button type="button" id="resetDoublesSummaryButton" class="btn btn-ghost btn-compact">Reset</button>
+              <button type="button" id="saveDoublesButton" class="btn btn-secondary btn-compact">Save My Plan</button>
+              <button type="button" id="printDoublesButton" class="btn btn-secondary btn-compact">Print Match Card</button>
+              <button
+                type="button"
+                id="copyDoublesButton"
+                class="btn btn-copy btn-compact"
+                aria-label="Copy the tactics plan so you can paste it into Notes, email, text, or a coaching doc."
+              >Copy Plan</button>
+              <span class="copy-help-inline" aria-hidden="true">Copies the full tactics plan so you can paste it into Notes, email, texts, or a coaching document.</span>
+            </div>
+          </div>
+
+          <p id="doublesNarrative" class="strategy-narrative">
+            Load a preset or build your own four-player matchup to get doubles-specific tactics.
+          </p>
+
+          <div class="quick-insight-grid">
+            <article class="insight-tile">
+              <span class="insight-label">Target Player</span>
+              <p id="targetPlayerText">The engine will identify the player to pressure first.</p>
+            </article>
+            <article class="insight-tile">
+              <span class="insight-label">Serve Pattern</span>
+              <p id="servePatternText">Your first serve pattern will appear here.</p>
+            </article>
+            <article class="insight-tile">
+              <span class="insight-label">Middle Ball Rule</span>
+              <p id="middleBallText">Your middle-ball ownership rule will appear here.</p>
+            </article>
+            <article class="insight-tile">
+              <span class="insight-label">Net Cue</span>
+              <p id="netCueText">Poach and net activity cues will appear here.</p>
+            </article>
+          </div>
+
+          <div class="matchup-tool-grid">
+            <article class="panel tactic-card matchup-score-card">
+              <div class="card-head">
+                <div>
+                  <p class="eyebrow">Rate My Matchup</p>
+                  <h3 id="doublesMatchupRatingValue">50 / 100</h3>
+                </div>
+              </div>
+              <p id="doublesMatchupRatingLabel" class="score-label">Balanced team matchup</p>
+              <p id="doublesMatchupRatingSummary" class="card-summary">Your doubles rating will show whether this looks favorable, neutral, or a rescue-style matchup.</p>
+              <ul id="doublesMatchupRatingList" class="tactic-list"></ul>
+            </article>
+
+            <article class="panel tactic-card matchup-card-panel">
+              <div class="card-head">
+                <div>
+                  <p class="eyebrow">Ladies League Match Card</p>
+                  <h3 id="doublesMatchCardTitle">Court-side team card</h3>
+                </div>
+              </div>
+              <p id="doublesMatchCardSummary" class="card-summary">This card shrinks the team plan into a cleaner courtside version for partners and captains.</p>
+              <ul id="doublesMatchCardList" class="tactic-list"></ul>
+            </article>
+          </div>
+        </section>
+
+        <div class="result-grid">
+          <article class="panel tactic-card tactic-card-primary">
+            <div class="card-head">
+              <p class="eyebrow">Plan A</p>
+              <h3 id="doublesPlanATitle">Primary team pattern</h3>
+            </div>
+            <p id="doublesPlanASummary" class="card-summary">Your first doubles plan will appear here.</p>
+            <ul id="doublesPlanAList" class="tactic-list"></ul>
+          </article>
+
+          <article class="panel tactic-card tactic-card-secondary">
+            <div class="card-head">
+              <p class="eyebrow">Plan B</p>
+              <h3 id="doublesPlanBTitle">Fallback adjustment</h3>
+            </div>
+            <p id="doublesPlanBSummary" class="card-summary">Your doubles fallback plan will appear here.</p>
+            <ul id="doublesPlanBList" class="tactic-list"></ul>
+          </article>
+
+          <article class="panel tactic-card">
+            <div class="card-head">
+              <p class="eyebrow">Serve + Return</p>
+              <h3>Patterns to start the point</h3>
+            </div>
+            <ul id="serveReturnList" class="tactic-list"></ul>
+          </article>
+
+          <article class="panel tactic-card">
+            <div class="card-head">
+              <p class="eyebrow">Net + Poach</p>
+              <h3>How your team should move</h3>
+            </div>
+            <ul id="netPoachList" class="tactic-list"></ul>
+          </article>
+
+          <article class="panel tactic-card">
+            <div class="card-head">
+              <p class="eyebrow">Communication Cues</p>
+              <h3>Simple team reminders</h3>
+            </div>
+            <ul id="communicationList" class="tactic-list"></ul>
+          </article>
+
+          <article class="panel tactic-card">
+            <div class="card-head">
+              <p class="eyebrow">What to Avoid</p>
+              <h3>Common doubles traps</h3>
+            </div>
+            <ul id="doublesAvoidList" class="tactic-list"></ul>
+          </article>
+
+          <article class="panel tactic-card wide-card">
+            <div class="card-head">
+              <p class="eyebrow">Why It Fits</p>
+              <h3>How the doubles logic is reading this matchup</h3>
+            </div>
+            <ul id="doublesReasonList" class="tactic-list"></ul>
+          </article>
+        </div>
+
+        <section class="panel saved-plan-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Saved Plans</p>
+              <h2>Saved doubles plans</h2>
+            </div>
+            <p class="panel-note">Save team plans here so you can reload them for league lineups, rematches, and captain prep.</p>
+          </div>
+
+          <p id="savedDoublesPlansEmpty" class="saved-plan-empty">No saved doubles plans yet. Generate a team plan and click <strong>Save My Plan</strong> to keep it here.</p>
+          <div id="savedDoublesPlansList" class="saved-plan-list"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="doubles.js"></script>
+</body>
+</html>

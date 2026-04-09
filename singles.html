@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TennisTacticsIQ Singles</title>
+  <meta
+    name="description"
+    content="Turn your playing style, opponent profile, and key strengths and weaknesses into a tactical Plan A and fallback Plan B."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="styles.css?v=20260408d">
+  <script src="nav-dropdowns.js?v=20260407-account" defer></script>
+</head>
+<body class="builder-page">
+  <div class="page-shell">
+    <div class="background-orb background-orb-a"></div>
+    <div class="background-orb background-orb-b"></div>
+    <div class="court-lines court-lines-a"></div>
+    <div class="court-lines court-lines-b"></div>
+
+    <header class="hero">
+      <div class="brand-row">
+        <div class="brand-mark">TennisTacticsIQ</div>
+        <div class="brand-pill">Coaching brain for matchups</div>
+      </div>
+
+      <div class="top-page-nav" aria-label="TennisTacticsIQ pages">
+        <a class="top-page-link" href="index.html">Home</a>
+        <a class="top-page-link top-page-link-active" href="singles.html">Build Singles Tactic Plan</a>
+        <a class="top-page-link" href="doubles.html">Build Doubles Tactic Plan</a>
+        <a class="top-page-link" href="defend-tactics.html">Counter Tactics</a>
+        <details class="top-page-dropdown">
+          <summary class="top-page-link">Patterns</summary>
+          <div class="top-page-dropdown-menu">
+            <a class="top-page-dropdown-link" href="patterns.html">Singles Patterns</a>
+            <a class="top-page-dropdown-link" href="doubles-patterns.html">Doubles Patterns</a>
+            <a class="top-page-dropdown-link" href="all-patterns.html">Master List</a>
+          </div>
+        </details>
+        <a class="top-page-link" href="tactics-library.html">Tactics Library</a>
+        <details class="top-page-dropdown">
+          <summary class="top-page-link">Captain's Corner</summary>
+          <div class="top-page-dropdown-menu">
+            <a class="top-page-dropdown-link" href="captains-corner.html">Captain's Corner Home</a>
+            <a class="top-page-dropdown-link" href="lineup-prep.html">Lineup Prep Tool</a>
+            <a class="top-page-dropdown-link" href="team-members-master-list.html">Team Members Master List</a>
+            <a class="top-page-dropdown-link" href="match-results.html">Match Results Pages</a>
+            <a class="top-page-dropdown-link" href="captain-subscription.html">Subscription Page</a>
+          </div>
+        </details>
+        <a class="top-page-link" href="video-library.html">Video Library</a>
+        <a class="top-page-link" href="captain-subscription.html">Subscribe</a>
+      </div>
+
+      <div class="hero-grid">
+        <section class="hero-copy">
+          <p class="eyebrow">Matchup Intelligence</p>
+          <h1>Build the match plan before the first ball is struck.</h1>
+          <p class="hero-text">
+            Build a singles plan from your style, your opponent's profile, and the few strengths and weaknesses that matter most.
+          </p>
+
+          <div class="hero-tags">
+            <span>Style vs style logic</span>
+            <span>Plan A + Plan B</span>
+          </div>
+        </section>
+
+        <aside class="hero-preview panel">
+          <p class="preview-copy">
+            Get a clear attack pattern, a safer fallback, and the first adjustment to make when the match starts drifting.
+          </p>
+
+          <div class="preview-strips">
+            <div>
+              <span class="strip-label">Plan A</span>
+              <p>Own the first forehand, pressure the weaker wing, close forward.</p>
+            </div>
+            <div>
+              <span class="strip-label">Plan B</span>
+              <p>Add height and margin, rebuild two neutral balls, then redirect.</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </header>
+
+    <main class="app-grid">
+      <section class="panel control-panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Input Builder</p>
+            <h2>Build the matchup</h2>
+          </div>
+          <p class="panel-note">Choose the traits that matter most in this specific match.</p>
+        </div>
+
+        <div id="presetNote" class="preset-note" hidden>
+          <p id="presetNoteTitle" class="preset-note-title">Demo preset loaded</p>
+          <p id="presetNoteText" class="preset-note-text">
+            This is a demo preset. You can edit any field or switch to another preset anytime.
+          </p>
+        </div>
+
+        <form id="matchupForm" class="matchup-form">
+          <div class="form-section">
+            <div class="section-heading">
+              <h3>Player 1</h3>
+              <span class="section-caption">Identity + weapons + leaks</span>
+            </div>
+
+            <div class="builder-player-photo" hidden>
+              <div class="photo-preview-shell">
+                <img id="playerPhotoPreview" class="photo-preview" alt="Player 1 preview" hidden>
+                <div id="playerPhotoFallback" class="photo-fallback">P1</div>
+              </div>
+            </div>
+
+            <label class="field">
+              <span>Player 1 name</span>
+              <input id="playerName" class="text-input" name="playerName" type="text" placeholder="Player 1">
+            </label>
+
+            <label class="field">
+              <span>Your playing style</span>
+              <select id="playerStyle" name="playerStyle"></select>
+            </label>
+
+            <div class="field-stack">
+              <div class="field-head">
+                <span>Your stroke ratings</span>
+                <small>Rate the shots and qualities that define your match identity</small>
+              </div>
+              <div id="playerRatings" class="rating-grid" aria-label="Your stroke ratings"></div>
+            </div>
+
+            <div class="field-stack">
+              <div class="field-head">
+                <span>Your strengths</span>
+                <small id="playerStrengthCount">0 selected</small>
+              </div>
+              <div id="playerStrengths" class="chip-grid" aria-label="Your strengths"></div>
+            </div>
+
+            <div class="field-stack">
+              <div class="field-head">
+                <span>Your weaknesses</span>
+                <small id="playerWeaknessCount">0 selected</small>
+              </div>
+              <div id="playerWeaknesses" class="chip-grid" aria-label="Your weaknesses"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="section-heading">
+              <h3>Player 2</h3>
+              <span class="section-caption">What they want and what they dislike</span>
+            </div>
+
+            <div class="builder-player-photo" hidden>
+              <div class="photo-preview-shell">
+                <img id="opponentPhotoPreview" class="photo-preview" alt="Player 2 preview" hidden>
+                <div id="opponentPhotoFallback" class="photo-fallback">P2</div>
+              </div>
+            </div>
+
+            <label class="field">
+              <span>Player 2 name</span>
+              <input id="opponentName" class="text-input" name="opponentName" type="text" placeholder="Player 2">
+            </label>
+
+            <label class="field">
+              <span>Opponent style</span>
+              <select id="opponentStyle" name="opponentStyle"></select>
+            </label>
+
+            <div class="field-stack">
+              <div class="field-head">
+                <span>Opponent stroke ratings</span>
+                <small>Build the profile you expect to face</small>
+              </div>
+              <div id="opponentRatings" class="rating-grid" aria-label="Opponent stroke ratings"></div>
+            </div>
+
+            <div class="field-stack">
+              <div class="field-head">
+                <span>Opponent strengths</span>
+                <small id="opponentStrengthCount">0 selected</small>
+              </div>
+              <div id="opponentStrengths" class="chip-grid" aria-label="Opponent strengths"></div>
+            </div>
+
+            <div class="field-stack">
+              <div class="field-head">
+                <span>Opponent weaknesses</span>
+                <small id="opponentWeaknessCount">0 selected</small>
+              </div>
+              <div id="opponentWeaknesses" class="chip-grid" aria-label="Opponent weaknesses"></div>
+            </div>
+          </div>
+
+          <div class="form-section compact-section">
+            <div class="section-heading">
+              <h3>Match Context</h3>
+              <span class="section-caption">Small context, bigger tactical accuracy</span>
+            </div>
+
+            <div class="compact-grid">
+              <label class="field">
+                <span>Surface</span>
+                <select id="surface" name="surface"></select>
+              </label>
+
+              <label class="field">
+                <span>Priority in this match</span>
+                <select id="priority" name="priority">
+                  <option value="balanced">Balanced game plan</option>
+                  <option value="protect-serve">Protect my serve first</option>
+                  <option value="attack-return">Create return pressure</option>
+                  <option value="reduce-errors">Reduce unforced errors</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-section compact-section">
+            <div class="section-heading">
+              <h3>Preset Matchups</h3>
+              <span class="section-caption">Load a pro matchup example instantly</span>
+            </div>
+
+            <div class="preset-row">
+              <label class="field preset-field">
+                <span>Choose preset</span>
+                <select id="presetMatchup" name="presetMatchup"></select>
+              </label>
+              <button type="button" id="loadPresetButton" class="btn btn-preset">Load Pro Preset</button>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button type="submit" class="btn btn-primary">Generate Tactics Plan</button>
+            <button type="button" id="demoButton" class="btn btn-secondary">Load Jannik vs Carlos Demo</button>
+            <button type="button" id="resetButton" class="btn btn-ghost">Reset</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="result-column">
+        <section class="panel strategy-summary">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Winning Blueprint</p>
+              <h2 id="matchupHeadline">Ready to build a smarter match plan?</h2>
+            </div>
+            <div class="panel-actions">
+              <button type="button" id="demoSummaryButton" class="btn btn-secondary btn-compact">Demo</button>
+              <span class="copy-help-inline" aria-hidden="true">Loads the built-in demo matchup so you can see how the plan engine works.</span>
+              <button type="button" id="resetSummaryButton" class="btn btn-ghost btn-compact">Reset</button>
+              <button type="button" id="saveButton" class="btn btn-secondary btn-compact">Save My Plan</button>
+              <button type="button" id="printButton" class="btn btn-secondary btn-compact">Print Match Card</button>
+              <button
+                type="button"
+                id="copyButton"
+                class="btn btn-copy btn-compact"
+                aria-label="Copy the tactics plan so you can paste it into Notes, email, text, or a coaching doc."
+              >Copy Plan</button>
+              <span class="copy-help-inline" aria-hidden="true">Copies the full tactics plan so you can paste it into Notes, email, texts, or a coaching document.</span>
+            </div>
+          </div>
+
+          <p id="strategyNarrative" class="strategy-narrative">
+            Choose the matchup details on the left and generate a tactical plan built around style clashes,
+            pressure points, and fallback adjustments.
+          </p>
+
+          <div class="matchup-visuals">
+            <div class="matchup-player-card">
+              <div class="matchup-avatar-shell" hidden>
+                <img id="summaryPlayerPhoto" class="matchup-avatar" alt="Player 1 summary image" hidden>
+                <div id="summaryPlayerFallback" class="matchup-avatar-fallback">P1</div>
+              </div>
+              <div>
+                <span class="insight-label">Player 1</span>
+                <p id="summaryPlayerLabel" class="matchup-player-label">Your game plan side</p>
+              </div>
+            </div>
+
+            <div class="matchup-player-card">
+              <div class="matchup-avatar-shell" hidden>
+                <img id="summaryOpponentPhoto" class="matchup-avatar" alt="Player 2 summary image" hidden>
+                <div id="summaryOpponentFallback" class="matchup-avatar-fallback">P2</div>
+              </div>
+              <div>
+                <span class="insight-label">Player 2</span>
+                <p id="summaryOpponentLabel" class="matchup-player-label">Opponent profile side</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="summary-pills">
+            <span id="playerStylePill" class="summary-pill">Your style</span>
+            <span id="opponentStylePill" class="summary-pill">Opponent style</span>
+            <span id="surfacePill" class="summary-pill">Surface</span>
+          </div>
+
+          <div class="quick-insight-grid">
+            <article class="insight-tile">
+              <span class="insight-label">Primary Pressure Point</span>
+              <p id="pressurePointText">Use the engine to find the most fragile part of the matchup.</p>
+            </article>
+            <article class="insight-tile">
+              <span class="insight-label">Fallback Trigger</span>
+              <p id="fallbackTriggerText">Plan B will tell you exactly when to change shape, depth, or pace.</p>
+            </article>
+            <article class="insight-tile">
+              <span class="insight-label">Identity Reminder</span>
+              <p id="identityReminderText">The best plan protects what you do well while hunting what they dislike.</p>
+            </article>
+          </div>
+
+          <div class="matchup-tool-grid">
+            <article class="panel tactic-card matchup-score-card">
+              <div class="card-head">
+                <div>
+                  <p class="eyebrow">Rate My Matchup</p>
+                  <h3 id="matchupRatingValue">50 / 100</h3>
+                </div>
+              </div>
+              <p id="matchupRatingLabel" class="score-label">Balanced matchup</p>
+              <p id="matchupRatingSummary" class="card-summary">Your matchup rating will explain whether the current profile looks favorable, neutral, or difficult.</p>
+              <ul id="matchupRatingList" class="tactic-list"></ul>
+            </article>
+
+            <article class="panel tactic-card matchup-card-panel">
+              <div class="card-head">
+                <div>
+                  <p class="eyebrow">Match Card</p>
+                  <h3 id="matchCardTitle">Court-side singles card</h3>
+                </div>
+              </div>
+              <p id="matchCardSummary" class="card-summary">This shrinks the full plan into a shorter match-day reminder you can print or carry courtside.</p>
+              <ul id="matchCardList" class="tactic-list"></ul>
+            </article>
+          </div>
+        </section>
+
+        <div class="result-grid">
+          <article class="panel tactic-card tactic-card-primary">
+            <div class="card-head">
+              <p class="eyebrow">Plan A</p>
+              <h3 id="planATitle">Primary strategy</h3>
+            </div>
+            <p id="planASummary" class="card-summary">Your first plan will appear here.</p>
+            <ul id="planAList" class="tactic-list"></ul>
+          </article>
+
+          <article class="panel tactic-card tactic-card-secondary">
+            <div class="card-head">
+              <p class="eyebrow">Plan B</p>
+              <h3 id="planBTitle">Fallback if the match turns</h3>
+            </div>
+            <p id="planBSummary" class="card-summary">Your adjustment plan will appear here.</p>
+            <ul id="planBList" class="tactic-list"></ul>
+          </article>
+
+          <article class="panel tactic-card">
+            <div class="card-head">
+              <p class="eyebrow">In-Match Cues</p>
+              <h3>What to say to yourself</h3>
+            </div>
+            <ul id="cueList" class="tactic-list"></ul>
+          </article>
+
+          <article class="panel tactic-card">
+            <div class="card-head">
+              <p class="eyebrow">What to Avoid</p>
+              <h3>Common traps in this matchup</h3>
+            </div>
+            <ul id="avoidList" class="tactic-list"></ul>
+          </article>
+
+          <article class="panel tactic-card wide-card">
+            <div class="card-head">
+              <p class="eyebrow">Why This Plan Fits</p>
+              <h3>Logic behind the tactics</h3>
+            </div>
+            <ul id="reasonList" class="tactic-list"></ul>
+          </article>
+        </div>
+
+        <section class="panel saved-plan-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Saved Plans</p>
+              <h2>Saved singles plans</h2>
+            </div>
+            <p class="panel-note">Save the current matchup so you can load it again later from this browser.</p>
+          </div>
+
+          <p id="savedPlansEmpty" class="saved-plan-empty">No saved singles plans yet. Generate a plan and click <strong>Save My Plan</strong> to keep it here.</p>
+          <div id="savedPlansList" class="saved-plan-list"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js?v=20260408b"></script>
+</body>
+</html>
