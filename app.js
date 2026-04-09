@@ -294,6 +294,7 @@ const UI_TRANSLATIONS = {
 const HOME_STATIC_TRANSLATIONS = {
   en: {
     masterListTitle: "All Strings",
+    masterListTitleWithCount: "All Strings - {count} in Database",
     masterListCopy: "Browse every string in one place",
     referenceTitle: "Reference Guide",
     referenceCopy: "Browse the full string library",
@@ -324,6 +325,7 @@ const HOME_STATIC_TRANSLATIONS = {
   },
   fr: {
     masterListTitle: "Liste complete",
+    masterListTitleWithCount: "Liste complete - {count} dans la base",
     masterListCopy: "Parcourez tous les cordages en un seul endroit",
     referenceTitle: "Guide de reference",
     referenceCopy: "Parcourir toute la bibliotheque de guides",
@@ -354,6 +356,7 @@ const HOME_STATIC_TRANSLATIONS = {
   },
   es: {
     masterListTitle: "Lista maestra",
+    masterListTitleWithCount: "Lista maestra - {count} en la base",
     masterListCopy: "Explora todas las cuerdas en un solo lugar",
     referenceTitle: "Guia de referencia",
     referenceCopy: "Explora la biblioteca completa de guias",
@@ -384,6 +387,7 @@ const HOME_STATIC_TRANSLATIONS = {
   },
   it: {
     masterListTitle: "Elenco completo",
+    masterListTitleWithCount: "Elenco completo - {count} nel database",
     masterListCopy: "Sfoglia tutte le corde in un solo posto",
     referenceTitle: "Guida di riferimento",
     referenceCopy: "Sfoglia l'intera libreria di guide",
@@ -420,8 +424,13 @@ function getUiText(key, fallback) {
 }
 
 function updateDatabaseCountLabels() {
+  const language = siteI18n.getLanguage();
+  const content = HOME_STATIC_TRANSLATIONS[language] || HOME_STATIC_TRANSLATIONS.en;
   const countText = siteI18n.t("masterDatabaseCount", "{count} strings in database", { count: STRINGS.length });
+  const masterTitle = document.getElementById("heroMasterListTitle");
+  const masterTitleText = (content.masterListTitleWithCount || "All Strings - {count} in Database").replace("{count}", String(STRINGS.length));
   if (databaseCount) databaseCount.textContent = countText;
+  if (masterTitle) masterTitle.textContent = masterTitleText;
   if (heroDatabaseButton) heroDatabaseButton.textContent = countText;
 }
 
@@ -440,7 +449,6 @@ function updateHomepageStaticTranslations() {
   const prosTitle = document.getElementById("heroProsTitle");
   const prosCopy = document.getElementById("heroProsCopy");
 
-  if (masterTitle) masterTitle.textContent = content.masterListTitle;
   if (masterCopy) masterCopy.textContent = content.masterListCopy;
   if (referenceTitle) referenceTitle.textContent = content.referenceTitle;
   if (referenceCopy) referenceCopy.textContent = content.referenceCopy;
@@ -3817,6 +3825,7 @@ window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS = {
 if (hasPlannerSurface) {
   updateLocalizedUiText();
   updateHomepageStaticTranslations();
+  updateDatabaseCountLabels();
   renderFilters();
   populateMobileQuickPlayerFilter();
   syncMobileQuickTypeFilter();
@@ -3826,20 +3835,13 @@ if (hasPlannerSurface) {
 
   if (stringSearchInput) {
     stringSearchInput.addEventListener("input", (event) => {
-      const wasSearching = Boolean(searchQuery);
       searchQuery = event.currentTarget.value.trim().toLowerCase();
       popularOnly = false;
       proOnly = false;
+      toolsHiddenForPrimaryModes = false;
+      autoCollapsedToolsForSearch = false;
       if (searchQuery) {
         clearNonSearchFilters();
-        if (!wasSearching) {
-          toolsHiddenBeforeSearch = toolsHiddenForPrimaryModes;
-          toolsHiddenForPrimaryModes = true;
-          autoCollapsedToolsForSearch = true;
-        }
-      } else if (wasSearching && autoCollapsedToolsForSearch) {
-        toolsHiddenForPrimaryModes = toolsHiddenBeforeSearch;
-        autoCollapsedToolsForSearch = false;
       }
       syncClearSearchButton();
       syncPopularButton();
@@ -3850,14 +3852,11 @@ if (hasPlannerSurface) {
 
   if (clearSearchButton && stringSearchInput) {
     clearSearchButton.addEventListener("click", () => {
-      const wasSearching = Boolean(searchQuery);
       stringSearchInput.value = "";
       stringSearchInput.focus();
       searchQuery = "";
-      if (wasSearching && autoCollapsedToolsForSearch) {
-        toolsHiddenForPrimaryModes = toolsHiddenBeforeSearch;
-        autoCollapsedToolsForSearch = false;
-      }
+      toolsHiddenForPrimaryModes = false;
+      autoCollapsedToolsForSearch = false;
       syncClearSearchButton();
       renderResults();
     });
@@ -3873,7 +3872,7 @@ if (hasPlannerSurface) {
       if (popularOnly) {
         proOnly = false;
       }
-      toolsHiddenForPrimaryModes = popularOnly;
+      toolsHiddenForPrimaryModes = false;
       syncPopularButton();
       syncProButton();
       renderResults();
@@ -3889,7 +3888,7 @@ if (hasPlannerSurface) {
       if (proOnly) {
         popularOnly = false;
       }
-      toolsHiddenForPrimaryModes = proOnly;
+      toolsHiddenForPrimaryModes = false;
       syncProButton();
       syncPopularButton();
       renderResults();
@@ -5979,10 +5978,8 @@ function syncFocusedMode() {
   const selectedPlayer = state.atpPlayer !== "Any" ? state.atpPlayer : state.wtaPlayer !== "Any" ? state.wtaPlayer : "";
   const hasSliderFocus = hasActiveSliderPreferences();
   const isFocused = popularOnly || proOnly || Boolean(searchQuery) || state.type !== "Any" || Boolean(selectedPlayer) || hasSliderFocus;
-  const hasPrimaryMainMode = popularOnly || proOnly;
   const hasActiveExampleFocus = activeQuickSetupExampleIndex !== -1
     && QUICK_SETUP_EXAMPLES[activeQuickSetupExampleIndex]?.player === selectedPlayer;
-  const showStandaloneToolsToggle = !hasPrimaryMainMode && toolsHiddenForPrimaryModes;
   const modeLabel = popularOnly
     ? siteI18n.t("activePopular", "Showing 20 Most Popular")
     : proOnly
@@ -5994,8 +5991,8 @@ function syncFocusedMode() {
           : state.type !== "Any"
             ? siteI18n.t("activeShowing", "Showing {value}", { value: state.type })
             : siteI18n.t("activeSliders", "Using preference sliders");
-  const showModePill = !(hasPrimaryMainMode && !toolsHiddenForPrimaryModes) && !hasActiveExampleFocus;
-  const hasActiveModeControls = showModePill || hasPrimaryMainMode;
+  const showModePill = isFocused && !hasActiveExampleFocus;
+  const hasActiveModeControls = showModePill;
 
   if (heroSection) {
     heroSection.classList.toggle("is-results-focused", isFocused);
@@ -6010,24 +6007,23 @@ function syncFocusedMode() {
   }
 
   if (toolWorkbench) {
-    toolWorkbench.hidden = toolsHiddenForPrimaryModes;
+    toolWorkbench.hidden = false;
   }
 
   if (toolWorkbenchToggleRow) {
-    toolWorkbenchToggleRow.hidden = !showStandaloneToolsToggle;
+    toolWorkbenchToggleRow.hidden = true;
   }
 
   if (toolWorkbenchToggleButton) {
-    toolWorkbenchToggleButton.textContent = siteI18n.t("showTools", "Show Tools");
+    toolWorkbenchToggleButton.hidden = true;
   }
 
   if (toolWorkbenchHeaderToggleButton) {
-    toolWorkbenchHeaderToggleButton.hidden = hasPrimaryMainMode || toolsHiddenForPrimaryModes;
-    toolWorkbenchHeaderToggleButton.textContent = siteI18n.t("hideTools", "Hide Tools");
+    toolWorkbenchHeaderToggleButton.hidden = true;
   }
 
   if (heroHomeButton) {
-    heroHomeButton.hidden = !isFocused;
+    heroHomeButton.hidden = false;
   }
 
   if (activeModeBar) {
@@ -6038,16 +6034,7 @@ function syncFocusedMode() {
       activeModeBar.hidden = false;
       activeModeBar.innerHTML = `
         ${showModePill ? `<span class="active-mode-pill">${modeLabel}</span>` : ""}
-        ${hasPrimaryMainMode ? `<button class="active-mode-clear active-mode-tools-toggle" type="button">${toolsHiddenForPrimaryModes ? siteI18n.t("showTools", "Show Tools") : siteI18n.t("hideTools", "Hide Tools")}</button>` : ""}
       `;
-
-      const toolsToggleButton = activeModeBar.querySelector(".active-mode-tools-toggle");
-      if (toolsToggleButton) {
-        toolsToggleButton.addEventListener("click", () => {
-          toolsHiddenForPrimaryModes = !toolsHiddenForPrimaryModes;
-          syncFocusedMode();
-        });
-      }
     }
   }
 

@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Tennis Setup">
-  <meta name="theme-color" content="#0a4d84">
+  <meta name="theme-color" content="#008f70">
   <title>Tennis Setup</title>
   <!-- SEO Meta -->
   <meta name="description" content="Use Tennis Setup to search the string database, build a quick setup, explore pro-inspired examples, and calculate a practical starting tension range.">
@@ -28,7 +28,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
   <link rel="manifest" href="./site.webmanifest">
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css?v=20260410b">
   <!-- SEO Structured Data -->
   <script type="application/ld+json">
 {
@@ -60,132 +60,44 @@
   <!-- /SEO Structured Data -->
 </head>
 <body data-page="home">
-  <main class="page-shell">
-    <section class="hero" id="heroSection">
-      <div class="brand-row">
-        <a class="brand-lockup brand-home-link" href="/" aria-label="Go to Tennis String Lab home">
-          <div class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 88 88" role="presentation">
-              <defs>
-                <linearGradient id="racketHeadFillMain" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#0a4d84" />
-                  <stop offset="100%" stop-color="#6fbde9" />
-                </linearGradient>
-                <clipPath id="racketHeadClipMain">
-                  <ellipse cx="44" cy="31" rx="17.5" ry="22.5" />
-                </clipPath>
-              </defs>
-              <g>
-                <ellipse cx="44" cy="31" rx="23.8" ry="28.8" fill="url(#racketHeadFillMain)" />
-                <ellipse cx="44" cy="31" rx="17.5" ry="22.5" fill="#f4f8fc" stroke="#aac0d5" stroke-width="2.1" />
-                <g clip-path="url(#racketHeadClipMain)">
-                  <path d="M34 10V52" stroke="#7fcb45" stroke-width="2.7" stroke-linecap="round"/>
-                  <path d="M39 9V53" stroke="#7fcb45" stroke-width="2.7" stroke-linecap="round"/>
-                  <path d="M44 9V53" stroke="#7fcb45" stroke-width="2.7" stroke-linecap="round"/>
-                  <path d="M49 9V53" stroke="#7fcb45" stroke-width="2.7" stroke-linecap="round"/>
-                  <path d="M54 10V52" stroke="#7fcb45" stroke-width="2.7" stroke-linecap="round"/>
-                  <path d="M30 18H58" stroke="#7fcb45" stroke-width="2.7" stroke-linecap="round"/>
-                  <path d="M29 25H59" stroke="#7fcb45" stroke-width="2.7" stroke-linecap="round"/>
-                  <path d="M29 32H59" stroke="#7fcb45" stroke-width="2.7" stroke-linecap="round"/>
-                  <path d="M30 39H58" stroke="#7fcb45" stroke-width="2.7" stroke-linecap="round"/>
-                </g>
-                <rect x="40" y="58" width="8" height="12" rx="2.8" fill="#0a4d84" />
-                <rect x="39" y="68" width="10" height="10" rx="3.1" fill="#7fcb45" />
+  <header class="site-header">
+    <div class="brand-row">
+      <a class="brand-lockup brand-home-link" href="/" aria-label="Go to Tennis String Lab home">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 88 88" role="presentation">
+            <defs>
+              <clipPath id="racketHeadClipMain">
+                <ellipse cx="44" cy="31" rx="17.5" ry="22.5" />
+              </clipPath>
+            </defs>
+            <g>
+              <ellipse cx="44" cy="31" rx="23.8" ry="28.8" fill="#ffffff" />
+              <ellipse cx="44" cy="31" rx="17.5" ry="22.5" fill="#ffffff" stroke="#d7e8e2" stroke-width="2.1" />
+              <g clip-path="url(#racketHeadClipMain)">
+                <path d="M34 10V52" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"/>
+                <path d="M39 9V53" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"/>
+                <path d="M44 9V53" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"/>
+                <path d="M49 9V53" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"/>
+                <path d="M54 10V52" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"/>
+                <path d="M30 18H58" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"/>
+                <path d="M29 25H59" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"/>
+                <path d="M29 32H59" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"/>
+                <path d="M30 39H58" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"/>
               </g>
-            </svg>
-          </div>
-          <div class="brand-text">
-            <p class="eyebrow">String Search + Setup</p>
-            <div class="brand-domains" aria-label="Website domains">
-              <span class="brand-domain">TennisStringLab.com</span>
-              <span class="brand-domain brand-domain-accent">TennisSetup.com</span>
-            </div>
-          </div>
-        </a>
-        <div class="hero-overflow-menu">
-          <button id="heroMenuButton" class="hero-menu-button" type="button" aria-expanded="false" aria-controls="heroMenuPanel" aria-label="Open menu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-          <div id="heroMenuPanel" class="hero-menu-panel" hidden>
-            <a class="hero-menu-link" href="./analyze-current-setup.html">Analyze Current String Setup</a>
-            <a class="hero-menu-link" href="./compare-strings.html">Compare Strings</a>
-            <a class="hero-menu-link" href="./compare-pro-setups.html">Compare Pro Setups</a>
-            <a class="hero-menu-link" href="./hybrid-builder.html">Hybrid String Builder</a>
-            <a id="menuStringLibrary" class="hero-menu-link" href="./string-library.html">String Library</a>
-            <a id="menuStringTypes" class="hero-menu-link" href="./string-types.html">String Type Descriptions</a>
-            <a id="menuStringMaterials" class="hero-menu-link" href="./string-materials-guide.html">String Materials Guide</a>
-            <a id="menuStringManufacturing" class="hero-menu-link" href="./how-tennis-string-is-made.html">How Tennis Strings Are Made</a>
-            <a id="menuTensionGuide" class="hero-menu-link" href="./tension-guide.html">Tension Guide</a>
-            <a id="menuTensionLogic" class="hero-menu-link" href="./tension-logic.html">Tension Calculator Logic</a>
-            <a id="menuGaugeGuide" class="hero-menu-link" href="./gauge-guide.html">Gauge Guide</a>
-            <a id="menuHybridGuide" class="hero-menu-link" href="./hybrid-guide.html">Hybrid String Guide</a>
-            <a id="menuArmFriendly" class="hero-menu-link" href="./arm-friendly.html">Arm-Friendly Strings</a>
-            <a id="menuShapeGuide" class="hero-menu-link" href="./string-shape-guide.html">String Shape Guide</a>
-            <a id="menuDampenersGuide" class="hero-menu-link" href="./string-dampeners-guide.html">String Dampeners: Do They Work?</a>
-            <a id="menuRestringGuide" class="hero-menu-link" href="./restring-guide.html">How Often to Restring</a>
-            <a id="menuPlayerTypeGuide" class="hero-menu-link" href="./player-type-guide.html">Best Strings by Player Type</a>
-            <a id="menuBestByNeed" class="hero-menu-link" href="./best-by-need.html">Best Strings by Need</a>
-            <a class="hero-menu-link" href="./best-strings-for-pure-aero.html">Best Strings for Pure Aero</a>
-            <a class="hero-menu-link" href="./best-strings-for-wilson-blade.html">Best Strings for Wilson Blade</a>
-            <a class="hero-menu-link" href="./best-strings-for-tennis-elbow.html">Best Strings for Tennis Elbow</a>
-            <a id="menuPopularComparisons" class="hero-menu-link" href="./popular-comparisons.html">Popular String Comparisons</a>
-            <a id="menuProShops" class="hero-menu-link" href="./proshops.html">Pro Shops</a>
-            <a id="menuAdminStats" class="hero-menu-link hero-menu-link-admin" href="./visit-stats.html" rel="nofollow">Admin Stats</a>
-          </div>
+              <rect x="40" y="58" width="8" height="12" rx="2.8" fill="#ffffff" />
+              <rect x="39" y="68" width="10" height="10" rx="3.1" fill="#008f70" />
+            </g>
+          </svg>
         </div>
-      </div>
-      <div class="hero-heading-row">
-        <div class="hero-heading-copy">
-          <div class="hero-title-topline-row">
-            <div class="mobile-home-title-row">
-              <h1>TennisSetup</h1>
-            </div>
-            <div class="hero-topline">
-              <p class="hero-tagline">Find your perfect setup - built for players, coaches and stringers!</p>
-              <a id="heroDatabaseButton" class="hero-database-button" href="./master-list.html">0 strings in database</a>
-            </div>
-          </div>
-          <p class="hero-copy">
-            Use Quick Setup and Tension Calculator tools to build a quick pro-inspired setup.
-          </p>
-          <div class="mobile-home-action-grid">
-            <a class="mobile-home-action-button" href="#plannerSearchSection">Search</a>
-            <a class="mobile-home-action-button" href="./master-list.html">All Strings</a>
-            <a class="mobile-home-action-button" href="./proshops.html">Pro Shops</a>
-            <a class="mobile-home-action-button mobile-home-action-button-tool" href="./analyze-current-setup.html">Analyze Setup</a>
-            <a class="mobile-home-action-button mobile-home-action-button-tool" href="./compare-strings.html">Compare Strings</a>
-            <a class="mobile-home-action-button mobile-home-action-button-tool" href="./quick-setup.html">Quick String Setup</a>
-            <a class="mobile-home-action-button mobile-home-action-button-tool" href="./tension-calculator.html">Tension Calculator</a>
-          </div>
+        <div class="brand-text">
+          <h1 class="brand-wordmark">TennisSetup</h1>
         </div>
-      </div>
-      <section class="mobile-home-tool-sections" aria-label="Mobile tool links">
-        <article class="mobile-home-tool-card mobile-home-tool-card-quick">
-          <p class="eyebrow">Quick String Setup</p>
-          <h2>Build a fast starting setup</h2>
-          <p class="summary-copy">Use the Quick String Setup page to choose feel, racket, style, and a pro example from a dropdown. It returns a short list of strong string matches without making you work through the full database.</p>
-          <a class="secondary-button mobile-home-section-button mobile-home-section-button-tool" href="./quick-setup.html">Open Quick String Setup</a>
-        </article>
-        <article class="mobile-home-tool-card mobile-home-tool-card-tension">
-          <p class="eyebrow">Tension Calculator</p>
-          <h2>Dial in a starting tension</h2>
-          <p class="summary-copy">Use the Tension Calculator page to turn your string type, racket family, feel goal, and arm comfort into a clean starting range in pounds and kilograms.</p>
-          <a class="secondary-button mobile-home-section-button mobile-home-section-button-tool" href="./tension-calculator.html">Open Tension Calculator</a>
-        </article>
-      </section>
-      <article id="typeDescriptionCard" class="type-description-card type-description-card-inline" hidden>
-        <p id="typeDescriptionEyebrow" class="eyebrow">String Type Guide</p>
-        <h3 id="typeDescriptionTitle">All String Types</h3>
-        <p id="typeDescriptionText" class="summary-copy">
-          Compare different string families to find the blend of spin, comfort, control, and power that best fits your game.
-        </p>
-      </article>
+      </a>
       <div class="hero-actions">
+        <a id="heroHomeButton" class="secondary-button hero-top-home-button" href="/">Home</a>
         <a class="hero-link master-list-hero-link hero-action-card" href="./master-list.html">
           <span class="hero-action-copy">
-            <strong id="heroMasterListTitle">All Strings</strong>
+            <strong id="heroMasterListTitle">All Strings - 0 in Database</strong>
             <span id="heroMasterListCopy">Browse every string in one place</span>
           </span>
         </a>
@@ -229,8 +141,98 @@
             <span id="heroProsCopy">See what top ATP and WTA players use</span>
           </span>
         </button>
-        <a id="heroHomeButton" class="secondary-button hero-top-home-button" href="/" hidden>Home</a>
       </div>
+      <div class="hero-overflow-menu">
+        <button id="heroMenuButton" class="hero-menu-button" type="button" aria-expanded="false" aria-controls="heroMenuPanel" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div id="heroMenuPanel" class="hero-menu-panel" hidden>
+          <a class="hero-menu-link" href="./analyze-current-setup.html">Analyze Current String Setup</a>
+          <a class="hero-menu-link" href="./compare-strings.html">Compare Strings</a>
+          <a class="hero-menu-link" href="./compare-pro-setups.html">Compare Pro Setups</a>
+          <a class="hero-menu-link" href="./hybrid-builder.html">Hybrid String Builder</a>
+          <a id="menuStringLibrary" class="hero-menu-link" href="./string-library.html">String Library</a>
+          <a id="menuStringTypes" class="hero-menu-link" href="./string-types.html">String Type Descriptions</a>
+          <a id="menuStringMaterials" class="hero-menu-link" href="./string-materials-guide.html">String Materials Guide</a>
+          <a id="menuStringManufacturing" class="hero-menu-link" href="./how-tennis-string-is-made.html">How Tennis Strings Are Made</a>
+          <a id="menuTensionGuide" class="hero-menu-link" href="./tension-guide.html">Tension Guide</a>
+          <a id="menuTensionLogic" class="hero-menu-link" href="./tension-logic.html">Tension Calculator Logic</a>
+          <a id="menuGaugeGuide" class="hero-menu-link" href="./gauge-guide.html">Gauge Guide</a>
+          <a id="menuHybridGuide" class="hero-menu-link" href="./hybrid-guide.html">Hybrid String Guide</a>
+          <a id="menuArmFriendly" class="hero-menu-link" href="./arm-friendly.html">Arm-Friendly Strings</a>
+          <a id="menuShapeGuide" class="hero-menu-link" href="./string-shape-guide.html">String Shape Guide</a>
+          <a id="menuDampenersGuide" class="hero-menu-link" href="./string-dampeners-guide.html">String Dampeners: Do They Work?</a>
+          <a id="menuRestringGuide" class="hero-menu-link" href="./restring-guide.html">How Often to Restring</a>
+          <a id="menuPlayerTypeGuide" class="hero-menu-link" href="./player-type-guide.html">Best Strings by Player Type</a>
+          <a id="menuBestByNeed" class="hero-menu-link" href="./best-by-need.html">Best Strings by Need</a>
+          <a class="hero-menu-link" href="./best-strings-for-pure-aero.html">Best Strings for Pure Aero</a>
+          <a class="hero-menu-link" href="./best-strings-for-wilson-blade.html">Best Strings for Wilson Blade</a>
+          <a class="hero-menu-link" href="./best-strings-for-tennis-elbow.html">Best Strings for Tennis Elbow</a>
+          <a id="menuPopularComparisons" class="hero-menu-link" href="./popular-comparisons.html">Popular String Comparisons</a>
+          <a id="menuProShops" class="hero-menu-link" href="./proshops.html">Pro Shops</a>
+          <a id="menuAdminStats" class="hero-menu-link hero-menu-link-admin" href="./visit-stats.html" rel="nofollow">Admin Stats</a>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="page-shell">
+    <section class="hero" id="heroSection">
+      <div class="tool-workbench-prelude">
+        <p>Find your perfect setup - built for players, coaches and stringers. TennisSetup helps you analyze your current string setup, compare options, and build a practical starting point faster.</p>
+        <p class="tool-workbench-prelude-links">
+          <span class="tool-workbench-prelude-label">Tools:</span>
+          <a href="./analyze-current-setup.html">Analyze Current String Setup</a>
+          <span>/</span>
+          <a href="./compare-strings.html">Compare Strings</a>
+          <span>/</span>
+          <a href="./quick-setup.html">Quick String Setup</a>
+          <span>/</span>
+          <a href="./tension-calculator.html">Tension Calculator</a>
+          <span>/</span>
+          <a href="./compare-pro-setups.html">Compare Pro Setups</a>
+          <span>/</span>
+          <a href="./hybrid-builder.html">Hybrid String Builder</a>
+        </p>
+      </div>
+      <div class="hero-heading-row">
+        <div class="hero-heading-copy">
+          <p class="hero-copy">
+            Search the database, build a fast string setup, compare tour-inspired options, and turn your choice into a practical starting tension.
+          </p>
+          <div class="mobile-home-action-grid">
+            <a class="mobile-home-action-button" href="#plannerSearchSection">Search</a>
+            <a class="mobile-home-action-button" href="./master-list.html">All Strings</a>
+            <a class="mobile-home-action-button" href="./proshops.html">Pro Shops</a>
+            <a class="mobile-home-action-button mobile-home-action-button-tool" href="./analyze-current-setup.html">Analyze Setup</a>
+            <a class="mobile-home-action-button mobile-home-action-button-tool" href="./compare-strings.html">Compare Strings</a>
+            <a class="mobile-home-action-button mobile-home-action-button-tool" href="./quick-setup.html">Quick String Setup</a>
+            <a class="mobile-home-action-button mobile-home-action-button-tool" href="./tension-calculator.html">Tension Calculator</a>
+          </div>
+        </div>
+      </div>
+      <section class="mobile-home-tool-sections" aria-label="Mobile tool links">
+        <article class="mobile-home-tool-card mobile-home-tool-card-quick">
+          <p class="eyebrow">Quick String Setup</p>
+          <h2>Build a fast starting setup</h2>
+          <p class="summary-copy">Use the Quick String Setup page to choose feel, racket, style, and a pro example from a dropdown. It returns a short list of strong string matches without making you work through the full database.</p>
+          <a class="secondary-button mobile-home-section-button mobile-home-section-button-tool" href="./quick-setup.html">Open Quick String Setup</a>
+        </article>
+        <article class="mobile-home-tool-card mobile-home-tool-card-tension">
+          <p class="eyebrow">Tension Calculator</p>
+          <h2>Dial in a starting tension</h2>
+          <p class="summary-copy">Use the Tension Calculator page to turn your string type, racket family, feel goal, and arm comfort into a clean starting range in pounds and kilograms.</p>
+          <a class="secondary-button mobile-home-section-button mobile-home-section-button-tool" href="./tension-calculator.html">Open Tension Calculator</a>
+        </article>
+      </section>
+      <article id="typeDescriptionCard" class="type-description-card type-description-card-inline" hidden>
+        <p id="typeDescriptionEyebrow" class="eyebrow">String Type Guide</p>
+        <h3 id="typeDescriptionTitle">All String Types</h3>
+        <p id="typeDescriptionText" class="summary-copy">
+          Compare different string families to find the blend of spin, comfort, control, and power that best fits your game.
+        </p>
+      </article>
       <div id="activeModeBar" class="active-mode-bar" hidden></div>
       <div class="mobile-quick-player-row">
         <label class="mobile-quick-player-label" for="mobileQuickPlayerFilter">Pro Player</label>
@@ -251,27 +253,14 @@
           <option value="Hybrid">Hybrid</option>
         </select>
       </div>
-      <div id="toolWorkbenchToggleRow" class="tool-workbench-toggle-row" hidden>
-        <button id="toolWorkbenchToggleButton" class="secondary-button tool-workbench-toggle-button" type="button">Hide Tools</button>
-      </div>
       <section class="tool-workbench" aria-labelledby="toolWorkbenchTitle">
         <div class="tool-workbench-header">
-          <div>
-            <p class="eyebrow">Setup Tools</p>
-            <p id="toolWorkbenchTitle" class="summary-copy">Use Quick Setup and Tension Calculator tools to build a quick pro-inspired setup.</p>
-            <p class="summary-copy">Use the Quick String Setup Tool to get a fast string recommendation based on your target feel, racket, playing style, and optional pro inspiration. Then use the Tension Calculator to turn that setup into a practical starting tension range before you string your racquet.</p>
-          </div>
-          <div class="tool-workbench-header-actions">
-            <div class="tool-workbench-header-topline">
-              <p class="eyebrow tool-workbench-inline-kicker">Analyze Your Current String Setup</p>
-              <button id="toolWorkbenchHeaderToggleButton" class="secondary-button tool-workbench-toggle-button" type="button">Hide Tools</button>
-            </div>
-            <div class="tool-workbench-analyzer-callout">
-              <div class="tool-workbench-analyzer-copy">
-                <h3>Already know your racket, string, and tension?</h3>
-                <p class="summary-copy">Open the Current Setup Analyzer to get a readable report on what your setup is likely doing well, where it may be holding you back, and what to try next.</p>
-              </div>
-              <a class="secondary-button tool-workbench-analyzer-link" href="./analyze-current-setup.html">Open Current Setup Analyzer</a>
+          <div class="tool-workbench-header-intro">
+            <p id="toolWorkbenchTitle" class="eyebrow">Analyze Current String Setup</p>
+            <div class="tool-workbench-summary-row">
+              <p class="summary-copy">Know your racket, string, and tension? Get a quick read on what that setup is likely doing.</p>
+              <img class="tool-workbench-analyzer-image" src="./images/stringer.jpg" alt="Tennis racquet being strung on a stringing machine">
+              <a class="secondary-button tool-workbench-analyzer-link" href="./analyze-current-setup.html">Open Current String Setup Analyzer</a>
             </div>
           </div>
         </div>
@@ -484,7 +473,17 @@
     </footer>
   </main>
 
-  <script src="./analytics.js"></script>
-  <script src="./app.js"></script>
+  <script src="./analytics.js?v=20260409c"></script>
+  <script src="./app.js?v=20260409b"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+

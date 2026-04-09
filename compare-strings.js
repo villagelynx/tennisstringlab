@@ -151,6 +151,9 @@
           <p class="eyebrow">String Matchup</p>
           <h3 class="tool-recommendation-name">${escapeHtml(comparison.left.name)} vs ${escapeHtml(comparison.right.name)}</h3>
           <p class="tool-note">${escapeHtml(comparison.summary)}</p>
+          <div class="tool-inline-actions">
+            <button class="secondary-button compact-button compare-tool-email-stringer" type="button">Email Comparison to Stringer</button>
+          </div>
         </div>
       </section>
 
@@ -193,6 +196,19 @@
         </ul>
       </section>
     `;
+
+    const emailButton = elements.report.querySelector(".compare-tool-email-stringer");
+    if (emailButton) {
+      emailButton.addEventListener("click", () => {
+        const draft = buildComparisonEmailDraft(comparison);
+        trackToolUsage("compare_strings_email_stringer", "Email Comparison to Stringer", {
+          leftString: comparison.left.name,
+          rightString: comparison.right.name,
+          racketFamily: comparison.racketFamily || ""
+        });
+        openMailDraft(draft);
+      });
+    }
   }
 
   function renderStringCard(label, entry, proCount, tensionRecommendation) {
@@ -387,6 +403,60 @@
       eventCategory: "tool_usage",
       ...extra
     });
+  }
+
+  function buildComparisonEmailDraft(comparison) {
+    const lines = [
+      "Hi,",
+      "",
+      "I am comparing these 2 strings and would like your input on which one makes more sense to string up.",
+      "",
+      `String A: ${comparison.left.name}`,
+      `Brand / type: ${comparison.left.brand || "Unknown"} / ${comparison.left.type || "Unknown"}`,
+      `Gauge: ${comparison.left.gauge || "Unknown"}`,
+      `Racket fit: ${comparison.left.racketFamily || "General fit"}`,
+      comparison.leftTension ? `Balanced starting tension: ${comparison.leftTension}` : "",
+      "",
+      `String B: ${comparison.right.name}`,
+      `Brand / type: ${comparison.right.brand || "Unknown"} / ${comparison.right.type || "Unknown"}`,
+      `Gauge: ${comparison.right.gauge || "Unknown"}`,
+      `Racket fit: ${comparison.right.racketFamily || "General fit"}`,
+      comparison.rightTension ? `Balanced starting tension: ${comparison.rightTension}` : "",
+      "",
+      comparison.racketFamily ? `My racket family: ${comparison.racketFamily}` : "",
+      `Summary: ${comparison.summary}`,
+      "",
+      "Quick read:",
+      ...comparison.bullets.map((item) => `- ${item}`),
+      "",
+      "Generated with TennisSetup.com"
+    ].filter(Boolean);
+
+    return {
+      subject: `String comparison: ${comparison.left.name} vs ${comparison.right.name}`,
+      body: lines.join("\n")
+    };
+  }
+
+  function buildMailtoLink({ to = "", subject = "", body = "" }) {
+    const params = [];
+    if (subject) {
+      params.push(`subject=${encodeURIComponent(subject)}`);
+    }
+    if (body) {
+      params.push(`body=${encodeURIComponent(body)}`);
+    }
+
+    const query = params.join("&");
+    return `mailto:${String(to || "").trim()}${query ? `?${query}` : ""}`;
+  }
+
+  function openMailDraft({ to = "", subject = "", body = "" }) {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    window.location.href = buildMailtoLink({ to, subject, body });
   }
 
   function escapeHtml(value) {

@@ -2,8 +2,5 @@
   "name": "tennisstringlab",
   "private": true,
   "version": "1.0.0",
-  "description": "Tennis String Lab with Netlify-backed visit tracking",
-  "dependencies": {
-    "@netlify/blobs": "^8.1.0"
-  }
+  "description": "Tennis String Lab with Supabase-backed analytics"
 }

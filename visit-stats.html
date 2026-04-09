@@ -11,7 +11,7 @@
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
   <link rel="manifest" href="./site.webmanifest">
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css?v=20260410a">
 </head>
 <body>
   <main class="site-shell standalone-shell">
@@ -19,7 +19,7 @@
       <div class="hero-copy">
         <p class="eyebrow">Counter Dashboard</p>
         <h1>Visit Stats</h1>
-        <p class="summary-copy">This page shows tracked page views and unique visitors from the Netlify-backed counter.</p>
+        <p class="summary-copy">This page shows tracked page views, tool usage, and unique visitors from the Supabase-backed analytics store.</p>
       </div>
       <div class="hero-actions">
         <a class="hero-link-card master-list-link" href="./index.html">
@@ -58,6 +58,14 @@
           <span>Unique visitors today</span>
         </article>
       </div>
+
+      <div class="results-header compact-section-header">
+        <div>
+          <p class="eyebrow">Tool Usage</p>
+          <h2>Tracked Tool Actions</h2>
+        </div>
+      </div>
+      <div id="statsEventList" class="results-list"></div>
 
       <div class="results-header compact-section-header">
         <div>
@@ -113,6 +121,31 @@
       `).join("");
     }
 
+    function renderEventStats(stats) {
+      const eventList = document.getElementById("statsEventList");
+      const events = Array.isArray(stats.topEvents) ? stats.topEvents : [];
+      if (!events.length) {
+        eventList.innerHTML = '<article class="result-card"><p class="result-summary">No tracked tool usage yet.</p></article>';
+        return;
+      }
+
+      eventList.innerHTML = events.map((eventEntry) => `
+        <article class="result-card">
+          <div class="result-header">
+            <div>
+              <p class="result-brand">${eventEntry.category || "Tool usage"}</p>
+              <h3>${eventEntry.label || eventEntry.name}</h3>
+            </div>
+            <div class="result-score">
+              <span>${formatNumber(eventEntry.count)}</span>
+              <small>uses</small>
+            </div>
+          </div>
+          <p class="result-summary">${formatNumber(eventEntry.uniqueVisitors)} unique visitors</p>
+        </article>
+      `).join("");
+    }
+
     async function initVisitStats() {
       try {
         const stats = await loadVisitStats();
@@ -121,14 +154,28 @@
         document.getElementById("statsTodayViews").textContent = formatNumber(stats.todayViews);
         document.getElementById("statsTodayVisitors").textContent = formatNumber(stats.todayUniqueVisitors);
         document.getElementById("statsUpdated").textContent = formatDate(stats.lastVisitAt);
+        renderEventStats(stats);
         renderPageStats(stats);
       } catch (error) {
         document.getElementById("statsUpdated").textContent = "Could not load stats yet";
-        document.getElementById("statsPageList").innerHTML = '<article class="result-card"><p class="result-summary">The counter will appear after the Netlify functions are deployed and the first visits are tracked.</p></article>';
+        document.getElementById("statsEventList").innerHTML = '<article class="result-card"><p class="result-summary">Tool usage stats will appear after the Netlify functions are deployed and the first actions are tracked.</p></article>';
+        document.getElementById("statsPageList").innerHTML = '<article class="result-card"><p class="result-summary">The counter will appear after the analytics functions are deployed, Supabase is configured, and the first visits are tracked.</p></article>';
       }
     }
 
     initVisitStats();
   </script>
+  <script src="./analytics.js?v=20260409c"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+

@@ -560,6 +560,308 @@
     return file || "index.html";
   }
 
+  const SHARED_HEADER_TOOL_PAGES = new Set([
+    "analyze-current-setup.html",
+    "quick-setup.html",
+    "tension-calculator.html",
+    "compare-strings.html",
+    "compare-pro-setups.html",
+    "hybrid-builder.html"
+  ]);
+
+  const SHARED_HEADER_REFERENCE_PAGES = new Set([
+    "string-library.html",
+    "string-types.html",
+    "string-materials-guide.html",
+    "how-tennis-string-is-made.html",
+    "tension-guide.html",
+    "tension-logic.html",
+    "gauge-guide.html",
+    "hybrid-guide.html",
+    "arm-friendly.html",
+    "string-shape-guide.html",
+    "string-dampeners-guide.html",
+    "restring-guide.html",
+    "player-type-guide.html",
+    "best-by-need.html",
+    "popular-comparisons.html",
+    "best-strings-for-beginners.html",
+    "best-strings-for-intermediate-players.html",
+    "best-strings-for-pure-aero.html",
+    "best-strings-for-tennis-elbow.html",
+    "best-strings-for-wilson-blade.html",
+    "do-tennis-strings-lose-tension-if-you-dont-play.html",
+    "full-bed-vs-hybrid.html",
+    "how-much-can-a-good-string-setup-improve-your-tennis-game.html",
+    "how-weather-affects-string-tension.html",
+    "natural-gut-vs-multifilament.html",
+    "poly-vs-co-poly.html",
+    "string-setup-mistakes-that-cost-performance.html",
+    "what-setup-changes-help-intermediate-players-most.html",
+    "what-strings-help-beginners-improve-most.html",
+    "when-poly-goes-dead.html",
+    "about.html",
+    "contact.html",
+    "privacy.html",
+    "terms.html"
+  ]);
+
+  function setupSharedDropdownMenu(button, panel, containerSelector) {
+    if (!button || !panel) return;
+
+    const container = button.closest(containerSelector) || document.querySelector(containerSelector);
+    let closeTimer = null;
+    const canHoverOpen = () => window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+    const openMenu = () => {
+      if (closeTimer) {
+        window.clearTimeout(closeTimer);
+        closeTimer = null;
+      }
+      button.setAttribute("aria-expanded", "true");
+      panel.hidden = false;
+    };
+
+    const closeMenu = () => {
+      if (closeTimer) {
+        window.clearTimeout(closeTimer);
+        closeTimer = null;
+      }
+      button.setAttribute("aria-expanded", "false");
+      panel.hidden = true;
+    };
+
+    const scheduleCloseMenu = () => {
+      if (closeTimer) {
+        window.clearTimeout(closeTimer);
+      }
+      closeTimer = window.setTimeout(() => {
+        closeMenu();
+      }, 90);
+    };
+
+    button.addEventListener("click", () => {
+      const isOpen = button.getAttribute("aria-expanded") === "true";
+      if (isOpen) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!panel.hidden && !event.target.closest(containerSelector)) {
+        closeMenu();
+      }
+    });
+
+    if (container) {
+      container.addEventListener("mouseenter", () => {
+        if (canHoverOpen()) {
+          openMenu();
+        }
+      });
+
+      container.addEventListener("mouseleave", () => {
+        if (canHoverOpen()) {
+          scheduleCloseMenu();
+        }
+      });
+
+      container.addEventListener("focusout", (event) => {
+        if (!container.contains(event.relatedTarget)) {
+          closeMenu();
+        }
+      });
+    }
+  }
+
+  function getSharedHeaderMarkup() {
+    return `
+      <div class="brand-row">
+        <a class="brand-lockup brand-home-link" href="./index.html" aria-label="Go to TennisSetup home">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 88 88" role="presentation">
+              <defs>
+                <clipPath id="sharedRacketHeadClip">
+                  <ellipse cx="44" cy="31" rx="17.5" ry="22.5" />
+                </clipPath>
+              </defs>
+              <g>
+                <ellipse cx="44" cy="31" rx="23.8" ry="28.8" fill="#ffffff" />
+                <ellipse cx="44" cy="31" rx="17.5" ry="22.5" fill="#ffffff" stroke="#d7e8e2" stroke-width="2.1" />
+                <g clip-path="url(#sharedRacketHeadClip)">
+                  <path d="M34 10V52" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
+                  <path d="M39 9V53" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
+                  <path d="M44 9V53" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
+                  <path d="M49 9V53" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
+                  <path d="M54 10V52" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
+                  <path d="M30 18H58" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
+                  <path d="M29 25H59" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
+                  <path d="M29 32H59" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
+                  <path d="M30 39H58" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
+                </g>
+                <rect x="40" y="58" width="8" height="12" rx="2.8" fill="#ffffff"></rect>
+                <rect x="39" y="68" width="10" height="10" rx="3.1" fill="#008f70"></rect>
+              </g>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1 class="brand-wordmark">TennisSetup</h1>
+          </div>
+        </a>
+        <div class="hero-actions">
+          <a id="sharedHeaderHomeLink" class="secondary-button hero-top-home-button hero-action-card" href="./index.html">
+            <span class="hero-action-copy"><strong>Home</strong></span>
+          </a>
+          <a id="sharedHeaderMasterListLink" class="hero-link master-list-hero-link hero-action-card" href="./master-list.html">
+            <span class="hero-action-copy">
+              <strong id="sharedHeaderMasterListTitle">All Strings</strong>
+              <span id="sharedHeaderMasterListCopy">Browse every string in one place</span>
+            </span>
+          </a>
+          <div class="hero-action-menu tools-action-menu">
+            <button id="sharedToolsMenuButton" class="hero-link master-list-hero-link hero-button hero-action-card" type="button" aria-expanded="false" aria-controls="sharedToolsMenuPanel">
+              <span class="hero-action-copy"><strong>Tools</strong></span>
+            </button>
+            <div id="sharedToolsMenuPanel" class="hero-action-panel" hidden>
+              <a class="hero-action-panel-link" href="./analyze-current-setup.html">Analyze Current String Setup</a>
+              <a class="hero-action-panel-link" href="./quick-setup.html">Quick String Setup</a>
+              <a class="hero-action-panel-link" href="./tension-calculator.html">Tension Calculator</a>
+              <a class="hero-action-panel-link" href="./compare-strings.html">Compare Strings</a>
+              <a class="hero-action-panel-link" href="./compare-pro-setups.html">Compare Pro Setups</a>
+              <a class="hero-action-panel-link" href="./hybrid-builder.html">Hybrid String Builder</a>
+            </div>
+          </div>
+          <a id="sharedReferenceGuideLink" class="hero-link master-list-hero-link hero-action-card" href="./string-library.html">
+            <span class="hero-action-copy"><strong>Reference Guide</strong></span>
+          </a>
+          <a id="sharedProShopsLink" class="hero-link proshops-hero-link hero-action-card" href="./proshops.html">
+            <span class="hero-action-copy"><strong>Pro Shops</strong></span>
+          </a>
+          <a id="sharedPopularLink" class="hero-link secondary-hero-link hero-action-card" href="./index.html">
+            <span class="hero-action-copy"><strong>20 Most Popular</strong></span>
+          </a>
+          <a id="sharedProPlayersLink" class="hero-link secondary-hero-link hero-action-card" href="./proplayers.html">
+            <span class="hero-action-copy"><strong>Pro Player Strings</strong></span>
+          </a>
+        </div>
+        <div class="hero-overflow-menu">
+          <button id="sharedHeroMenuButton" class="hero-menu-button" type="button" aria-expanded="false" aria-controls="sharedHeroMenuPanel" aria-label="Open menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <div id="sharedHeroMenuPanel" class="hero-menu-panel" hidden>
+            <a class="hero-menu-link" href="./index.html">Home</a>
+            <a class="hero-menu-link" href="./master-list.html">All Strings</a>
+            <a class="hero-menu-link" href="./string-library.html">Reference Guide</a>
+            <a class="hero-menu-link" href="./proshops.html">Pro Shops</a>
+            <a class="hero-menu-link" href="./index.html">20 Most Popular</a>
+            <a class="hero-menu-link" href="./proplayers.html">Pro Player Strings</a>
+            <a class="hero-menu-link" href="./analyze-current-setup.html">Analyze Current String Setup</a>
+            <a class="hero-menu-link" href="./quick-setup.html">Quick String Setup</a>
+            <a class="hero-menu-link" href="./tension-calculator.html">Tension Calculator</a>
+            <a class="hero-menu-link" href="./compare-strings.html">Compare Strings</a>
+            <a class="hero-menu-link" href="./compare-pro-setups.html">Compare Pro Setups</a>
+            <a class="hero-menu-link" href="./hybrid-builder.html">Hybrid String Builder</a>
+            <a class="hero-menu-link" href="./string-types.html">String Type Descriptions</a>
+            <a class="hero-menu-link" href="./string-materials-guide.html">String Materials Guide</a>
+            <a class="hero-menu-link" href="./how-tennis-string-is-made.html">How Tennis Strings Are Made</a>
+            <a class="hero-menu-link" href="./tension-guide.html">Tension Guide</a>
+            <a class="hero-menu-link" href="./gauge-guide.html">Gauge Guide</a>
+            <a class="hero-menu-link" href="./hybrid-guide.html">Hybrid String Guide</a>
+            <a class="hero-menu-link" href="./arm-friendly.html">Arm-Friendly Strings</a>
+            <a class="hero-menu-link" href="./string-shape-guide.html">String Shape Guide</a>
+            <a class="hero-menu-link" href="./restring-guide.html">How Often to Restring</a>
+            <a class="hero-menu-link" href="./player-type-guide.html">Best Strings by Player Type</a>
+            <a class="hero-menu-link" href="./best-by-need.html">Best Strings by Need</a>
+            <a class="hero-menu-link" href="./popular-comparisons.html">Popular String Comparisons</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function applySharedHeaderActiveStates(page) {
+    const setActive = (selector) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.classList.add("is-active");
+        element.setAttribute("aria-current", "page");
+      }
+    };
+
+    if (page === "master-list.html") {
+      setActive("#sharedHeaderMasterListLink");
+      return;
+    }
+
+    if (page === "proshops.html") {
+      setActive("#sharedProShopsLink");
+      return;
+    }
+
+    if (page === "proplayers.html") {
+      setActive("#sharedProPlayersLink");
+      return;
+    }
+
+    if (SHARED_HEADER_TOOL_PAGES.has(page)) {
+      setActive("#sharedToolsMenuButton");
+      return;
+    }
+
+    if (SHARED_HEADER_REFERENCE_PAGES.has(page)) {
+      setActive("#sharedReferenceGuideLink");
+    }
+  }
+
+  function updateSharedHeaderDatabaseCount() {
+    const title = document.getElementById("sharedHeaderMasterListTitle");
+    if (!title) return;
+
+    if (Array.isArray(window.STRINGS) && window.STRINGS.length) {
+      title.textContent = `All Strings - ${window.STRINGS.length} in Database`;
+    } else {
+      title.textContent = "All Strings";
+    }
+  }
+
+  function ensureSharedSiteHeader() {
+    const page = getCurrentPage();
+    if (page === "index.html" || document.querySelector(".site-header")) {
+      return;
+    }
+
+    const header = document.createElement("header");
+    header.className = "site-header site-header-shared";
+    header.innerHTML = getSharedHeaderMarkup();
+
+    const firstMain = document.querySelector("main");
+    if (firstMain && firstMain.parentNode === document.body) {
+      document.body.insertBefore(header, firstMain);
+    } else {
+      document.body.insertBefore(header, document.body.firstChild);
+    }
+
+    document.body.classList.add("has-shared-site-header");
+    applySharedHeaderActiveStates(page);
+    updateSharedHeaderDatabaseCount();
+    window.addEventListener("load", updateSharedHeaderDatabaseCount, { once: true });
+
+    setupSharedDropdownMenu(
+      document.getElementById("sharedHeroMenuButton"),
+      document.getElementById("sharedHeroMenuPanel"),
+      ".hero-overflow-menu"
+    );
+    setupSharedDropdownMenu(
+      document.getElementById("sharedToolsMenuButton"),
+      document.getElementById("sharedToolsMenuPanel"),
+      ".tools-action-menu"
+    );
+  }
+
   function getSelectedLanguage() {
     try {
       const stored = localStorage.getItem(LANGUAGE_KEY);
@@ -667,9 +969,10 @@
   }
 
   function updateLanguageButtons(language) {
-    document.querySelectorAll(".language-switcher-button").forEach((button) => {
-      button.classList.toggle("is-active", button.dataset.language === language);
-    });
+    const select = document.querySelector(".language-switcher-select");
+    if (select && select.value !== language) {
+      select.value = language;
+    }
   }
 
   function createLanguageSwitcher() {
@@ -679,20 +982,37 @@
     switcher.className = "language-switcher";
     switcher.setAttribute("aria-label", "Language switcher");
 
+    const select = document.createElement("select");
+    select.className = "language-switcher-select";
+    select.setAttribute("aria-label", "Select language");
+
     SUPPORTED_LANGUAGES.forEach((language) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "language-switcher-button";
-      button.dataset.language = language;
-      button.title = LANGUAGE_LABELS[language];
-      button.setAttribute("aria-label", LANGUAGE_LABELS[language]);
-      button.innerHTML = getFlagMarkup(language);
-      button.addEventListener("click", () => {
-        setSelectedLanguage(language);
-        applyLanguage(language);
-      });
-      switcher.appendChild(button);
+      const option = document.createElement("option");
+      option.value = language;
+      option.textContent = LANGUAGE_LABELS[language] || language.toUpperCase();
+      select.appendChild(option);
     });
+
+    select.value = getSelectedLanguage();
+    select.addEventListener("change", () => {
+      const language = SUPPORTED_LANGUAGES.includes(select.value) ? select.value : "en";
+      setSelectedLanguage(language);
+      applyLanguage(language);
+    });
+
+    switcher.appendChild(select);
+
+    const sharedHeaderRow = document.querySelector("body.has-shared-site-header .site-header .brand-row");
+    if (sharedHeaderRow) {
+      switcher.classList.add("language-switcher--header");
+      const overflowMenu = sharedHeaderRow.querySelector(".hero-overflow-menu");
+      if (overflowMenu) {
+        sharedHeaderRow.insertBefore(switcher, overflowMenu);
+      } else {
+        sharedHeaderRow.appendChild(switcher);
+      }
+      return;
+    }
 
     document.body.appendChild(switcher);
   }
@@ -760,6 +1080,7 @@
     window.TSL_ANALYTICS = {
       trackEvent: trackAnalyticsEvent
     };
+    ensureSharedSiteHeader();
     createLanguageSwitcher();
     applyLanguage(getSelectedLanguage());
     trackVisit();
