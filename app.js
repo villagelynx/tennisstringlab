@@ -1,2457 +1,6757 @@
-const STYLE_OPTIONS = [
-  { value: "aggressive-baseliner", label: "Aggressive Baseliner" },
-  { value: "baseline-grinder", label: "Baseline Grinder" },
-  { value: "counterpuncher", label: "Counterpuncher" },
-  { value: "all-court-attacker", label: "All-Court Attacker" },
-  { value: "big-server-first-striker", label: "Big Server + First Striker" },
-  { value: "serve-volleyer", label: "Serve + Volleyer" },
-  { value: "disruptor-variety", label: "Disruptor / Variety Player" }
-];
+const filterGrid = document.getElementById("filterGrid");
+const resultsList = document.getElementById("resultsList");
+const resultsCount = document.getElementById("resultsCount");
+const databaseCount = document.getElementById("databaseCount");
+const heroDatabaseButton = document.getElementById("heroDatabaseButton");
+const pageKey = document.body?.dataset?.page || "home";
+const resetButton = document.getElementById("resetButton");
+const hasPlannerSurface = Boolean(filterGrid && resultsList && resultsCount && databaseCount && resetButton);
+const mobileFilterToggle = document.getElementById("mobileFilterToggle");
+const mobileQuickPlayerFilter = document.getElementById("mobileQuickPlayerFilter");
+const mobileQuickTypeFilter = document.getElementById("mobileQuickTypeFilter");
+const mobileQuickTypeRow = document.querySelector(".mobile-quick-type-row");
+const stringSearchInput = document.getElementById("stringSearchInput");
+const clearSearchButton = document.getElementById("clearSearchButton");
+const popularStringsButton = document.getElementById("popularStringsButton");
+const proPlayersButton = document.getElementById("proPlayersButton");
+const typeMenu = document.getElementById("typeMenu");
+const heroSection = document.getElementById("heroSection");
+const layoutGrid = document.getElementById("layoutGrid");
+const heroHomeButton = document.getElementById("heroHomeButton");
+const activeModeBar = document.getElementById("activeModeBar");
+const toolWorkbenchToggleRow = document.getElementById("toolWorkbenchToggleRow");
+const toolWorkbenchToggleButton = document.getElementById("toolWorkbenchToggleButton");
+const toolWorkbenchHeaderToggleButton = document.getElementById("toolWorkbenchHeaderToggleButton");
+const toolWorkbench = document.querySelector(".tool-workbench");
+const resultsPanel = document.querySelector(".results-panel");
+const heroMenuButton = document.getElementById("heroMenuButton");
+const heroMenuPanel = document.getElementById("heroMenuPanel");
+const toolsMenuButton = document.getElementById("toolsMenuButton");
+const toolsMenuPanel = document.getElementById("toolsMenuPanel");
+const referenceGuideButton = document.getElementById("referenceGuideButton");
+const referenceGuidePanel = document.getElementById("referenceGuidePanel");
+const typeDescriptionCard = document.getElementById("typeDescriptionCard");
+const typeDescriptionEyebrow = document.getElementById("typeDescriptionEyebrow");
+const typeDescriptionTitle = document.getElementById("typeDescriptionTitle");
+const typeDescriptionText = document.getElementById("typeDescriptionText");
+const resultsTypeDescriptionCard = document.getElementById("resultsTypeDescriptionCard");
+const resultsTypeDescriptionEyebrow = document.getElementById("resultsTypeDescriptionEyebrow");
+const resultsTypeDescriptionTitle = document.getElementById("resultsTypeDescriptionTitle");
+const resultsTypeDescriptionText = document.getElementById("resultsTypeDescriptionText");
+const guideMatchesSection = document.getElementById("guideMatchesSection");
+const guideMatchesList = document.getElementById("guideMatchesList");
+const guideMatchesCount = document.getElementById("guideMatchesCount");
+const sliderPower = document.getElementById("sliderPower");
+const sliderSpin = document.getElementById("sliderSpin");
+const sliderControl = document.getElementById("sliderControl");
+const sliderProPlayers = document.getElementById("sliderProPlayers");
+const sliderPowerValue = document.getElementById("sliderPowerValue");
+const sliderSpinValue = document.getElementById("sliderSpinValue");
+const sliderControlValue = document.getElementById("sliderControlValue");
+const sliderProPlayersValue = document.getElementById("sliderProPlayersValue");
 
-const SURFACE_OPTIONS = [
-  { value: "hard", label: "Hard Court" },
-  { value: "clay", label: "Clay" },
-  { value: "grass", label: "Grass" },
-  { value: "indoor", label: "Indoor Hard" }
-];
+normalizeHomeLinksForLocalFiles();
 
-const STRENGTH_OPTIONS = [
-  { id: "big-first-serve", label: "Big first serve" },
-  { id: "serve-placement", label: "Serve placement" },
-  { id: "heavy-forehand", label: "Heavy forehand" },
-  { id: "inside-out-forehand", label: "Inside-out forehand" },
-  { id: "solid-backhand", label: "Reliable backhand" },
-  { id: "return-pressure", label: "Return pressure" },
-  { id: "consistency", label: "Consistency" },
-  { id: "court-speed", label: "Speed / court coverage" },
-  { id: "net-finishing", label: "Net finishing" },
-  { id: "slice-variety", label: "Slice / variety" },
-  { id: "drop-shot-touch", label: "Drop shot touch" },
-  { id: "mental-resilience", label: "Mental resilience" },
-  { id: "passing-shots", label: "Passing shots" },
-  { id: "short-angles", label: "Short-angle creation" }
-];
-
-const WEAKNESS_OPTIONS = [
-  { id: "weak-second-serve", label: "Weak second serve" },
-  { id: "backhand-breaks-down", label: "Backhand breaks down" },
-  { id: "forehand-sprays", label: "Forehand leaks under pace" },
-  { id: "return-struggles", label: "Struggles on return" },
-  { id: "short-balls", label: "Short balls sit up" },
-  { id: "net-discomfort", label: "Uncomfortable at net" },
-  { id: "slice-discomfort", label: "Struggles vs slice" },
-  { id: "height-depth-discomfort", label: "Struggles vs height + depth" },
-  { id: "wide-recovery", label: "Slow recovery after wide ball" },
-  { id: "pressure-overhit", label: "Overhits when trailing" },
-  { id: "fitness-drop", label: "Level drops in long rallies" },
-  { id: "body-serve-trouble", label: "Trouble with body serve" },
-  { id: "low-ball-trouble", label: "Trouble with low balls" },
-  { id: "predictable-crosscourt", label: "Predictable crosscourt patterns" }
-];
-
-const RATING_FIELDS = [
-  { id: "firstServe", label: "1st Serve" },
-  { id: "secondServe", label: "2nd Serve" },
-  { id: "forehand", label: "Forehand" },
-  { id: "backhand", label: "Backhand" },
-  { id: "forehandVolley", label: "FH Volley" },
-  { id: "backhandVolley", label: "BH Volley" },
-  { id: "dropShot", label: "Drop Shot" },
-  { id: "lob", label: "Lob" },
-  { id: "overhead", label: "Overhead" },
-  { id: "fitness", label: "Fitness" },
-  { id: "mental", label: "Mental" }
-];
-
-const RATING_OPTIONS = [
-  { value: "excellent", label: "Excellent", score: 4 },
-  { value: "good", label: "Good", score: 3 },
-  { value: "average", label: "Average", score: 2 },
-  { value: "weak", label: "Weak", score: 1 }
-];
-
-const RATING_SCORE = {
-  excellent: 4,
-  good: 3,
-  average: 2,
-  weak: 1
-};
-
-const optionLabelLookup = new Map(
-  [...STYLE_OPTIONS, ...SURFACE_OPTIONS, ...STRENGTH_OPTIONS, ...WEAKNESS_OPTIONS].map((item) => [item.value || item.id, item.label])
-);
-
-function tactic(key, text, priority = 50) {
-  return { key, text, priority };
-}
-
-function meta(text, priority = 60) {
-  return { text, priority };
-}
-
-const STYLE_BLUEPRINTS = {
-  "aggressive-baseliner": {
-    headlines: {
-      planA: meta("Take time away and own the first strike.", 74),
-      planB: meta("If the match gets messy, add shape before you redirect.", 68)
-    },
-    meta: {
-      identity: meta("You win this matchup when you stay front-footed without redlining from bad court position.", 72)
-    },
-    planA: [
-      tactic("ab-forehand-first", "Build your point around the first forehand after serve or return instead of trying to finish off the very first ball.", 73),
-      tactic("ab-baseline-position", "Stand on or just inside the baseline whenever the incoming ball is neutral enough to take time away.", 66),
-      tactic("ab-close-forward", "After your best heavy crosscourt ball, close forward and finish rather than gifting them another neutral rally.", 64)
-    ],
-    planB: [
-      tactic("ab-margin-reset", "For two games, add one meter of net clearance and two deep crosscourts before you redirect down the line.", 68),
-      tactic("ab-simplify-pattern", "Simplify to one serve + one forehand pattern until you stop donating free errors.", 64)
-    ],
-    cues: [
-      tactic("ab-cue-1", "Early feet. Early contact. Heavy first forehand.", 72),
-      tactic("ab-cue-2", "Attack from balance, not from hope.", 67)
-    ],
-    avoid: [
-      tactic("ab-avoid-1", "Do not chase highlight-line winners from behind the baseline in neutral rallies.", 70),
-      tactic("ab-avoid-2", "Do not stay back too long after you already earned a short ball.", 62)
-    ],
-    reasons: [
-      tactic("ab-reason-1", "Aggressive baseliners get the most value when their tempo forces the opponent to defend before the point settles.", 66)
-    ]
-  },
-  "baseline-grinder": {
-    headlines: {
-      planA: meta("Win with depth, repeatability, and patience that asks the harder physical question.", 74),
-      planB: meta("If the match speeds up on you, slow the rally shape before you re-accelerate.", 67)
-    },
-    meta: {
-      identity: meta("Your edge is making the opponent hit uncomfortable extra balls instead of giving them cheap pace.", 70)
-    },
-    planA: [
-      tactic("bg-depth", "Make depth your first job: deep crosscourt balls that land close to the baseline are your platform.", 72),
-      tactic("bg-middle-reset", "Use deep middle balls when you are stretched so you can reset court position without bleeding errors.", 63),
-      tactic("bg-tolerance", "Stay in rallies long enough to expose impatience rather than trying to end points too early.", 69)
-    ],
-    planB: [
-      tactic("bg-height", "Add heavier height and shape for a full service game if the opponent is rushing you into lower-margin exchanges.", 66),
-      tactic("bg-change-ball", "Once the rally reaches neutral, use one lower slice or shorter angle to break rhythm before going back behind them.", 61)
-    ],
-    cues: [
-      tactic("bg-cue-1", "Depth first, direction second.", 71),
-      tactic("bg-cue-2", "One more solid ball before you change.", 68)
-    ],
-    avoid: [
-      tactic("bg-avoid-1", "Do not trade flat pace from identical court positions if that is what the opponent wants.", 68),
-      tactic("bg-avoid-2", "Do not let frustration shrink your targets.", 60)
-    ],
-    reasons: [
-      tactic("bg-reason-1", "Baseline grinders win value by shrinking the opponent's margin and extending the physical and mental workload.", 65)
-    ]
-  },
-  counterpuncher: {
-    headlines: {
-      planA: meta("Absorb first, redirect second, and make the opponent hit the extra pressure ball.", 73),
-      planB: meta("If absorbing is not enough, step in sooner and counter from inside the baseline.", 66)
-    },
-    meta: {
-      identity: meta("Your best tennis comes from frustrating the first-strike player and turning their pace into your timing.", 71)
-    },
-    planA: [
-      tactic("cp-absorb", "Use your depth tolerance to neutralize their first two attacks before you counter behind them.", 72),
-      tactic("cp-middle", "Keep more balls through the middle third early in points so you do not open the court for them too soon.", 63),
-      tactic("cp-redirect", "When they commit hard to one direction, redirect with your best balanced ball and make them recover on the run.", 67)
-    ],
-    planB: [
-      tactic("cp-step-in", "Step half a meter closer on return and neutral rally balls if the opponent is getting too comfortable owning time.", 64),
-      tactic("cp-short-angle", "Use one short angle per game to pull them wide and then counter behind the next recovery step.", 60)
-    ],
-    cues: [
-      tactic("cp-cue-1", "Take their pace. Give them one extra ball.", 71),
-      tactic("cp-cue-2", "Counter only after you have balance.", 65)
-    ],
-    avoid: [
-      tactic("cp-avoid-1", "Do not start trading unnecessary down-the-line risks if your defense is already asking questions.", 68),
-      tactic("cp-avoid-2", "Do not get pinned too far behind the baseline for whole games.", 61)
-    ],
-    reasons: [
-      tactic("cp-reason-1", "Counterpunchers create value when the opponent feels like they must win the point two or three times.", 63)
-    ]
-  },
-  "all-court-attacker": {
-    headlines: {
-      planA: meta("Win by changing the picture before the opponent can camp in one rhythm.", 74),
-      planB: meta("If the variety gets noisy, reduce to your best serve + first-ball pattern.", 65)
-    },
-    meta: {
-      identity: meta("You are strongest when you mix height, pace, and net pressure with a clear pattern behind each change.", 69)
-    },
-    planA: [
-      tactic("aca-mix", "Use deliberate changes of height, spin, and court position so the opponent never sits in one comfortable pattern.", 72),
-      tactic("aca-approach", "Attack short balls and move forward behind a ball that forces a low or rushed reply.", 66),
-      tactic("aca-return-variety", "Vary return height and direction enough that their first serve + first ball pattern never settles.", 61)
-    ],
-    planB: [
-      tactic("aca-simplify", "If your choices start leaking errors, simplify to one clear rally target and approach only off obvious short balls.", 66),
-      tactic("aca-body", "Use more body serves and body returns to keep the opponent from camping on angles.", 58)
-    ],
-    cues: [
-      tactic("aca-cue-1", "Change the picture with purpose, not for entertainment.", 71),
-      tactic("aca-cue-2", "Enter the net behind quality, not out of boredom.", 64)
-    ],
-    avoid: [
-      tactic("aca-avoid-1", "Do not use variety that leaves you out of position with no follow-up ball.", 67),
-      tactic("aca-avoid-2", "Do not make every rally a creativity contest.", 61)
-    ],
-    reasons: [
-      tactic("aca-reason-1", "All-court attackers separate themselves when each variation forces a specific defensive reply.", 62)
-    ]
-  },
-  "big-server-first-striker": {
-    headlines: {
-      planA: meta("Protect serve and win with one or two front-foot blows after the return comes back.", 76),
-      planB: meta("If the first strike is not landing, use more body targets and deeper middle balls to stabilize.", 69)
-    },
-    meta: {
-      identity: meta("Your advantage comes from serve quality and taking the first neutral ball away from the opponent.", 73)
-    },
-    planA: [
-      tactic("bsf-hold", "Treat every service game like a pressure game: first-serve percentage plus one aggressive follow-up ball.", 74),
-      tactic("bsf-short-points", "Shorten points whenever possible, especially after you earn a weak return or mid-court ball.", 66),
-      tactic("bsf-return-plus", "On return games, aim to steal one early strike each game instead of trying to out-grind from the back.", 61)
-    ],
-    planB: [
-      tactic("bsf-body", "If your wide or T targets are not landing, shift to heavier body serves and look for the next forehand to the open court.", 69),
-      tactic("bsf-middle", "When rallies start, use one deep middle reset before you try to finish from a stable position.", 60)
-    ],
-    cues: [
-      tactic("bsf-cue-1", "Serve with shape, then own the next ball.", 73),
-      tactic("bsf-cue-2", "Cheap points count the same.", 68)
-    ],
-    avoid: [
-      tactic("bsf-avoid-1", "Do not force return-game winners too early if your main edge is protecting serve cleanly.", 67),
-      tactic("bsf-avoid-2", "Do not overhit second balls just because the first serve did not finish the point.", 63)
-    ],
-    reasons: [
-      tactic("bsf-reason-1", "Big servers gain separation when they turn service games into scoreboard pressure and protect that edge calmly.", 64)
-    ]
-  },
-  "serve-volleyer": {
-    headlines: {
-      planA: meta("Use serve location and first-volley placement to keep the opponent under immediate stress.", 75),
-      planB: meta("If the rushes get picked off, disguise your forward moves and chip-charge more selectively.", 67)
-    },
-    meta: {
-      identity: meta("Your edge is forcing rushed returns and low passing decisions before the opponent settles.", 72)
-    },
-    planA: [
-      tactic("sv-location", "Serve with location first so your first volley is played from advantage, not from survival mode.", 73),
-      tactic("sv-first-volley", "Play the first volley deep through the larger court unless the opponent clearly gives you the open angle.", 68),
-      tactic("sv-return-game", "On return games, chip low and follow only behind balls that keep their contact below net height.", 60)
-    ],
-    planB: [
-      tactic("sv-fake", "Mix in occasional stay-back service points so the opponent cannot lock into one return picture.", 62),
-      tactic("sv-body-serve", "If passes are flying crosscourt, use more body serves and first volleys behind them.", 65)
-    ],
-    cues: [
-      tactic("sv-cue-1", "Low first volley. No hero angle needed.", 72),
-      tactic("sv-cue-2", "Close with balance, split early.", 64)
-    ],
-    avoid: [
-      tactic("sv-avoid-1", "Do not approach behind neutral or floating balls that leave easy passing angles.", 68),
-      tactic("sv-avoid-2", "Do not turn every second serve into a panic net rush.", 61)
-    ],
-    reasons: [
-      tactic("sv-reason-1", "Serve-and-volley tennis wins when the opponent is rushed into low-quality contact, not when you guess at the net.", 63)
-    ]
-  },
-  "disruptor-variety": {
-    headlines: {
-      planA: meta("Break rhythm with purpose: height, slice, short-deep changes, and uncomfortable contact points.", 73),
-      planB: meta("If the disruptions stop bothering them, go back to depth and pick one variation at a time.", 66)
-    },
-    meta: {
-      identity: meta("Your value comes from making the opponent hit balls they do not enjoy timing, not from random trick shots.", 71)
-    },
-    planA: [
-      tactic("dv-rhythm", "Use height, low slice, and depth changes to keep the opponent from hitting the same contact point twice in a row.", 72),
-      tactic("dv-short-deep", "Short-deep combinations work best after you first push them behind the baseline with a high heavy ball.", 66),
-      tactic("dv-middle-trap", "Use middle depth more often than you think so the next variation lands from a balanced court position.", 60)
-    ],
-    planB: [
-      tactic("dv-reset", "If the opponent handles the junk comfortably, reset with depth for a game and then reintroduce one disruptive tool.", 67),
-      tactic("dv-discipline", "Limit yourself to one surprise change per rally until your error rate cools down.", 60)
-    ],
-    cues: [
-      tactic("dv-cue-1", "Uncomfortable contact beats random creativity.", 72),
-      tactic("dv-cue-2", "Push them back first, then surprise them.", 65)
-    ],
-    avoid: [
-      tactic("dv-avoid-1", "Do not feed short neutral balls and call it variety.", 69),
-      tactic("dv-avoid-2", "Do not use drop shots without first earning a deep court position.", 62)
-    ],
-    reasons: [
-      tactic("dv-reason-1", "Disruptors are most dangerous when every variation has a setup ball behind it.", 63)
-    ]
-  }
-};
-
-const OPPONENT_RESPONSES = {
-  "aggressive-baseliner": {
-    meta: {
-      pressurePoint: meta("Deny the aggressive baseliner clean first-strike looks and force lower-contact or awkward-tempo balls.", 75)
-    },
-    planA: [
-      tactic("or-ab-low", "Use low balls, body patterns, and changed tempo so they cannot camp on the same contact height.", 72),
-      tactic("or-ab-extra-ball", "Make them hit one extra offensive ball before they get paid.", 67)
-    ],
-    planB: [
-      tactic("or-ab-middle", "If they are flying, play more deep middle and then change only once they must generate their own angle.", 63)
-    ],
-    avoid: [
-      tactic("or-ab-feed-slot", "Do not feed repeated medium-paced balls into their strike zone and favorite forehand setup.", 73)
-    ]
-  },
-  "baseline-grinder": {
-    meta: {
-      pressurePoint: meta("Move the grinder away from repeatable depth and make them defend change of shape or court position.", 72)
-    },
-    planA: [
-      tactic("or-bg-rhythm", "Break their steady rhythm with height changes, occasional low balls, and direction changes from balance.", 68),
-      tactic("or-bg-short", "Take controlled chances on short balls so the grinder does not get to extend every rally on their terms.", 64)
-    ],
-    planB: [
-      tactic("or-bg-serve-return", "If rallies get too physical, shift pressure onto serve quality and the first return ball.", 61)
-    ],
-    avoid: [
-      tactic("or-bg-flat-neutral", "Do not settle into identical neutral crosscourt exchanges if they enjoy repetition more than you do.", 70)
-    ]
-  },
-  counterpuncher: {
-    meta: {
-      pressurePoint: meta("Counterpunchers hate when you finish the point before they turn defense back into neutral.", 77)
-    },
-    planA: [
-      tactic("or-cp-close", "Use your first attack to open the court and your second move to finish, especially by closing forward.", 72),
-      tactic("or-cp-no-reset", "Do not give them free reset balls after you have already moved them.", 68)
-    ],
-    planB: [
-      tactic("or-cp-margin", "If they are absorbing everything, keep the same target but add more net clearance before your redirect.", 65)
-    ],
-    avoid: [
-      tactic("or-cp-hurry", "Do not panic because they make one more ball. Stay committed to the pattern, not the first miss.", 69)
-    ]
-  },
-  "all-court-attacker": {
-    meta: {
-      pressurePoint: meta("The all-court attacker becomes more manageable when you force them to play simple balls from uncomfortable positions.", 71)
-    },
-    planA: [
-      tactic("or-aca-body", "Use body serves, body returns, and deep middle depth to remove the easy angle that starts their variety.", 67),
-      tactic("or-aca-pass", "Pass or counter mostly through the middle until their net entries are clearly earned.", 60)
-    ],
-    planB: [
-      tactic("or-aca-boring", "If they are out-creating you, make the match a little boring for two games with shape, middle, and patience.", 63)
-    ],
-    avoid: [
-      tactic("or-aca-random", "Do not try to out-variety the variety player without first stopping their patterns.", 64)
-    ]
-  },
-  "big-server-first-striker": {
-    meta: {
-      pressurePoint: meta("Against the big server, neutralizing the first two balls matters more than winning flashy rallies.", 78)
-    },
-    planA: [
-      tactic("or-bsf-return-block", "Block or chip the return deep through the middle third and make them hit their next ball from lower-quality court position.", 74),
-      tactic("or-bsf-lengthen", "Whenever the point starts, push it one or two balls longer than they want.", 66)
-    ],
-    planB: [
-      tactic("or-bsf-back-up", "If the serve is overwhelming you, back up slightly, prioritize depth, and stop chasing low-margin return winners.", 68)
-    ],
-    avoid: [
-      tactic("or-bsf-hero-return", "Do not try to win every big-serve point with a heroic return swing.", 72)
-    ]
-  },
-  "serve-volleyer": {
-    meta: {
-      pressurePoint: meta("Serve-and-volley players dislike body returns, dipping contact, and passing decisions taken out of their comfort zone.", 79)
-    },
-    planA: [
-      tactic("or-sv-body", "Use body or backhand returns that dip at their feet so the first volley is defensive.", 75),
-      tactic("or-sv-middle-pass", "When rushed, pass through the middle and force an extra volley before chasing angles.", 67)
-    ],
-    planB: [
-      tactic("or-sv-lob", "If they close too well, add one surprise topspin lob each return game to stretch their court positioning.", 59)
-    ],
-    avoid: [
-      tactic("or-sv-angle-chase", "Do not overforce miracle pass angles from outside the court.", 69)
-    ]
-  },
-  "disruptor-variety": {
-    meta: {
-      pressurePoint: meta("The disruptor loses value when you refuse to get emotional about ugly balls and take time away on the next good contact.", 73)
-    },
-    planA: [
-      tactic("or-dv-early", "Take the first reasonable ball early so their height and junk do not get full time to settle.", 70),
-      tactic("or-dv-depth", "Use depth before pace; deep balls stop them from turning every rally into a chaos exchange.", 65)
-    ],
-    planB: [
-      tactic("or-dv-simple", "If the weird ball pattern bothers you, simplify the rally to crosscourt depth for a game and then accelerate again.", 62)
-    ],
-    avoid: [
-      tactic("or-dv-ego", "Do not let frustration make you overhit balls that are only mildly uncomfortable.", 68)
-    ]
-  }
-};
-
-const MATCHUP_OVERRIDES = {
-  "aggressive-baseliner|counterpuncher": {
-    headlines: {
-      planA: meta("Use your tempo plus forward movement before the counterpuncher settles.", 82),
-      planB: meta("If they are soaking up pace, keep the target but add more shape before you finish.", 77)
-    },
-    planA: [
-      tactic("mo-ab-cp-1", "Attack the second serve or first neutral ball early, then close forward behind the next deep crosscourt ball.", 80),
-      tactic("mo-ab-cp-2", "Direct 65-70% of your rally pressure into the weaker wing or the body so they cannot reset with clean angles.", 74)
-    ],
-    planB: [
-      tactic("mo-ab-cp-3", "If they keep extending rallies, stop changing direction too early; go two heavy crosscourts first, then redirect.", 76)
-    ],
-    reasons: [
-      tactic("mo-ab-cp-r", "This matchup is won by finishing your advantage before the counterpuncher turns defense into another neutral pattern.", 78)
-    ]
-  },
-  "aggressive-baseliner|baseline-grinder": {
-    headlines: {
-      planA: meta("Push the grinder off repeatable depth before they settle into rally comfort.", 79),
-      planB: meta("If your offense is leaking, attack with patience instead of speed alone.", 72)
-    },
-    planA: [
-      tactic("mo-ab-bg-1", "Take balls earlier and use inside-out forehands to expose the grinder's recovery step before they camp in deep rhythm.", 75)
-    ],
-    planB: [
-      tactic("mo-ab-bg-2", "If they are making every ball, use heavier spin and only change direction from balance.", 70)
-    ]
-  },
-  "baseline-grinder|big-server-first-striker": {
-    headlines: {
-      planA: meta("Neutralize serve first, then drag the match into one extra neutral ball.", 81),
-      planB: meta("If you are getting rushed, retreat half a step on return and prioritize depth over aggression.", 75)
-    },
-    planA: [
-      tactic("mo-bg-bsf-1", "Block the serve return deep middle, then make them hit at least one extra rally ball before you open the court.", 79)
-    ],
-    planB: [
-      tactic("mo-bg-bsf-2", "If their serve is dominating, start returns slightly deeper and focus on height and center targets until you settle.", 74)
-    ]
-  },
-  "serve-volleyer|counterpuncher": {
-    headlines: {
-      planA: meta("Keep the counterpuncher low and rushed before they make the passing lanes predictable.", 79),
-      planB: meta("If they read every rush, vary when you come forward rather than abandoning your identity.", 72)
-    },
-    planA: [
-      tactic("mo-sv-cp-1", "Use body serves and first volleys behind the opponent to stop them setting up clean passing angles.", 77)
-    ],
-    planB: [
-      tactic("mo-sv-cp-2", "If returns are dipping perfectly, stay back occasionally and attack the first shorter reply instead.", 70)
-    ]
-  }
-};
-
-const PLAYER_STRENGTH_RULES = {
-  "big-first-serve": {
-    planA: [
-      tactic("ps-big-first-serve", "Lean on a high first-serve percentage so your first tactical advantage starts 1-0 instead of neutral.", 74)
-    ],
-    reasons: [
-      tactic("psr-big-first-serve", "A strong first serve earns simpler holds and creates scoreboard pressure that feeds the rest of the plan.", 65)
-    ]
-  },
-  "serve-placement": {
-    planA: [
-      tactic("ps-serve-placement", "Use serve location as a tactic tool: body on pressure points, wide only when it opens the next ball cleanly.", 72)
-    ]
-  },
-  "heavy-forehand": {
-    planA: [
-      tactic("ps-heavy-forehand", "Look to dictate with your heavy forehand into the opponent's weaker wing or into their body before changing direction.", 78)
-    ],
-    cues: [
-      tactic("psc-heavy-forehand", "Forehand first, then the open court.", 71)
-    ]
-  },
-  "inside-out-forehand": {
-    planA: [
-      tactic("ps-inside-out", "Whenever you earn time, run your forehand around the backhand corner and start with the inside-out pattern before going inside-in.", 75)
-    ]
-  },
-  "solid-backhand": {
-    planA: [
-      tactic("ps-solid-backhand", "Use your backhand crosscourt as a stable pressure lane so you can wait for the right change-of-direction ball.", 69)
-    ]
-  },
-  "return-pressure": {
-    planA: [
-      tactic("ps-return-pressure", "Step inside on second serves and force the opponent to start rallies from defense or from the middle of the court.", 79)
-    ]
-  },
-  consistency: {
-    planA: [
-      tactic("ps-consistency", "Accept a five-to-seven ball build if needed; your consistency lets you attack after the pattern has actually opened.", 68)
-    ]
-  },
-  "court-speed": {
-    planA: [
-      tactic("ps-court-speed", "Use your speed to stretch them wide and then strike behind their recovery instead of going for the line too early.", 71)
-    ]
-  },
-  "net-finishing": {
-    planA: [
-      tactic("ps-net-finishing", "Any ball that forces a floating or low-quality reply is a green light to close and finish at net.", 76)
-    ]
-  },
-  "slice-variety": {
-    planA: [
-      tactic("ps-slice-variety", "Use low skid slices to change rhythm, especially before attacking the next higher-contact ball.", 69)
-    ]
-  },
-  "drop-shot-touch": {
-    planA: [
-      tactic("ps-drop", "Only use the drop shot after you first push the opponent behind the baseline or when their recovery position gets lazy.", 66)
-    ]
-  },
-  "mental-resilience": {
-    planB: [
-      tactic("ps-mental", "Stay with the pattern for a full service game before changing. Your composure is an asset, not just your strokes.", 68)
-    ]
-  },
-  "passing-shots": {
-    planA: [
-      tactic("ps-passing", "If the opponent approaches too casually, invite the net entry with a low reply and trust your passing patterns.", 67)
-    ]
-  },
-  "short-angles": {
-    planA: [
-      tactic("ps-short-angles", "Use short angles after depth has pushed the opponent back so their first recovery step gets exposed.", 70)
-    ]
-  }
-};
-
-const PLAYER_WEAKNESS_RULES = {
-  "weak-second-serve": {
-    headlines: {
-      planB: meta("Protect the second serve before you worry about flashy return games.", 78)
-    },
-    meta: {
-      adjustmentTrigger: meta("If they start camping on your second serve or you lose two service games quickly, shift to bigger targets and body patterns.", 80)
-    },
-    planA: [
-      tactic("pw-weak-second-serve-a", "Use safer second-serve targets and plan the first groundstroke to the middle or body so you are not defending immediately.", 79)
-    ],
-    planB: [
-      tactic("pw-weak-second-serve-b", "If they keep attacking second serves, serve 5-10% slower with more shape and make them hit the first aggressive ball from a tougher spot.", 76)
-    ],
-    avoid: [
-      tactic("pw-weak-second-serve-c", "Do not chase low-percentage second-serve bombs when scoreboard pressure is already on you.", 75)
-    ]
-  },
-  "backhand-breaks-down": {
-    planA: [
-      tactic("pw-backhand-a", "Protect your backhand by running around to forehand sooner or using a neutralizing slice when the opponent pins that wing.", 74)
-    ],
-    planB: [
-      tactic("pw-backhand-b", "If they keep crowding your backhand, use more middle depth and avoid forcing down-the-line backhands from defense.", 70)
-    ]
-  },
-  "forehand-sprays": {
-    planB: [
-      tactic("pw-forehand-a", "Use more height and spin on forehands for two games and stop changing direction unless you are fully balanced.", 73)
-    ],
-    avoid: [
-      tactic("pw-forehand-b", "Do not keep trying to hit through pace with a leaking forehand from equal court position.", 68)
-    ]
-  },
-  "return-struggles": {
-    planA: [
-      tactic("pw-return-a", "On return, prioritize depth through the middle third rather than trying to do damage on the first swing.", 72)
-    ],
-    planB: [
-      tactic("pw-return-b", "If you are missing returns, simplify your backswing and look only for playable neutral depth.", 69)
-    ]
-  },
-  "short-balls": {
-    planA: [
-      tactic("pw-short-balls-a", "If your neutral ball sits up, commit to heavier shape and deeper targets so you stop giving the opponent attackable mid-court pace.", 69)
-    ]
-  },
-  "net-discomfort": {
-    planB: [
-      tactic("pw-net-a", "Approach only behind obvious floaters or stretched replies so your first volley is simple rather than nervous.", 64)
-    ]
-  },
-  "slice-discomfort": {
-    planB: [
-      tactic("pw-slice-a", "Take the slice earlier and lift it high crosscourt instead of trying to flatten through a low contact point.", 70)
-    ]
-  },
-  "height-depth-discomfort": {
-    planB: [
-      tactic("pw-height-a", "Back up half a step and use more height through the middle until your spacing feels clean again.", 69)
-    ]
-  },
-  "wide-recovery": {
-    avoid: [
-      tactic("pw-wide-a", "Do not overcommit to the first angle if your recovery after wide balls is one of your leaks.", 66)
-    ]
-  },
-  "pressure-overhit": {
-    planB: [
-      tactic("pw-pressure-a", "When trailing, use a simple two-ball build: one solid crosscourt, one deep middle, then reassess.", 74)
-    ],
-    cues: [
-      tactic("pw-pressure-b", "Bigger target, same intent.", 69)
-    ]
-  },
-  "fitness-drop": {
-    planA: [
-      tactic("pw-fitness-a", "Use more first-strike intent on your serve games and avoid volunteering for long neutral rallies with no tactical reason.", 70)
-    ]
-  },
-  "body-serve-trouble": {
-    planB: [
-      tactic("pw-body-serve-a", "Stand a half-step back on return and clear the hips early so the body serve does not jam your first move.", 68)
-    ]
-  },
-  "low-ball-trouble": {
-    planB: [
-      tactic("pw-low-ball-a", "Lower your base sooner and roll low balls with shape instead of forcing a flat contact point.", 68)
-    ]
-  },
-  "predictable-crosscourt": {
-    planB: [
-      tactic("pw-predictable-a", "Schedule one deliberate change of direction after three neutral balls so the opponent cannot sit on your crosscourt lane.", 71)
-    ]
-  }
-};
-
-const OPPONENT_STRENGTH_RULES = {
-  "big-first-serve": {
-    planA: [
-      tactic("os-big-first-serve", "Respect the serve by prioritizing a playable deep return over an ambitious swing winner.", 77)
-    ]
-  },
-  "serve-placement": {
-    planB: [
-      tactic("os-serve-placement", "Do not camp on one return spot; protect the body serve and be willing to adjust your start position.", 65)
-    ]
-  },
-  "heavy-forehand": {
-    planA: [
-      tactic("os-heavy-forehand", "Avoid feeding repeated medium-paced balls into their forehand slot; jam the body or pressure the other wing first.", 76)
-    ]
-  },
-  "inside-out-forehand": {
-    planB: [
-      tactic("os-inside-out", "Protect the ad-court corner and occasionally show them the line so they cannot camp on their inside-out forehand.", 64)
-    ]
-  },
-  "solid-backhand": {
-    avoid: [
-      tactic("os-solid-backhand", "Do not mindlessly hammer the backhand wing if that side is one of their strengths.", 72)
-    ]
-  },
-  "return-pressure": {
-    planA: [
-      tactic("os-return-pressure", "Raise your first-serve percentage and use more body or jam patterns so they cannot start every return game on offense.", 76)
-    ]
-  },
-  consistency: {
-    avoid: [
-      tactic("os-consistency", "Do not assume they will miss just because the rally gets long. You still need a real tactical lever.", 74)
-    ]
-  },
-  "court-speed": {
-    planA: [
-      tactic("os-court-speed", "Use wrong-foot patterns and shots behind their recovery if they cover space exceptionally well.", 69)
-    ]
-  },
-  "net-finishing": {
-    planA: [
-      tactic("os-net-finishing", "Keep returns and passing replies low through the middle so their first volley is uncomfortable.", 72)
-    ]
-  },
-  "slice-variety": {
-    planB: [
-      tactic("os-slice-variety", "Simplify your feet and take slices a little earlier so you do not get dragged into ugly timing.", 63)
-    ]
-  },
-  "drop-shot-touch": {
-    planB: [
-      tactic("os-drop", "Hold a slightly tighter court position so the drop shot is not free points for them.", 61)
-    ]
-  },
-  "mental-resilience": {
-    reasons: [
-      tactic("os-mental", "This opponent is unlikely to donate the match mentally, so the plan needs real tactical edges instead of hope.", 68)
-    ]
-  },
-  "passing-shots": {
-    avoid: [
-      tactic("os-passing", "Do not approach behind soft neutral balls if passing shots are one of their strengths.", 71)
-    ]
-  },
-  "short-angles": {
-    planB: [
-      tactic("os-short-angles", "Recover a little narrower so you are ready for the short angle instead of overprotecting the line.", 62)
-    ]
-  }
-};
-
-const OPPONENT_WEAKNESS_RULES = {
-  "weak-second-serve": {
-    meta: {
-      pressurePoint: meta("Their second serve is the most attackable pressure point in the matchup.", 82)
-    },
-    planA: [
-      tactic("ow-weak-second-serve", "Step inside on second serves and send aggressive returns 65-70% to their weaker wing or deep middle to start the point on your terms.", 83)
-    ]
-  },
-  "backhand-breaks-down": {
-    meta: {
-      pressurePoint: meta("Their backhand can be stress-tested under repeated tempo and depth.", 80)
-    },
-    planA: [
-      tactic("ow-backhand", "Make the backhand prove itself. Send the majority of your neutral rally pressure there until they hold that wing cleanly.", 81)
-    ]
-  },
-  "forehand-sprays": {
-    planA: [
-      tactic("ow-forehand", "Rush their forehand with body pressure and low balls so they feel crowded instead of free-swinging.", 74)
-    ]
-  },
-  "return-struggles": {
-    planA: [
-      tactic("ow-return", "Protect your service games with high first-serve percentage because their return struggles should turn into scoreboard pressure quickly.", 79)
-    ]
-  },
-  "short-balls": {
-    planA: [
-      tactic("ow-short-balls", "If their neutral ball sits up, use depth first and then attack the next mid-court ball with conviction.", 69)
-    ]
-  },
-  "net-discomfort": {
-    planA: [
-      tactic("ow-net", "Use short slice, angle, or drop variations to draw them forward if they are uncomfortable finishing at net.", 69)
-    ]
-  },
-  "slice-discomfort": {
-    planA: [
-      tactic("ow-slice", "Feed them low skid slices and make them lift from uncomfortable contact points until they prove they can handle it.", 74)
-    ]
-  },
-  "height-depth-discomfort": {
-    planA: [
-      tactic("ow-height-depth", "Use height and depth first, then flatten the next shorter reply. They do not enjoy repeated heavy contact above shoulder level.", 78)
-    ]
-  },
-  "wide-recovery": {
-    planA: [
-      tactic("ow-wide", "Stretch them wide once and hit behind the first recovery step instead of going for the sideline outright.", 77)
-    ]
-  },
-  "pressure-overhit": {
-    planB: [
-      tactic("ow-pressure", "If the score gets tight, make them play one more neutral ball. Players who overhit when trailing usually leak under repetition.", 73)
-    ]
-  },
-  "fitness-drop": {
-    planA: [
-      tactic("ow-fitness", "Test their legs early with heavier physical rallies so their quality drops later when the scoreboard matters most.", 68)
-    ]
-  },
-  "body-serve-trouble": {
-    planA: [
-      tactic("ow-body-serve", "Body serves should be a staple, especially on pressure points, if they struggle to clear the jammed contact.", 77)
-    ]
-  },
-  "low-ball-trouble": {
-    planA: [
-      tactic("ow-low-ball", "Use slice, skidding returns, and lower-contact patterns because low balls are an uncomfortable height for them.", 75)
-    ]
-  },
-  "predictable-crosscourt": {
-    planA: [
-      tactic("ow-predictable", "Sit on their favorite crosscourt lane and counter behind it once or twice each game to make them doubt the pattern.", 70)
-    ]
-  }
-};
-
-const SURFACE_RULES = {
-  hard: {
-    planA: [
-      tactic("sr-hard-a", "Hard court rewards early court position and clear serve + first-ball patterns, so stay intentional with your first strike.", 65)
-    ],
-    planB: [
-      tactic("sr-hard-b", "If the pace is rushing you, use deeper middle targets for a game before reopening the court.", 59)
-    ]
-  },
-  clay: {
-    planA: [
-      tactic("sr-clay-a", "Clay gives you time, so use more height, shape, and repeated depth before flattening out the shorter ball.", 71)
-    ],
-    planB: [
-      tactic("sr-clay-b", "If you are pressing, remember the court lets you build longer: one more heavy ball before you change direction.", 66)
-    ]
-  },
-  grass: {
-    planA: [
-      tactic("sr-grass-a", "Grass rewards low contact and first-strike clarity, so use skidding patterns and simpler finishes.", 71)
-    ],
-    planB: [
-      tactic("sr-grass-b", "If rallies are chaotic, use body serves and through-the-middle depth to keep the bounce low and the picture simpler.", 63)
-    ]
-  },
-  indoor: {
-    planA: [
-      tactic("sr-indoor-a", "Indoor conditions usually reward front-foot tennis, so be decisive with serve location and early contact.", 69)
-    ],
-    planB: [
-      tactic("sr-indoor-b", "If both of you are rushing, add a little more net clearance rather than giving away flat errors.", 60)
-    ]
-  }
-};
-
-const PRIORITY_RULES = {
-  balanced: {},
-  "protect-serve": {
-    planA: [
-      tactic("priority-serve-a", "Make holding serve the anchor of the match: raise first-serve percentage and simplify the first rally ball behind it.", 77)
-    ],
-    planB: [
-      tactic("priority-serve-b", "If return games are scarce, stop pressing for them and keep squeezing value from clean holds.", 65)
-    ]
-  },
-  "attack-return": {
-    planA: [
-      tactic("priority-return-a", "Look for one aggressive return pattern every game, especially against second serves or body-serve habits you can read.", 77)
-    ]
-  },
-  "reduce-errors": {
-    headlines: {
-      planB: meta("If the match is running through your error count, lower the risk before you raise the pressure again.", 77)
-    },
-    planB: [
-      tactic("priority-errors-a", "Shrink your targets for two games and make the opponent hit one extra pressure ball before you accelerate.", 78)
-    ],
-    avoid: [
-      tactic("priority-errors-b", "Do not confuse urgency with low-percentage shot selection.", 72)
-    ]
-  }
-};
-
-const DEMO_MATCHUP = {
-  playerName: "Jannik Sinner",
-  opponentName: "Carlos Alcaraz",
-  playerImage: "assets/jannik-sinner-demo.jpg",
-  playerImageFallback: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Jannik_Sinner_2025_US_Open.jpg/250px-Jannik_Sinner_2025_US_Open.jpg",
-  opponentImage: "assets/carlos-alcaraz-demo.jpg",
-  opponentImageFallback: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Carlos_Alcaraz_2025_FO.jpg/250px-Carlos_Alcaraz_2025_FO.jpg",
-  playerStyle: "aggressive-baseliner",
-  opponentStyle: "all-court-attacker",
-  playerStrengths: ["big-first-serve", "heavy-forehand", "solid-backhand", "return-pressure"],
-  playerWeaknesses: ["net-discomfort", "pressure-overhit"],
-  opponentStrengths: ["court-speed", "drop-shot-touch", "short-angles", "net-finishing"],
-  opponentWeaknesses: ["forehand-sprays", "body-serve-trouble"],
-  playerRatings: {
-    firstServe: "excellent",
-    secondServe: "good",
-    forehand: "excellent",
-    backhand: "excellent",
-    forehandVolley: "average",
-    backhandVolley: "average",
-    dropShot: "average",
-    lob: "average",
-    overhead: "good",
-    fitness: "excellent",
-    mental: "excellent"
-  },
-  opponentRatings: {
-    firstServe: "good",
-    secondServe: "good",
-    forehand: "excellent",
-    backhand: "good",
-    forehandVolley: "good",
-    backhandVolley: "good",
-    dropShot: "excellent",
-    lob: "good",
-    overhead: "good",
-    fitness: "excellent",
-    mental: "excellent"
-  },
-  surface: "hard",
-  priority: "balanced"
-};
-
-const PRESET_MATCHUPS = [
-  {
-    id: "sinner-alcaraz",
-    label: "ATP | Jannik Sinner vs Carlos Alcaraz",
-    scenario: DEMO_MATCHUP
-  },
-  {
-    id: "djokovic-medvedev",
-    label: "ATP | Novak Djokovic vs Daniil Medvedev",
-    scenario: {
-      playerName: "Novak Djokovic",
-      opponentName: "Daniil Medvedev",
-      playerStyle: "all-court-attacker",
-      opponentStyle: "counterpuncher",
-      playerStrengths: ["return-pressure", "solid-backhand", "mental-resilience", "court-speed"],
-      playerWeaknesses: ["pressure-overhit"],
-      opponentStrengths: ["consistency", "court-speed", "big-first-serve", "mental-resilience"],
-      opponentWeaknesses: ["net-discomfort", "low-ball-trouble"],
-      playerRatings: {
-        firstServe: "good",
-        secondServe: "excellent",
-        forehand: "good",
-        backhand: "excellent",
-        forehandVolley: "good",
-        backhandVolley: "good",
-        dropShot: "good",
-        lob: "good",
-        overhead: "good",
-        fitness: "excellent",
-        mental: "excellent"
-      },
-      opponentRatings: {
-        firstServe: "excellent",
-        secondServe: "good",
-        forehand: "good",
-        backhand: "excellent",
-        forehandVolley: "average",
-        backhandVolley: "average",
-        dropShot: "average",
-        lob: "good",
-        overhead: "good",
-        fitness: "excellent",
-        mental: "excellent"
-      },
-      surface: "hard",
-      priority: "balanced"
+const siteI18n = {
+  getLanguage() {
+    return window.TSL_I18N && typeof window.TSL_I18N.getLanguage === "function"
+      ? window.TSL_I18N.getLanguage()
+      : "en";
+  },
+  t(key, fallback, vars) {
+    if (window.TSL_I18N && typeof window.TSL_I18N.t === "function") {
+      return window.TSL_I18N.t(key, fallback, vars);
     }
-  },
-  {
-    id: "swiatek-sabalenka",
-    label: "WTA | Iga Swiatek vs Aryna Sabalenka",
-    scenario: {
-      playerName: "Iga Swiatek",
-      opponentName: "Aryna Sabalenka",
-      playerStyle: "aggressive-baseliner",
-      opponentStyle: "big-server-first-striker",
-      playerStrengths: ["heavy-forehand", "return-pressure", "court-speed", "mental-resilience"],
-      playerWeaknesses: ["net-discomfort"],
-      opponentStrengths: ["big-first-serve", "heavy-forehand", "mental-resilience"],
-      opponentWeaknesses: ["forehand-sprays", "low-ball-trouble"],
-      playerRatings: {
-        firstServe: "good",
-        secondServe: "good",
-        forehand: "excellent",
-        backhand: "good",
-        forehandVolley: "average",
-        backhandVolley: "average",
-        dropShot: "good",
-        lob: "good",
-        overhead: "good",
-        fitness: "excellent",
-        mental: "excellent"
-      },
-      opponentRatings: {
-        firstServe: "excellent",
-        secondServe: "good",
-        forehand: "excellent",
-        backhand: "good",
-        forehandVolley: "average",
-        backhandVolley: "average",
-        dropShot: "average",
-        lob: "average",
-        overhead: "good",
-        fitness: "excellent",
-        mental: "excellent"
-      },
-      surface: "clay",
-      priority: "attack-return"
-    }
-  },
-  {
-    id: "gauff-rybakina",
-    label: "WTA | Coco Gauff vs Elena Rybakina",
-    scenario: {
-      playerName: "Coco Gauff",
-      opponentName: "Elena Rybakina",
-      playerStyle: "counterpuncher",
-      opponentStyle: "big-server-first-striker",
-      playerStrengths: ["court-speed", "solid-backhand", "mental-resilience", "return-pressure"],
-      playerWeaknesses: ["forehand-sprays", "pressure-overhit"],
-      opponentStrengths: ["big-first-serve", "heavy-forehand"],
-      opponentWeaknesses: ["fitness-drop", "net-discomfort"],
-      playerRatings: {
-        firstServe: "good",
-        secondServe: "good",
-        forehand: "average",
-        backhand: "excellent",
-        forehandVolley: "average",
-        backhandVolley: "average",
-        dropShot: "average",
-        lob: "good",
-        overhead: "good",
-        fitness: "excellent",
-        mental: "excellent"
-      },
-      opponentRatings: {
-        firstServe: "excellent",
-        secondServe: "good",
-        forehand: "excellent",
-        backhand: "good",
-        forehandVolley: "average",
-        backhandVolley: "average",
-        dropShot: "average",
-        lob: "average",
-        overhead: "good",
-        fitness: "good",
-        mental: "good"
-      },
-      surface: "hard",
-      priority: "protect-serve"
-    }
-  },
-  {
-    id: "pegula-jabeur",
-    label: "WTA | Jessica Pegula vs Ons Jabeur",
-    scenario: {
-      playerName: "Jessica Pegula",
-      opponentName: "Ons Jabeur",
-      playerStyle: "baseline-grinder",
-      opponentStyle: "disruptor-variety",
-      playerStrengths: ["consistency", "return-pressure", "solid-backhand"],
-      playerWeaknesses: ["net-discomfort"],
-      opponentStrengths: ["drop-shot-touch", "slice-variety", "short-angles"],
-      opponentWeaknesses: ["fitness-drop", "weak-second-serve"],
-      playerRatings: {
-        firstServe: "good",
-        secondServe: "good",
-        forehand: "good",
-        backhand: "good",
-        forehandVolley: "average",
-        backhandVolley: "average",
-        dropShot: "average",
-        lob: "good",
-        overhead: "good",
-        fitness: "good",
-        mental: "good"
-      },
-      opponentRatings: {
-        firstServe: "average",
-        secondServe: "average",
-        forehand: "good",
-        backhand: "good",
-        forehandVolley: "good",
-        backhandVolley: "good",
-        dropShot: "excellent",
-        lob: "good",
-        overhead: "average",
-        fitness: "average",
-        mental: "good"
-      },
-      surface: "hard",
-      priority: "balanced"
-    }
-  }
-];
-
-const state = {
-  selected: {
-    playerStrengths: new Set(),
-    playerWeaknesses: new Set(),
-    opponentStrengths: new Set(),
-    opponentWeaknesses: new Set()
-  }
-};
-
-const SINGLES_STORAGE_KEY = "ttiq-singles-saved-plans-v1";
-
-const SINGLES_TRAIT_MATCHUPS = {
-  "big-first-serve": ["return-struggles", "body-serve-trouble"],
-  "serve-placement": ["return-struggles", "body-serve-trouble", "predictable-crosscourt"],
-  "heavy-forehand": ["backhand-breaks-down", "wide-recovery"],
-  "inside-out-forehand": ["backhand-breaks-down", "wide-recovery", "predictable-crosscourt"],
-  "solid-backhand": ["forehand-sprays", "predictable-crosscourt"],
-  "return-pressure": ["weak-second-serve", "body-serve-trouble"],
-  consistency: ["pressure-overhit", "fitness-drop"],
-  "court-speed": ["wide-recovery", "fitness-drop"],
-  "net-finishing": ["net-discomfort", "short-balls"],
-  "slice-variety": ["slice-discomfort", "low-ball-trouble", "height-depth-discomfort"],
-  "drop-shot-touch": ["fitness-drop", "height-depth-discomfort"],
-  "mental-resilience": ["pressure-overhit"],
-  "passing-shots": ["net-discomfort"],
-  "short-angles": ["wide-recovery", "predictable-crosscourt"]
-};
-
-let currentSinglesView = null;
-
-const elements = {
-  form: document.getElementById("matchupForm"),
-  presetMatchup: document.getElementById("presetMatchup"),
-  loadPresetButton: document.getElementById("loadPresetButton"),
-  presetNote: document.getElementById("presetNote"),
-  presetNoteTitle: document.getElementById("presetNoteTitle"),
-  presetNoteText: document.getElementById("presetNoteText"),
-  playerName: document.getElementById("playerName"),
-  opponentName: document.getElementById("opponentName"),
-  playerStyle: document.getElementById("playerStyle"),
-  opponentStyle: document.getElementById("opponentStyle"),
-  surface: document.getElementById("surface"),
-  priority: document.getElementById("priority"),
-  playerPhotoPreview: document.getElementById("playerPhotoPreview"),
-  opponentPhotoPreview: document.getElementById("opponentPhotoPreview"),
-  playerPhotoFallback: document.getElementById("playerPhotoFallback"),
-  opponentPhotoFallback: document.getElementById("opponentPhotoFallback"),
-  summaryPlayerPhoto: document.getElementById("summaryPlayerPhoto"),
-  summaryOpponentPhoto: document.getElementById("summaryOpponentPhoto"),
-  summaryPlayerFallback: document.getElementById("summaryPlayerFallback"),
-  summaryOpponentFallback: document.getElementById("summaryOpponentFallback"),
-  summaryPlayerLabel: document.getElementById("summaryPlayerLabel"),
-  summaryOpponentLabel: document.getElementById("summaryOpponentLabel"),
-  playerRatings: document.getElementById("playerRatings"),
-  opponentRatings: document.getElementById("opponentRatings"),
-  playerStrengths: document.getElementById("playerStrengths"),
-  playerWeaknesses: document.getElementById("playerWeaknesses"),
-  opponentStrengths: document.getElementById("opponentStrengths"),
-  opponentWeaknesses: document.getElementById("opponentWeaknesses"),
-  playerStrengthCount: document.getElementById("playerStrengthCount"),
-  playerWeaknessCount: document.getElementById("playerWeaknessCount"),
-  opponentStrengthCount: document.getElementById("opponentStrengthCount"),
-  opponentWeaknessCount: document.getElementById("opponentWeaknessCount"),
-  demoButton: document.getElementById("demoButton"),
-  demoSummaryButton: document.getElementById("demoSummaryButton"),
-  resetButton: document.getElementById("resetButton"),
-  resetSummaryButton: document.getElementById("resetSummaryButton"),
-  saveButton: document.getElementById("saveButton"),
-  printButton: document.getElementById("printButton"),
-  copyButton: document.getElementById("copyButton"),
-  matchupHeadline: document.getElementById("matchupHeadline"),
-  strategyNarrative: document.getElementById("strategyNarrative"),
-  playerStylePill: document.getElementById("playerStylePill"),
-  opponentStylePill: document.getElementById("opponentStylePill"),
-  surfacePill: document.getElementById("surfacePill"),
-  pressurePointText: document.getElementById("pressurePointText"),
-  fallbackTriggerText: document.getElementById("fallbackTriggerText"),
-  identityReminderText: document.getElementById("identityReminderText"),
-  planATitle: document.getElementById("planATitle"),
-  planASummary: document.getElementById("planASummary"),
-  planAList: document.getElementById("planAList"),
-  planBTitle: document.getElementById("planBTitle"),
-  planBSummary: document.getElementById("planBSummary"),
-  planBList: document.getElementById("planBList"),
-  cueList: document.getElementById("cueList"),
-  avoidList: document.getElementById("avoidList"),
-  reasonList: document.getElementById("reasonList"),
-  matchupRatingValue: document.getElementById("matchupRatingValue"),
-  matchupRatingLabel: document.getElementById("matchupRatingLabel"),
-  matchupRatingSummary: document.getElementById("matchupRatingSummary"),
-  matchupRatingList: document.getElementById("matchupRatingList"),
-  matchCardTitle: document.getElementById("matchCardTitle"),
-  matchCardSummary: document.getElementById("matchCardSummary"),
-  matchCardList: document.getElementById("matchCardList"),
-  savedPlansEmpty: document.getElementById("savedPlansEmpty"),
-  savedPlansList: document.getElementById("savedPlansList")
-};
-
-function populateSelect(select, options) {
-  select.innerHTML = "";
-  options.forEach((option) => {
-    const node = document.createElement("option");
-    node.value = option.value;
-    node.textContent = option.label;
-    select.appendChild(node);
-  });
-}
-
-function populatePresetSelect() {
-  elements.presetMatchup.innerHTML = "";
-  PRESET_MATCHUPS.forEach((preset) => {
-    const option = document.createElement("option");
-    option.value = preset.id;
-    option.textContent = preset.label;
-    elements.presetMatchup.appendChild(option);
-  });
-}
-
-function getPresetById(id) {
-  return PRESET_MATCHUPS.find((preset) => preset.id === id) || PRESET_MATCHUPS[0];
-}
-
-function showPresetNote(presetLabel) {
-  elements.presetNote.hidden = false;
-  elements.presetNoteTitle.textContent = `Demo preset loaded: ${presetLabel}`;
-  elements.presetNoteText.textContent =
-    "This is a demo preset. You can edit any field or switch to another preset anytime.";
-}
-
-function hidePresetNote() {
-  elements.presetNote.hidden = true;
-}
-
-function createDefaultRatings(defaultValue = "average") {
-  return RATING_FIELDS.reduce((accumulator, field) => {
-    accumulator[field.id] = defaultValue;
-    return accumulator;
-  }, {});
-}
-
-function renderRatingGrid(container, groupPrefix) {
-  container.innerHTML = "";
-  RATING_FIELDS.forEach((field) => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "rating-card";
-
-    const label = document.createElement("label");
-    label.setAttribute("for", `${groupPrefix}-${field.id}`);
-    label.textContent = field.label;
-
-    const select = document.createElement("select");
-    select.id = `${groupPrefix}-${field.id}`;
-    select.dataset.ratingGroup = groupPrefix;
-    select.dataset.ratingField = field.id;
-
-    RATING_OPTIONS.forEach((option) => {
-      const node = document.createElement("option");
-      node.value = option.value;
-      node.textContent = option.label;
-      select.appendChild(node);
+    let text = fallback || key || "";
+    Object.entries(vars || {}).forEach(([name, value]) => {
+      text = text.replaceAll(`{${name}}`, String(value));
     });
-
-    wrapper.appendChild(label);
-    wrapper.appendChild(select);
-    container.appendChild(wrapper);
-  });
-}
-
-function collectRatings(groupPrefix) {
-  return RATING_FIELDS.reduce((accumulator, field) => {
-    const select = document.getElementById(`${groupPrefix}-${field.id}`);
-    accumulator[field.id] = select ? select.value : "average";
-    return accumulator;
-  }, {});
-}
-
-function setRatings(groupPrefix, ratings) {
-  const mergedRatings = { ...createDefaultRatings(), ...(ratings || {}) };
-  RATING_FIELDS.forEach((field) => {
-    const select = document.getElementById(`${groupPrefix}-${field.id}`);
-    if (select) {
-      select.value = mergedRatings[field.id];
-    }
-  });
-}
-
-function syncImagePreview(targetImage, targetFallback, source, fallbackSource = "") {
-  if (source) {
-    targetImage.onerror = null;
-    targetImage.dataset.fallbackSource = fallbackSource;
-    targetImage.dataset.fallbackApplied = "0";
-    if (fallbackSource) {
-      targetImage.onerror = () => {
-        if (targetImage.dataset.fallbackApplied !== "1") {
-          targetImage.dataset.fallbackApplied = "1";
-          targetImage.src = fallbackSource;
-          return;
-        }
-        targetImage.onerror = null;
-        targetImage.removeAttribute("src");
-        targetImage.hidden = true;
-        targetFallback.hidden = false;
-      };
-    }
-    targetImage.src = source;
-    targetImage.hidden = false;
-    targetFallback.hidden = true;
-  } else {
-    targetImage.onerror = null;
-    targetImage.dataset.fallbackSource = "";
-    targetImage.dataset.fallbackApplied = "0";
-    targetImage.removeAttribute("src");
-    targetImage.hidden = true;
-    targetFallback.hidden = false;
+    return text;
   }
-}
+};
 
-function clearImageSelection(previewImage, previewFallback, summaryImage, summaryFallback) {
-  syncImagePreview(previewImage, previewFallback, "");
-  syncImagePreview(summaryImage, summaryFallback, "");
-}
-
-function setBuilderPhotoVisibility(previewImage, isVisible) {
-  const wrapper = previewImage.closest(".builder-player-photo");
-  if (wrapper) {
-    wrapper.hidden = !isVisible;
-  }
-}
-
-function setSummaryPhotoVisibility(summaryImage, isVisible) {
-  const shell = summaryImage.closest(".matchup-avatar-shell");
-  const card = summaryImage.closest(".matchup-player-card");
-  if (shell) {
-    shell.hidden = !isVisible;
-  }
-  if (card) {
-    card.classList.toggle("matchup-player-card-no-avatar", !isVisible);
-  }
-}
-
-function getRatingScore(value) {
-  return RATING_SCORE[value] || 2;
-}
-
-function getTopRatedFields(ratings, minimumScore = 3, limit = 2) {
-  return RATING_FIELDS
-    .map((field) => ({ ...field, score: getRatingScore(ratings[field.id]) }))
-    .filter((field) => field.score >= minimumScore)
-    .sort((left, right) => right.score - left.score)
-    .slice(0, limit)
-    .map((field) => field.label.toLowerCase());
-}
-
-function getLowestRatedFields(ratings, maximumScore = 2, limit = 2) {
-  return RATING_FIELDS
-    .map((field) => ({ ...field, score: getRatingScore(ratings[field.id]) }))
-    .filter((field) => field.score <= maximumScore)
-    .sort((left, right) => left.score - right.score)
-    .slice(0, limit)
-    .map((field) => field.label.toLowerCase());
-}
-
-function renderChipGroup(container, options, stateKey) {
-  container.innerHTML = "";
-  options.forEach((option) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "chip";
-    button.dataset.id = option.id;
-    button.dataset.group = stateKey;
-    button.textContent = option.label;
-    button.addEventListener("click", () => toggleChip(stateKey, option.id, button));
-    container.appendChild(button);
-  });
-}
-
-function toggleChip(group, id, button) {
-  const selectedSet = state.selected[group];
-  if (selectedSet.has(id)) {
-    selectedSet.delete(id);
-    button.classList.remove("active");
-  } else {
-    selectedSet.add(id);
-    button.classList.add("active");
-  }
-  updateCounts();
-}
-
-function updateCounts() {
-  elements.playerStrengthCount.textContent = `${state.selected.playerStrengths.size} selected`;
-  elements.playerWeaknessCount.textContent = `${state.selected.playerWeaknesses.size} selected`;
-  elements.opponentStrengthCount.textContent = `${state.selected.opponentStrengths.size} selected`;
-  elements.opponentWeaknessCount.textContent = `${state.selected.opponentWeaknesses.size} selected`;
-}
-
-function setChipGroupSelection(group, ids) {
-  state.selected[group] = new Set(ids);
-  document.querySelectorAll(`.chip[data-group="${group}"]`).forEach((chip) => {
-    chip.classList.toggle("active", state.selected[group].has(chip.dataset.id));
-  });
-  updateCounts();
-}
-
-function collectInput() {
-  return {
-    playerName: elements.playerName.value,
-    opponentName: elements.opponentName.value,
-    playerStyle: elements.playerStyle.value,
-    opponentStyle: elements.opponentStyle.value,
-    playerStrengths: [...state.selected.playerStrengths],
-    playerWeaknesses: [...state.selected.playerWeaknesses],
-    opponentStrengths: [...state.selected.opponentStrengths],
-    opponentWeaknesses: [...state.selected.opponentWeaknesses],
-    playerRatings: collectRatings("player"),
-    opponentRatings: collectRatings("opponent"),
-    surface: elements.surface.value,
-    priority: elements.priority.value
-  };
-}
-
-function createDraft() {
-  return {
-    planA: [],
-    planB: [],
-    cues: [],
-    avoid: [],
-    reasons: [],
-    headlines: {
-      planA: [],
-      planB: []
-    },
-    meta: {
-      pressurePoint: [],
-      adjustmentTrigger: [],
-      identity: []
-    }
-  };
-}
-
-function addRule(draft, rule, bump = 0) {
-  if (!rule) {
+function normalizeHomeLinksForLocalFiles() {
+  if (!window.location || window.location.protocol !== "file:") {
     return;
   }
 
-  ["planA", "planB", "cues", "avoid", "reasons"].forEach((section) => {
-    (rule[section] || []).forEach((item) => {
-      draft[section].push({ ...item, priority: item.priority + bump });
-    });
+  document.querySelectorAll('a[href="/"]').forEach((link) => {
+    link.setAttribute("href", "./index.html");
   });
-
-  if (rule.headlines) {
-    Object.entries(rule.headlines).forEach(([section, item]) => {
-      draft.headlines[section].push({ ...item, priority: item.priority + bump });
-    });
-  }
-
-  if (rule.meta) {
-    Object.entries(rule.meta).forEach(([section, item]) => {
-      draft.meta[section].push({ ...item, priority: item.priority + bump });
-    });
-  }
 }
 
-function finalizeItems(items, limit = 4) {
-  const bestByKey = new Map();
-  items.forEach((item) => {
-    const existing = bestByKey.get(item.key);
-    if (!existing || existing.priority < item.priority) {
-      bestByKey.set(item.key, item);
-    }
+function trackToolUsage(eventName, eventLabel, extra = {}) {
+  if (!window.TSL_ANALYTICS || typeof window.TSL_ANALYTICS.trackEvent !== "function") {
+    return;
+  }
+
+  window.TSL_ANALYTICS.trackEvent(eventName, eventLabel, {
+    eventCategory: "tool_usage",
+    ...extra
   });
-  return [...bestByKey.values()].sort((left, right) => right.priority - left.priority).slice(0, limit);
 }
 
-function finalizeMeta(items, fallback) {
-  if (!items.length) {
-    return fallback;
+function buildMailtoLink({ to = "", subject = "", body = "" }) {
+  const params = [];
+  if (subject) {
+    params.push(`subject=${encodeURIComponent(subject)}`);
   }
-  return items.sort((left, right) => right.priority - left.priority)[0].text;
+  if (body) {
+    params.push(`body=${encodeURIComponent(body)}`);
+  }
+
+  const query = params.join("&");
+  return `mailto:${String(to || "").trim()}${query ? `?${query}` : ""}`;
 }
 
-function getLabel(value) {
-  return optionLabelLookup.get(value) || value;
+function openMailDraft({ to = "", subject = "", body = "" }) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.location.href = buildMailtoLink({ to, subject, body });
 }
 
-function getPlayerName(value, fallback) {
-  const trimmed = (value || "").trim();
-  return trimmed || fallback;
-}
-
-function getInitials(value, fallback) {
-  const trimmed = (value || "").trim();
-  if (!trimmed) {
-    return fallback;
-  }
-  const initials = trimmed
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join("");
-  return initials || fallback;
-}
-
-function refreshFallbackInitials(playerName, opponentName) {
-  const playerInitials = getInitials(playerName, "P1");
-  const opponentInitials = getInitials(opponentName, "P2");
-  elements.playerPhotoFallback.textContent = playerInitials;
-  elements.summaryPlayerFallback.textContent = playerInitials;
-  elements.opponentPhotoFallback.textContent = opponentInitials;
-  elements.summaryOpponentFallback.textContent = opponentInitials;
-}
-
-function listToPhrase(values) {
-  if (!values.length) {
-    return "";
-  }
-  if (values.length === 1) {
-    return values[0];
-  }
-  if (values.length === 2) {
-    return `${values[0]} and ${values[1]}`;
-  }
-  return `${values.slice(0, -1).join(", ")}, and ${values[values.length - 1]}`;
-}
-
-function buildNarrative(input) {
-  const playerTraitWeapons = input.playerStrengths.slice(0, 2).map(getLabel).map((label) => label.toLowerCase());
-  const playerRatedWeapons = getTopRatedFields(input.playerRatings, 3, 2);
-  const opponentTraitLeaks = input.opponentWeaknesses.slice(0, 2).map(getLabel).map((label) => label.toLowerCase());
-  const opponentRatedLeaks = getLowestRatedFields(input.opponentRatings, 2, 2);
-  const playerWeapons = listToPhrase(playerTraitWeapons.length ? playerTraitWeapons : playerRatedWeapons);
-  const opponentLeaks = listToPhrase(opponentTraitLeaks.length ? opponentTraitLeaks : opponentRatedLeaks);
-  const playerStyleLabel = getLabel(input.playerStyle);
-  const opponentStyleLabel = getLabel(input.opponentStyle);
-  const playerName = getPlayerName(input.playerName, "Player 1");
-  const opponentName = getPlayerName(input.opponentName, "Player 2");
-
-  if (playerWeapons && opponentLeaks) {
-    return `${playerName} should lead with ${playerWeapons} and repeatedly test ${opponentLeaks} before ${opponentName} can settle into their ${opponentStyleLabel.toLowerCase()} comfort pattern.`;
-  }
-  if (playerWeapons) {
-    return `${playerName}'s edge is to build the match around ${playerWeapons} while keeping ${opponentName} away from the preferred rhythm of an ${opponentStyleLabel.toLowerCase()}.`;
-  }
-  if (opponentLeaks) {
-    return `This matchup is about forcing ${opponentName} to deal with ${opponentLeaks} over and over until the shape of the rally breaks.`;
-  }
-  return `This plan uses the core tension between ${playerName}'s ${playerStyleLabel.toLowerCase()} identity and ${opponentName}'s ${opponentStyleLabel.toLowerCase()} profile to create one clear front-foot pattern and one fallback adjustment.`;
-}
-
-function addRatingDrivenRules(draft, input) {
-  const player = input.playerRatings;
-  const opponent = input.opponentRatings;
-
-  const playerFirstServe = getRatingScore(player.firstServe);
-  const playerSecondServe = getRatingScore(player.secondServe);
-  const playerForehand = getRatingScore(player.forehand);
-  const playerBackhand = getRatingScore(player.backhand);
-  const playerForehandVolley = getRatingScore(player.forehandVolley);
-  const playerBackhandVolley = getRatingScore(player.backhandVolley);
-  const playerDropShot = getRatingScore(player.dropShot);
-  const playerLob = getRatingScore(player.lob);
-  const playerFitness = getRatingScore(player.fitness);
-  const playerMental = getRatingScore(player.mental);
-
-  const opponentSecondServe = getRatingScore(opponent.secondServe);
-  const opponentForehand = getRatingScore(opponent.forehand);
-  const opponentBackhand = getRatingScore(opponent.backhand);
-  const opponentForehandVolley = getRatingScore(opponent.forehandVolley);
-  const opponentBackhandVolley = getRatingScore(opponent.backhandVolley);
-  const opponentOverhead = getRatingScore(opponent.overhead);
-  const opponentFitness = getRatingScore(opponent.fitness);
-  const opponentMental = getRatingScore(opponent.mental);
-  const opponentVolley = Math.min(opponentForehandVolley, opponentBackhandVolley);
-  const playerVolley = Math.max(playerForehandVolley, playerBackhandVolley);
-
-  if (playerFirstServe >= 3 && playerForehand >= 3) {
-    addRule(draft, {
-      planA: [
-        tactic("rating-serve-forehand", "Build around your serve plus first forehand combination. Start points by creating a forehand you can dictate with immediately.", 82)
-      ],
-      reasons: [
-        tactic("rating-serve-forehand-reason", "A good first serve paired with a good forehand is one of the cleanest ways to control the first two shots of the rally.", 72)
-      ]
-    }, 5);
+function buildQuickSetupStringerEmailDraft(recommendation, optionIndex = 0) {
+  const option = recommendation?.options?.[optionIndex] || recommendation?.options?.[0];
+  if (!option?.entry) {
+    return null;
   }
 
-  if (playerSecondServe === 1) {
-    addRule(draft, {
-      headlines: {
-        planB: meta("Protect your second serve and simplify the first two shots whenever scoreboard pressure rises.", 84)
-      },
-      meta: {
-        adjustmentTrigger: meta("Switch earlier if the opponent starts attacking second serves or if your first two service games feel rushed.", 84)
-      },
-      planB: [
-        tactic("rating-weak-second-serve", "On second serve, choose your safest target and expect to play the next ball through the middle third before opening the court.", 84)
-      ]
-    }, 6);
-  }
-
-  if (playerForehand >= 3 && opponentBackhand <= 2) {
-    addRule(draft, {
-      meta: {
-        pressurePoint: meta("The clearest pressure lane is your forehand into their backhand side until they prove they can absorb it cleanly.", 86)
-      },
-      planA: [
-        tactic("rating-forehand-vs-backhand", "Use your forehand to pressure their backhand repeatedly before you redirect or come forward.", 86)
-      ]
-    }, 7);
-  }
-
-  if (playerBackhand === 1) {
-    addRule(draft, {
-      planB: [
-        tactic("rating-protect-backhand", "If they pin your backhand, neutralize with middle depth or slice and look to re-center the point instead of forcing from that wing.", 77)
-      ],
-      avoid: [
-        tactic("rating-protect-backhand-avoid", "Do not turn their pressure into rushed down-the-line backhand misses.", 72)
-      ]
-    }, 5);
-  }
-
-  if (playerVolley >= 3 && opponentVolley <= 2) {
-    addRule(draft, {
-      planA: [
-        tactic("rating-net-edge", "Look for more forward opportunities because your volleying profile is stronger than theirs once the point gets compressed.", 78)
-      ]
-    }, 5);
-  }
-
-  if (playerDropShot >= 3 && opponentFitness <= 2) {
-    addRule(draft, {
-      planA: [
-        tactic("rating-drop-shot-fitness", "Use the drop shot as a true tactical tool once you have pushed them deep, especially if their movement or recovery fitness looks average or weak.", 73)
-      ]
-    }, 4);
-  }
-
-  if (playerLob >= 3 && opponentVolley >= 3 && opponentOverhead <= 2) {
-    addRule(draft, {
-      planA: [
-        tactic("rating-lob-overhead", "If they close to net well but their overhead is shaky, show the lob enough that they stop rushing with confidence.", 76)
-      ]
-    }, 5);
-  }
-
-  if (playerFitness >= 4 && opponentFitness <= 2) {
-    addRule(draft, {
-      planA: [
-        tactic("rating-fitness-edge", "Lean into physical rallies and make them play one or two extra balls, because the fitness edge should widen as the match wears on.", 79)
-      ],
-      reasons: [
-        tactic("rating-fitness-edge-reason", "A clear fitness edge changes the value of longer points and gives you more freedom to stay patient.", 69)
-      ]
-    }, 6);
-  }
-
-  if (playerFitness === 1 && opponentFitness >= 3) {
-    addRule(draft, {
-      planB: [
-        tactic("rating-fitness-protect", "Shorten points more aggressively on your serve games and avoid volunteering for long neutral exchanges with no tactical purpose.", 77)
-      ]
-    }, 5);
-  }
-
-  if (playerMental >= 4 && opponentMental <= 2) {
-    addRule(draft, {
-      cues: [
-        tactic("rating-mental-edge", "Stay calm and make them feel every extra score pressure point.", 76)
-      ],
-      reasons: [
-        tactic("rating-mental-edge-reason", "A mental edge matters most if you keep the tactical pattern disciplined and make the opponent hit under scoreboard stress.", 70)
-      ]
-    }, 5);
-  }
-
-  if (playerMental === 1) {
-    addRule(draft, {
-      planB: [
-        tactic("rating-mental-protect", "When the score gets tight, go back to one trusted serve target and one trusted rally lane instead of reinventing the plan mid-game.", 79)
-      ],
-      cues: [
-        tactic("rating-mental-protect-cue", "Trusted pattern first. Creativity second.", 74)
-      ]
-    }, 5);
-  }
-
-  if (opponentSecondServe <= 2) {
-    addRule(draft, {
-      meta: {
-        pressurePoint: meta("Their second serve should be attacked often enough that it never becomes a neutral starting point.", opponentSecondServe === 1 ? 88 : 78)
-      },
-      planA: [
-        tactic(
-          "rating-opponent-second-serve",
-          "Step in on the opponent's second serve and start the point with intent, especially to the weaker wing or deep middle.",
-          opponentSecondServe === 1 ? 88 : 78
-        )
-      ]
-    }, 6);
-  }
-
-  if (opponentForehand <= 2) {
-    addRule(draft, {
-      planA: [
-        tactic("rating-opponent-forehand", "If their forehand is only average or weak, jam it with body patterns and low contact before you open angles elsewhere.", 74)
-      ]
-    }, 4);
-  }
-
-  if (opponentBackhand <= 2) {
-    addRule(draft, {
-      planA: [
-        tactic("rating-opponent-backhand", "Keep asking their backhand to handle repeated depth and pace until it proves stable under pressure.", 80)
-      ]
-    }, 5);
-  }
-
-  if (opponentVolley <= 2) {
-    addRule(draft, {
-      planA: [
-        tactic("rating-opponent-volley", "If they are not comfortable volleying, draw them forward with shorter or lower balls and make them finish from awkward net positions.", 72)
-      ]
-    }, 4);
-  }
-
-  if (opponentOverhead <= 2 && playerLob >= 3) {
-    addRule(draft, {
-      planA: [
-        tactic("rating-opponent-overhead", "Do not forget the lob if they struggle overhead. It can stop them from crowding the net too early.", 73)
-      ]
-    }, 4);
-  }
-
-  if (opponentFitness <= 2) {
-    addRule(draft, {
-      planA: [
-        tactic("rating-opponent-fitness", "If their fitness is average or weak, build a physical tax early so the tactical openings get bigger later.", 71)
-      ]
-    }, 4);
-  }
-
-  if (opponentMental <= 2) {
-    addRule(draft, {
-      planB: [
-        tactic("rating-opponent-mental", "If the score gets close, keep the point structure solid and make them solve the pressure rather than rushing for winners yourself.", 74)
-      ]
-    }, 4);
-  }
-}
-
-function generateGamePlan(input) {
-  const draft = createDraft();
-
-  addRule(draft, STYLE_BLUEPRINTS[input.playerStyle], 0);
-  addRule(draft, OPPONENT_RESPONSES[input.opponentStyle], 4);
-  addRule(draft, MATCHUP_OVERRIDES[`${input.playerStyle}|${input.opponentStyle}`], 8);
-  addRule(draft, SURFACE_RULES[input.surface], 2);
-  addRule(draft, PRIORITY_RULES[input.priority], 4);
-
-  input.playerStrengths.forEach((id) => addRule(draft, PLAYER_STRENGTH_RULES[id], 3));
-  input.playerWeaknesses.forEach((id) => addRule(draft, PLAYER_WEAKNESS_RULES[id], 4));
-  input.opponentStrengths.forEach((id) => addRule(draft, OPPONENT_STRENGTH_RULES[id], 4));
-  input.opponentWeaknesses.forEach((id) => addRule(draft, OPPONENT_WEAKNESS_RULES[id], 5));
-  addRatingDrivenRules(draft, input);
+  const appliedRacketFamily = recommendation?.racketFamily && recommendation.racketFamily !== "Any"
+    ? recommendation.racketFamily
+    : option.entry.racketFamily;
+  const referenceLine = option.playerRacket
+    ? `${option.playerRacket.player} uses ${option.playerRacket.racket}`
+    : "";
+  const lines = [
+    "Hi,",
+    "",
+    "Could you please string this setup for me?",
+    "",
+    `String: ${option.entry.name}`,
+    `Type: ${option.entry.type}`,
+    `Gauge: ${option.entry.gauge}`,
+    `Suggested tension: ${option.tensionDisplay?.label || "Use the Tension Calculator"}`,
+    `Racket: ${appliedRacketFamily || option.entry.racketFamily}`,
+    option.tensionDisplay?.detail ? `Tension note: ${option.tensionDisplay.detail}` : "",
+    referenceLine ? `Reference: ${referenceLine}` : "",
+    recommendation?.reason ? `Why this setup: ${recommendation.reason}` : "",
+    option.entry.summary ? `String note: ${option.entry.summary}` : "",
+    "",
+    "Generated with TennisSetup.com"
+  ].filter(Boolean);
 
   return {
-    narrative: buildNarrative(input),
-    planA: finalizeItems(draft.planA, 5),
-    planB: finalizeItems(draft.planB, 5),
-    cues: finalizeItems(draft.cues, 4),
-    avoid: finalizeItems(draft.avoid, 4),
-    reasons: finalizeItems(draft.reasons, 4),
-    planAHeadline: finalizeMeta(draft.headlines.planA, "Own the first tactical advantage and press the clearest weakness."),
-    planBHeadline: finalizeMeta(draft.headlines.planB, "If the first pattern stalls, add margin and simplify the next two games."),
-    pressurePoint: finalizeMeta(
-      draft.meta.pressurePoint,
-      "Look for the wing, serve pattern, or rally shape the opponent struggles to repeat under pressure."
-    ),
-    adjustmentTrigger: finalizeMeta(
-      draft.meta.adjustmentTrigger,
-      "Switch to Plan B if you lose two quick games, miss your pattern ball repeatedly, or cannot protect your serve cleanly."
-    ),
-    identity: finalizeMeta(
-      draft.meta.identity,
-      "Protect your own best identity first, then build pressure from there."
-    )
+    subject: `String setup request: ${option.entry.name} ${option.entry.gauge}`.trim(),
+    body: lines.join("\n")
   };
 }
 
-function clamp(value, minimum, maximum) {
-  return Math.min(maximum, Math.max(minimum, value));
+function buildTensionCalculatorStringerEmailDraft(recommendation) {
+  if (!recommendation) {
+    return null;
+  }
+
+  const selectedString = recommendation.source
+    ? `${recommendation.source.name} ${recommendation.source.gauge || ""}`.trim()
+    : "";
+  const subjectLabel = selectedString || `${recommendation.type} setup`;
+  const referenceLine = recommendation.proReference
+    ? `${recommendation.proReference.player} ${recommendation.proReference.tension}${recommendation.proReference.detail ? ` | ${recommendation.proReference.detail}` : ""}`
+    : "";
+  const lines = [
+    "Hi,",
+    "",
+    "Could you please string this setup for me?",
+    "",
+    selectedString ? `String: ${selectedString}` : "",
+    `String type: ${recommendation.type}`,
+    `Requested tension range: ${recommendation.lbsRange} (${recommendation.kgRange})`,
+    `Racket family: ${recommendation.racketFamily}`,
+    `Feel goal: ${recommendation.preference}`,
+    `Arm comfort: ${recommendation.armComfort}`,
+    referenceLine ? `Reference: ${referenceLine}` : "",
+    recommendation.sourceNote ? `Setup note: ${recommendation.sourceNote}` : "",
+    recommendation.explanation ? `Calculator note: ${recommendation.explanation}` : "",
+    "",
+    "Generated with TennisSetup.com"
+  ].filter(Boolean);
+
+  return {
+    subject: `Stringing request: ${subjectLabel} @ ${recommendation.lbsRange}`,
+    body: lines.join("\n")
+  };
 }
 
-function getAverageRating(ratings, fieldIds = RATING_FIELDS.map((field) => field.id)) {
-  const total = fieldIds.reduce((sum, fieldId) => sum + getRatingScore(ratings[fieldId]), 0);
-  return total / fieldIds.length;
+const UI_TRANSLATIONS = {
+  en: {
+    mobileShowFilters: "Show Filters",
+    mobileHideFilters: "Hide Filters",
+    sliderShow: "Show Sliders",
+    sliderHide: "Hide Sliders",
+    sliderPanelTitle: "Preference Sliders",
+    sliderPanelCopy: "Move the sliders toward what matters most and the rankings will rebalance live.",
+    sliderPower: "Power",
+    sliderSpin: "Spin",
+    sliderControl: "Control",
+    sliderPros: "Pro Players Using",
+    scaleLow: "Low",
+    scaleBalanced: "Balanced",
+    scaleHigh: "High",
+    scaleFew: "Few",
+    mobileQuickPlayer: "Pro Player",
+    mobileQuickType: "String Type",
+    allProPlayers: "All Pro Players",
+    allStringTypes: "All String Types",
+    quickFiltersEyebrow: "Quick Filters",
+    stringFiltersTitle: "String Filters",
+    reset: "Reset",
+    stringTypeGuide: "String Type Guide",
+    allStringTypeTitle: "All String Types",
+    allStringTypeText: "Compare different string families to find the blend of spin, comfort, control, and power that best fits your game."
+  },
+  fr: {
+    mobileShowFilters: "Afficher les filtres",
+    mobileHideFilters: "Masquer les filtres",
+    sliderShow: "Afficher les curseurs",
+    sliderHide: "Masquer les curseurs",
+    sliderPanelTitle: "Curseurs de preference",
+    sliderPanelCopy: "Deplacez les curseurs vers ce qui compte le plus et le classement se reequilibrera en direct.",
+    sliderPower: "Puissance",
+    sliderSpin: "Spin",
+    sliderControl: "Controle",
+    sliderPros: "Pros utilisant",
+    scaleLow: "Faible",
+    scaleBalanced: "Equilibre",
+    scaleHigh: "Eleve",
+    scaleFew: "Peu",
+    mobileQuickPlayer: "Joueur pro",
+    mobileQuickType: "Type de cordage",
+    allProPlayers: "Tous les pros",
+    allStringTypes: "Tous les types de cordage",
+    quickFiltersEyebrow: "Filtres rapides",
+    stringFiltersTitle: "Filtres de cordage",
+    reset: "Reinitialiser",
+    stringTypeGuide: "Guide des types de cordage",
+    allStringTypeTitle: "Tous les types de cordage",
+    allStringTypeText: "Comparez les grandes familles de cordage pour trouver le bon melange de spin, confort, controle et puissance pour votre jeu."
+  },
+  es: {
+    mobileShowFilters: "Mostrar filtros",
+    mobileHideFilters: "Ocultar filtros",
+    sliderShow: "Mostrar deslizadores",
+    sliderHide: "Ocultar deslizadores",
+    sliderPanelTitle: "Deslizadores de preferencia",
+    sliderPanelCopy: "Mueve los deslizadores hacia lo que mas importa y la clasificacion se reequilibrara al instante.",
+    sliderPower: "Potencia",
+    sliderSpin: "Spin",
+    sliderControl: "Control",
+    sliderPros: "Profesionales que la usan",
+    scaleLow: "Bajo",
+    scaleBalanced: "Equilibrado",
+    scaleHigh: "Alto",
+    scaleFew: "Pocos",
+    mobileQuickPlayer: "Jugador pro",
+    mobileQuickType: "Tipo de cuerda",
+    allProPlayers: "Todos los profesionales",
+    allStringTypes: "Todos los tipos de cuerda",
+    quickFiltersEyebrow: "Filtros rapidos",
+    stringFiltersTitle: "Filtros de cuerda",
+    reset: "Restablecer",
+    stringTypeGuide: "Guia de tipos de cuerda",
+    allStringTypeTitle: "Todos los tipos de cuerda",
+    allStringTypeText: "Compara las principales familias de cuerdas para encontrar la mezcla de spin, comodidad, control y potencia que mejor encaja con tu juego."
+  },
+  it: {
+    mobileShowFilters: "Mostra filtri",
+    mobileHideFilters: "Nascondi filtri",
+    sliderShow: "Mostra cursori",
+    sliderHide: "Nascondi cursori",
+    sliderPanelTitle: "Cursori di preferenza",
+    sliderPanelCopy: "Sposta i cursori verso cio che conta di piu e la classifica si riequilibrera in tempo reale.",
+    sliderPower: "Potenza",
+    sliderSpin: "Spin",
+    sliderControl: "Controllo",
+    sliderPros: "Professionisti che la usano",
+    scaleLow: "Basso",
+    scaleBalanced: "Bilanciato",
+    scaleHigh: "Alto",
+    scaleFew: "Pochi",
+    mobileQuickPlayer: "Giocatore pro",
+    mobileQuickType: "Tipo di corda",
+    allProPlayers: "Tutti i professionisti",
+    allStringTypes: "Tutti i tipi di corda",
+    quickFiltersEyebrow: "Filtri rapidi",
+    stringFiltersTitle: "Filtri corde",
+    reset: "Reimposta",
+    stringTypeGuide: "Guida ai tipi di corda",
+    allStringTypeTitle: "Tutti i tipi di corda",
+    allStringTypeText: "Confronta le principali famiglie di corde per trovare il mix di spin, comfort, controllo e potenza piu adatto al tuo gioco."
+  }
+};
+
+const HOME_STATIC_TRANSLATIONS = {
+  en: {
+    masterListTitle: "All Strings",
+    masterListCopy: "Browse every string in one place",
+    referenceTitle: "Reference Guide",
+    referenceCopy: "Browse the full string library",
+    proShopsTitle: "Pro Shops",
+    proShopsCopy: "Find nearby stringing shops",
+    popularTitle: "20 Most Popular",
+    popularCopy: "Start with the most searched strings",
+    prosTitle: "Pro Player Strings",
+    prosCopy: "See what top ATP and WTA players use",
+    menu: {
+      "./string-library.html": "String Library",
+      "./string-types.html": "String Type Descriptions",
+      "./string-materials-guide.html": "String Materials Guide",
+      "./how-tennis-string-is-made.html": "How Tennis Strings Are Made",
+      "./tension-guide.html": "Tension Guide",
+      "./tension-logic.html": "Tension Calculator Logic",
+      "./gauge-guide.html": "Gauge Guide",
+      "./hybrid-guide.html": "Hybrid String Guide",
+      "./arm-friendly.html": "Arm-Friendly Strings",
+      "./string-shape-guide.html": "String Shape Guide",
+      "./string-dampeners-guide.html": "String Dampeners: Do They Work?",
+      "./restring-guide.html": "How Often to Restring",
+      "./player-type-guide.html": "Best Strings by Player Type",
+      "./best-by-need.html": "Best Strings by Need",
+      "./popular-comparisons.html": "Popular String Comparisons",
+      "./proshops.html": "Pro Shops"
+    }
+  },
+  fr: {
+    masterListTitle: "Liste complete",
+    masterListCopy: "Parcourez tous les cordages en un seul endroit",
+    referenceTitle: "Guide de reference",
+    referenceCopy: "Parcourir toute la bibliotheque de guides",
+    proShopsTitle: "Magasins pro",
+    proShopsCopy: "Trouver des magasins de cordage proches",
+    popularTitle: "20 plus populaires",
+    popularCopy: "Commencez par les cordages les plus recherches",
+    prosTitle: "Cordages des pros",
+    prosCopy: "Voir ce qu'utilisent les meilleurs ATP et WTA",
+    menu: {
+      "./string-library.html": "Bibliotheque de cordages",
+      "./string-types.html": "Descriptions des types de cordage",
+      "./string-materials-guide.html": "Guide des materiaux de cordage",
+      "./how-tennis-string-is-made.html": "Comment les cordages de tennis sont fabriques",
+      "./tension-guide.html": "Guide de tension",
+      "./tension-logic.html": "Logique du calculateur de tension",
+      "./gauge-guide.html": "Guide de jauge",
+      "./hybrid-guide.html": "Guide des hybrides",
+      "./arm-friendly.html": "Confort du bras",
+      "./string-shape-guide.html": "Guide de forme du cordage",
+      "./string-dampeners-guide.html": "Les antivibrateurs fonctionnent-ils",
+      "./restring-guide.html": "Quand recorder",
+      "./player-type-guide.html": "Meilleurs cordages par profil",
+      "./best-by-need.html": "Meilleurs cordages par besoin",
+      "./popular-comparisons.html": "Comparaisons populaires",
+      "./proshops.html": "Magasins pro"
+    }
+  },
+  es: {
+    masterListTitle: "Lista maestra",
+    masterListCopy: "Explora todas las cuerdas en un solo lugar",
+    referenceTitle: "Guia de referencia",
+    referenceCopy: "Explora la biblioteca completa de guias",
+    proShopsTitle: "Pro shops",
+    proShopsCopy: "Encuentra tiendas de encordado cercanas",
+    popularTitle: "20 mas populares",
+    popularCopy: "Empieza con las cuerdas mas buscadas",
+    prosTitle: "Cuerdas de profesionales",
+    prosCopy: "Ver lo que usan los mejores ATP y WTA",
+    menu: {
+      "./string-library.html": "Biblioteca de cuerdas",
+      "./string-types.html": "Descripciones de tipos de cuerda",
+      "./string-materials-guide.html": "Guia de materiales de cuerda",
+      "./how-tennis-string-is-made.html": "Como se fabrican las cuerdas de tenis",
+      "./tension-guide.html": "Guia de tension",
+      "./tension-logic.html": "Logica del calculador de tension",
+      "./gauge-guide.html": "Guia de calibre",
+      "./hybrid-guide.html": "Guia de hibridos",
+      "./arm-friendly.html": "Brazo y confort",
+      "./string-shape-guide.html": "Guia de forma de cuerda",
+      "./string-dampeners-guide.html": "Los antivibradores funcionan",
+      "./restring-guide.html": "Cuando reencordar",
+      "./player-type-guide.html": "Mejores cuerdas por perfil",
+      "./best-by-need.html": "Mejores cuerdas por necesidad",
+      "./popular-comparisons.html": "Comparaciones populares",
+      "./proshops.html": "Pro shops"
+    }
+  },
+  it: {
+    masterListTitle: "Elenco completo",
+    masterListCopy: "Sfoglia tutte le corde in un solo posto",
+    referenceTitle: "Guida di riferimento",
+    referenceCopy: "Sfoglia l'intera libreria di guide",
+    proShopsTitle: "Pro shop",
+    proShopsCopy: "Trova negozi di incordatura vicini",
+    popularTitle: "20 piu popolari",
+    popularCopy: "Inizia con le corde piu cercate",
+    prosTitle: "Corde dei professionisti",
+    prosCopy: "Vedi cosa usano i migliori ATP e WTA",
+    menu: {
+      "./string-library.html": "Libreria corde",
+      "./string-types.html": "Descrizioni dei tipi di corda",
+      "./string-materials-guide.html": "Guida ai materiali delle corde",
+      "./how-tennis-string-is-made.html": "Come vengono prodotte le corde da tennis",
+      "./tension-guide.html": "Guida alla tensione",
+      "./tension-logic.html": "Logica del calcolatore di tensione",
+      "./gauge-guide.html": "Guida al calibro",
+      "./hybrid-guide.html": "Guida agli ibridi",
+      "./arm-friendly.html": "Comfort del braccio",
+      "./string-shape-guide.html": "Guida alla forma della corda",
+      "./string-dampeners-guide.html": "Gli antivibrazioni funzionano",
+      "./restring-guide.html": "Quando reincordare",
+      "./player-type-guide.html": "Migliori corde per profilo",
+      "./best-by-need.html": "Migliori corde per esigenza",
+      "./popular-comparisons.html": "Confronti popolari",
+      "./proshops.html": "Pro shop"
+    }
+  }
+};
+
+function getUiText(key, fallback) {
+  const language = siteI18n.getLanguage();
+  return UI_TRANSLATIONS[language]?.[key] || UI_TRANSLATIONS.en[key] || fallback || key;
 }
 
-function countTraitMatchups(sourceIds, targetIds, mapping) {
-  return sourceIds.reduce((count, id) => {
-    const targets = mapping[id] || [];
-    return count + (targets.some((target) => targetIds.includes(target)) ? 1 : 0);
+function updateDatabaseCountLabels() {
+  const countText = siteI18n.t("masterDatabaseCount", "{count} strings in database", { count: STRINGS.length });
+  if (databaseCount) databaseCount.textContent = countText;
+  if (heroDatabaseButton) heroDatabaseButton.textContent = countText;
+}
+
+function updateHomepageStaticTranslations() {
+  const language = siteI18n.getLanguage();
+  const content = HOME_STATIC_TRANSLATIONS[language] || HOME_STATIC_TRANSLATIONS.en;
+
+  const masterTitle = document.getElementById("heroMasterListTitle");
+  const masterCopy = document.getElementById("heroMasterListCopy");
+  const referenceTitle = document.getElementById("heroReferenceGuideTitle");
+  const referenceCopy = document.getElementById("heroReferenceGuideCopy");
+  const proShopsTitle = document.getElementById("heroProShopsTitle");
+  const proShopsCopy = document.getElementById("heroProShopsCopy");
+  const popularTitle = document.getElementById("heroPopularTitle");
+  const popularCopy = document.getElementById("heroPopularCopy");
+  const prosTitle = document.getElementById("heroProsTitle");
+  const prosCopy = document.getElementById("heroProsCopy");
+
+  if (masterTitle) masterTitle.textContent = content.masterListTitle;
+  if (masterCopy) masterCopy.textContent = content.masterListCopy;
+  if (referenceTitle) referenceTitle.textContent = content.referenceTitle;
+  if (referenceCopy) referenceCopy.textContent = content.referenceCopy;
+  if (proShopsTitle) proShopsTitle.textContent = content.proShopsTitle;
+  if (proShopsCopy) proShopsCopy.textContent = content.proShopsCopy;
+  if (popularTitle) popularTitle.textContent = content.popularTitle;
+  if (popularCopy) popularCopy.textContent = content.popularCopy;
+  if (prosTitle) prosTitle.textContent = content.prosTitle;
+  if (prosCopy) prosCopy.textContent = content.prosCopy;
+
+  const menuIdMap = {
+    "./string-library.html": ["menuStringLibrary"],
+    "./string-types.html": ["menuStringTypes", "guideStringTypes"],
+    "./string-materials-guide.html": ["menuStringMaterials", "guideStringMaterials"],
+    "./how-tennis-string-is-made.html": ["menuStringManufacturing", "guideStringManufacturing"],
+    "./tension-guide.html": ["menuTensionGuide", "guideTensionGuide"],
+    "./tension-logic.html": ["menuTensionLogic", "guideTensionLogic"],
+    "./gauge-guide.html": ["menuGaugeGuide", "guideGaugeGuide"],
+    "./hybrid-guide.html": ["menuHybridGuide", "guideHybridGuide"],
+    "./arm-friendly.html": ["menuArmFriendly", "guideArmFriendly"],
+    "./string-shape-guide.html": ["menuShapeGuide", "guideShapeGuide"],
+    "./string-dampeners-guide.html": ["menuDampenersGuide"],
+    "./restring-guide.html": ["menuRestringGuide", "guideRestringGuide"],
+    "./player-type-guide.html": ["menuPlayerTypeGuide", "guidePlayerTypeGuide"],
+    "./best-by-need.html": ["menuBestByNeed", "guideBestByNeed"],
+    "./popular-comparisons.html": ["menuPopularComparisons", "guidePopularComparisons"],
+    "./proshops.html": ["menuProShops"]
+  };
+
+  Object.entries(content.menu).forEach(([href, text]) => {
+    (menuIdMap[href] || []).forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.textContent = text;
+      }
+    });
+  });
+
+  const adminLink = document.getElementById("menuAdminStats");
+  if (adminLink) {
+    adminLink.textContent = language === "fr"
+      ? "Stats admin"
+      : language === "es"
+        ? "Estadisticas admin"
+        : language === "it"
+          ? "Statistiche admin"
+          : "Admin Stats";
+  }
+}
+
+const sliderPanelToggle = document.getElementById("sliderPanelToggle");
+const sliderPanelBody = document.getElementById("sliderPanelBody");
+const sliderResultsSummary = document.getElementById("sliderResultsSummary");
+const exampleSetupButtons = Array.from(document.querySelectorAll(".example-setup-button"));
+const quickSetupStyle = document.getElementById("quickSetupStyle");
+const quickSetupPro = document.getElementById("quickSetupPro");
+const quickSetupSpin = document.getElementById("quickSetupSpin");
+const quickSetupPower = document.getElementById("quickSetupPower");
+const quickSetupControl = document.getElementById("quickSetupControl");
+const quickSetupRacket = document.getElementById("quickSetupRacket");
+const quickSetupUseProRacket = document.getElementById("quickSetupUseProRacket");
+const quickSetupProRacketHelp = document.getElementById("quickSetupProRacketHelp");
+const quickSetupProRacketNote = document.getElementById("quickSetupProRacketNote");
+const quickSetupButton = document.getElementById("quickSetupButton");
+const quickSetupApplyButton = document.getElementById("quickSetupApplyButton");
+const quickSetupResult = document.getElementById("quickSetupResult");
+const quickSetupExampleSelect = document.getElementById("quickSetupExampleSelect");
+const tensionCalcType = document.getElementById("tensionCalcType");
+const tensionCalcRacket = document.getElementById("tensionCalcRacket");
+const tensionCalcPreference = document.getElementById("tensionCalcPreference");
+const tensionCalcArm = document.getElementById("tensionCalcArm");
+const tensionCalcButton = document.getElementById("tensionCalcButton");
+const tensionCalcResult = document.getElementById("tensionCalcResult");
+const tensionSourceStorageKey = "tennisStringPlannerTensionSource";
+const hasSetupWorkbenchSurface = Boolean(
+  quickSetupButton
+  || tensionCalcButton
+  || quickSetupExampleSelect
+  || exampleSetupButtons.length
+);
+
+if (mobileFilterToggle) {
+  mobileFilterToggle.addEventListener("click", () => {
+    const shouldCollapse = !filterGrid.classList.contains("is-collapsed");
+    filterGrid.classList.toggle("is-collapsed", shouldCollapse);
+    mobileFilterToggle.textContent = shouldCollapse ? getUiText("mobileShowFilters", "Show Filters") : getUiText("mobileHideFilters", "Hide Filters");
+    mobileFilterToggle.setAttribute("aria-expanded", shouldCollapse ? "false" : "true");
+  });
+}
+
+function setupDropdownMenu(button, panel, containerSelector) {
+  if (!button || !panel) return;
+
+  const container = button.closest(containerSelector) || document.querySelector(containerSelector);
+  let closeTimer = null;
+  const canHoverOpen = () => window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  const openMenu = () => {
+    if (closeTimer) {
+      window.clearTimeout(closeTimer);
+      closeTimer = null;
+    }
+    button.setAttribute("aria-expanded", "true");
+    panel.hidden = false;
+  };
+
+  const closeMenu = () => {
+    if (closeTimer) {
+      window.clearTimeout(closeTimer);
+      closeTimer = null;
+    }
+    button.setAttribute("aria-expanded", "false");
+    panel.hidden = true;
+  };
+
+  const scheduleCloseMenu = () => {
+    if (closeTimer) {
+      window.clearTimeout(closeTimer);
+    }
+    closeTimer = window.setTimeout(() => {
+      closeMenu();
+    }, 90);
+  };
+
+  button.addEventListener("click", () => {
+    const isOpen = button.getAttribute("aria-expanded") === "true";
+    if (isOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!panel.hidden && !event.target.closest(containerSelector)) {
+      closeMenu();
+    }
+  });
+
+  if (container) {
+    container.addEventListener("mouseenter", () => {
+      if (canHoverOpen()) {
+        openMenu();
+      }
+    });
+
+    container.addEventListener("mouseleave", () => {
+      if (canHoverOpen()) {
+        scheduleCloseMenu();
+      }
+    });
+
+    container.addEventListener("focusout", (event) => {
+      if (!container.contains(event.relatedTarget)) {
+        closeMenu();
+      }
+    });
+  }
+}
+
+setupDropdownMenu(heroMenuButton, heroMenuPanel, ".hero-overflow-menu");
+setupDropdownMenu(toolsMenuButton, toolsMenuPanel, ".tools-action-menu");
+setupDropdownMenu(referenceGuideButton, referenceGuidePanel, ".hero-action-menu");
+
+const IMAGE_STORAGE_PREFIX = "tennisStringPlannerImage:";
+const PRO_PLAYER_STORAGE_KEY = "tennisStringPlannerCustomPros";
+const POPULAR_STRING_NAMES = [
+  "Babolat RPM Blast",
+  "Luxilon ALU Power",
+  "Solinco Hyper-G",
+  "Tecnifibre X-One Biphase",
+  "Wilson NXT",
+  "Babolat VS Touch",
+  "Yonex Poly Tour Pro",
+  "Head Lynx Tour",
+  "Solinco Confidential",
+  "Luxilon 4G",
+  "Prince Synthetic Gut Duraflex",
+  "Tecnifibre Razor Code",
+  "Babolat RPM Team",
+  "Wilson Revolve Spin",
+  "Head Velocity MLT",
+  "Volkl Cyclone",
+  "Wilson Champion's Choice",
+  "Luxilon Element",
+  "Yonex Poly Tour Rev",
+  "Tecnifibre Triax"
+];
+const STRING_COLOR_OVERRIDES = {
+  "Babolat RPM Blast": "Black",
+  "Luxilon ALU Power": "Silver",
+  "Solinco Hyper-G": "Green",
+  "Tecnifibre X-One Biphase": "Natural",
+  "Wilson NXT": "Natural",
+  "Babolat VS Touch": "Natural",
+  "Yonex Poly Tour Pro": "Yellow",
+  "Head Lynx Tour": "Champagne",
+  "Solinco Confidential": "Grey",
+  "Luxilon 4G": "Gold",
+  "Prince Synthetic Gut Duraflex": "Natural",
+  "Tecnifibre Razor Code": "White",
+  "Babolat RPM Team": "Black",
+  "Wilson Revolve Spin": "Green",
+  "Yonex Rexis Comfort": "White",
+  "Head Velocity MLT": "Natural",
+  "Kirschbaum Max Power": "Red",
+  "Volkl Cyclone": "Purple",
+  "Wilson Champion's Choice": "Natural",
+  "Solinco Tour Bite Soft": "Silver",
+  "Luxilon Element": "Bronze",
+  "Babolat Origin": "Natural",
+  "Yonex Poly Tour Rev": "Blue",
+  "Head Hawk Power": "Orange",
+  "Wilson Sensation": "Natural",
+  "Tecnifibre Triax": "Natural",
+  "Prince Premier Control": "Natural",
+  "Babolat Addixion+": "Natural",
+  "Head Synthetic Gut PPS": "White",
+  "Luxilon Eco Power": "Green",
+  "Toroline Wasabi": "Green",
+  "Gosen OG-Sheep Micro": "White",
+  "Yonex Dynawire": "Silver",
+  "Wilson Revolve": "Blue",
+  "Head Hawk Touch": "Copper",
+  "Prince Premier Touch": "Natural",
+  "Luxilon Natural Gut / ALU Hybrid": "Natural",
+  "Babolat Touch VS / RPM Blast Hybrid": "Natural"
+};
+
+const STRING_COLOR_HEX = {
+  Black: "#2f3136",
+  Silver: "#b9c2ca",
+  Grey: "#7f8791",
+  White: "#f5f7f8",
+  Natural: "#ead9b8",
+  Gold: "#d8b347",
+  Bronze: "#b77d4a",
+  Blue: "#4c8fe8",
+  Green: "#8fd645",
+  Yellow: "#efe34d",
+  Orange: "#ee9442",
+  Red: "#df5454",
+  Purple: "#9f72de",
+  Champagne: "#d8bf8a",
+  Copper: "#b87333"
+};
+
+const FILTERS = [
+  { key: "brand", label: "String Brand", options: ["Any", "Ashaway", "Babolat", "Diadem", "Dunlop", "Forten", "Gamma", "Genesis", "Gosen", "Grapplesnake", "Head", "IsoSpeed", "Kirschbaum", "Klip", "Luxilon", "Mayami", "MSV", "Prince", "Restring", "Signum Pro", "Solinco", "Tecnifibre", "Topspin", "Toroline", "Tourna", "Volkl", "Weiss Cannon", "Wilson", "YTex", "Yonex"] },
+  { key: "type", label: "Type of String", options: ["Any", "Poly", "Co-Poly", "Synthetic Gut", "Multifilament", "Hybrid-Style Multi", "Natural Gut", "Hybrid"] },
+  { key: "atpPlayer", label: "ATP Player", options: ["Any", "Jannik Sinner", "Alexander Zverev", "Carlos Alcaraz", "Taylor Fritz", "Novak Djokovic", "Casper Ruud", "Daniil Medvedev", "Andrey Rublev", "Stefanos Tsitsipas", "Alex de Minaur", "Holger Rune", "Tommy Paul", "Ben Shelton", "Ugo Humbert", "Grigor Dimitrov", "Hubert Hurkacz", "Lorenzo Musetti", "Frances Tiafoe", "Sebastian Korda", "Arthur Fils", "Karen Khachanov", "Nicolas Jarry", "Felix Auger-Aliassime", "Matteo Berrettini", "Matteo Arnaldi", "Cameron Norrie", "Alejandro Tabilo", "Jiri Lehecka", "Jack Draper", "Alexander Bublik", "Tomas Machac", "Alexei Popyrin", "Nuno Borges", "Sebastian Baez", "Federico Agustin Gomez", "Daniel Gimeno Traver", "Julian Cash", "Rafael Nadal", "Roger Federer"] },
+  { key: "wtaPlayer", label: "WTA Player", options: ["Any", "Iga Swiatek", "Aryna Sabalenka", "Coco Gauff", "Jessica Pegula", "Elena Rybakina", "Amanda Anisimova", "Belinda Bencic", "Clara Tauson", "Marketa Vondrousova", "Qinwen Zheng", "Ons Jabeur", "Maria Sakkari", "Jelena Ostapenko", "Daria Kasatkina", "Danielle Collins", "Barbora Krejcikova", "Emma Navarro", "Beatriz Haddad Maia", "Liudmila Samsonova", "Caroline Garcia", "Madison Keys", "Anna Kalinskaya", "Naomi Osaka", "Paula Badosa", "Donna Vekic", "Ekaterina Alexandrova", "Marta Kostyuk", "Elina Svitolina", "Mirra Andreeva", "Karolina Muchova", "Veronika Kudermetova", "Jasmine Paolini", "Leylah Fernandez", "Diana Shnaider", "McCartney Kessler", "Anna Blinkova", "Sloane Stephens"] },
+  { key: "stringColor", label: "String Color", options: ["Any", "Black", "Silver", "Grey", "White", "Natural", "Gold", "Bronze", "Blue", "Green", "Yellow", "Orange", "Red", "Purple", "Champagne", "Copper"] },
+  { key: "stringShape", label: "String Shape", options: ["Any", "Round", "Shaped", "Textured", "Hybrid Mix"] },
+  { key: "spin", label: "Spin", options: ["Any", "Low", "Medium", "High", "Very High"] },
+  { key: "power", label: "Power", options: ["Any", "Low", "Medium", "High"] },
+  { key: "control", label: "Control", options: ["Any", "Low", "Medium", "High", "Very High"] },
+  { key: "durability", label: "Durability", options: ["Any", "Low", "Medium", "High", "Very High"] },
+  { key: "comfort", label: "Comfort", options: ["Any", "Low", "Medium", "High"] },
+  { key: "feel", label: "Feel", options: ["Any", "Crisp", "Plush", "Muted", "Responsive"] },
+  { key: "gauge", label: "String Gauge", options: ["Any", "15L", "16", "16L", "17", "17L", "18"] },
+  { key: "playerLevel", label: "Player Level", options: ["Any", "Beginner", "Novice", "Intermediate", "Advanced", "Pro"] },
+  { key: "gameStyle", label: "Game Style", options: ["Any", "Aggressive Baseliner", "Counterpuncher", "All-Court", "Serve and Volley", "Flat Hitter", "Heavy Topspin"] },
+  { key: "tensionBand", label: "Recommended Tension", options: ["Any", "Low 40s", "Mid 40s", "High 40s", "Low 50s", "Mid 50s"] },
+  { key: "racketFamily", label: "Racket Being Used", options: ["Any", "Babolat Pure Aero", "Babolat Pure Drive", "Wilson Blade", "Wilson Clash", "Wilson Pro Staff", "Yonex Ezone", "Yonex VCORE", "Head Speed", "Head Radical", "Control Frame", "Power Frame", "Spin Frame"] },
+  { key: "armFriendliness", label: "Arm Friendliness", options: ["Any", "Low", "Medium", "High"] },
+  { key: "surface", label: "Best Court Fit", options: ["Any", "Clay", "Hard Court", "Grass", "All Surfaces"] },
+  { key: "priceTier", label: "Price / Value", options: ["Any", "Budget", "Mid-Range", "Premium"] }
+];
+
+const TYPE_DESCRIPTIONS = {
+  Any: {
+    eyebrow: "String Type Guide",
+    title: "All String Types",
+    text: "Compare different string families to find the blend of spin, comfort, control, and power that best fits your game."
+  },
+  Poly: {
+    eyebrow: "Poly",
+    title: "Poly Strings",
+    text: "Poly strings usually favor spin, control, and durability. They are often firmer and work best for stronger players with fast swings who generate their own pace."
+  },
+  "Co-Poly": {
+    eyebrow: "Co-Poly",
+    title: "Co-Poly Strings",
+    text: "Co-polys are modern polyester blends that aim to keep the control and spin of poly while improving feel, comfort, or tension maintenance. Many advanced players live in this category."
+  },
+  "Synthetic Gut": {
+    eyebrow: "Synthetic Gut",
+    title: "Synthetic Gut Strings",
+    text: "Synthetic gut is the classic all-around option. It is usually affordable, crisp, and balanced, making it a strong starting point for beginners and everyday club players."
+  },
+  Multifilament: {
+    eyebrow: "Multifilament",
+    title: "Multifilament Strings",
+    text: "Multifilaments are built for comfort, touch, and easier power. They are popular with players who want a softer feel, more forgiveness, or better arm-friendliness."
+  },
+  "Natural Gut": {
+    eyebrow: "Natural Gut",
+    title: "Natural Gut Strings",
+    text: "Natural gut offers premium power, comfort, feel, and tension maintenance. It is expensive, but still one of the best choices for touch players, hybrids, and arm comfort."
+  },
+  Hybrid: {
+    eyebrow: "Hybrid",
+    title: "Hybrid String Setups",
+    text: "Hybrids combine two different string types, often to blend control and spin from poly with the comfort, feel, or power of gut or multifilament."
+  }
+};
+
+if (typeof window !== "undefined") {
+  window.TENNIS_STRING_TYPE_DESCRIPTIONS = TYPE_DESCRIPTIONS;
+}
+
+const GUIDE_PAGES = [
+  {
+    title: "Compare Strings",
+    href: "./compare-strings.html",
+    description: "Compare two tennis strings side by side for spin, control, comfort, power, durability, and racket fit.",
+    keywords: ["compare strings", "string comparison", "compare tennis strings", "tennis string comparison", "string matchup"]
+  },
+  {
+    title: "Compare Pro Setups",
+    href: "./compare-pro-setups.html",
+    description: "Compare two curated pro-inspired tennis setups side by side for racket fit, string choice, tension reference, and likely setup profile.",
+    keywords: ["compare pro setups", "pro setups", "compare pro tennis setups", "pro setup comparison", "compare pros"]
+  },
+  {
+    title: "Hybrid String Builder",
+    href: "./hybrid-builder.html",
+    description: "Build a mains and crosses hybrid using the string database, then get a practical profile, starting split, pro hybrid examples, and popular hybrid setup ideas.",
+    keywords: ["hybrid string builder", "hybrid builder", "build a hybrid", "string hybrid", "mains and crosses", "tennis hybrid setup", "hybrid strings"]
+  },
+  {
+    title: "String Library",
+    href: "./string-library.html",
+    description: "Browse the full Tennis String Lab article library, grouped into fundamentals, setup guides, player-fit pages, comparisons, and resources.",
+    keywords: ["string library", "reference guide", "guides", "articles", "library", "tennis string guides"]
+  },
+  {
+    title: "Popular Tennis Stringing Machines",
+    href: "./popular-tennis-stringing-machines.html",
+    description: "A practical guide to current popular tennis stringing machines, including entry-level drop-weight machines, premium tabletop models, crank machines, and travel options.",
+    keywords: ["popular stringing machines", "tennis stringing machines", "best tennis stringing machine", "drop weight machine", "crank stringing machine"]
+  },
+  {
+    title: "Portable Tennis Stringing Machines",
+    href: "./portable-tennis-stringing-machines.html",
+    description: "A practical guide to portable and travel-friendly tennis stringing machines, including true carry-on machines and lighter tabletop options.",
+    keywords: ["portable stringing machines", "travel stringing machine", "portable tennis stringing machine", "Pro Stringer", "tabletop stringing machine"]
+  },
+  {
+    title: "String Type Descriptions",
+    href: "./string-types.html",
+    description: "Compare the main string families and understand how they differ in spin, comfort, power, control, and durability.",
+    keywords: ["string type", "string types", "types", "poly", "co-poly", "multifilament", "natural gut", "synthetic gut", "hybrid"]
+  },
+  {
+    title: "String Materials Guide",
+    href: "./string-materials-guide.html",
+    description: "Learn what tennis strings are made from, including natural gut, nylon, multifilament, polyester, co-poly, and aramid constructions.",
+    keywords: ["string materials", "materials", "nylon", "polyester", "co-poly", "natural gut", "aramid", "kevlar", "multifilament"]
+  },
+  {
+    title: "How Tennis Strings Are Made",
+    href: "./how-tennis-string-is-made.html",
+    description: "See how tennis strings are manufactured, from natural gut twisting to polyester extrusion and multifilament bonding.",
+    keywords: ["how strings are made", "manufacturing", "extrusion", "multifilament", "synthetic gut", "natural gut", "polyester", "co-poly"]
+  },
+  {
+    title: "Poly vs Co-Poly",
+    href: "./poly-vs-co-poly.html",
+    description: "Learn the practical difference between poly and co-poly strings, including why the terms are often used loosely.",
+    keywords: ["poly vs co-poly", "poly", "co-poly", "polyester", "difference between poly and co-poly", "poly string"]
+  },
+  {
+    title: "Natural Gut vs Multifilament",
+    href: "./natural-gut-vs-multifilament.html",
+    description: "Compare natural gut and multifilament for comfort, power, feel, tension maintenance, and price.",
+    keywords: ["natural gut vs multifilament", "natural gut", "multifilament", "comfort strings", "soft strings", "gut vs multi"]
+  },
+  {
+    title: "Full Bed vs Hybrid",
+    href: "./full-bed-vs-hybrid.html",
+    description: "Learn the practical difference between a full bed and a hybrid setup, and which players usually benefit from each.",
+    keywords: ["full bed vs hybrid", "hybrid", "mains and crosses", "same string both ways", "poly hybrid", "gut hybrid"]
+  },
+  {
+    title: "Tension Guide",
+    href: "./tension-guide.html",
+    description: "Learn how lower and higher tension change comfort, power, control, and overall response.",
+    keywords: ["tension", "lbs", "pounds", "low tension", "high tension", "string tension"]
+  },
+  {
+    title: "Tension Calculator Logic",
+    href: "./tension-logic.html",
+    description: "See exactly how the calculator combines string type, racket family, feel goal, arm comfort, and displayed range.",
+    keywords: ["tension calculator", "calculator logic", "how tension works", "stringing formula", "lbs", "kg", "feel goal", "arm comfort"]
+  },
+  {
+    title: "Gauge Guide",
+    href: "./gauge-guide.html",
+    description: "See how string thickness affects feel, durability, spin, and liveliness.",
+    keywords: ["gauge", "16", "17", "18", "thickness", "string gauge", "16l"]
+  },
+  {
+    title: "Hybrid String Guide",
+    href: "./hybrid-guide.html",
+    description: "Understand mains, crosses, and common hybrid combinations like poly plus gut or poly plus multi.",
+    keywords: ["hybrid", "mains", "crosses", "poly gut", "poly multi", "hybrid strings"]
+  },
+  {
+    title: "Arm-Friendly Strings",
+    href: "./arm-friendly.html",
+    description: "Comfort-focused guidance for players dealing with harsh setups, tennis elbow, or arm sensitivity.",
+    keywords: ["arm", "arm friendly", "comfort", "tennis elbow", "elbow", "soft strings"]
+  },
+  {
+    title: "String Shape Guide",
+    href: "./string-shape-guide.html",
+    description: "Compare round, shaped, and textured strings and how they influence feel and spin.",
+    keywords: ["shape", "shaped", "round", "textured", "spin shape", "string shape"]
+  },
+  {
+    title: "String Dampeners: Do They Work?",
+    href: "./string-dampeners-guide.html",
+    description: "Learn what tennis string dampeners actually change, what they do not fix, and whether a dampener is worth using.",
+    keywords: ["string dampener", "dampener", "vibration dampener", "do dampeners work", "tennis dampener", "muted feel", "ping sound"]
+  },
+  {
+    title: "When Poly Goes Dead",
+    href: "./when-poly-goes-dead.html",
+    description: "Learn the signs that polyester strings have gone dead and when it is time to restring instead of playing through it.",
+    keywords: ["dead poly", "when poly goes dead", "polyester strings", "old poly", "restring poly", "dead strings"]
+  },
+  {
+    title: "Best Strings for Beginners",
+    href: "./best-strings-for-beginners.html",
+    description: "Find the best string directions for beginners, including comfortable, affordable, and easy-to-use setups.",
+    keywords: ["best strings for beginners", "beginner tennis strings", "starter strings", "beginner setup", "first tennis strings"]
+  },
+  {
+    title: "Best Strings for Intermediate Players",
+    href: "./best-strings-for-intermediate-players.html",
+    description: "Find the best string directions for intermediate players who want a better balance of control, comfort, spin, and value.",
+    keywords: ["best strings for intermediate players", "intermediate tennis strings", "balanced setup", "control and comfort", "intermediate setup"]
+  },
+  {
+    title: "How Much Can a Good String Setup Improve Your Tennis Game?",
+    href: "./how-much-can-a-good-string-setup-improve-your-tennis-game.html",
+    description: "Learn how much a good tennis string setup can improve consistency, comfort, control, and confidence for different types of players.",
+    keywords: ["how much can strings improve your game", "string setup improvement", "tennis string performance", "better string setup", "consistency", "confidence"]
+  },
+  {
+    title: "What Strings Help Beginners Improve Most?",
+    href: "./what-strings-help-beginners-improve-most.html",
+    description: "Learn which string types help beginners most and why synthetic gut and softer multifilaments are often better early choices than poly.",
+    keywords: ["what strings help beginners", "beginner improvement", "beginner tennis strings", "synthetic gut", "soft multifilament", "starter strings"]
+  },
+  {
+    title: "What Setup Changes Help Intermediate Players Most?",
+    href: "./what-setup-changes-help-intermediate-players-most.html",
+    description: "Learn which setup changes help intermediate players most, including tension changes, softer polys, hybrid logic, and fresher strings.",
+    keywords: ["intermediate setup changes", "what helps intermediates most", "tennis string setup changes", "tension changes", "softer poly", "hybrid"]
+  },
+  {
+    title: "Do Tennis Strings Lose Tension If You Don't Play?",
+    href: "./do-tennis-strings-lose-tension-if-you-dont-play.html",
+    description: "Learn why strings can still lose tension while sitting unused and why age matters even without much play.",
+    keywords: ["lose tension if you don't play", "string tension over time", "unused strings", "old strings", "do strings lose tension", "time-based restringing"]
+  },
+  {
+    title: "How Weather Affects String Tension",
+    href: "./how-weather-affects-string-tension.html",
+    description: "Learn how heat, cold, humidity, and seasonal conditions can make the same racket setup feel different.",
+    keywords: ["weather affects string tension", "hot weather tension", "cold weather tension", "summer tension", "winter tension", "humidity string tension"]
+  },
+  {
+    title: "How Often to Restring",
+    href: "./restring-guide.html",
+    description: "Know when a string setup is ready to be changed based on feel, hours played, and string type.",
+    keywords: ["restring", "how often", "how often to restring", "dead strings", "replace strings", "old strings"]
+  },
+  {
+    title: "Best Strings by Player Type",
+    href: "./player-type-guide.html",
+    description: "Find the best string directions for beginners, intermediates, advanced hitters, touch players, and more.",
+    keywords: ["player type", "beginner", "intermediate", "advanced", "junior", "senior", "all court", "touch player"]
+  },
+  {
+    title: "Best Strings by Need",
+    href: "./best-by-need.html",
+    description: "Browse practical directions for players shopping by spin, control, power, comfort, durability, or feel.",
+    keywords: ["best for spin", "best for control", "best for power", "best for comfort", "durability", "feel", "need"]
+  },
+  {
+    title: "Best Strings for Pure Aero",
+    href: "./best-strings-for-pure-aero.html",
+    description: "Find string directions that usually work best in a Babolat Pure Aero, from control-first polys to softer comfort paths.",
+    keywords: ["pure aero", "babolat pure aero", "best strings for pure aero", "pure aero strings", "spin frame", "aero setup"]
+  },
+  {
+    title: "Best Strings for Wilson Blade",
+    href: "./best-strings-for-wilson-blade.html",
+    description: "See which string directions usually fit the Wilson Blade best, including round polys, softer setups, and feel-oriented options.",
+    keywords: ["wilson blade", "best strings for blade", "blade strings", "best strings for wilson blade", "control frame", "blade setup"]
+  },
+  {
+    title: "Best Strings for Tennis Elbow",
+    href: "./best-strings-for-tennis-elbow.html",
+    description: "Comfort-focused guidance for players dealing with tennis elbow, harsh strings, or sensitive arms.",
+    keywords: ["tennis elbow", "best strings for tennis elbow", "arm friendly strings", "soft strings", "comfortable strings", "elbow pain"]
+  },
+  {
+    title: "Popular String Comparisons",
+    href: "./popular-comparisons.html",
+    description: "Quick head-to-head guidance for common string matchups like RPM Blast vs Hyper-G and ALU Power vs 4G.",
+    keywords: ["comparison", "compare", "vs", "rpm blast", "hyper-g", "alu power", "4g", "nxt", "x-one"]
+  }
+];
+
+const OFFICIAL_BRAND_PAGES = {
+  Babolat: "https://www.babolat.com/us/tennis/strings.html",
+  Luxilon: "https://www.wilson.com/en-us/tennis/strings",
+  Wilson: "https://www.wilson.com/en-us/tennis/strings",
+  Yonex: "https://www.yonex.com/tennis/strings",
+  Head: "https://www.head.com/en/strings/tennis-strings",
+  Tecnifibre: "https://tecnifibre.com/en/tennis/tennis-strings/",
+  Solinco: "https://www.solincosports.com/products-strings/",
+  Kirschbaum: "https://www.kirschbaum-tennis.de/en/strings/",
+  Volkl: "https://www.volkltennis.com/collections/strings",
+  Prince: "https://princetennis.com/collections/strings",
+  Gosen: "https://gosenamerica.com/",
+  Toroline: "https://toroline.com/collections/strings",
+  "Signum Pro": "https://www.signumpro.de/",
+  Dunlop: "https://dunlopsports.com/collections/tennis-strings",
+  Gamma: "https://gammasports.com/collections/tennis-strings",
+  MSV: "https://www.msv-tennis.com/",
+  "Weiss Cannon": "https://weisscannon.com/",
+  Mayami: "https://mayamistrings.com/collections/strings",
+  Restring: "https://restring.com/collections/tennis-strings",
+  Diadem: "https://diademsports.com/collections/strings",
+  Genesis: "https://www.genesis-tennis.com/"
+};
+
+const state = Object.fromEntries(FILTERS.map((filter) => [filter.key, "Any"]));
+let searchQuery = "";
+let popularOnly = false;
+let proOnly = false;
+let toolsHiddenForPrimaryModes = false;
+let autoCollapsedToolsForSearch = false;
+let toolsHiddenBeforeSearch = false;
+const sliderPreferences = {
+  power: 5,
+  spin: 5,
+  control: 5,
+  proPlayers: 5
+};
+let sliderRenderTimeout = null;
+let sliderInteractionActive = false;
+let sliderInteractionTimeout = null;
+let latestQuickSetupRecommendation = null;
+let latestTensionCalculatorSource = null;
+let activeQuickSetupExampleIndex = -1;
+
+function persistTensionCalculatorSource(source) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    if (!source) {
+      window.localStorage.removeItem(tensionSourceStorageKey);
+      return;
+    }
+
+    window.localStorage.setItem(tensionSourceStorageKey, JSON.stringify(source));
+  } catch {
+    // Ignore storage failures so the tool still works without persistence.
+  }
+}
+
+function loadStoredTensionCalculatorSource() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  try {
+    const raw = window.localStorage.getItem(tensionSourceStorageKey);
+    if (!raw) {
+      return null;
+    }
+
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+const QUICK_SETUP_EXAMPLES = [
+  {
+    buttonLabel: "Example 1/12: Carlos Alcaraz",
+    style: "Aggressive Baseliner",
+    player: "Carlos Alcaraz",
+    preferredTopEntryName: "Babolat RPM Blast",
+    racketFamily: "Babolat Pure Aero",
+    useProRacket: true,
+    preferences: {
+      spin: "Very High",
+      power: "Medium",
+      control: "High"
+    }
+  },
+  {
+    buttonLabel: "Example 2/12: Jannik Sinner",
+    style: "Aggressive Baseliner",
+    player: "Jannik Sinner",
+    preferredTopEntryName: "Head Hawk Touch",
+    racketFamily: "Head Speed",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "Medium",
+      control: "Very High"
+    }
+  },
+  {
+    buttonLabel: "Example 3/12: Aryna Sabalenka",
+    style: "Aggressive Baseliner",
+    player: "Aryna Sabalenka",
+    preferredTopEntryName: "Luxilon ALU Power",
+    racketFamily: "Wilson Blade",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "High",
+      control: "High"
+    }
+  },
+  {
+    buttonLabel: "Example 4/12: Taylor Fritz",
+    style: "Aggressive Baseliner",
+    player: "Taylor Fritz",
+    preferredTopEntryName: "Head Hawk",
+    racketFamily: "Head Radical",
+    useProRacket: true,
+    preferences: {
+      spin: "Medium",
+      power: "Low",
+      control: "Very High"
+    }
+  },
+  {
+    buttonLabel: "Example 5/12: Ben Shelton",
+    style: "Aggressive Baseliner",
+    player: "Ben Shelton",
+    preferredTopEntryName: "Yonex Poly Tour Pro",
+    racketFamily: "Yonex Ezone",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "Medium",
+      control: "High"
+    }
+  },
+  {
+    buttonLabel: "Example 6/12: Iga Swiatek",
+    style: "Aggressive Baseliner",
+    player: "Iga Swiatek",
+    preferredTopEntryName: "Tecnifibre Razor Code",
+    racketFamily: "Control Frame",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "Medium",
+      control: "Very High"
+    }
+  },
+  {
+    buttonLabel: "Example 7/12: Novak Djokovic",
+    style: "All-Court",
+    player: "Novak Djokovic",
+    preferredTopEntryName: "Babolat VS Touch",
+    racketFamily: "Control Frame",
+    useProRacket: true,
+    preferences: {
+      spin: "Medium",
+      power: "High",
+      control: "High"
+    }
+  },
+  {
+    buttonLabel: "Example 8/12: Alexander Zverev",
+    style: "Flat Hitter",
+    player: "Alexander Zverev",
+    preferredTopEntryName: "Head Hawk Touch",
+    racketFamily: "Head Radical",
+    useProRacket: true,
+    preferences: {
+      spin: "Medium",
+      power: "Low",
+      control: "Very High"
+    }
+  },
+  {
+    buttonLabel: "Example 9/12: Coco Gauff",
+    style: "Aggressive Baseliner",
+    player: "Coco Gauff",
+    preferredTopEntryName: "Luxilon ALU Power",
+    racketFamily: "Wilson Blade",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "Medium",
+      control: "High"
+    }
+  },
+  {
+    buttonLabel: "Example 10/12: Tommy Paul",
+    style: "Heavy Topspin",
+    player: "Tommy Paul",
+    preferredTopEntryName: "Solinco Tour Bite",
+    racketFamily: "Spin Frame",
+    useProRacket: true,
+    preferences: {
+      spin: "Very High",
+      power: "Low",
+      control: "Very High"
+    }
+  },
+  {
+    buttonLabel: "Example 11/12: Paula Badosa",
+    style: "Aggressive Baseliner",
+    player: "Paula Badosa",
+    preferredTopEntryName: "Luxilon ALU Power",
+    racketFamily: "Wilson Blade",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "Medium",
+      control: "High"
+    }
+  },
+  {
+    buttonLabel: "Example 12/12: Elena Rybakina",
+    style: "Aggressive Baseliner",
+    player: "Elena Rybakina",
+    preferredTopEntryName: "Yonex Poly Tour Fire",
+    racketFamily: "Yonex Ezone",
+    useProRacket: true,
+    preferences: {
+      spin: "High",
+      power: "Medium",
+      control: "High"
+    }
+  }
+];
+const TENSION_BAND_DETAILS = {
+  "Low 40s": { min: 43, max: 46, center: 44.5, lbs: "43-46 lbs" },
+  "Mid 40s": { min: 46, max: 48, center: 47, lbs: "46-48 lbs" },
+  "High 40s": { min: 48, max: 50, center: 49, lbs: "48-50 lbs" },
+  "Low 50s": { min: 50, max: 53, center: 51.5, lbs: "50-53 lbs" },
+  "Mid 50s": { min: 54, max: 56, center: 55, lbs: "54-56 lbs" }
+};
+const TENSION_TYPE_BASE = {
+  Poly: 48.5,
+  "Co-Poly": 49,
+  "Synthetic Gut": 55,
+  Multifilament: 54,
+  "Natural Gut": 55.5,
+  Hybrid: 52.5
+};
+const TENSION_RACKET_ADJUSTMENTS = {
+  "Babolat Pure Aero": 0,
+  "Babolat Pure Drive": 1.5,
+  "Wilson Blade": 0.5,
+  "Wilson Clash": 1.5,
+  "Wilson Pro Staff": 0.5,
+  "Yonex Ezone": 1,
+  "Yonex VCORE": 0,
+  "Head Speed": 0.5,
+  "Head Radical": 0.5,
+  "Control Frame": 0.5,
+  "Power Frame": 1.5,
+  "Spin Frame": 0
+};
+const TENSION_FEEL_ADJUSTMENTS = {
+  Comfort: -2,
+  Balanced: 0,
+  Control: 2
+};
+const TENSION_ARM_ADJUSTMENTS = {
+  Normal: 0,
+  Sensitive: -1.5,
+  "Very Sensitive": -3
+};
+
+// Admin note:
+// String result cards now link to the shop finder page.
+// Add or update shops in proshops.js and include coordinates so nearby
+// locations can be ranked first for each visitor.
+
+const STRINGS = [
+  stringEntry("Babolat RPM Blast", {
+    brand: "Babolat", type: "Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Babolat Pure Aero", atpPlayers: ["Arthur Fils", "Carlos Alcaraz", "Holger Rune", "Alexander Bublik", "Rafael Nadal"], wtaPlayers: ["Leylah Fernandez"],
+    proRackets: [
+      { player: "Arthur Fils", racket: "Babolat Pure Aero 98" },
+      { player: "Carlos Alcaraz", racket: "Babolat Pure Aero 98" },
+      { player: "Alexander Bublik", racket: "Babolat Aero-style pro stock / blacked-out frame" },
+      { player: "Leylah Fernandez", racket: "Babolat Pure Aero 98" }
+    ],
+    armFriendliness: "Low", surface: "All Surfaces", priceTier: "Premium", imageTone: "#d1ff38",
+    proTensions: [
+      { player: "Arthur Fils", detail: "Typical full-bed example", tension: "22 / 23 kg" },
+      { player: "Carlos Alcaraz", detail: "Typical full-bed example", tension: "55 / 53 lbs" },
+      { player: "Rafael Nadal", detail: "Typical full-bed example", tension: "55 / 55 lbs" }
+    ],
+    summary: "A benchmark shaped poly for players who want heavy spin and a lively-but-controlled launch.",
+    note: "Great fit for big swings and modern topspin mechanics."
+  }),
+stringEntry("Luxilon ALU Power", {
+  brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+  comfort: "Low", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+  tensionBand: "Low 50s", racketFamily: "Wilson Blade", atpPlayers: ["Cameron Norrie", "Jack Draper", "Jiri Lehecka", "Karen Khachanov", "Novak Djokovic", "Daniil Medvedev", "Sebastian Korda"], wtaPlayers: ["Anna Kalinskaya", "Amanda Anisimova", "Anna Blinkova", "Aryna Sabalenka", "Barbora Krejcikova", "Beatriz Haddad Maia", "Coco Gauff", "Maria Sakkari", "McCartney Kessler", "Mirra Andreeva", "Ons Jabeur", "Paula Badosa"],
+    proRackets: [
+      { player: "Anna Kalinskaya", racket: "Wilson Ultra 100 v5" },
+      { player: "Amanda Anisimova", racket: "Wilson Steam 100 BLX" },
+      { player: "Anna Blinkova", racket: "Wilson Steam 100" },
+      { player: "Barbora Krejcikova", racket: "Customized HEAD Youtek IG Extreme Pro (Extreme MP cosmetic)" },
+      { player: "Beatriz Haddad Maia", racket: "Wilson Steam 100" },
+      { player: "Coco Gauff", racket: "HEAD racquet" },
+      { player: "Maria Sakkari", racket: "Wilson Ultra 100 v5" },
+      { player: "Novak Djokovic", racket: "Head Speed Pro Legend" },
+      { player: "Karen Khachanov", racket: "Wilson Blade 98 18x20 v9" },
+      { player: "Aryna Sabalenka", racket: "Wilson Blade 98 18x20 v9" },
+      { player: "Jiri Lehecka", racket: "Wilson Pro Staff 97 V14 cosmetic / customized Six One 95" },
+      { player: "McCartney Kessler", racket: "Wilson Blade 98 16x19 / Blade Pro mold" },
+      { player: "Paula Badosa", racket: "Wilson Blade 98 v9 / customized Wilson Steam 100" },
+      { player: "Sebastian Korda", racket: "Wilson Blade 98" },
+      { player: "Ons Jabeur", racket: "Wilson Pro Staff 97 v14" }
+    ],
+    proTensions: [
+      { player: "Anna Kalinskaya", detail: "Typical full-bed example", tension: "53 lbs" },
+      { player: "Coco Gauff", detail: "Typical full-bed example", tension: "53-55 lbs" },
+      { player: "Cameron Norrie", detail: "Typical full-bed example", tension: "Mid-40s lbs" },
+      { player: "Jiri Lehecka", detail: "Typical full-bed example", tension: "24 / 22 kg" },
+      { player: "Sebastian Korda", detail: "Typical full-bed example", tension: "50 / 47 lbs" }
+    ],
+    armFriendliness: "Low", surface: "All Surfaces", priceTier: "Premium", imageTone: "#9cc8ff",
+    summary: "Classic tour-level co-poly with clean response and strong control on full swings.",
+    note: "Best for players who create pace and want a connected ball feel."
+  }),
+  stringEntry("Solinco Hyper-G", {
+    brand: "Solinco", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: ["Hubert Hurkacz"], wtaPlayers: ["Sloane Stephens"],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#90d550",
+    summary: "Spin-focused co-poly that rewards fast racquet head speed and aggressive shapes on the ball.",
+    note: "Popular among players who want trajectory control and bite."
+  }),
+  stringEntry("Tecnifibre X-One Biphase", {
+    brand: "Tecnifibre", type: "Multifilament", stringShape: "Round", spin: "Medium", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: ["Daniil Medvedev"], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f4e6af",
+    summary: "Premium multi with strong pop and comfort for players wanting easier depth and touch.",
+    note: "Great for players protecting the arm without moving to full gut."
+  }),
+  stringEntry("Wilson NXT", {
+    brand: "Wilson", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Wilson Clash", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#ffd4b5",
+    summary: "Comfort-first multifilament that gives easy power and a soft impact feel.",
+    note: "A strong option for newer players and anyone managing arm tenderness."
+  }),
+  stringEntry("Babolat VS Touch", {
+    brand: "Babolat", type: "Natural Gut", stringShape: "Round", spin: "Medium", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Pro", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: ["Novak Djokovic", "Roger Federer"], wtaPlayers: ["Iga Swiatek", "Belinda Bencic", "McCartney Kessler", "Anna Blinkova"],
+    proRackets: [
+      { player: "Novak Djokovic", racket: "Head Speed Pro Legend" },
+      { player: "Roger Federer", racket: "Wilson RF 01 Pro" },
+      { player: "Belinda Bencic", racket: "Yonex EZONE 100" },
+      { player: "McCartney Kessler", racket: "Wilson Blade 98 16x19 / Blade Pro mold" },
+      { player: "Anna Blinkova", racket: "Wilson Steam 100" }
+    ],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f7deb0",
+    proTensions: [
+      { player: "Novak Djokovic", detail: "Typical gut/poly hybrid example", tension: "59 / 56 lbs" }
+    ],
+    summary: "Reference natural gut for players who want premium power, touch, and tension maintenance.",
+    note: "Often used in hybrids for elite feel and arm comfort."
+  }),
+stringEntry("Yonex Poly Tour Pro", {
+  brand: "Yonex", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+  comfort: "Medium", feel: "Muted", gauge: "16L", playerLevel: "Intermediate", gameStyle: "Counterpuncher",
+  tensionBand: "High 40s", racketFamily: "Yonex Ezone", atpPlayers: ["Alejandro Tabilo", "Ben Shelton", "Casper Ruud", "Frances Tiafoe", "Nick Kyrgios"], wtaPlayers: ["Belinda Bencic", "Jasmine Paolini", "Naomi Osaka"],
+    proRackets: [
+      { player: "Alejandro Tabilo", racket: "Yonex VCORE 98 (older paint generation)" },
+      { player: "Belinda Bencic", racket: "Yonex EZONE 100" }
+    ],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#f1da4b",
+    summary: "Softer co-poly that balances control and comfort without feeling too dead.",
+    note: "Works well for players transitioning into poly. Alejandro Tabilo is commonly documented with a Poly Tour Pro mains / Poly Tour Spin crosses hybrid, so this is the closest in-database match."
+  }),
+  stringEntry("Head Lynx Tour", {
+    brand: "Head", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Head Speed", atpPlayers: ["Andrey Rublev", "Lorenzo Musetti"], wtaPlayers: ["Liudmila Samsonova"],
+    proRackets: [
+      { player: "Liudmila Samsonova", racket: "HEAD Speed MP 2024" }
+    ],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#f39b61",
+    summary: "Firm six-sided co-poly built for precision, bite, and dependable directional control.",
+    note: "Good for speed-frame users wanting extra spin structure."
+  }),
+  stringEntry("Solinco Confidential", {
+    brand: "Solinco", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Muted", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Wilson Blade", atpPlayers: ["Hubert Hurkacz"], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#767676",
+    summary: "Control-heavy poly for bigger hitters who want a tighter, more predictable response.",
+    note: "A strong fit when launch control matters more than free power."
+  }),
+  stringEntry("Luxilon 4G", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "Very High",
+    comfort: "Low", feel: "Muted", gauge: "16L", playerLevel: "Pro", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: ["Alexander Zverev", "Alexei Popyrin", "Nicolas Jarry"], wtaPlayers: ["Ekaterina Alexandrova", "Jelena Ostapenko", "Marta Kostyuk", "Qinwen Zheng", "Veronika Kudermetova"],
+    proRackets: [
+      { player: "Alexei Popyrin", racket: "Dunlop FX 500 Tour" },
+      { player: "Ekaterina Alexandrova", racket: "Wilson Blade 98S v9" },
+      { player: "Marta Kostyuk", racket: "Wilson Ultra 99 Pro v5" },
+      { player: "Qinwen Zheng", racket: "Wilson Ultra 99 Pro / 95 QZ" },
+      { player: "Veronika Kudermetova", racket: "Wilson Steam 99 / Blade 98 V9 paint" },
+      { player: "Nicolas Jarry", racket: "Wilson Blade 98 V9 paint / Blade pro stock" },
+      { player: "Jelena Ostapenko", racket: "Wilson Steam 100 BLX (Blade paint)" }
+    ],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Premium", imageTone: "#e0b143",
+    proTensions: [
+      { player: "Stefanos Tsitsipas", detail: "Typical 4G / ALU example", tension: "57 / 57 lbs" },
+      { player: "Jelena Ostapenko", detail: "Typical full-bed example", tension: "57-60 lbs" },
+      { player: "Marta Kostyuk", detail: "Typical full-bed example", tension: "55 lbs" }
+    ],
+    summary: "Very stable co-poly known for tension maintenance and a controlled launch window.",
+    note: "Best for players who hit hard and restring less often."
+  }),
+  stringEntry("Luxilon 4G Soft", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "16L", playerLevel: "Pro", gameStyle: "Counterpuncher",
+    tensionBand: "Mid 40s", racketFamily: "Wilson Blade", atpPlayers: ["Ugo Humbert"], wtaPlayers: [],
+    proRackets: [
+      { player: "Ugo Humbert", racket: "Wilson Blade 98 16x19" }
+    ],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#dcb756",
+    proTensions: [
+      { player: "Ugo Humbert", detail: "Typical full-bed example", tension: "42-49 lbs" }
+    ],
+    summary: "Softer version of 4G that keeps the family control and stability while offering a more forgiving response.",
+    note: "Useful for players who like controlled Luxilon performance but want a friendlier feel and lower-tension setup."
+  }),
+  stringEntry("Prince Synthetic Gut Duraflex", {
+    brand: "Prince", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#f4d39b",
+    summary: "Classic all-around synthetic gut with balanced playability and easy value.",
+    note: "Great starting point for rec players figuring out what they like."
+  }),
+  stringEntry("Tecnifibre Razor Code", {
+    brand: "Tecnifibre", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Head Radical", atpPlayers: [], wtaPlayers: ["Iga Swiatek"],
+    proRackets: [
+      { player: "Iga Swiatek", racket: "Tecnifibre TFight 300S" }
+    ],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Premium", imageTone: "#e7c7ff",
+    proTensions: [
+      { player: "Iga Swiatek", detail: "Typical full-bed example", tension: "53 / 53 lbs" }
+    ],
+    summary: "Crisp, tour-style co-poly that blends pop, shape, and directional trust.",
+    note: "Useful for aggressive all-court players who want a modern poly feel."
+  }),
+  stringEntry("Tecnifibre Razor Soft", {
+    brand: "Tecnifibre", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: ["Danielle Collins"],
+    proRackets: [
+      { player: "Danielle Collins", racket: "Tecnifibre T-Fight 300" }
+    ],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#f1d7f8",
+    summary: "Softer-feeling Razor-family co-poly that aims to blend modern control with a friendlier response.",
+    note: "A strong fit for players who want a cleaner Tecnifibre poly feel without the harshest impact."
+  }),
+  stringEntry("Babolat RPM Team", {
+    brand: "Babolat", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Babolat Pure Drive", atpPlayers: ["Carlos Alcaraz", "Felix Auger-Aliassime"], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#b6ec69",
+    summary: "A slightly softer RPM-family option with strong spin and easier access to pace.",
+    note: "Nice bridge string for players curious about firmer polys."
+  }),
+  stringEntry("Wilson Revolve Spin", {
+    brand: "Wilson", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Wilson Blade", atpPlayers: ["Stefanos Tsitsipas"], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#7df0a4",
+    summary: "Shaped co-poly designed to help aggressive topspin players get extra bite and shape.",
+    note: "Strong fit for modern baseline patterns and spin frames."
+  }),
+  stringEntry("Yonex Rexis Comfort", {
+    brand: "Yonex", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Yonex Ezone", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#dff0ff",
+    summary: "Soft, lively multifilament aimed at comfort and easy depth.",
+    note: "A good option for players coming from synthetic gut and wanting more comfort."
+  }),
+  stringEntry("Head Velocity MLT", {
+    brand: "Head", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Head Speed", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Budget", imageTone: "#8fd5ec",
+    summary: "Popular multi with above-average control for the category and a cleaner response than many soft strings.",
+    note: "Great value pick for comfort-oriented players."
+  }),
+  stringEntry("Kirschbaum Max Power", {
+    brand: "Kirschbaum", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: ["Dominic Thiem"], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#e36b5c",
+    summary: "Control-first co-poly for flatter ball strikers who want a firmer, cleaner contact point.",
+    note: "Particularly useful when you need to rein in a lively racket."
+  }),
+  stringEntry("Signum Pro Firestorm", {
+    brand: "Signum Pro", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: ["Matteo Berrettini"], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#e58a52",
+    proTensions: [
+      { player: "Matteo Berrettini", detail: "Typical full-bed example", tension: "51 lbs" }
+    ],
+    summary: "Popular Signum Pro co-poly known for balancing power, control, and a more comfortable feel than many firmer polys.",
+    note: "A strong option for aggressive ball strikers who want a livelier full-bed poly without losing too much control."
+  }),
+  stringEntry("Volkl Cyclone", {
+    brand: "Volkl", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Budget", imageTone: "#d69aff",
+    summary: "Firm shaped poly that gives excellent bite and directional confidence on fast swings.",
+    note: "Best suited to players who already like a firmer poly response."
+  }),
+  stringEntry("Wilson Champion's Choice", {
+    brand: "Wilson", type: "Hybrid", stringShape: "Hybrid Mix", spin: "High", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Pro", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Wilson Pro Staff", atpPlayers: ["Roger Federer"], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f0e7bf",
+    proTensions: [
+      { player: "Roger Federer", detail: "Typical gut/poly hybrid example", tension: "48.5 / 45 lbs" }
+    ],
+    summary: "Classic gut/poly hybrid for players wanting elite power, touch, and string-bed definition.",
+    note: "A premium all-court setup with broad performance range."
+  }),
+  stringEntry("Solinco Tour Bite Soft", {
+    brand: "Solinco", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: ["Sloane Stephens"],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#9bd46a",
+    summary: "A friendlier Tour Bite variant that keeps spin and control while softening impact slightly.",
+    note: "Useful for players who like shaped polys but want a gentler ride."
+  }),
+  stringEntry("Luxilon Element", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "High 40s", racketFamily: "Wilson Clash", atpPlayers: ["Gael Monfils"], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#d9cbff",
+    summary: "Soft-feeling co-poly for players who want control and easier comfort in a poly setup.",
+    note: "A nice bridge between multis and firmer tour polys."
+  }),
+  stringEntry("Babolat Origin", {
+    brand: "Babolat", type: "Hybrid", stringShape: "Hybrid Mix", spin: "Medium", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Plush", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f8deb5",
+    summary: "Comfort-oriented performance string with more life and softness than most firm polys.",
+    note: "Useful for players who like easy depth and a forgiving response."
+  }),
+  stringEntry("Yonex Poly Tour Rev", {
+    brand: "Yonex", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Yonex VCORE", atpPlayers: ["Nick Kyrgios"], wtaPlayers: ["Emma Navarro", "Jessica Pegula", "Madison Keys"],
+    proRackets: [
+      { player: "Jessica Pegula", racket: "Yonex EZONE 98" }
+    ],
+    proTensions: [
+      { player: "Jessica Pegula", detail: "Typical example with 10% pre-stretch", tension: "42 lbs" }
+    ],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#7bd1ff",
+    summary: "Spin-centric shaped co-poly with strong snapback and a lively modern feel.",
+    note: "Ideal for players wanting RPMs without going all the way to the firmest polys."
+  }),
+  stringEntry("Head Hawk Power", {
+    brand: "Head", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Head Speed", atpPlayers: ["Jannik Sinner"], wtaPlayers: [],
+    proRackets: [
+      { player: "Jannik Sinner", racket: "Head Speed MP 2026" }
+    ],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#ffcb6b",
+    summary: "A more explosive take on a control poly for players who still want a firmer launch window.",
+    note: "Pairs well with fast modern frames."
+  }),
+  stringEntry("Wilson Sensation", {
+    brand: "Wilson", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Budget", imageTone: "#ffcfc0",
+    summary: "Easy-power multi built for recreational players wanting comfort and softer feedback.",
+    note: "A strong starter upgrade from entry-level strings."
+  }),
+  stringEntry("Tecnifibre Triax", {
+    brand: "Tecnifibre", type: "Multifilament", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#ffd8f7",
+    summary: "Control-oriented multi with a more disciplined response than most soft string options.",
+    note: "Good for players who want arm comfort without losing too much precision."
+  }),
+  stringEntry("Prince Premier Control", {
+    brand: "Prince", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Muted", gauge: "16", playerLevel: "Intermediate", gameStyle: "Counterpuncher",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#efdfa9",
+    summary: "Comfort-friendly multi with firmer control than many power-oriented multifilaments.",
+    note: "A useful choice for steadier ball strikers."
+  }),
+  stringEntry("Babolat Addixion+", {
+    brand: "Babolat", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Babolat Pure Drive", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#fceca6",
+    summary: "Comfortable multi with accessible power and a cleaner response than entry-level synthetic gut.",
+    note: "Good for recreational Babolat users wanting an easier string bed."
+  }),
+  stringEntry("Head Synthetic Gut PPS", {
+    brand: "Head", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#cfeee9",
+    summary: "Reliable budget string with predictable response and solid all-around playability.",
+    note: "A sensible low-cost restring for club players."
+  }),
+  stringEntry("Luxilon Eco Power", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Wilson Blade", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#9ddf6a",
+    summary: "Modern co-poly with a clean response and eco-minded construction.",
+    note: "A newer option for players who still want recognizable Luxilon control."
+  }),
+  stringEntry("Toroline Wasabi", {
+    brand: "Toroline", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Premium", imageTone: "#b6f25a",
+    summary: "Lively shaped co-poly for players who want heavy rotation with a more modern, energetic response.",
+    note: "Strong fit for spin-first baseline patterns."
+  }),
+  stringEntry("Gosen OG-Sheep Micro", {
+    brand: "Gosen", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#efe4cb",
+    summary: "Value synthetic gut that stays simple, predictable, and easy to recommend for everyday club play.",
+    note: "A good baseline restring when budget matters."
+  }),
+  stringEntry("Yonex Dynawire", {
+    brand: "Yonex", type: "Synthetic Gut", stringShape: "Textured", spin: "Medium", power: "Medium", control: "Medium", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Intermediate", gameStyle: "Flat Hitter",
+    tensionBand: "Mid 50s", racketFamily: "Yonex Ezone", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Budget", imageTone: "#b0d8ff",
+    summary: "Crisper synthetic setup with solid durability for players who want cleaner feedback than a soft multi.",
+    note: "Useful for frequent club hitters and junior competitors."
+  }),
+  stringEntry("Wilson Revolve", {
+    brand: "Wilson", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Wilson Clash", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#8cc9ff",
+    summary: "Round co-poly with a smooth snapback feel and a friendlier response than the stiffest tour strings.",
+    note: "Nice for players wanting spin and control without a very harsh bed."
+  }),
+  stringEntry("Head Hawk Touch", {
+    brand: "Head", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Head Radical", atpPlayers: ["Alexander Zverev", "Jannik Sinner", "Nuno Borges"], wtaPlayers: [],
+    proRackets: [
+      { player: "Jannik Sinner", racket: "Head Speed MP 2026" },
+      { player: "Nuno Borges", racket: "HEAD Radical pro stock (TGT 307)" }
+    ],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#d8a56d",
+    proTensions: [
+      { player: "Jannik Sinner", detail: "Typical full-bed example", tension: "61 / 61 lbs" }
+    ],
+    summary: "Control-oriented co-poly with a slightly cleaner feel than deader low-powered options.",
+    note: "Works well for players who redirect pace and value precise targeting."
+  }),
+  stringEntry("Prince Premier Touch", {
+    brand: "Prince", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "17", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f7e1b4",
+    summary: "Soft multifilament aimed at comfort, easy pace, and a forgiving overall ride.",
+    note: "A dependable option for players prioritizing feel over durability."
+  }),
+  stringEntry("Luxilon Natural Gut / ALU Hybrid", {
+    brand: "Luxilon", type: "Hybrid", stringShape: "Hybrid Mix", spin: "High", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Pro", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: ["Grigor Dimitrov", "Roger Federer"], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#efe3c2",
+    summary: "Premium gut/poly hybrid recipe for players chasing elite touch, power, and controlled launch.",
+    note: "A luxury choice that plays big and feels connected."
+  }),
+  stringEntry("Luxilon Natural Gut / 4G Rough Hybrid", {
+    brand: "Luxilon", type: "Hybrid", stringShape: "Hybrid Mix", spin: "High", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16L", playerLevel: "Pro", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: ["Alex de Minaur"], wtaPlayers: [],
+    armFriendliness: "High", surface: "Hard Court", priceTier: "Premium", imageTone: "#ece1c4",
+    proTensions: [
+      { player: "Alex de Minaur", detail: "Typical gut / 4G Rough hybrid example", tension: "46-51 lbs" }
+    ],
+    summary: "Specific Luxilon gut and 4G Rough hybrid built around touch, controlled launch, and strong tension stability.",
+    note: "A premium low-tension hybrid for players wanting feel in the mains and firmer poly control in the crosses."
+  }),
+  stringEntry("Babolat Touch VS / RPM Blast Hybrid", {
+    brand: "Babolat", type: "Hybrid", stringShape: "Hybrid Mix", spin: "High", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Pro", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Mid 50s", racketFamily: "Babolat Pure Aero", atpPlayers: ["Carlos Alcaraz", "Rafael Nadal"], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#edf2b5",
+    summary: "Gut and shaped poly hybrid that blends pocketing, pop, and heavier-ball potential.",
+    note: "Great for advanced players wanting more complete performance than a full poly."
+  }),
+  stringEntry("Yonex Poly Tour Air / Babolat VS Touch Hybrid", {
+    brand: "Yonex", type: "Hybrid", stringShape: "Hybrid Mix", spin: "High", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16L", playerLevel: "Pro", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Yonex Ezone", atpPlayers: [], wtaPlayers: ["Marketa Vondrousova"],
+    proRackets: [
+      { player: "Marketa Vondrousova", racket: "Yonex EZONE 100" }
+    ],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#b8dfff",
+    summary: "Soft poly and natural gut hybrid that blends comfort, power, and controlled spin in a very playable premium setup.",
+    note: "A strong fit for players who want a more comfortable hybrid with touch from the gut and shape from the poly."
+  }),
+  stringEntry("Head Hawk Touch / Babolat VS Touch Hybrid", {
+    brand: "Head", type: "Hybrid", stringShape: "Hybrid Mix", spin: "High", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16L", playerLevel: "Pro", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Head Speed", atpPlayers: [], wtaPlayers: ["Karolina Muchova"],
+    proRackets: [
+      { player: "Karolina Muchova", racket: "HEAD Speed MP" }
+    ],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#d5d9df",
+    summary: "Poly-and-gut hybrid that combines controlled poly response in the mains with natural-gut touch and power in the crosses.",
+    note: "A premium setup for all-court players who want precision, feel, and comfort in one string bed."
+  }),
+  stringEntry("Luxilon ALU Power Rough", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Textured", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Low", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Wilson Pro Staff", atpPlayers: ["Grigor Dimitrov"], wtaPlayers: [],
+    armFriendliness: "Low", surface: "All Surfaces", priceTier: "Premium", imageTone: "#9fc2d9",
+    summary: "Textured version of ALU Power that adds a little extra bite without losing the classic connected feel.",
+    note: "Popular with players who like ALU but want a touch more spin response."
+  }),
+  stringEntry("Luxilon Savage", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#8ec3ff",
+    summary: "Firm, spin-oriented Luxilon string for players who want sharper bite and a lower-powered launch.",
+    note: "Best when you swing fast and want more grab on the ball."
+  }),
+  stringEntry("Solinco Tour Bite", {
+    brand: "Solinco", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: ["Tommy Paul"], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#8fdd68",
+    summary: "One of the benchmark shaped polys for maximum bite, control, and RPM production.",
+    note: "A common choice for aggressive baseliners with fast racquet-head speed."
+  }),
+  stringEntry("Tecnifibre Black Code", {
+    brand: "Tecnifibre", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: ["Daria Kasatkina"],
+    proRackets: [
+      { player: "Daria Kasatkina", racket: "Customized Artengo TR990" }
+    ],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#555555",
+    summary: "Softer-feeling shaped poly that balances spin, comfort, and a smoother trajectory than firmer tour strings.",
+    note: "A good transition string for players testing shaped polys."
+  }),
+  stringEntry("Babolat RPM Power", {
+    brand: "Babolat", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Babolat Pure Drive", atpPlayers: ["Felix Auger-Aliassime"], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#a65757",
+    summary: "Slicker, more explosive Babolat poly for players who want pace plus a modern controlled response.",
+    note: "Pairs well with livelier modern frames."
+  }),
+  stringEntry("Babolat Synthetic Gut", {
+    brand: "Babolat", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#f6e6b5",
+    summary: "Simple, affordable all-rounder for club players who want predictable response and value.",
+    note: "A sensible first restring for newer players."
+  }),
+  stringEntry("Wilson Hyper-G Round", {
+    brand: "Wilson", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Wilson Blade", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#9ebeff",
+    summary: "Round co-poly feel profile aimed at a cleaner response and easy snapback.",
+    note: "A nice fit for players wanting control without a shaped edge."
+  }),
+  stringEntry("Wilson Natural Gut", {
+    brand: "Wilson", type: "Natural Gut", stringShape: "Round", spin: "Medium", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Advanced", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: ["Roger Federer"], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f2deba",
+    summary: "Premium gut option with excellent feel, power, and tension maintenance.",
+    note: "Often chosen for luxury gut/poly hybrid builds."
+  }),
+  stringEntry("Head Lynx", {
+    brand: "Head", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "High 40s", racketFamily: "Head Speed", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#74e2c7",
+    summary: "More forgiving round poly in the Head family with balanced control and comfort.",
+    note: "Good for players stepping into poly for the first time."
+  }),
+stringEntry("Head Hawk", {
+  brand: "Head", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "High",
+  comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+  tensionBand: "High 40s", racketFamily: "Head Radical", atpPlayers: ["Alexander Zverev", "Taylor Fritz", "Matteo Arnaldi"], wtaPlayers: [],
+    proRackets: [
+      { player: "Taylor Fritz", racket: "Head Radical MP 2025" },
+      { player: "Matteo Arnaldi", racket: "HEAD Radical MP / Graphene 360+ Radical MP pro stock" }
+    ],
+  armFriendliness: "Low", surface: "Hard Court", priceTier: "Premium", imageTone: "#9caab4",
+    summary: "Firm control poly built for precise direction and a tight, stable ball flight.",
+    note: "Best for flatter strikers and redirectors."
+  }),
+  stringEntry("Yonex Poly Tour Strike", {
+    brand: "Yonex", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Yonex VCORE", atpPlayers: ["Sebastian Baez"], wtaPlayers: ["Caroline Garcia", "Clara Tauson", "Donna Vekic"],
+    proRackets: [
+      { player: "Sebastian Baez", racket: "Yonex VCORE 100" },
+      { player: "Clara Tauson", racket: "Yonex Percept 100 cosmetic / VCORE Pro 100" },
+      { player: "Donna Vekic", racket: "Yonex VCORE 100" }
+    ],
+    stringColor: "Grey",
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Premium", imageTone: "#f0d857",
+    summary: "Control-first Yonex poly for players who want lower launch and a firmer tour feel.",
+    note: "Strong option for big hitters who like clean feedback."
+  }),
+stringEntry("Yonex Poly Tour Fire", {
+  brand: "Yonex", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+  comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+  tensionBand: "High 40s", racketFamily: "Yonex Ezone", atpPlayers: ["Tomas Machac"], wtaPlayers: ["Diana Shnaider", "Elena Rybakina"],
+    proRackets: [
+      { player: "Tomas Machac", racket: "Yonex VCORE 100" },
+      { player: "Diana Shnaider", racket: "Yonex EZONE 100" }
+    ],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#e0624f",
+    summary: "Slick, modern Yonex co-poly with livelier response and solid spin support.",
+    note: "Useful if you want more pace than Poly Tour Strike."
+  }),
+  stringEntry("Kirschbaum Super Smash Orange", {
+    brand: "Kirschbaum", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Budget", imageTone: "#f38b42",
+    summary: "Classic low-powered poly with firm response and durable performance.",
+    note: "A strong budget choice for control-minded hitters."
+  }),
+  stringEntry("Volkl V-Square", {
+    brand: "Volkl", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#d98cff",
+    summary: "Shaped Volkl poly built for extra bite and heavy rotation.",
+    note: "Best for players who want aggressive shape on the ball."
+  }),
+  stringEntry("Prince Tour XP", {
+    brand: "Prince", type: "Co-Poly", stringShape: "Textured", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#b8f26f",
+    summary: "Textured Prince poly with good pop and above-average spin.",
+    note: "Works well for players who want a lively poly bed."
+  }),
+  stringEntry("Prince Duraflex Plus", {
+    brand: "Prince", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#f5d890",
+    summary: "Reliable everyday synthetic gut with classic feel and straightforward value.",
+    note: "A practical club-player restring choice."
+  }),
+  stringEntry("Gosen AK Pro CX", {
+    brand: "Gosen", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f2d2b7",
+    summary: "Comfortable multi with a cleaner, more controlled response than most soft strings.",
+    note: "Nice for players who want comfort but not too much trampoline."
+  }),
+  stringEntry("Babolat RPM Soft", {
+    brand: "Babolat", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Babolat Pure Drive", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#d8d05c",
+    summary: "Softer Babolat poly designed to offer easier comfort without giving up modern control.",
+    note: "Good for players moving toward poly but avoiding harsh setups."
+  }),
+  stringEntry("Babolat Pro Hurricane Tour", {
+    brand: "Babolat", type: "Poly", stringShape: "Shaped", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "16", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#dcb94d",
+    summary: "Older-school firm poly with dependable bite and a controlled response.",
+    note: "Best suited to confident swingers who prefer a firmer string bed."
+  }),
+  stringEntry("Babolat Excel", {
+    brand: "Babolat", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f2e5aa",
+    summary: "Comfort-focused multi with easy depth, touch, and a very forgiving impact feel.",
+    note: "A nice softer alternative to synthetic gut."
+  }),
+  stringEntry("Luxilon M2 Pro", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "High 40s", racketFamily: "Wilson Blade", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Premium", imageTone: "#b4b7be",
+    summary: "A more elastic Luxilon option with a smoother, more forgiving response than 4G or ALU.",
+    note: "Useful if you want Luxilon control with easier comfort."
+  }),
+  stringEntry("Luxilon Big Banger Original", {
+    brand: "Luxilon", type: "Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "Very High",
+    comfort: "Low", feel: "Muted", gauge: "16", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Premium", imageTone: "#c8c07a",
+    summary: "Legendary low-powered poly with stable control and long-play consistency.",
+    note: "Best for players who want to keep launch and power in check."
+  }),
+  stringEntry("Solinco Revolution", {
+    brand: "Solinco", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#8bd96b",
+    summary: "Modern Solinco co-poly with a livelier feel than Confidential and strong control.",
+    note: "Good for players who want a cleaner response with easy spin."
+  }),
+  stringEntry("Solinco Vanquish", {
+    brand: "Solinco", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#efe5b4",
+    summary: "Soft Solinco multi geared toward comfort, feel, and easy pace.",
+    note: "A nice fit for players who want arm relief."
+  }),
+  stringEntry("Tecnifibre Ice Code", {
+    brand: "Tecnifibre", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#edf2f8",
+    summary: "Crisp co-poly with a smoother feel and easy pace compared with firmer control strings.",
+    note: "A strong modern option for players wanting a cleaner white poly."
+  }),
+  stringEntry("Tecnifibre Red Code", {
+    brand: "Tecnifibre", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#d85a5a",
+    summary: "Firm control poly with a crisp response and reliable directional confidence.",
+    note: "Best for flatter ball strikers and full swings."
+  }),
+  stringEntry("Tecnifibre HDMX", {
+    brand: "Tecnifibre", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f0dcb7",
+    summary: "Hybrid-style multi blend that leans more controlled than many comfort strings.",
+    note: "Good for players wanting comfort with disciplined response."
+  }),
+  stringEntry("Wilson Revolve Twist", {
+    brand: "Wilson", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#8fead7",
+    summary: "Twisted co-poly aimed at extra bite and heavy-topspin response.",
+    note: "A strong fit for players wanting more action on the ball."
+  }),
+  stringEntry("Wilson Ripspin", {
+    brand: "Wilson", type: "Co-Poly", stringShape: "Textured", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Muted", gauge: "16", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#5f636a",
+    summary: "Textured control string for players who want lower-powered spin response.",
+    note: "Best for aggressive baseliners who create their own pace."
+  }),
+  stringEntry("Wilson Stamina", {
+    brand: "Wilson", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#efe2c4",
+    summary: "Durable synthetic option with classic response and straightforward value.",
+    note: "Useful for frequent hitters on a budget."
+  }),
+  stringEntry("Wilson Duo Control", {
+    brand: "Wilson", type: "Hybrid", stringShape: "Hybrid Mix", spin: "Medium", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#d6dce4",
+    summary: "Prebuilt Wilson hybrid for players wanting control with more comfort than a full poly.",
+    note: "A convenient way to try a hybrid setup."
+  }),
+  stringEntry("Head Gravity", {
+    brand: "Head", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#dcdcdc",
+    summary: "Soft multifilament built for comfort, depth, and a relaxed response.",
+    note: "Strong option for recreational players seeking easy power."
+  }),
+  stringEntry("Yonex Rexis Feel", {
+    brand: "Yonex", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f2ead3",
+    summary: "Feel-first multi with softer impact and more touch-oriented response.",
+    note: "Ideal for players prioritizing comfort and finesse."
+  }),
+  stringEntry("Yonex Aeron Super 850", {
+    brand: "Yonex", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f6eccd",
+    summary: "Soft Yonex multi built around comfort and easy depth.",
+    note: "Nice fit for recreational players wanting less impact shock."
+  }),
+  stringEntry("Kirschbaum Pro Line II", {
+    brand: "Kirschbaum", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#c76262",
+    summary: "Firm German co-poly with controlled response and reliable tension stability.",
+    note: "Good for disciplined all-court and counterpunching styles."
+  }),
+  stringEntry("Kirschbaum Flash", {
+    brand: "Kirschbaum", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f0cc4c",
+    summary: "More lively Kirschbaum poly that still keeps a clean, controlled feel.",
+    note: "A stronger fit if you want easier pace than Max Power."
+  }),
+  stringEntry("Volkl Cyclone Tour", {
+    brand: "Volkl", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#d8a7ff",
+    summary: "Softer sibling to Cyclone that keeps spin but offers a friendlier response.",
+    note: "A nice choice for topspin players who dislike harsh beds."
+  }),
+  stringEntry("Volkl Classic Synthetic Gut", {
+    brand: "Volkl", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#f5e2bb",
+    summary: "Straightforward synthetic gut with classic feel and easy value.",
+    note: "A sensible everyday restring for rec players."
+  }),
+  stringEntry("Prince Beast XP", {
+    brand: "Prince", type: "Co-Poly", stringShape: "Textured", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#91ef61",
+    summary: "Lively Prince co-poly with easy spin and a modern response.",
+    note: "Good for players who want a slightly friendlier poly bed."
+  }),
+  stringEntry("Prince Lightning Pro", {
+    brand: "Prince", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Budget", imageTone: "#f6df9f",
+    summary: "Affordable Prince multi with easy pace and good comfort.",
+    note: "A practical softer option for newer players."
+  }),
+  stringEntry("Gosen Polylon", {
+    brand: "Gosen", type: "Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Budget", imageTone: "#dadfe5",
+    summary: "Simple control poly with a lower-powered old-school feel.",
+    note: "Best for budget-conscious hitters who want control."
+  }),
+  stringEntry("Gosen Sidewinder", {
+    brand: "Gosen", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#92ca68",
+    summary: "Shaped Gosen poly built for extra bite and spin support.",
+    note: "A nice option for topspin-oriented club players."
+  }),
+  stringEntry("Gosen AK Pro", {
+    brand: "Gosen", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#ead8bd",
+    summary: "Classic Gosen multi with a cleaner, more controlled feel than many soft strings.",
+    note: "Useful for players who want comfort without a trampoline effect."
+  }),
+  stringEntry("Toroline Toro Toro", {
+    brand: "Toroline", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Premium", imageTone: "#ef6b6b",
+    summary: "Boutique shaped poly with big spin and energetic response.",
+    note: "A lively option for players who want RPMs and modern feel."
+  }),
+  stringEntry("Toroline Enso Pro", {
+    brand: "Toroline", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#66c4f5",
+    summary: "Smooth modern co-poly with a balanced mix of control and pop.",
+    note: "Good for players wanting boutique feel without an extreme shape."
+  }),
+  stringEntry("Toroline K-Pop", {
+    brand: "Toroline", type: "Hybrid", stringShape: "Hybrid Mix", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "16", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Premium", imageTone: "#d5a6ff",
+    summary: "Boutique prebuilt hybrid designed to blend spin, feel, and a more complete response.",
+    note: "A convenient option if you want to try a hybrid without mixing sets."
+  }),
+  stringEntry("Head RIP Control", {
+    brand: "Head", type: "Multifilament", stringShape: "Textured", spin: "Low", power: "Low", control: "High", durability: "Medium",
+    comfort: "High", feel: "Muted", gauge: "16", playerLevel: "Intermediate", gameStyle: "Counterpuncher",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Budget", imageTone: "#d5caa5",
+    summary: "Control-oriented soft string with uniquely muted response and low-powered feel.",
+    note: "A favorite for players wanting comfort plus directional discipline."
+  }),
+  stringEntry("Head Hawk Rough", {
+    brand: "Head", type: "Co-Poly", stringShape: "Textured", spin: "High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Head Radical", atpPlayers: ["Nuno Borges"], wtaPlayers: [],
+    proRackets: [
+      { player: "Nuno Borges", racket: "HEAD Radical pro stock (TGT 307)" }
+    ],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Premium", imageTone: "#8a969e",
+    summary: "Textured Head control poly with a firmer feel and extra grip on the ball.",
+    note: "Best for advanced players who like a lower-powered setup."
+  }),
+  stringEntry("Wilson Duo Power", {
+    brand: "Wilson", type: "Hybrid", stringShape: "Hybrid Mix", spin: "Medium", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f0dcc0",
+    summary: "Power-oriented Wilson hybrid for players wanting easier depth without losing too much feel.",
+    note: "Good for club players wanting a more premium blended setup."
+  }),
+  stringEntry("Tecnifibre Synthetic Gut", {
+    brand: "Tecnifibre", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#f2e0c1",
+    summary: "Straightforward synthetic gut with balanced performance and good value.",
+    note: "A practical choice for frequent restringers."
+  }),
+  stringEntry("Prince Tour XR", {
+    brand: "Prince", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#7cb9ef",
+    summary: "Round Prince poly that leans livelier than Tour XP while keeping control in check.",
+    note: "Good for players who want a cleaner feel than textured polys."
+  }),
+  stringEntry("Prince Warrior Response", {
+    brand: "Prince", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#efe0bc",
+    summary: "Control-oriented Prince multi with strong comfort and a more disciplined launch.",
+    note: "Useful for players who want feel without excess power."
+  }),
+  stringEntry("Gosen Multi CX", {
+    brand: "Gosen", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#eadbc0",
+    summary: "Comfortable Gosen multi that leans toward control and clean feel rather than raw power.",
+    note: "A nice fit for players who want comfort with structure."
+  }),
+  stringEntry("Volkl V-Torque Tour", {
+    brand: "Volkl", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#b77bff",
+    summary: "Spin-focused Volkl poly with good bite and a friendlier response than the firmest shaped strings.",
+    note: "A solid choice for topspin-heavy baseliners wanting easier comfort."
+  }),
+  stringEntry("Babolat Pro Hurricane", {
+    brand: "Babolat", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "16", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#f1cd58",
+    summary: "Firm classic Babolat poly with a controlled launch and dependable durability.",
+    note: "Best for players who want a traditional polyester feel without a shaped profile."
+  }),
+  stringEntry("Babolat Syn Gut", {
+    brand: "Babolat", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#f5e7b6",
+    summary: "Simple synthetic gut with balanced performance and easy value.",
+    note: "Useful for recreational players who restring often and want a straightforward setup."
+  }),
+  stringEntry("Luxilon Adrenaline", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#b8c3cc",
+    summary: "Value-minded Luxilon poly with a firm, controlled response and strong durability.",
+    note: "A practical alternative for players who want the Luxilon feel at a lower cost."
+  }),
+  stringEntry("Luxilon Original", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "Very High",
+    comfort: "Low", feel: "Muted", gauge: "16L", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "Low 50s", racketFamily: "Wilson Pro Staff", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Premium", imageTone: "#b8b3aa",
+    summary: "Legendary low-powered control poly with exceptional predictability and durability.",
+    note: "Best for strong hitters who prefer a deader, very stable string bed."
+  }),
+  stringEntry("Solinco Hyper-G Round", {
+    brand: "Solinco", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#89d34b",
+    summary: "Rounder Hyper-G variant for players who want the family feel with a cleaner response.",
+    note: "Useful if you like Solinco control but want less extreme shape."
+  }),
+  stringEntry("Solinco Outlast", {
+    brand: "Solinco", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "Very High",
+    comfort: "Low", feel: "Crisp", gauge: "16", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Budget", imageTone: "#9aa7b3",
+    summary: "Durability-first Solinco poly with a firmer, lower-powered response.",
+    note: "Great for string breakers who still want directional control."
+  }),
+  stringEntry("Tecnifibre Black Code 4S", {
+    brand: "Tecnifibre", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#3e4349",
+    summary: "Sharper-edged Black Code version built for stronger bite and a lower launch.",
+    note: "A good fit for aggressive topspin players wanting a firm Tecnifibre poly."
+  }),
+  stringEntry("Tecnifibre MultiFeel", {
+    brand: "Tecnifibre", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Budget", imageTone: "#f0e0b6",
+    summary: "Soft budget-friendly multi aimed at comfort and easy depth.",
+    note: "A strong option for recreational players moving away from harsh strings."
+  }),
+  stringEntry("Tecnifibre NRG2", {
+    brand: "Tecnifibre", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "Very High", feel: "Plush", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Very High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f2dec5",
+    summary: "Classic premium multifilament known for comfort, touch, and lively response.",
+    note: "Excellent for players prioritizing feel or protecting the arm."
+  }),
+  stringEntry("Wilson NXT Control", {
+    brand: "Wilson", type: "Multifilament", stringShape: "Textured", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Muted", gauge: "16", playerLevel: "Intermediate", gameStyle: "Counterpuncher",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#efe0c2",
+    summary: "Textured Wilson multi that reins in power and adds a more controlled launch.",
+    note: "A nice bridge for players who want comfort but not a trampoline feel."
+  }),
+  stringEntry("Wilson Red Alert", {
+    brand: "Wilson", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Budget", imageTone: "#df5a5a",
+    summary: "Firm budget poly aimed at control and durability over comfort.",
+    note: "Works best for players who generate their own pace and restring often."
+  }),
+  stringEntry("Wilson Ultra Synthetic Gut", {
+    brand: "Wilson", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#f3e6cb",
+    summary: "Classic Wilson synthetic gut with even-handed all-around performance.",
+    note: "Great as an affordable everyday setup for recreational players."
+  }),
+  stringEntry("Head Reflex MLT", {
+    brand: "Head", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "Very High", feel: "Plush", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Very High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f2e2c0",
+    summary: "Premium Head multi built for comfort, touch, and easy pace.",
+    note: "A great choice for players dealing with arm sensitivity."
+  }),
+  stringEntry("Head Sonic Pro", {
+    brand: "Head", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Medium", control: "Medium", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Head Extreme", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Budget", imageTone: "#7aa8ef",
+    summary: "Accessible Head poly that keeps things simple with balanced response and decent comfort.",
+    note: "Works well for players trying poly without jumping into the firmest options."
+  }),
+  stringEntry("Head Sonic Pro Edge", {
+    brand: "Head", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Intermediate", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Head Extreme", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Budget", imageTone: "#88b4f0",
+    summary: "Shaped Sonic Pro variant that adds bite while staying playable for club hitters.",
+    note: "A nice budget spin option for modern baseline games."
+  }),
+  stringEntry("Yonex Rexis Speed", {
+    brand: "Yonex", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Yonex Ezone", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f4e7c6",
+    summary: "Lively Yonex multi that favors easy depth and cleaner rebound speed.",
+    note: "Good for players who want power without going to full poly."
+  }),
+  stringEntry("Yonex Rexis Spin", {
+    brand: "Yonex", type: "Multifilament", stringShape: "Textured", spin: "Medium", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Yonex VCORE", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f0ddbc",
+    summary: "Textured Yonex multi built to add a little more grip and control than a typical soft string.",
+    note: "Useful for players who want comfort but still like a modern ball shape."
+  }),
+  stringEntry("Yonex Poly Tour Drive", {
+    brand: "Yonex", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Yonex Ezone", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#74b6f1",
+    summary: "Balanced Yonex co-poly with a little more pace than the firmest control options.",
+    note: "Good for players who want a less dead feel without losing shape on the ball."
+  }),
+  stringEntry("Kirschbaum Super Smash", {
+    brand: "Kirschbaum", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Budget", imageTone: "#c6b289",
+    summary: "Longtime Kirschbaum staple with classic low-powered poly control.",
+    note: "Appeals to players who like firmer traditional polyester response."
+  }),
+  stringEntry("Kirschbaum Competition", {
+    brand: "Kirschbaum", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Muted", gauge: "16", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Budget", imageTone: "#cfd0c6",
+    summary: "Stable Kirschbaum poly built around consistency, durability, and control.",
+    note: "A solid budget choice for players who want dependable behavior over flash."
+  }),
+  stringEntry("Kirschbaum Pro Line Evolution", {
+    brand: "Kirschbaum", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#ee6767",
+    summary: "More modern-feeling Kirschbaum poly with livelier pace and cleaner feedback.",
+    note: "Useful if you want control but not a completely dead response."
+  }),
+  stringEntry("Volkl Power Fiber Pro", {
+    brand: "Volkl", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "Very High", feel: "Plush", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Very High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#efe2c7",
+    summary: "Soft premium Volkl multi built around comfort and lively feel.",
+    note: "Excellent for arm-conscious players who want easier pace."
+  }),
+  stringEntry("Volkl Synthetic Gut", {
+    brand: "Volkl", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#f1e5cb",
+    summary: "Straightforward synthetic gut offering balanced playability at low cost.",
+    note: "Good for casual players or frequent restringers."
+  }),
+  stringEntry("Prince Tournament Nylon", {
+    brand: "Prince", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#efe0c8",
+    summary: "Traditional Prince nylon string with balanced value-oriented performance.",
+    note: "A dependable starter choice for recreational tennis."
+  }),
+  stringEntry("Prince ResiPro", {
+    brand: "Prince", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f3e4c8",
+    summary: "Comfort-friendly Prince multi with easy depth and a softer ride.",
+    note: "Good for players who want forgiveness without premium pricing."
+  }),
+  stringEntry("Gamma Live Wire", {
+    brand: "Gamma", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "Very High", feel: "Plush", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Very High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f1e1c4",
+    summary: "Very soft Gamma multi designed for comfort, touch, and easy pace.",
+    note: "A strong option for players with arm concerns or compact swings."
+  }),
+  stringEntry("Gamma Live Wire XP", {
+    brand: "Gamma", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f0dfc2",
+    summary: "Livelier Gamma multi with slightly firmer response and better durability than classic Live Wire.",
+    note: "Useful for players who want comfort with a little extra structure."
+  }),
+  stringEntry("Gamma TNT2 Touch", {
+    brand: "Gamma", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#f1e3cb",
+    summary: "Popular Gamma all-around string with a crisp but playable synthetic-gut feel.",
+    note: "A safe all-purpose choice for club players."
+  }),
+  stringEntry("Gamma Moto", {
+    brand: "Gamma", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#6db858",
+    summary: "Firm Gamma shaped poly for players chasing heavy spin and lower launch.",
+    note: "Best for fast swingers who want strong bite on the ball."
+  }),
+  stringEntry("Gamma Ocho", {
+    brand: "Gamma", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#6aa8f0",
+    summary: "Eight-sided Gamma poly with strong spin access and a more modern response.",
+    note: "A good fit for players wanting RPMs without a dead feel."
+  }),
+  stringEntry("Gamma IO Soft", {
+    brand: "Gamma", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Muted", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#f0b18c",
+    summary: "Softer Gamma poly that makes polyester more approachable for club players.",
+    note: "Useful for players who want control and durability without harsh impact."
+  }),
+  stringEntry("Dunlop Explosive Spin", {
+    brand: "Dunlop", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#eea84a",
+    summary: "Spin-heavy Dunlop poly for players wanting sharper bite and stronger trajectory control.",
+    note: "Best for modern baseliners who create racquet-head speed."
+  }),
+  stringEntry("Dunlop Explosive Bite", {
+    brand: "Dunlop", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#efb24e",
+    summary: "Livelier Dunlop spin poly that blends bite with more rebound pace.",
+    note: "Useful if you want spin support without an overly dead response."
+  }),
+  stringEntry("Dunlop Silk", {
+    brand: "Dunlop", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Budget", imageTone: "#f2e2c8",
+    summary: "Comfort-oriented Dunlop multi with soft impact and easy pace.",
+    note: "A friendly option for newer players or sore arms."
+  }),
+  stringEntry("Dunlop S-Gut", {
+    brand: "Dunlop", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#efe0c6",
+    summary: "Basic synthetic gut with solid all-around playability and good value.",
+    note: "Ideal for recreational use and frequent restringing."
+  }),
+  stringEntry("MSV Focus Hex", {
+    brand: "MSV", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Budget", imageTone: "#d7c559",
+    summary: "Budget-friendly shaped poly known for strong bite and control.",
+    note: "A nice value option for players who want spin without premium pricing."
+  }),
+  stringEntry("MSV Swift", {
+    brand: "MSV", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#79b7f2",
+    summary: "Softer MSV poly built for players who want poly control with easier comfort.",
+    note: "Useful for transitioning into polyester without the harshest impact."
+  }),
+  stringEntry("Weiss Cannon Ultra Cable", {
+    brand: "Weiss Cannon", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#d8d24e",
+    summary: "Textured spin monster for players chasing maximum bite and heavy action.",
+    note: "Best for advanced hitters who want the ball to jump off the court."
+  }),
+  stringEntry("Weiss Cannon Silverstring", {
+    brand: "Weiss Cannon", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#bdc6cf",
+    summary: "Popular round control poly with clean response and a slightly softer feel than the firmest polys.",
+    note: "A strong fit for players who prioritize consistency and feel."
+  }),
+  stringEntry("Mayami Big Spin", {
+    brand: "Mayami", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#8fda5b",
+    summary: "Boutique spin poly with strong bite and a firm, controlled response.",
+    note: "Good for players who want sharper RPM-focused performance."
+  }),
+  stringEntry("Mayami Tour Hex", {
+    brand: "Mayami", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#7fc1f0",
+    summary: "Hexagonal boutique poly with modern response and easy spin access.",
+    note: "A balanced pick for players who want both bite and usable pace."
+  }),
+  stringEntry("Restring Zero", {
+    brand: "Restring", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#d8dce1",
+    summary: "Modern control poly with a lower-powered, stable, point-and-shoot response.",
+    note: "Great for precision-oriented players who want a predictable launch."
+  }),
+  stringEntry("Restring Sync", {
+    brand: "Restring", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#78bdf2",
+    summary: "Slightly livelier Restring poly that blends control with a cleaner rebound speed.",
+    note: "Useful for players who want precision without going too dead."
+  }),
+  stringEntry("Diadem Solstice Power", {
+    brand: "Diadem", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: ["Elina Svitolina"],
+    proRackets: [
+      { player: "Elina Svitolina", racket: "Diadem Axis 98" }
+    ],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#6fc86c",
+    summary: "Popular Diadem shaped poly with easy spin and a more energetic response.",
+    note: "A good fit for modern topspin players who still want some pop. Used here as the closest in-database match to Svitolina's current full Diadem setup."
+  }),
+  stringEntry("Diadem Flash", {
+    brand: "Diadem", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#84bef2",
+    summary: "Round Diadem poly with a balanced mix of pace, control, and playability.",
+    note: "Nice for players who want a cleaner feel than heavily shaped strings."
+  }),
+  stringEntry("Diadem Evolution", {
+    brand: "Diadem", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#efe1c9",
+    summary: "Simple value string from Diadem with balanced all-around playability.",
+    note: "A practical everyday setup for newer players."
+  }),
+  stringEntry("Toroline Caviar", {
+    brand: "Toroline", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#2f3136",
+    summary: "Boutique black control poly with strong stability and a more precise launch.",
+    note: "A strong pick for players who like low-powered confidence."
+  }),
+  stringEntry("Toroline O-Toro", {
+    brand: "Toroline", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Premium", imageTone: "#e9cf58",
+    summary: "Popular Toroline spin poly with lively jump and strong grab on the ball.",
+    note: "Great for players who want heavy RPMs with boutique feel."
+  }),
+  stringEntry("Genesis Black Magic", {
+    brand: "Genesis", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#2e3136",
+    summary: "Smooth black co-poly with a balanced mix of control, pace, and clean feel.",
+    note: "A nice all-around poly for players who want a modern response without going too stiff."
+  }),
+  stringEntry("Solinco Mach-10", {
+    brand: "Solinco", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#7fc4f4",
+    summary: "Modern Solinco co-poly designed to blend speed, spin, and a slightly more energetic feel.",
+    note: "Good for players who want a cleaner launch than heavily shaped polys."
+  }),
+  stringEntry("Solinco X-Natural", {
+    brand: "Solinco", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "Very High", feel: "Plush", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Very High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f0dfc3",
+    summary: "Comfort-focused Solinco multi with easy depth and a soft, forgiving response.",
+    note: "A strong option for players who want maximum comfort without moving to natural gut."
+  }),
+  stringEntry("Wilson Sensation Control", {
+    brand: "Wilson", type: "Multifilament", stringShape: "Textured", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Muted", gauge: "16", playerLevel: "Intermediate", gameStyle: "Counterpuncher",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#eadcc1",
+    summary: "Control-oriented Sensation variant for players who want softer feel with more restraint.",
+    note: "Useful when a standard power multi launches a little too high."
+  }),
+  stringEntry("Wilson Optimus", {
+    brand: "Wilson", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "Very High", feel: "Plush", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Very High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f2e2c9",
+    summary: "High-end Wilson multi aimed at comfort, touch, and easier offensive depth.",
+    note: "A premium pick for players prioritizing arm safety and feel."
+  }),
+  stringEntry("Head Lynx Touch", {
+    brand: "Head", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Head Speed", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#d4bf90",
+    summary: "Softer-feeling Lynx family poly with easier pace and a cleaner touch response.",
+    note: "A nice middle ground for players not wanting the firmest Head polys."
+  }),
+  stringEntry("Head Hawk Black", {
+    brand: "Head", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "High 40s", racketFamily: "Head Radical", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Premium", imageTone: "#2f3136",
+    summary: "Control-first Hawk variant with a firm, deadened response and strong predictability.",
+    note: "Best for advanced players who want to rein in a lively frame."
+  }),
+  stringEntry("Yonex Poly Tour Spin", {
+    brand: "Yonex", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Yonex VCORE", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#e56f4f",
+    summary: "Spin-oriented Yonex poly with extra bite and lively modern snapback.",
+    note: "A strong fit for VCORE users who want easy RPM production."
+  }),
+  stringEntry("Yonex Rexis", {
+    brand: "Yonex", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "Very High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Yonex Ezone", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Very High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f1e2c6",
+    summary: "Premium Yonex multifilament with strong comfort, feel, and easy access to pace.",
+    note: "A dependable non-poly option for players wanting a softer string bed."
+  }),
+  stringEntry("Kirschbaum Pro Line X", {
+    brand: "Kirschbaum", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#c75f5f",
+    summary: "Sharper Kirschbaum poly built for bite, firmness, and controlled acceleration.",
+    note: "Good for aggressive players wanting a crisper German co-poly feel."
+  }),
+  stringEntry("Volkl V-Cell", {
+    brand: "Volkl", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#efe2ca",
+    summary: "Value-friendly Volkl all-around string with a crisp but approachable response.",
+    note: "Useful for recreational players who want easy restrings without much fuss."
+  }),
+  stringEntry("Prince Tour XC", {
+    brand: "Prince", type: "Co-Poly", stringShape: "Textured", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#7eb8ee",
+    summary: "Prince co-poly with textured grip on the ball and a lower-powered launch.",
+    note: "A solid fit for players who want extra bite without going too lively."
+  }),
+  stringEntry("Gosen G-Tour 3", {
+    brand: "Gosen", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#7fbdf1",
+    summary: "Modern Gosen co-poly with a smooth response and a balanced control-to-power ratio.",
+    note: "Good for players who want a round poly that stays lively enough to attack with."
+  }),
+  stringEntry("Toroline Super Toro", {
+    brand: "Toroline", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Premium", imageTone: "#79d262",
+    summary: "Boutique Toroline spin string with extra bite, lively response, and heavy action.",
+    note: "Great for players who want more jump without sacrificing too much pace."
+  }),
+  stringEntry("Dunlop Black Widow", {
+    brand: "Dunlop", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Budget", imageTone: "#2f3136",
+    summary: "Classic spin-focused Dunlop poly built to help players roll the ball with confidence.",
+    note: "Best for topspin hitters who like shaped strings and lower power."
+  }),
+  stringEntry("Gamma Jet", {
+    brand: "Gamma", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#74baf1",
+    summary: "Faster-feeling Gamma poly with good pocketing and a more energetic rebound.",
+    note: "A nice option for players wanting modern response without extreme stiffness."
+  }),
+  stringEntry("Diadem Elite XT", {
+    brand: "Diadem", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f0e1c7",
+    summary: "Comfort-friendly Diadem multi with a little extra structure and cleaner feel than entry-level multis.",
+    note: "Useful for players who want soft performance without too much trampoline."
+  }),
+  stringEntry("Mayami Hit Pro", {
+    brand: "Mayami", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#77bdf2",
+    summary: "Boutique round poly with clean contact, solid control, and enough pace to finish points.",
+    note: "A balanced pick for big hitters who do not want an overly dead bed."
+  }),
+  stringEntry("Weiss Cannon Scorpion", {
+    brand: "Weiss Cannon", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#b8c1ca",
+    summary: "Control-focused Weiss Cannon poly with a cleaner response than many dead-feeling polys.",
+    note: "Nice for players who want precision while keeping some pocketing."
+  }),
+  stringEntry("MSV Co Focus", {
+    brand: "MSV", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Budget", imageTone: "#c0c7cf",
+    summary: "Value co-poly with classic control and a predictable, no-nonsense response.",
+    note: "A good option for players who prioritize direction and durability over free pace."
+  }),
+  stringEntry("Genesis Typhoon", {
+    brand: "Genesis", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Budget", imageTone: "#81d35e",
+    summary: "Spin-heavy Genesis poly with sharp bite and lower-powered confidence.",
+    note: "Useful for players who want maximum rotation from a budget-friendly string."
+  }),
+  stringEntry("Signum Pro Poly Plasma", {
+    brand: "Signum Pro", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "Very High",
+    comfort: "Low", feel: "Muted", gauge: "16", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Budget", imageTone: "#d6c15b",
+    summary: "Classic Signum Pro control poly known for stability, tension hold, and durability.",
+    note: "A dependable option for players who want a firm, traditional polyester response."
+  }),
+  stringEntry("Babolat RPM Hurricane", {
+    brand: "Babolat", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "16", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Babolat Pure Aero", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#e2cf5b",
+    summary: "Firm Babolat control poly for players who want a traditional, lower-powered response.",
+    note: "A nice fit for heavy swingers wanting predictable ball flight."
+  }),
+  stringEntry("Babolat RPM Dual", {
+    brand: "Babolat", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Premium", imageTone: "#c9ef67",
+    summary: "Spin-heavy Babolat poly with a more energetic response than the firmest RPM options.",
+    note: "Useful for players who want a livelier shaped-poly feel."
+  }),
+  stringEntry("Luxilon Eco Rough", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Textured", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "16L", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#8fd645",
+    summary: "Sustainability-minded Luxilon poly that keeps the brand's control DNA with extra texture.",
+    note: "A strong pick for players who want control and a lower-powered launch."
+  }),
+  stringEntry("Solinco Hyper-G Soft", {
+    brand: "Solinco", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16L", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#8fd645",
+    summary: "Softer Hyper-G variant that keeps spin and control while easing impact firmness.",
+    note: "Ideal for players who like shaped polys but want a gentler ride."
+  }),
+  stringEntry("Tecnifibre Razor Code Soft", {
+    brand: "Tecnifibre", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Hard Court", priceTier: "Premium", imageTone: "#e8d2ff",
+    summary: "Friendlier Tecnifibre control poly with easier comfort and a more forgiving feel.",
+    note: "A solid bridge for players stepping down from firmer tour strings."
+  }),
+  stringEntry("Tecnifibre Multifeel Black", {
+    brand: "Tecnifibre", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Budget", imageTone: "#2f3136",
+    summary: "Softer Tecnifibre multi with easy power and a darker cosmetic option.",
+    note: "Good for players prioritizing comfort over durability."
+  }),
+  stringEntry("Wilson Reaction", {
+    brand: "Wilson", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#efe0c8",
+    summary: "Comfort-driven Wilson multi built for easy depth and a softer impact feel.",
+    note: "Nice for recreational players or anyone looking for an arm-friendly setup."
+  }),
+  stringEntry("Wilson Hollow Core Pro", {
+    brand: "Wilson", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#f2e4cc",
+    summary: "Classic hollow-core synthetic with a comfortable, balanced response.",
+    note: "A practical option for players wanting value and easy restringing."
+  }),
+  stringEntry("Head Hawk Silver", {
+    brand: "Head", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "High 40s", racketFamily: "Head Radical", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Premium", imageTone: "#b8c1ca",
+    summary: "Another Hawk-family control option with a clean, lower-powered launch and firm response.",
+    note: "Best for players who want tight directional precision."
+  }),
+  stringEntry("Head Velocity Power", {
+    brand: "Head", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Budget", imageTone: "#dfe9c6",
+    summary: "Livelier companion to Velocity MLT with easier depth and softer feedback.",
+    note: "A nice value pick for comfort-first club players."
+  }),
+  stringEntry("Yonex Poly Tour Tough", {
+    brand: "Yonex", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "Very High",
+    comfort: "Low", feel: "Muted", gauge: "16", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Yonex VCORE", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#7aaef0",
+    summary: "Durability-oriented Yonex poly designed for string breakers and control-first hitters.",
+    note: "Useful when you want longevity without giving up predictability."
+  }),
+  stringEntry("Yonex Poly Tour Spin G", {
+    brand: "Yonex", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Yonex VCORE", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Premium", imageTone: "#8fda5b",
+    summary: "Sharply spin-focused Yonex poly for players who want extra grip and heavier action.",
+    note: "A strong fit for big topspin mechanics and modern baseline play."
+  }),
+  stringEntry("Kirschbaum Touch Multifiber", {
+    brand: "Kirschbaum", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f0dfc8",
+    summary: "Comfortable Kirschbaum multi with a cleaner feel than many softer strings.",
+    note: "Good for players who want touch and control without harsh impact."
+  }),
+  stringEntry("Volkl Cyclone Soft", {
+    brand: "Volkl", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Clay", priceTier: "Mid-Range", imageTone: "#c58aff",
+    summary: "Softer Cyclone variant that keeps spin alive while making the bed more comfortable.",
+    note: "Great for players who like Volkl spin strings but want less stiffness."
+  }),
+  stringEntry("Prince Premier LT", {
+    brand: "Prince", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "17", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f2e4c6",
+    summary: "Very soft Prince multi with easy power and a forgiving sweet spot response.",
+    note: "A nice comfort-first choice for recreational players."
+  }),
+  stringEntry("Gosen AK Pro 17", {
+    brand: "Gosen", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#eadcc1",
+    summary: "Thinner AK Pro variant with enhanced feel and a little more touch-oriented response.",
+    note: "A nice fit for players who want comfort without excessive power."
+  }),
+  stringEntry("Toroline Snapper", {
+    brand: "Toroline", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#77bdf2",
+    summary: "Boutique round poly with a lively response and reliable snapback.",
+    note: "Useful for players wanting a modern poly feel without a sharp shape."
+  }),
+  stringEntry("Dunlop Iconic All", {
+    brand: "Dunlop", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#efe1c8",
+    summary: "Balanced Dunlop multi offering comfort, touch, and decent structure for the category.",
+    note: "A versatile option for club players seeking softer performance."
+  }),
+  stringEntry("Gamma Moto Soft", {
+    brand: "Gamma", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Clay", priceTier: "Mid-Range", imageTone: "#74c367",
+    summary: "Friendlier Moto variant that keeps spin alive while softening impact.",
+    note: "A nice bridge for topspin players who need more comfort."
+  }),
+  stringEntry("Diadem Nova", {
+    brand: "Diadem", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f0e1c9",
+    summary: "Comfort-driven Diadem string built for easy depth and softer impact.",
+    note: "Good for players wanting forgiveness and liveliness."
+  }),
+  stringEntry("Mayami Hepta Power", {
+    brand: "Mayami", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#79d35f",
+    summary: "Seven-sided boutique poly built for heavy spin and an energetic modern response.",
+    note: "A good pick for aggressive players who want extra shape on the ball."
+  }),
+  stringEntry("Weiss Cannon Super Cable Pro", {
+    brand: "Weiss Cannon", type: "Co-Poly", stringShape: "Textured", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#d7cf57",
+    summary: "Aggressive Weiss Cannon spin string with extra grip and a lower-powered trajectory.",
+    note: "Best for topspin hitters who want maximum bite."
+  }),
+  stringEntry("MSV Hepta Twist", {
+    brand: "MSV", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Budget", imageTone: "#cfd25d",
+    summary: "Classic budget spin poly with a twisted shape and strong bite on the ball.",
+    note: "A solid choice for players who want heavy rotation at a lower price."
+  }),
+  stringEntry("Genesis Twisted Razor", {
+    brand: "Genesis", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Budget", imageTone: "#82d45f",
+    summary: "Spin-oriented Genesis poly with a shaped profile and controlled, lower-powered response.",
+    note: "A good fit for players who want extra bite and a budget-friendly polyester."
+  }),
+  stringEntry("Babolat Xalt", {
+    brand: "Babolat", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Babolat Pure Drive", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f7e2be",
+    summary: "Modern comfort-oriented multi aimed at easy power and arm-friendly response.",
+    note: "Useful for players who want a softer alternative to firmer Babolat setups."
+  }),
+  stringEntry("Babolat Pro Last", {
+    brand: "Babolat", type: "Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "Very High",
+    comfort: "Low", feel: "Crisp", gauge: "15L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Babolat Pure Aero", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Premium", imageTone: "#d8c66a",
+    summary: "Extra-durable Babolat tour poly built for long life and a dead, controlled launch.",
+    note: "Best for string breakers who want maximum longevity and a firmer response."
+  }),
+  stringEntry("Luxilon Monotec Supersense", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#8fd2aa",
+    summary: "Smoother Luxilon poly with a little more ball pocketing and feel than the brand's deadest strings.",
+    note: "Useful for advanced players who want control without a completely muted response."
+  }),
+  stringEntry("Babolat RPM Rough", {
+    brand: "Babolat", type: "Poly", stringShape: "Textured", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Babolat Pure Aero", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Premium", imageTone: "#d6cd65",
+    summary: "Textured RPM variant built for extra grab and heavier ball rotation.",
+    note: "A natural fit for spin-first baseline games."
+  }),
+  stringEntry("Luxilon Big Banger Ace", {
+    brand: "Luxilon", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "18", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Premium", imageTone: "#9ad778",
+    summary: "Thin-gauge Luxilon poly that offers easier access to spin and livelier snapback.",
+    note: "Great for players who want a tour poly feel with extra bite from a thinner gauge."
+  }),
+  stringEntry("Solinco Barb Wire", {
+    brand: "Solinco", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#7ecf60",
+    summary: "Firm, aggressively shaped Solinco poly built to maximize bite and directional control.",
+    note: "Best for committed topspin hitters who like a deader, more locked-in bed."
+  }),
+  stringEntry("Tecnifibre HDMX Tour", {
+    brand: "Tecnifibre", type: "Hybrid-Style Multi", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#efd4bd",
+    summary: "Complex Tecnifibre construction blending multi comfort with a little more control and durability.",
+    note: "A nice step up for players who want premium comfort without a trampoline feel."
+  }),
+  stringEntry("Solinco Tour Bite Diamond Rough", {
+    brand: "Solinco", type: "Co-Poly", stringShape: "Textured", spin: "Very High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Clay", priceTier: "Premium", imageTone: "#86d067",
+    summary: "Extra-grippy Tour Bite variant built for maximum spin and firm directional trust.",
+    note: "Ideal for high-rpm hitters who like a shaped, aggressive bed."
+  }),
+  stringEntry("Tecnifibre XR3", {
+    brand: "Tecnifibre", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Lively", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f1d2c4",
+    summary: "Elastic premium Tecnifibre multi with easy depth, strong comfort, and a lively launch.",
+    note: "Works well for players who want multi power with a slightly cleaner response than the softest options."
+  }),
+  stringEntry("Wilson Syn Gut Power", {
+    brand: "Wilson", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#e8dbc3",
+    summary: "Straightforward Wilson synthetic gut with balanced pop, crisp feel, and solid value.",
+    note: "A dependable option for recreational players or backup stringing."
+  }),
+  stringEntry("Wilson Sensation Plus", {
+    brand: "Wilson", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Wilson Clash", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f3d9c1",
+    summary: "More durable take on Wilson Sensation with soft feel and easy depth.",
+    note: "Nice for players wanting comfort without moving into a premium price tier."
+  }),
+  stringEntry("Wilson Super Tour", {
+    brand: "Wilson", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Wilson Blade", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#ead8c7",
+    summary: "Classic Wilson value string with a familiar crisp synthetic gut response.",
+    note: "Useful as a budget-friendly all-around setup for casual players."
+  }),
+  stringEntry("Head Intellitour", {
+    brand: "Head", type: "Hybrid", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Muted", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Head Radical", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#d7d3bc",
+    summary: "Pre-packaged Head hybrid that leans into comfort, touch, and a lower-powered response.",
+    note: "Good for players who want a softer, more controlled bed without building their own hybrid."
+  }),
+  stringEntry("Yonex Poly Tour Air", {
+    brand: "Yonex", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Muted", gauge: "16L", playerLevel: "Intermediate", gameStyle: "Counterpuncher",
+    tensionBand: "Low 50s", racketFamily: "Yonex Ezone", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#8dd7ef",
+    summary: "Comfort-first Yonex poly aimed at softer impact and easier playability.",
+    note: "A good bridge string for players easing into polyester."
+  }),
+  stringEntry("Head Master", {
+    brand: "Head", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#e7ddc7",
+    summary: "Affordable Head synthetic gut with a traditional feel and balanced response.",
+    note: "A sensible entry-level string for general recreational use."
+  }),
+  stringEntry("Prince Lightning XX", {
+    brand: "Prince", type: "Synthetic Gut", stringShape: "Textured", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Lively", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#efe0c5",
+    summary: "Lively Prince synthetic gut with extra sparkle and a slightly textured outer wrap.",
+    note: "Good for players wanting an inexpensive string with easy depth."
+  }),
+  stringEntry("Kirschbaum Max Power Rough", {
+    brand: "Kirschbaum", type: "Co-Poly", stringShape: "Textured", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#e56a62",
+    summary: "Textured Max Power variant with a firmer response and extra bite.",
+    note: "Works for flatter hitters who still want some added grip."
+  }),
+  stringEntry("Prince Topspin Plus", {
+    brand: "Prince", type: "Synthetic Gut", stringShape: "Textured", spin: "Medium", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Budget", imageTone: "#e6e0b8",
+    summary: "Budget Prince option with a textured wrap aimed at adding a little more grip on the ball.",
+    note: "Useful for recreational players who want a spin-leaning synthetic gut."
+  }),
+  stringEntry("Prince Premier Power", {
+    brand: "Prince", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#f1e2c7",
+    summary: "Power-focused Prince multi designed for easier depth and a smooth response.",
+    note: "Great when you want a softer string bed with help on pace."
+  }),
+  stringEntry("Gamma Ocho TNT", {
+    brand: "Gamma", type: "Synthetic Gut", stringShape: "Shaped", spin: "Medium", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#8fd8ef",
+    summary: "Gamma TNT-family string with an octagonal profile for a little more spin and bite.",
+    note: "A nice middle ground for players who want texture without going full poly."
+  }),
+  stringEntry("Diadem Impulse", {
+    brand: "Diadem", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#bfe0f7",
+    summary: "Soft Diadem multi built for comfort, clean pocketing, and easy depth.",
+    note: "Helpful for players prioritizing arm relief and a forgiving response."
+  }),
+  stringEntry("Kirschbaum Synthetic Gut", {
+    brand: "Kirschbaum", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#e7cfc0",
+    summary: "Value-oriented Kirschbaum synthetic gut with predictable launch and traditional feel.",
+    note: "Good as a low-cost all-around option or backup restring."
+  }),
+  stringEntry("Restring Vivo", {
+    brand: "Restring", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#8abff0",
+    summary: "Modern boutique poly with a livelier response and easy snapback for aggressive hitters.",
+    note: "A good option when you want more pop than the deadest control polys."
+  }),
+  stringEntry("Diadem Pro X", {
+    brand: "Diadem", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#88c6f1",
+    summary: "Controlled Diadem poly with balanced pop, spin, and directional trust.",
+    note: "A versatile modern poly for players who want a little of everything."
+  }),
+  stringEntry("Volkl V-Pro", {
+    brand: "Volkl", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#8bb7f0",
+    summary: "Control-led Volkl poly with a stable, lower-powered response and dependable flight.",
+    note: "Useful for players who prefer precision and predictable trajectory over free pace."
+  }),
+  stringEntry("Babolat Xcel", {
+    brand: "Babolat", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Babolat Pure Drive", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f3dec8",
+    summary: "Premium Babolat multifilament with easy depth, plush comfort, and a more polished feel than entry-level multis.",
+    note: "A strong option for players who want comfort and power without moving into natural gut."
+  }),
+  stringEntry("ISOSPEED Cream", {
+    brand: "IsoSpeed", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "Medium",
+    comfort: "High", feel: "Muted", gauge: "17", playerLevel: "Intermediate", gameStyle: "Counterpuncher",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#e8ddbf",
+    summary: "Comfort-first co-poly that gives big swings a controlled, arm-friendlier response.",
+    note: "Useful for players easing into polyester or wanting a softer full bed."
+  }),
+  stringEntry("ISOSPEED Control Classic", {
+    brand: "IsoSpeed", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Muted", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#e7d9bf",
+    summary: "Ultra-soft classic multifilament built around comfort, muted feel, and stable tension maintenance.",
+    note: "Best for players who want arm relief and a very gentle stringbed."
+  }),
+  stringEntry("ISOSPEED Professional Classic", {
+    brand: "IsoSpeed", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Plush", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#ead6c4",
+    summary: "Soft ribbon-based multi with lively pocketing and standout comfort for a non-gut setup.",
+    note: "Great for players chasing easy depth and a premium-feeling response on a friendlier budget."
+  }),
+  stringEntry("Tourna Big Hitter Silver 7 Tour", {
+    brand: "Tourna", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#c8d0d6",
+    summary: "Firm seven-sided Tourna poly aimed at maximum control, spin, and strong tension maintenance.",
+    note: "A good fit for experienced poly users who want a crisp, lower-powered bed."
+  }),
+  stringEntry("Tourna Big Hitter Black 7", {
+    brand: "Tourna", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#3d434b",
+    summary: "Softer seven-sided Tourna poly with big spin and more pop than the brand's firmest control strings.",
+    note: "Useful for players who want shaped-poly bite without a harsh response."
+  }),
+  stringEntry("Tourna Quasi Gut Armor", {
+    brand: "Tourna", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#ead9c5",
+    summary: "Arm-friendly Tourna multi with added ribbons for better control and durability than a typical soft multi.",
+    note: "A nice bridge option for players who want comfort but do not want the stringbed to get too lively."
+  }),
+  stringEntry("Ashaway MonoGut ZX", {
+    brand: "Ashaway", type: "Synthetic Gut", stringShape: "Round", spin: "Medium", power: "High", control: "Medium", durability: "High",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#e2d5b3",
+    summary: "Unique Zyex monofilament that blends big power and comfort with unusually good durability for a soft string.",
+    note: "Helpful for players who want monofilament longevity without the harshness of polyester."
+  }),
+  stringEntry("Ashaway MonoGut ZX Pro", {
+    brand: "Ashaway", type: "Synthetic Gut", stringShape: "Round", spin: "Medium", power: "Medium", control: "High", durability: "High",
+    comfort: "High", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#c4b79f",
+    summary: "Thinner, more control-oriented version of MonoGut ZX with impressive comfort and surprising spin.",
+    note: "Good for players who want a softer monofilament feel but still value precision."
+  }),
+  stringEntry("Ashaway Dynamite Soft", {
+    brand: "Ashaway", type: "Multifilament", stringShape: "Textured", spin: "Medium", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "18", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#efe0cf",
+    summary: "Very soft Zyex multifilament with easy pocketing, high comfort, and a livelier launch.",
+    note: "Best for players prioritizing comfort and touch over maximum string life."
+  }),
+  stringEntry("Ashaway Dynamite Natural", {
+    brand: "Ashaway", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#eddcc8",
+    summary: "Comfortable Ashaway multi with easy power and better tension maintenance than many soft nylon options.",
+    note: "A solid fit for players who want a softer, more forgiving everyday restring."
+  }),
+  stringEntry("Ashaway Crossfire ZX Tour", {
+    brand: "Ashaway", type: "Hybrid", stringShape: "Hybrid Mix", spin: "Medium", power: "Low", control: "Very High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#d2c59f",
+    summary: "Kevlar and Zyex hybrid built for very high control, strong durability, and better comfort than classic Kevlar setups.",
+    note: "Most useful for advanced players who want a long-lasting hybrid with a dead, predictable launch."
+  }),
+  stringEntry("Grapplesnake Tour Sniper", {
+    brand: "Grapplesnake", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: ["Federico Agustin Gomez"], wtaPlayers: [],
+    proRackets: [
+      { player: "Federico Agustin Gomez", racket: "Head Prestige pro stock / TK293 mold" }
+    ],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#9aa2a8",
+    summary: "Firm five-sided co-poly that leans hard into control, spin-loaded trajectory, and clean targeting.",
+    note: "A smart option for big hitters who want a firmer response than softer boutique polys."
+  }),
+  stringEntry("Grapplesnake Alpha", {
+    brand: "Grapplesnake", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#9bc48d",
+    summary: "Softer Grapplesnake poly designed to give players a more accessible blend of spin, pocketing, and comfort.",
+    note: "A good first full-bed poly for players wanting modern spin without an overly harsh feel."
+  }),
+  stringEntry("Grapplesnake Tour M8", {
+    brand: "Grapplesnake", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: ["Daniel Gimeno Traver", "Julian Cash"], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#8eb06d",
+    summary: "Eight-sided boutique co-poly with heavy spin, strong control, and a more balanced feel than many firm tour strings.",
+    note: "Useful for advanced players who want spin and touch without going to the deadest control polys."
+  }),
+  stringEntry("Klip Legend Natural Gut", {
+    brand: "Klip", type: "Natural Gut", stringShape: "Round", spin: "Medium", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Advanced", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f2dec2",
+    summary: "Classic Australian natural gut with premium power, touch, comfort, and tension maintenance.",
+    note: "A strong luxury option for full beds or gut/poly hybrid mains."
+  }),
+  stringEntry("Klip X-Plosive", {
+    brand: "Klip", type: "Hybrid", stringShape: "Hybrid Mix", spin: "Medium", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Advanced", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#ddd0b8",
+    summary: "Natural gut and co-poly hybrid built to blend gut comfort and power with more control and longevity.",
+    note: "Appeals to players who want a premium hybrid without building one from separate sets."
+  }),
+  stringEntry("Topspin Cyber Flash", {
+    brand: "Topspin", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#b9c1c7",
+    summary: "Control-oriented co-poly with solid durability and better touch than many old-school firm polys.",
+    note: "A dependable pick for big hitters who want a round poly with a slightly more playable feel."
+  }),
+  stringEntry("YTex Quadro Twist", {
+    brand: "YTex", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#7ac66b",
+    summary: "Shaped YTex co-poly built for heavy rotation, lively snapback, and a modern attacking response.",
+    note: "Good for topspin players who want extra bite without dropping too low on power."
+  }),
+  stringEntry("Forten Synthetic Gut Sweet", {
+    brand: "Forten", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#e7d1a9",
+    summary: "Value synthetic gut with a lively response, solid tension maintenance, and easy all-around playability.",
+    note: "A simple budget-friendly choice for casual players or inexpensive hybrid crosses."
+  }),
+  stringEntry("Forten Nylon", {
+    brand: "Forten", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#eadcc4",
+    summary: "Basic nylon string that keeps cost low while delivering a predictable all-around response.",
+    note: "Useful for home stringers, budget restrings, or hybrid parts."
+  }),
+  stringEntry("IsoSpeed AXON Multi", {
+    brand: "IsoSpeed", type: "Hybrid-Style Multi", stringShape: "Round", spin: "Medium", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16L", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#edd8bf",
+    summary: "Elastic hybrid-style multi built to give multi users more spin, control, and tension stability.",
+    note: "A strong bridge string for players moving away from poly but still wanting structure and bite."
+  }),
+  stringEntry("IsoSpeed Control", {
+    brand: "IsoSpeed", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Muted", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#ead8c7",
+    summary: "Gut-inspired multifilament with soft feel, easy depth, and a little more control than the Classic version.",
+    note: "Good for players chasing comfort and touch without an overly lively launch."
+  }),
+  stringEntry("IsoSpeed Professional", {
+    brand: "IsoSpeed", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Plush", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#efddca",
+    summary: "Power Ribbon multi designed to mimic natural-gut comfort, power, and tension maintenance.",
+    note: "Helpful for players with arm sensitivity who still want a premium-feeling response."
+  }),
+  stringEntry("IsoSpeed Black Fire", {
+    brand: "IsoSpeed", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Budget", imageTone: "#4a4d57",
+    summary: "Firm value co-poly with a low-powered response, strong control, and better comfort than many cheap polys.",
+    note: "A smart pick for big hitters who want precision without a premium price tag."
+  }),
+  stringEntry("IsoSpeed Grey Fire", {
+    brand: "IsoSpeed", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Budget", imageTone: "#aeb4bd",
+    summary: "Snapback-focused co-poly with surgical control and a little more pocketing than older-school firm polys.",
+    note: "Useful for players who want a cleaner, more spin-friendly take on a control poly."
+  }),
+  stringEntry("IsoSpeed Pyramid", {
+    brand: "IsoSpeed", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Clay", priceTier: "Budget", imageTone: "#d9c676",
+    summary: "Arm-friendly shaped co-poly that adds sharp bite and easier spin without the harshness of firmer tour strings.",
+    note: "A nice option for players who want shaped-poly RPMs with more comfort."
+  }),
+  stringEntry("IsoSpeed Touch Poly V18", {
+    brand: "IsoSpeed", type: "Co-Poly", stringShape: "Round", spin: "Very High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "18", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Budget", imageTone: "#f1d55f",
+    summary: "Ultra-thin co-poly with strong ball bite, lively touch, and more comfort than most ultra-thin polys.",
+    note: "Best for advanced players who want extra spin and feel from a thinner gauge."
+  }),
+  stringEntry("Tourna Grit", {
+    brand: "Tourna", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#c8ccd1",
+    summary: "Modern Tourna co-poly with above-average comfort, solid control, and long-lasting playability for the category.",
+    note: "A good fit for players who want a controlled poly that does not go dead too quickly."
+  }),
+  stringEntry("Tourna Big Hitter Blue Rough", {
+    brand: "Tourna", type: "Co-Poly", stringShape: "Textured", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#5a8fce",
+    summary: "Twisted pentagonal co-poly built for big bite, easy spin, and a comfortably firm response.",
+    note: "Works well for baseline players who want RPMs and enough pop to drive the ball through the court."
+  }),
+  stringEntry("Tourna Quasi Gut", {
+    brand: "Tourna", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#eedfcf",
+    summary: "Soft PU-infused multi made to mimic natural-gut comfort and easy depth at a lower price.",
+    note: "A good comfort-first option for doubles players or anyone wanting a forgiving stringbed."
+  }),
+  stringEntry("Tourna Synthetic Gut Armor", {
+    brand: "Tourna", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#d8d0c8",
+    summary: "Durability-boosted synthetic gut that stays crisp while offering better mileage than a basic nylon setup.",
+    note: "Handy for budget players and as a hybrid cross for firmer mains."
+  }),
+  stringEntry("Ashaway Liberty Synthetic Gut", {
+    brand: "Ashaway", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#e6d4bb",
+    summary: "Value tournament nylon with honest all-around playability and excellent price-to-performance.",
+    note: "A solid low-cost restring for newer players or high-volume stringers."
+  }),
+  stringEntry("Ashaway Synthetic Gut", {
+    brand: "Ashaway", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#e7d9c8",
+    summary: "Responsive entry-level synthetic gut with a clean feel and a little more touch than bargain-basement nylon.",
+    note: "Useful as a simple full bed or as an inexpensive hybrid cross."
+  }),
+  stringEntry("Ashaway Crossfire ZX", {
+    brand: "Ashaway", type: "Hybrid", stringShape: "Hybrid Mix", spin: "High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#d6c8a8",
+    summary: "Kevlar and Zyex hybrid that delivers standout control and spin with surprisingly good comfort for the breed.",
+    note: "Best suited to experienced players who want a durable, low-powered hybrid with a more forgiving feel than classic Kevlar."
+  }),
+  stringEntry("Signum Pro X-Perience", {
+    brand: "Signum Pro", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#77b85b",
+    summary: "Shaped Signum Pro co-poly with impressive control, strong spin, and above-average comfort for a firm poly.",
+    note: "A good option for big hitters who want predictable ball flight without a completely dead feel."
+  }),
+  stringEntry("Signum Pro Tornado", {
+    brand: "Signum Pro", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#2d2f31",
+    summary: "Twisted heptagonal co-poly built for heavy bite, strong spin creation, and controlled power.",
+    note: "Useful for topspin players who want a lively shaped poly with strong durability."
+  }),
+  stringEntry("Topspin Cyber Blue", {
+    brand: "Topspin", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#8db4e8",
+    summary: "Control-oriented poly with a softer, more dampened feel and better tension maintenance than Cyber Flash.",
+    note: "Nice for players who like round polys but want a touch more comfort and playability."
+  }),
+  stringEntry("Forten Kevlar Thin Blend", {
+    brand: "Forten", type: "Hybrid", stringShape: "Hybrid Mix", spin: "Medium", power: "Low", control: "Very High", durability: "Very High",
+    comfort: "Low", feel: "Crisp", gauge: "18", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "All Surfaces", priceTier: "Budget", imageTone: "#c8a57a",
+    summary: "Thin Kevlar hybrid that blends exceptional durability and control with better playability than many harsh Kevlar setups.",
+    note: "Best for string breakers and advanced players who prioritize longevity and directional trust."
+  }),
+  stringEntry("Gamma TNT2", {
+    brand: "Gamma", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#ead8bf",
+    summary: "Lively TNT-processed synthetic string with easy power, clean feel, and better playability than a basic nylon.",
+    note: "A good all-around option for players who want more pop and feel than standard synthetic gut."
+  }),
+  stringEntry("Wilson NXT Power", {
+    brand: "Wilson", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Wilson Clash", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#f0ddcf",
+    summary: "Extra-soft Wilson multi with standout comfort, touch, and easy power for players who want a premium cushioned response.",
+    note: "Especially appealing in stiff frames or for players prioritizing arm-friendliness."
+  }),
+  stringEntry("IsoSpeed Baseline Spin", {
+    brand: "IsoSpeed", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Budget", imageTone: "#d9d16f",
+    summary: "Value co-poly designed to give topspin players easier bite, lively snapback, and solid control for the price.",
+    note: "A smart budget poly for players who want spin without jumping to a harsher premium setup."
+  }),
+  stringEntry("IsoSpeed Baseline Control", {
+    brand: "IsoSpeed", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "Very High", durability: "High",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Budget", imageTone: "#d8d8d1",
+    summary: "Control-first budget co-poly with a firm, predictable response and enough durability for heavier hitters.",
+    note: "Best for players who value direction and consistency over free power."
+  }),
+  stringEntry("IsoSpeed Baseline Speed", {
+    brand: "IsoSpeed", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Medium", control: "Medium", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#e4cf88",
+    summary: "Faster, livelier Baseline option built for easier depth and a more forgiving polyester response.",
+    note: "A useful entry point for players who want poly durability but still need some help from the stringbed."
+  }),
+  stringEntry("IsoSpeed Baseline Long Life", {
+    brand: "IsoSpeed", type: "Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "Very High",
+    comfort: "Low", feel: "Crisp", gauge: "15L", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Budget", imageTone: "#cab98a",
+    summary: "Longevity-focused polyester monofilament built for string breakers who want maximum life and a dead, controlled launch.",
+    note: "Most useful for players who routinely shear through softer strings."
+  }),
+  stringEntry("IsoSpeed Rexxxer", {
+    brand: "IsoSpeed", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#cfa65b",
+    summary: "Aggressively shaped IsoSpeed co-poly with heavy spin creation, lively snapback, and stronger touch than the stiffest tour polys.",
+    note: "A natural fit for modern baseline games that lean on height and RPMs."
+  }),
+  stringEntry("IsoSpeed Black Fire S", {
+    brand: "IsoSpeed", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Budget", imageTone: "#4d4d4d",
+    summary: "Spin-loaded control poly with a firmer feel, lower launch, and stronger directional accuracy than the softer IsoSpeed offerings.",
+    note: "Best for experienced players who like to attack with full swings and tight targets."
+  }),
+  stringEntry("Tourna Big Hitter Silver", {
+    brand: "Tourna", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Silver",
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Budget", imageTone: "#bfc4ca",
+    summary: "Classic budget co-poly with a lively but controlled response, dependable spin, and excellent value for high-volume hitters.",
+    note: "One of the more approachable low-cost polys for players who want a familiar modern feel."
+  }),
+  stringEntry("Tourna Black Zone", {
+    brand: "Tourna", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Black",
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Budget", imageTone: "#43484f",
+    summary: "Lower-powered Tourna poly made for flatter hitters and redirectors who want predictable depth and crisp control.",
+    note: "A nice value option when you want a simpler round poly with a deader response."
+  }),
+  stringEntry("Tourna Premium Poly", {
+    brand: "Tourna", type: "Poly", stringShape: "Round", spin: "High", power: "Low", control: "High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "16", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Budget", imageTone: "#d8d8d0",
+    summary: "Straightforward polyester monofilament that gives chronic breakers affordable control, spin, and durability.",
+    note: "Works as a no-frills full bed for players who prioritize value and longevity."
+  }),
+  stringEntry("Ashaway Dynamite Tough", {
+    brand: "Ashaway", type: "Multifilament", stringShape: "Round", spin: "Low", power: "Medium", control: "High", durability: "High",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#ead9c8",
+    summary: "Durability-oriented Zyex multi that keeps a softer feel while lasting longer than many comfort strings.",
+    note: "A strong comfort option for players who routinely shred ordinary multis."
+  }),
+  stringEntry("Ashaway Crossfire+ Plus", {
+    brand: "Ashaway", type: "Hybrid", stringShape: "Hybrid Mix", spin: "Medium", power: "Low", control: "Very High", durability: "Very High",
+    comfort: "Low", feel: "Crisp", gauge: "16", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "All Surfaces", priceTier: "Budget", imageTone: "#d3c3a3",
+    summary: "Kevlar hybrid built for serious durability and an extremely controlled response, with more power than the deadest aramid setups.",
+    note: "Best suited to heavy hitters and string breakers who still want some liveliness."
+  }),
+  stringEntry("Ashaway Crossfire II", {
+    brand: "Ashaway", type: "Hybrid", stringShape: "Hybrid Mix", spin: "Medium", power: "Low", control: "Very High", durability: "Very High",
+    comfort: "Low", feel: "Crisp", gauge: "16", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "All Surfaces", priceTier: "Budget", imageTone: "#c9b695",
+    summary: "Classic aramid hybrid with maximum durability, a firm impact feel, and locked-in directional control.",
+    note: "A practical choice for advanced players who want their strings to last and launch low."
+  }),
+  stringEntry("Ashaway Crossfire", {
+    brand: "Ashaway", type: "Hybrid", stringShape: "Hybrid Mix", spin: "Medium", power: "Low", control: "Very High", durability: "Very High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Counterpuncher",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Low", surface: "All Surfaces", priceTier: "Budget", imageTone: "#c3af8b",
+    summary: "Thin-gauge Kevlar hybrid with strong bite, a very controlled launch, and unusually long life for players who hit big.",
+    note: "Useful for experienced players wanting maximum durability from a slightly livelier aramid blend."
+  }),
+  stringEntry("Signum Pro Yellow Jacket", {
+    brand: "Signum Pro", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Yellow",
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#e5d25f",
+    summary: "Six-sided Signum Pro co-poly with standout spin, strong control, and better feel than many shaped tour strings.",
+    note: "A nice middle ground for players who want Hyper-G style bite without an overly harsh response."
+  }),
+  stringEntry("Signum Pro Poly Plasma Pure", {
+    brand: "Signum Pro", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "White",
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Budget", imageTone: "#f0efeb",
+    summary: "Co-polyester monofilament that pairs strong control and spin with above-average comfort and tension hold for the category.",
+    note: "Good for aggressive players who want a durable poly that does not feel completely dead."
+  }),
+  stringEntry("Signum Pro Poly Megaforce", {
+    brand: "Signum Pro", type: "Co-Poly", stringShape: "Round", spin: "Medium", power: "Low", control: "High", durability: "High",
+    comfort: "Medium", feel: "Muted", gauge: "17L", playerLevel: "Advanced", gameStyle: "Flat Hitter",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Budget", imageTone: "#cbd4db",
+    summary: "Budget-minded co-poly with a firmer, more controlled response and excellent value for frequent restringers.",
+    note: "A clean fit for players who want a reliable round poly without paying premium prices."
+  }),
+  stringEntry("Signum Pro Hyperion", {
+    brand: "Signum Pro", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#cfa45d",
+    summary: "Playability-first Signum co-poly with more pop and feel than the deadest control strings while keeping a stable flight.",
+    note: "Useful for players who want a round poly that feels a touch livelier and more forgiving."
+  }),
+  stringEntry("Klip Legend Tour Natural Gut", {
+    brand: "Klip", type: "Natural Gut", stringShape: "Round", spin: "Medium", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Black",
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#3f3b3c",
+    summary: "Highest-grade black natural gut with premium comfort, touch, power, and slightly more durability from its coated construction.",
+    note: "A luxury option for players who want gut performance with a unique look and a smooth response."
+  }),
+  stringEntry("YTex Square-X", {
+    brand: "YTex", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "High", feel: "Responsive", gauge: "16L", playerLevel: "Intermediate", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#2f2f31",
+    summary: "Soft square-shaped co-poly with easy access to spin, strong feel, and unusually friendly comfort for a shaped polyester.",
+    note: "A compelling option for players who want RPM Blast style bite with a softer response."
+  }),
+  stringEntry("YTex Hexagon-X", {
+    brand: "YTex", type: "Co-Poly", stringShape: "Shaped", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#cf4d4d",
+    summary: "Six-sided co-poly that blends spin, control, and durability with a more complete all-around response than many ultra-dead polys.",
+    note: "A strong fit for players who want shape and bite without sacrificing too much feel."
+  }),
+  stringEntry("Topspin Cyber Twirl", {
+    brand: "Topspin", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Black",
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#2d3036",
+    summary: "Twisted pentagonal co-poly with heavy bite, lively ball speed, and better playability than many firm spin strings.",
+    note: "A good fit for topspin players who want a shaped poly that feels more alive than a dead control setup."
+  }),
+  stringEntry("Grapplesnake Irukandji", {
+    brand: "Grapplesnake", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "All-Court",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#8b9299",
+    summary: "Comfort-focused polyester made to work as a soft cross string or a surprisingly playable full bed with easy snapback.",
+    note: "Useful for players building hybrids and for poly users who want more pocketing and less harshness."
+  }),
+  stringEntry("Grapplesnake Paradox Pro", {
+    brand: "Grapplesnake", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#6c8b57",
+    summary: "Smooth boutique co-poly that aims for the rare middle ground of pop, precision, durability, and softer impact feel.",
+    note: "A strong choice for players who like round polys but still want some grip and a more complete response."
+  }),
+  stringEntry("Grapplesnake Aspera Triplum", {
+    brand: "Grapplesnake", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "High",
+    comfort: "High", feel: "Responsive", gauge: "18", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Clay", priceTier: "Premium", imageTone: "#d7d63f",
+    summary: "Square textured co-poly built for maximum rotation, sharp grab, and unusually soft feedback for a spin-first string.",
+    note: "Best for players who want one of the grippiest shapes in the database without dropping into a harsh feel."
+  }),
+  stringEntry("Grapplesnake Tour Mako", {
+    brand: "Grapplesnake", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "High", feel: "Responsive", gauge: "16L", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "High", surface: "Hard Court", priceTier: "Premium", imageTone: "#6ea6a1",
+    summary: "Smooth poly with extra feel, reliable control, and a softer response than many boutique tour-oriented strings.",
+    note: "A clean option for players who want a round poly that does not feel boardy or dead."
+  }),
+  stringEntry("Grapplesnake Soldier", {
+    brand: "Grapplesnake", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "Very High", durability: "Very High",
+    comfort: "Medium", feel: "Crisp", gauge: "16L", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Black",
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Premium", imageTone: "#26292d",
+    summary: "Heptagonal control poly with excellent stability, long tension life, and a firmer response aimed at advanced hitters.",
+    note: "Appeals to players who want shaped-poly bite with a more locked-in launch and above-average durability."
+  }),
+  stringEntry("Grapplesnake Game Changer", {
+    brand: "Grapplesnake", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "High", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Premium", imageTone: "#8e8c89",
+    summary: "Power-friendly square co-poly with strong bite, lively response, and enough comfort to feel more forgiving than many spin strings.",
+    note: "Useful for topspin players who want a little more pop and feel than the stiffest square polys."
+  }),
+  stringEntry("YTex Pro-Feel", {
+    brand: "YTex", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "High",
+    comfort: "High", feel: "Responsive", gauge: "16L", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Natural",
+    armFriendliness: "High", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#ead7bb",
+    summary: "Soft co-poly that leans into pocketing, comfort, and controllable spin without feeling mushy or underpowered.",
+    note: "A good bridge string for players moving from firm polys toward something easier on the arm."
+  }),
+  stringEntry("YTex Touch Natural", {
+    brand: "YTex", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Natural",
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#e8cfad",
+    summary: "Soft nylon multifilament built for touch, easy power, and a more arm-friendly transition away from polyester.",
+    note: "A nice fit for comfort-first players and anyone wanting a livelier multi that still feels connected."
+  }),
+  stringEntry("YTex Square-X Sharp", {
+    brand: "YTex", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "18", playerLevel: "Intermediate", gameStyle: "Heavy Topspin",
+    tensionBand: "Low 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Green",
+    armFriendliness: "High", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#98d448",
+    summary: "Extra-thin square co-poly that delivers sharp spin, easy pace, and a softer ride than most spin-first polys.",
+    note: "A strong choice for players who want arm-friendly spin and do not need maximum durability."
+  }),
+  stringEntry("Wilson NXT Soft", {
+    brand: "Wilson", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Plush", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Blue",
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#b8d8ea",
+    summary: "Comfort-first NXT variant with softer fibers, easier power, and a more forgiving impact feel than the original.",
+    note: "A strong fit for players who want maximum comfort without leaving the premium multi category."
+  }),
+  stringEntry("Wilson Synthetic Gut Power", {
+    brand: "Wilson", type: "Synthetic Gut", stringShape: "Round", spin: "Low", power: "Medium", control: "Medium", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "16", playerLevel: "Beginner", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Gold",
+    armFriendliness: "Medium", surface: "All Surfaces", priceTier: "Budget", imageTone: "#e7c86d",
+    summary: "Classic nylon synthetic gut that blends crisp response, easy power, and solid value for everyday restringing.",
+    note: "Useful for rec players wanting a lively all-around setup without jumping into polyester."
+  }),
+  stringEntry("Babolat Tonic+ Ball Feel", {
+    brand: "Babolat", type: "Natural Gut", stringShape: "Round", spin: "Medium", power: "High", control: "High", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Advanced", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Natural",
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#e7d2a8",
+    summary: "More approachable Babolat natural gut option that keeps the power, feel, and comfort profile gut lovers want.",
+    note: "A smart entry point into natural gut for players who want premium feel without paying full VS prices."
+  }),
+  stringEntry("Prince Tour XT", {
+    brand: "Prince", type: "Co-Poly", stringShape: "Round", spin: "High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "Medium", feel: "Responsive", gauge: "18", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Grey",
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#cfd5dc",
+    summary: "Thin Prince tour poly that leans into spin, feel, and easier pocketing rather than maximum stiffness or launch suppression.",
+    note: "Best for players who like thinner gauges and want a livelier response than deadest control polys."
+  }),
+  stringEntry("Gamma Ocho XP", {
+    brand: "Gamma", type: "Multifilament", stringShape: "Shaped", spin: "Medium", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Natural",
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#e8d7b0",
+    summary: "Octagonal Gamma multifilament built to add more spin and bite than a traditional comfort-first multi.",
+    note: "A nice bridge option for players who want multi comfort without giving up all their spin help."
+  }),
+  stringEntry("Gamma Glide Cross String", {
+    brand: "Gamma", type: "Hybrid", stringShape: "Round", spin: "High", power: "Medium", control: "Medium", durability: "Low",
+    comfort: "High", feel: "Responsive", gauge: "16", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Clear",
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Mid-Range", imageTone: "#d9eef4",
+    summary: "Specialty low-friction cross string designed to unlock more snapback, spin, and comfort in custom hybrids.",
+    note: "Best treated as a hybrid building block rather than a normal full-bed string."
+  }),
+  stringEntry("Gamma Live Wire Professional", {
+    brand: "Gamma", type: "Multifilament", stringShape: "Round", spin: "Low", power: "High", control: "Medium", durability: "Medium",
+    comfort: "High", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "All-Court",
+    tensionBand: "Mid 50s", racketFamily: "Power Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Natural",
+    armFriendliness: "High", surface: "All Surfaces", priceTier: "Premium", imageTone: "#efdfbd",
+    summary: "Premium Gamma multi with easy depth, softer shock absorption, and a cleaner response than entry-level comfort strings.",
+    note: "A good fit for players who want premium multi performance with a bit more structure than mushy comfort strings."
+  }),
+  stringEntry("ISOSPEED V18", {
+    brand: "IsoSpeed", type: "Co-Poly", stringShape: "Round", spin: "Very High", power: "Medium", control: "High", durability: "Low",
+    comfort: "Low", feel: "Crisp", gauge: "18", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Yellow",
+    armFriendliness: "Low", surface: "Clay", priceTier: "Mid-Range", imageTone: "#f1dc4a",
+    summary: "Ultra-thin co-poly aimed at fast swingers who want extra spin, livelier rebound, and thin-gauge precision.",
+    note: "Best for players who value bite and feel more than durability."
+  }),
+  stringEntry("Tourna Silver 7 Tour", {
+    brand: "Tourna", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Low", control: "Very High", durability: "High",
+    comfort: "Low", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Silver",
+    armFriendliness: "Low", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#c7cdd4",
+    summary: "Firm seven-sided Tourna poly that prioritizes control, spin definition, and a locked-in response on big swings.",
+    note: "A clear fit for experienced poly users who want firmer feedback and lower launch."
+  }),
+  stringEntry("Weiss Cannon Mosquito Bite", {
+    brand: "Weiss Cannon", type: "Co-Poly", stringShape: "Round", spin: "Very High", power: "Medium", control: "High", durability: "Low",
+    comfort: "Medium", feel: "Responsive", gauge: "18", playerLevel: "Advanced", gameStyle: "Aggressive Baseliner",
+    tensionBand: "High 40s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Red",
+    armFriendliness: "Medium", surface: "Clay", priceTier: "Mid-Range", imageTone: "#d4665f",
+    summary: "Ultra-thin German co-poly with quick snapback, strong feel, and surprising spin from a very narrow gauge.",
+    note: "A fun option for advanced players who want touch and spin without a thick, boardy string bed."
+  }),
+  stringEntry("MSV Focus HEX Ultra", {
+    brand: "MSV", type: "Co-Poly", stringShape: "Shaped", spin: "Very High", power: "Medium", control: "High", durability: "Medium",
+    comfort: "Medium", feel: "Crisp", gauge: "17", playerLevel: "Advanced", gameStyle: "Heavy Topspin",
+    tensionBand: "High 40s", racketFamily: "Spin Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Neon Yellow",
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Budget", imageTone: "#dbe84a",
+    summary: "Hexagonal MSV co-poly with sharp snapback, strong control, and better tension stability than many bargain spin strings.",
+    note: "Good for players who want a spin-first poly without paying premium-tour pricing."
+  }),
+  stringEntry("Dunlop Explosive Red", {
+    brand: "Dunlop", type: "Poly", stringShape: "Round", spin: "Medium", power: "High", control: "High", durability: "High",
+    comfort: "Medium", feel: "Responsive", gauge: "17", playerLevel: "Intermediate", gameStyle: "Aggressive Baseliner",
+    tensionBand: "Low 50s", racketFamily: "Control Frame", atpPlayers: [], wtaPlayers: [],
+    stringColor: "Red",
+    armFriendliness: "Medium", surface: "Hard Court", priceTier: "Mid-Range", imageTone: "#d84c4f",
+    summary: "Dunlop monofilament with a smoother, more power-friendly response than many stiff control-first polyester strings.",
+    note: "Useful for players who want poly-style precision with a little more energy and feel."
+  })
+];
+
+window.TENNIS_STRING_DATA = STRINGS;
+
+const strictFilterKeys = new Set(["brand", "type", "atpPlayer", "wtaPlayer", "stringColor", "gauge", "playerLevel", "gameStyle", "tensionBand", "racketFamily"]);
+
+window.TENNIS_STRING_PLANNER_STRINGS = STRINGS;
+window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS = {
+  atp: (FILTERS.find((filter) => filter.key === "atpPlayer")?.options || []).filter((option) => option !== "Any"),
+  wta: (FILTERS.find((filter) => filter.key === "wtaPlayer")?.options || []).filter((option) => option !== "Any")
+};
+
+if (hasPlannerSurface) {
+  updateLocalizedUiText();
+  updateHomepageStaticTranslations();
+  renderFilters();
+  populateMobileQuickPlayerFilter();
+  syncMobileQuickTypeFilter();
+  initializeSetupWorkbench();
+  syncClearSearchButton();
+  renderResults();
+
+  if (stringSearchInput) {
+    stringSearchInput.addEventListener("input", (event) => {
+      const wasSearching = Boolean(searchQuery);
+      searchQuery = event.currentTarget.value.trim().toLowerCase();
+      popularOnly = false;
+      proOnly = false;
+      if (searchQuery) {
+        clearNonSearchFilters();
+        if (!wasSearching) {
+          toolsHiddenBeforeSearch = toolsHiddenForPrimaryModes;
+          toolsHiddenForPrimaryModes = true;
+          autoCollapsedToolsForSearch = true;
+        }
+      } else if (wasSearching && autoCollapsedToolsForSearch) {
+        toolsHiddenForPrimaryModes = toolsHiddenBeforeSearch;
+        autoCollapsedToolsForSearch = false;
+      }
+      syncClearSearchButton();
+      syncPopularButton();
+      syncProButton();
+      renderResults();
+    });
+  }
+
+  if (clearSearchButton && stringSearchInput) {
+    clearSearchButton.addEventListener("click", () => {
+      const wasSearching = Boolean(searchQuery);
+      stringSearchInput.value = "";
+      stringSearchInput.focus();
+      searchQuery = "";
+      if (wasSearching && autoCollapsedToolsForSearch) {
+        toolsHiddenForPrimaryModes = toolsHiddenBeforeSearch;
+        autoCollapsedToolsForSearch = false;
+      }
+      syncClearSearchButton();
+      renderResults();
+    });
+  }
+
+  if (popularStringsButton) {
+    popularStringsButton.addEventListener("click", () => {
+      const nextPopularOnly = !popularOnly;
+      if (nextPopularOnly) {
+        clearPrimaryMenuModeInputs();
+      }
+      popularOnly = nextPopularOnly;
+      if (popularOnly) {
+        proOnly = false;
+      }
+      toolsHiddenForPrimaryModes = popularOnly;
+      syncPopularButton();
+      syncProButton();
+      renderResults();
+    });
+  }
+  if (proPlayersButton) {
+    proPlayersButton.addEventListener("click", () => {
+      const nextProOnly = !proOnly;
+      if (nextProOnly) {
+        clearPrimaryMenuModeInputs();
+      }
+      proOnly = nextProOnly;
+      if (proOnly) {
+        popularOnly = false;
+      }
+      toolsHiddenForPrimaryModes = proOnly;
+      syncProButton();
+      syncPopularButton();
+      renderResults();
+    });
+  }
+
+  if (toolWorkbenchToggleButton) {
+    toolWorkbenchToggleButton.addEventListener("click", () => {
+      autoCollapsedToolsForSearch = false;
+      toolsHiddenForPrimaryModes = !toolsHiddenForPrimaryModes;
+      syncFocusedMode();
+    });
+  }
+
+  if (toolWorkbenchHeaderToggleButton) {
+    toolWorkbenchHeaderToggleButton.addEventListener("click", () => {
+      autoCollapsedToolsForSearch = false;
+      toolsHiddenForPrimaryModes = !toolsHiddenForPrimaryModes;
+      syncFocusedMode();
+    });
+  }
+
+  if (typeMenu) {
+    typeMenu.querySelectorAll("[data-type]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const selectedType = button.dataset.type || "Any";
+        state.type = selectedType;
+        const typeSelect = document.getElementById("filter-type");
+        if (typeSelect) {
+          typeSelect.value = selectedType;
+        }
+        syncTypeMenu();
+        syncMobileQuickTypeFilter();
+        renderResults();
+      });
+    });
+    syncTypeMenu();
+  }
+
+  resetButton.addEventListener("click", () => {
+    resetToMainChoices();
+  });
+}
+
+if (hasSetupWorkbenchSurface && !hasPlannerSurface) {
+  initializeSetupWorkbench();
+  updateDatabaseCountLabels();
+}
+
+function initializeSliderPanelToggle() {
+  if (!sliderPanelToggle || !sliderPanelBody) {
+    return;
+  }
+
+  sliderPanelToggle.addEventListener("click", () => {
+    const nextCollapsed = !sliderPanelBody.classList.contains("is-collapsed");
+    sliderPanelBody.classList.toggle("is-collapsed", nextCollapsed);
+    sliderPanelToggle.textContent = nextCollapsed ? getUiText("sliderShow", "Show Sliders") : getUiText("sliderHide", "Hide Sliders");
+    sliderPanelToggle.setAttribute("aria-expanded", nextCollapsed ? "false" : "true");
+  });
+}
+
+function initializePreferenceSliders() {
+  [
+    { input: sliderPower, output: sliderPowerValue, key: "power" },
+    { input: sliderSpin, output: sliderSpinValue, key: "spin" },
+    { input: sliderControl, output: sliderControlValue, key: "control" },
+    { input: sliderProPlayers, output: sliderProPlayersValue, key: "proPlayers" }
+  ].forEach((item) => {
+    if (!item.input || !item.output) {
+      return;
+    }
+
+    item.output.textContent = String(sliderPreferences[item.key]);
+    item.input.value = String(sliderPreferences[item.key]);
+    item.input.addEventListener("input", (event) => {
+      const nextValue = Number(event.currentTarget.value || 5);
+      sliderPreferences[item.key] = nextValue;
+      item.output.textContent = String(nextValue);
+      markSliderInteraction();
+      scheduleSliderRender();
+    });
+    item.input.addEventListener("change", () => {
+      markSliderInteraction();
+      flushSliderRender();
+    });
+  });
+}
+
+function syncSliderControls() {
+  if (sliderPower) sliderPower.value = String(sliderPreferences.power);
+  if (sliderSpin) sliderSpin.value = String(sliderPreferences.spin);
+  if (sliderControl) sliderControl.value = String(sliderPreferences.control);
+  if (sliderProPlayers) sliderProPlayers.value = String(sliderPreferences.proPlayers);
+  if (sliderPowerValue) sliderPowerValue.textContent = String(sliderPreferences.power);
+  if (sliderSpinValue) sliderSpinValue.textContent = String(sliderPreferences.spin);
+  if (sliderControlValue) sliderControlValue.textContent = String(sliderPreferences.control);
+  if (sliderProPlayersValue) sliderProPlayersValue.textContent = String(sliderPreferences.proPlayers);
+}
+
+function scheduleSliderRender() {
+  if (sliderRenderTimeout) {
+    window.clearTimeout(sliderRenderTimeout);
+  }
+
+  sliderRenderTimeout = window.setTimeout(() => {
+    sliderRenderTimeout = null;
+    renderResults();
+  }, 180);
+}
+
+function flushSliderRender() {
+  if (sliderRenderTimeout) {
+    window.clearTimeout(sliderRenderTimeout);
+    sliderRenderTimeout = null;
+  }
+  renderResults();
+}
+
+function markSliderInteraction() {
+  sliderInteractionActive = true;
+  if (sliderInteractionTimeout) {
+    window.clearTimeout(sliderInteractionTimeout);
+  }
+  sliderInteractionTimeout = window.setTimeout(() => {
+    sliderInteractionActive = false;
+    sliderInteractionTimeout = null;
+  }, 700);
+}
+
+function renderFilters() {
+  const playerCoverage = getPlayerCoverage();
+
+  filterGrid.innerHTML = FILTERS.map((filter) => `
+    <div class="field">
+      <label for="filter-${filter.key}">${getFilterLabel(filter.key)}</label>
+      <select id="filter-${filter.key}" data-key="${filter.key}" class="${filter.key === "atpPlayer" || filter.key === "wtaPlayer" ? "player-filter-select" : ""}">
+        ${buildFilterOptions(filter, playerCoverage)}
+      </select>
+      ${buildFilterNote(filter, playerCoverage)}
+    </div>
+  `).join("");
+
+  FILTERS.forEach((filter) => {
+    const select = document.getElementById(`filter-${filter.key}`);
+    if (!select) {
+      return;
+    }
+
+    select.addEventListener("change", (event) => {
+      state[filter.key] = event.currentTarget.value;
+      if (filter.key === "type") {
+        syncTypeMenu();
+        syncMobileQuickTypeFilter();
+      }
+      if (filter.key === "atpPlayer" || filter.key === "wtaPlayer") {
+        syncMobileQuickPlayerFilter();
+      }
+      renderResults();
+    });
+  });
+}
+
+function populateMobileQuickPlayerFilter() {
+  if (!mobileQuickPlayerFilter) {
+    return;
+  }
+
+  const atpPlayers = FILTERS.find((filter) => filter.key === "atpPlayer")?.options.filter((option) => option !== "Any") || [];
+  const wtaPlayers = FILTERS.find((filter) => filter.key === "wtaPlayer")?.options.filter((option) => option !== "Any") || [];
+  const players = sortNamesBySurname([...new Set([...atpPlayers, ...wtaPlayers])]);
+
+  mobileQuickPlayerFilter.innerHTML = `
+    <option value="Any">${getUiText("allProPlayers", "All Pro Players")}</option>
+    ${players.map((player) => `<option value="${player}">${player}</option>`).join("")}
+  `;
+
+  mobileQuickPlayerFilter.onchange = (event) => {
+    const selectedPlayer = event.currentTarget.value;
+    const isAtpPlayer = atpPlayers.includes(selectedPlayer);
+    const isWtaPlayer = wtaPlayers.includes(selectedPlayer);
+
+    state.atpPlayer = isAtpPlayer ? selectedPlayer : "Any";
+    state.wtaPlayer = isWtaPlayer ? selectedPlayer : "Any";
+
+    const atpSelect = document.getElementById("filter-atpPlayer");
+    const wtaSelect = document.getElementById("filter-wtaPlayer");
+
+    if (atpSelect) {
+      atpSelect.value = state.atpPlayer;
+    }
+
+    if (wtaSelect) {
+      wtaSelect.value = state.wtaPlayer;
+    }
+
+    renderResults();
+  };
+
+  syncMobileQuickPlayerFilter();
+}
+
+function initializeSetupWorkbench() {
+  populateQuickSetupControls();
+  populateTensionCalculatorControls();
+  populateQuickSetupExampleSelect();
+
+  [
+    quickSetupStyle,
+    quickSetupPro,
+    quickSetupSpin,
+    quickSetupPower,
+    quickSetupControl,
+    quickSetupRacket,
+    quickSetupUseProRacket
+  ].forEach((control) => {
+    if (!control) {
+      return;
+    }
+
+    control.addEventListener("change", () => {
+      clearActiveQuickSetupExample();
+    });
+  });
+
+  if (quickSetupPro) {
+    quickSetupPro.addEventListener("change", () => {
+      syncQuickSetupProRacketUi();
+    });
+  }
+
+  if (quickSetupUseProRacket) {
+    quickSetupUseProRacket.addEventListener("change", () => {
+      syncQuickSetupProRacketUi();
+    });
+  }
+
+  if (quickSetupButton) {
+    quickSetupButton.addEventListener("click", () => {
+      const recommendation = buildQuickSetupRecommendation(
+        quickSetupStyle?.value || "Any",
+        quickSetupPro?.value || "Any",
+        {
+          spin: quickSetupSpin?.value || "Any",
+          power: quickSetupPower?.value || "Any",
+          control: quickSetupControl?.value || "Any",
+          racketFamily: quickSetupRacket?.value || "Any",
+          useProRacket: quickSetupUseProRacket?.checked || false
+        }
+      );
+      renderQuickSetupRecommendation(recommendation);
+      trackToolUsage("quick_setup_build", "Build Setup");
+    });
+  }
+
+  if (quickSetupApplyButton) {
+    quickSetupApplyButton.addEventListener("click", () => {
+      applyQuickSetupRecommendation();
+    });
+  }
+
+  if (exampleSetupButtons.length) {
+    exampleSetupButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        applyExampleSetup(Number(button.dataset.exampleIndex || 0));
+      });
+    });
+  }
+
+  if (quickSetupExampleSelect) {
+    quickSetupExampleSelect.addEventListener("change", (event) => {
+      const selectedIndex = Number(event.currentTarget.value || -1);
+      if (selectedIndex >= 0) {
+        applyExampleSetup(selectedIndex);
+      } else {
+        clearActiveQuickSetupExample();
+      }
+    });
+  }
+
+  if (tensionCalcButton) {
+    tensionCalcButton.addEventListener("click", () => {
+      renderTensionCalculatorRecommendation();
+      trackToolUsage("tension_calculator_calculate", "Calculate Tension");
+    });
+  }
+
+  restoreStoredTensionCalculatorSource();
+  renderQuickSetupRecommendation(null);
+  renderTensionCalculatorRecommendation();
+  syncQuickSetupProRacketUi();
+  syncExampleSetupButtons();
+}
+
+function syncExampleSetupButtons() {
+  if (exampleSetupButtons.length) {
+    exampleSetupButtons.forEach((button, index) => {
+      const isActive = index === activeQuickSetupExampleIndex;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+  }
+
+  if (quickSetupExampleSelect) {
+    quickSetupExampleSelect.value = activeQuickSetupExampleIndex >= 0 ? String(activeQuickSetupExampleIndex) : "";
+  }
+}
+
+function clearActiveQuickSetupExample() {
+  if (activeQuickSetupExampleIndex === -1) {
+    return;
+  }
+
+  activeQuickSetupExampleIndex = -1;
+  syncExampleSetupButtons();
+}
+
+function populateQuickSetupControls() {
+  if (quickSetupStyle) {
+    const styles = FILTERS.find((filter) => filter.key === "gameStyle")?.options.filter((option) => option !== "Any") || [];
+    quickSetupStyle.innerHTML = `
+      <option value="Any">Choose a playing style</option>
+      ${styles.map((style) => `<option value="${style}">${style}</option>`).join("")}
+    `;
+  }
+
+  if (quickSetupPro) {
+    const players = getCoveredQuickSetupPlayers();
+    quickSetupPro.innerHTML = `
+      <option value="Any">Choose a pro player</option>
+      ${players.map((player) => `<option value="${player}">${player}</option>`).join("")}
+    `;
+  }
+
+  if (quickSetupSpin) {
+    const spinLevels = FILTERS.find((filter) => filter.key === "spin")?.options || ["Any"];
+    quickSetupSpin.innerHTML = spinLevels.map((value) => `
+      <option value="${value}">${value === "Any" ? "Any spin level" : value}</option>
+    `).join("");
+    quickSetupSpin.value = "Any";
+  }
+
+  if (quickSetupPower) {
+    const powerLevels = FILTERS.find((filter) => filter.key === "power")?.options || ["Any"];
+    quickSetupPower.innerHTML = powerLevels.map((value) => `
+      <option value="${value}">${value === "Any" ? "Any power level" : value}</option>
+    `).join("");
+    quickSetupPower.value = "Any";
+  }
+
+  if (quickSetupControl) {
+    const controlLevels = FILTERS.find((filter) => filter.key === "control")?.options || ["Any"];
+    quickSetupControl.innerHTML = controlLevels.map((value) => `
+      <option value="${value}">${value === "Any" ? "Any control level" : value}</option>
+    `).join("");
+    quickSetupControl.value = "Any";
+  }
+
+  if (quickSetupRacket) {
+    const racketFamilies = FILTERS.find((filter) => filter.key === "racketFamily")?.options || ["Any"];
+    quickSetupRacket.innerHTML = racketFamilies.map((value) => `
+      <option value="${value}">${value === "Any" ? "Any racket family" : value}</option>
+    `).join("");
+    quickSetupRacket.value = "Any";
+  }
+
+  if (quickSetupUseProRacket) {
+    quickSetupUseProRacket.checked = false;
+  }
+}
+
+function populateQuickSetupExampleSelect() {
+  if (!quickSetupExampleSelect) {
+    return;
+  }
+
+  quickSetupExampleSelect.innerHTML = `
+    <option value="">Choose an example pro setup</option>
+    ${QUICK_SETUP_EXAMPLES.map((example, index) => `<option value="${index}">${example.player}</option>`).join("")}
+  `;
+}
+
+function populateTensionCalculatorControls() {
+  if (tensionCalcType) {
+    const types = FILTERS.find((filter) => filter.key === "type")?.options.filter((option) => option !== "Any") || [];
+    tensionCalcType.innerHTML = types.map((type) => `<option value="${type}">${type}</option>`).join("");
+    tensionCalcType.value = "Co-Poly";
+  }
+
+  if (tensionCalcRacket) {
+    const rackets = FILTERS.find((filter) => filter.key === "racketFamily")?.options.filter((option) => option !== "Any") || [];
+    tensionCalcRacket.innerHTML = rackets.map((family) => `<option value="${family}">${family}</option>`).join("");
+    tensionCalcRacket.value = "Control Frame";
+  }
+
+  if (tensionCalcPreference) {
+    tensionCalcPreference.value = "Balanced";
+  }
+
+  if (tensionCalcArm) {
+    tensionCalcArm.value = "Normal";
+  }
+}
+
+function restoreStoredTensionCalculatorSource() {
+  const storedSource = loadStoredTensionCalculatorSource();
+  if (!storedSource) {
+    return;
+  }
+
+  latestTensionCalculatorSource = storedSource;
+
+  if (tensionCalcType && storedSource.type) {
+    tensionCalcType.value = storedSource.type;
+  }
+
+  if (tensionCalcRacket && storedSource.appliedRacketFamily) {
+    tensionCalcRacket.value = storedSource.appliedRacketFamily;
+  }
+
+  if (tensionCalcPreference && storedSource.inferredPreference) {
+    tensionCalcPreference.value = storedSource.inferredPreference;
+  }
+}
+
+function getCoveredQuickSetupPlayers() {
+  const coverage = getPlayerCoverage();
+  const atpPlayers = (window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS?.atp || []).filter((player) => coverage.atp.has(player));
+  const wtaPlayers = (window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS?.wta || []).filter((player) => coverage.wta.has(player));
+  return sortNamesBySurname([...new Set([...atpPlayers, ...wtaPlayers])]);
+}
+
+function buildQuickSetupRecommendation(styleValue, playerValue, preferenceValues = {}, forcedTopEntryName = "") {
+  const selectedStyle = styleValue || "Any";
+  const selectedPlayer = playerValue || "Any";
+  const requestedRacketFamily = preferenceValues.racketFamily || "Any";
+  const wantsProRacket = Boolean(preferenceValues.useProRacket) && selectedPlayer !== "Any";
+  const resolvedProRacketFamily = wantsProRacket ? resolveQuickSetupPlayerRacketFamily(selectedPlayer) : "";
+  const selectedPreferences = {
+    spin: preferenceValues.spin || "Any",
+    power: preferenceValues.power || "Any",
+    control: preferenceValues.control || "Any"
+  };
+  const selectedRacketFamily = resolvedProRacketFamily || requestedRacketFamily;
+
+  const hasPreferenceFilters = Object.values(selectedPreferences).some((value) => value !== "Any");
+  if (selectedStyle === "Any" && selectedPlayer === "Any" && selectedRacketFamily === "Any" && !hasPreferenceFilters) {
+    return null;
+  }
+
+  let pool = [...STRINGS];
+
+  if (selectedPlayer !== "Any") {
+    const playerPool = pool.filter((entry) => getAllPlayersForEntry(entry).includes(selectedPlayer));
+    if (!playerPool.length) {
+      return null;
+    }
+    pool = playerPool;
+  }
+
+  if (selectedStyle !== "Any" && selectedPlayer === "Any") {
+    const stylePool = pool.filter((entry) => entry.gameStyle === selectedStyle);
+    if (stylePool.length) {
+      pool = stylePool;
+    }
+  }
+
+  if (selectedRacketFamily !== "Any" && selectedPlayer === "Any") {
+    const exactRacketPool = pool.filter((entry) => entry.racketFamily === selectedRacketFamily);
+    if (exactRacketPool.length) {
+      pool = exactRacketPool;
+    } else {
+      const groupedRacketPool = pool.filter((entry) => getRacketFamilyGroup(entry.racketFamily) === getRacketFamilyGroup(selectedRacketFamily));
+      if (groupedRacketPool.length) {
+        pool = groupedRacketPool;
+      }
+    }
+  }
+
+  const ranked = pool
+    .map((entry) => {
+      const playerTension = findPlayerTensionForEntry(entry, selectedPlayer);
+      const playerRacket = findPlayerRacketForEntry(entry, selectedPlayer);
+      const proReferenceStrength = getQuickSetupProReferenceStrength(playerTension, playerRacket);
+      let score = calculateQuickSetupFitScore(entry, selectedStyle, selectedPreferences, selectedRacketFamily);
+
+      if (selectedPlayer !== "Any") {
+        score += 3.5;
+      }
+
+      if (playerTension) {
+        score += 2.5;
+      }
+
+      if (entry.type === "Hybrid") {
+        score -= 0.35;
+      }
+
+      score += Math.min(getKnownProPlayerCount(entry), 10) * 0.08;
+
+      return {
+        entry,
+        playerTension,
+        playerRacket,
+        proReferenceStrength,
+        score
+      };
+    })
+    .sort((left, right) => {
+      if (selectedPlayer !== "Any" && right.proReferenceStrength !== left.proReferenceStrength) {
+        return right.proReferenceStrength - left.proReferenceStrength;
+      }
+
+      if (right.score !== left.score) {
+        return right.score - left.score;
+      }
+
+      const leftHasExactTension = left.playerTension ? 1 : 0;
+      const rightHasExactTension = right.playerTension ? 1 : 0;
+      if (rightHasExactTension !== leftHasExactTension) {
+        return rightHasExactTension - leftHasExactTension;
+      }
+
+      const proDifference = getKnownProPlayerCount(right.entry) - getKnownProPlayerCount(left.entry);
+      if (proDifference !== 0) {
+        return proDifference;
+      }
+
+      return left.entry.name.localeCompare(right.entry.name);
+    });
+
+  if (!ranked.length) {
+    return null;
+  }
+
+  const pinnedRanked = pinQuickSetupOption(ranked, forcedTopEntryName);
+  const hasForcedTopMatch = Boolean(forcedTopEntryName) && pinnedRanked[0]?.entry?.name === forcedTopEntryName;
+  const hasPinnedProSetup = selectedPlayer !== "Any" && ranked.some((item) => item.proReferenceStrength > 0);
+  const options = selectQuickSetupOptions(pinnedRanked, 5, 3).map((item, index) => ({
+    entry: item.entry,
+    playerTension: item.playerTension,
+    playerRacket: item.playerRacket,
+    tensionDisplay: buildQuickSetupTensionDisplay(item.entry, item.playerTension),
+    rankLabel: index === 0
+      ? hasForcedTopMatch
+        ? "Example Pick"
+        : "Top Match"
+      : `Option ${index + 1}`
+  }));
+  const best = options[0];
+  const reasonParts = [];
+
+  if (hasForcedTopMatch) {
+    reasonParts.push(`Pinned example string: ${forcedTopEntryName}.`);
+  }
+
+  if (selectedStyle !== "Any") {
+    reasonParts.push(`Matches a ${selectedStyle.toLowerCase()} profile.`);
+  }
+
+  if (selectedPlayer !== "Any") {
+    reasonParts.push(best.playerTension
+      ? `Includes a documented ${selectedPlayer} tension reference.`
+      : `Uses a string associated with ${selectedPlayer}.`);
+  }
+
+  if (wantsProRacket) {
+    reasonParts.push(resolvedProRacketFamily
+      ? `Using ${selectedPlayer}'s racket family: ${resolvedProRacketFamily}.`
+      : requestedRacketFamily !== "Any"
+        ? `No saved racket family found for ${selectedPlayer}, so your selected racket stayed in place.`
+        : `No saved racket family found for ${selectedPlayer}, so racket fit stayed open.`);
+  }
+
+  if (selectedRacketFamily !== "Any") {
+    reasonParts.push(best.entry.racketFamily === selectedRacketFamily
+      ? `Aligned to your ${selectedRacketFamily.toLowerCase()} frame.`
+      : `Closest racket-family fit to ${selectedRacketFamily.toLowerCase()}.`);
+  }
+
+  if (selectedPreferences.spin !== "Any") {
+    reasonParts.push(`Biased toward ${selectedPreferences.spin.toLowerCase()} spin.`);
+  }
+
+  if (selectedPreferences.power !== "Any") {
+    reasonParts.push(`Biased toward ${selectedPreferences.power.toLowerCase()} power.`);
+  }
+
+  if (selectedPreferences.control !== "Any") {
+    reasonParts.push(`Biased toward ${selectedPreferences.control.toLowerCase()} control.`);
+  }
+
+  if (!reasonParts.length) {
+    reasonParts.push("Closest in-database fit for a fast starting point.");
+  }
+
+  const logic = buildQuickSetupLogicSummary({
+    selectedPlayer,
+    selectedStyle,
+    selectedPreferences,
+    selectedRacketFamily,
+    hasPinnedProSetup,
+    hasForcedTopMatch,
+    forcedTopEntryName,
+    wantsProRacket,
+    resolvedProRacketFamily
+  });
+
+  return {
+    style: selectedStyle,
+    player: selectedPlayer,
+    requestedRacketFamily,
+    racketFamily: selectedRacketFamily,
+    useProRacket: wantsProRacket,
+    proRacketFamily: resolvedProRacketFamily,
+    preferences: selectedPreferences,
+    options,
+    entry: best.entry,
+    playerTension: best.playerTension,
+    playerRacket: best.playerRacket,
+    tensionDisplay: best.tensionDisplay,
+    logic,
+    reason: reasonParts.join(" ")
+  };
+}
+
+function getQuickSetupProReferenceStrength(playerTension, playerRacket) {
+  if (playerTension && playerRacket) {
+    return 3;
+  }
+
+  if (playerTension) {
+    return 2;
+  }
+
+  if (playerRacket) {
+    return 1;
+  }
+
+  return 0;
+}
+
+function pinQuickSetupOption(ranked, forcedTopEntryName = "") {
+  if (!Array.isArray(ranked) || !ranked.length || !forcedTopEntryName) {
+    return ranked;
+  }
+
+  const forcedIndex = ranked.findIndex((item) => item?.entry?.name === forcedTopEntryName);
+  if (forcedIndex <= 0) {
+    return ranked;
+  }
+
+  return [ranked[forcedIndex], ...ranked.slice(0, forcedIndex), ...ranked.slice(forcedIndex + 1)];
+}
+
+function buildQuickSetupLogicSummary({
+  selectedPlayer,
+  selectedStyle,
+  selectedPreferences,
+  selectedRacketFamily,
+  hasPinnedProSetup,
+  hasForcedTopMatch,
+  forcedTopEntryName,
+  wantsProRacket,
+  resolvedProRacketFamily
+}) {
+  const parts = [];
+
+  if (hasForcedTopMatch && forcedTopEntryName) {
+    parts.push(`${forcedTopEntryName} pinned first`);
+  }
+
+  if (selectedPlayer !== "Any") {
+    parts.push(`${selectedPlayer} string pool`);
+    if (hasPinnedProSetup) {
+      parts.push("documented pro setup first");
+    }
+  }
+
+  if (selectedStyle !== "Any") {
+    parts.push(`${selectedStyle} fit`);
+  }
+
+  if (selectedRacketFamily !== "Any") {
+    const racketLabel = wantsProRacket && resolvedProRacketFamily
+      ? `${resolvedProRacketFamily} racket family`
+      : `${selectedRacketFamily} racket fit`;
+    parts.push(racketLabel);
+  }
+
+  const preferenceLabels = [
+    selectedPreferences.spin !== "Any" ? `${selectedPreferences.spin} spin` : "",
+    selectedPreferences.power !== "Any" ? `${selectedPreferences.power} power` : "",
+    selectedPreferences.control !== "Any" ? `${selectedPreferences.control} control` : ""
+  ].filter(Boolean);
+
+  if (preferenceLabels.length) {
+    parts.push(preferenceLabels.join(" / "));
+  }
+
+  return parts.length ? parts.join(" -> ") : "Closest in-database fit";
+}
+
+function resolveQuickSetupPlayerRacketFamily(player) {
+  if (!player || player === "Any") {
+    return "";
+  }
+
+  const counts = new Map();
+
+  STRINGS.forEach((entry) => {
+    if (!getAllPlayersForEntry(entry).includes(player) || !entry.racketFamily) {
+      return;
+    }
+
+    const hasDirectRacketReference = Boolean(findPlayerRacketForEntry(entry, player));
+    const weight = hasDirectRacketReference ? 3 : 1;
+    counts.set(entry.racketFamily, (counts.get(entry.racketFamily) || 0) + weight);
+  });
+
+  return [...counts.entries()]
+    .sort((left, right) => {
+      if (right[1] !== left[1]) {
+        return right[1] - left[1];
+      }
+      return left[0].localeCompare(right[0]);
+    })[0]?.[0] || "";
+}
+
+function syncQuickSetupProRacketUi() {
+  const selectedPlayer = quickSetupPro?.value || "Any";
+  const hasPlayer = selectedPlayer !== "Any";
+  const resolvedRacketFamily = hasPlayer ? resolveQuickSetupPlayerRacketFamily(selectedPlayer) : "";
+  const useProRacket = Boolean(quickSetupUseProRacket?.checked);
+
+  if (quickSetupUseProRacket) {
+    quickSetupUseProRacket.disabled = !hasPlayer;
+    if (!hasPlayer) {
+      quickSetupUseProRacket.checked = false;
+    }
+  }
+
+  if (quickSetupProRacketNote) {
+    const helpText = !hasPlayer
+      ? "Pick a pro to narrow results to that pro's strings. Turn this on to also use the pro's racket family."
+      : resolvedRacketFamily
+        ? useProRacket
+          ? `${selectedPlayer} now narrows results by both string and racket family: ${resolvedRacketFamily}.`
+          : `${selectedPlayer} already narrows results to that pro's strings. Turn this on to also use ${selectedPlayer}'s racket family: ${resolvedRacketFamily}.`
+        : `${selectedPlayer} already narrows results to that pro's strings, but no racket family is saved yet.`;
+    quickSetupProRacketNote.textContent = helpText;
+    if (quickSetupProRacketHelp) {
+      quickSetupProRacketHelp.setAttribute("aria-label", helpText);
+      quickSetupProRacketHelp.setAttribute("title", helpText);
+    }
+  }
+}
+
+function selectQuickSetupOptions(ranked, desiredCount = 5, minimumBrandCount = 3) {
+  if (!Array.isArray(ranked) || ranked.length === 0) {
+    return [];
+  }
+
+  const targetCount = Math.max(1, desiredCount);
+  const availableBrandCount = new Set(ranked.map((item) => item.entry.brand).filter(Boolean)).size;
+  const targetBrandCount = Math.min(minimumBrandCount, availableBrandCount, targetCount);
+  const selected = [];
+  const selectedNames = new Set();
+  const selectedBrands = new Set();
+
+  const addOption = (item) => {
+    if (!item || selectedNames.has(item.entry.name)) {
+      return false;
+    }
+
+    selected.push(item);
+    selectedNames.add(item.entry.name);
+    if (item.entry.brand) {
+      selectedBrands.add(item.entry.brand);
+    }
+    return true;
+  };
+
+  addOption(ranked[0]);
+
+  if (selectedBrands.size < targetBrandCount) {
+    ranked.forEach((item) => {
+      if (selected.length >= targetCount || selectedBrands.size >= targetBrandCount) {
+        return;
+      }
+
+      if (!item.entry.brand || selectedBrands.has(item.entry.brand)) {
+        return;
+      }
+
+      addOption(item);
+    });
+  }
+
+  ranked.forEach((item) => {
+    if (selected.length >= targetCount) {
+      return;
+    }
+
+    addOption(item);
+  });
+
+  return selected;
+}
+
+function calculateQuickSetupFitScore(entry, selectedStyle, selectedPreferences = {}, selectedRacketFamily = "Any") {
+  if (!selectedStyle || selectedStyle === "Any") {
+    const preferenceOnlyScore = calculateQuickSetupPreferenceScore(entry, selectedPreferences);
+    const racketScore = calculateQuickSetupRacketScore(entry, selectedRacketFamily);
+    return (preferenceOnlyScore > 0 ? preferenceOnlyScore : 3) + racketScore;
+  }
+
+  const styleWeights = {
+    "Aggressive Baseliner": { spin: 2.2, control: 2, power: 1.2, durability: 1.2, comfort: 0.4 },
+    Counterpuncher: { control: 2, comfort: 1.6, durability: 1.4, spin: 1.1, power: 0.6 },
+    "All-Court": { comfort: 1.6, power: 1.5, control: 1.4, durability: 0.8, spin: 0.8 },
+    "Serve and Volley": { power: 1.7, comfort: 1.5, control: 1.4, durability: 0.6, spin: 0.4 },
+    "Flat Hitter": { control: 2.2, power: 1.1, durability: 1.4, spin: 0.6, comfort: 0.6 },
+    "Heavy Topspin": { spin: 2.4, control: 1.7, durability: 1.5, power: 0.8, comfort: 0.4 }
+  };
+
+  const weights = styleWeights[selectedStyle];
+  if (!weights) {
+    return 3;
+  }
+
+  const totalWeight = Object.values(weights).reduce((sum, value) => sum + value, 0);
+  if (!totalWeight) {
+    return 3;
+  }
+
+  const weightedValue =
+    mapStringLevelToNumeric(entry.spin) * (weights.spin || 0) +
+    mapStringLevelToNumeric(entry.control) * (weights.control || 0) +
+    mapStringLevelToNumeric(entry.power) * (weights.power || 0) +
+    mapStringLevelToNumeric(entry.durability) * (weights.durability || 0) +
+    mapStringLevelToNumeric(entry.comfort) * (weights.comfort || 0);
+
+  const normalized = weightedValue / totalWeight;
+  return normalized * 2
+    + calculateQuickSetupPreferenceScore(entry, selectedPreferences)
+    + calculateQuickSetupRacketScore(entry, selectedRacketFamily);
+}
+
+function calculateQuickSetupPreferenceScore(entry, selectedPreferences = {}) {
+  const affinityWeights = {
+    spin: 1.6,
+    power: 1.2,
+    control: 1.6
+  };
+
+  return Object.entries(affinityWeights).reduce((sum, [key, weight]) => {
+    const desired = selectedPreferences[key];
+    if (!desired || desired === "Any") {
+      return sum;
+    }
+
+    const difference = Math.abs(mapStringLevelToNumeric(entry[key]) - mapStringLevelToNumeric(desired));
+    const closeness = Math.max(0, 1 - difference / 3);
+    return sum + closeness * weight;
   }, 0);
 }
 
-function addMatchupFactor(factors, weight, positiveText, negativeText) {
-  if (Math.abs(weight) < 1) {
+function calculateQuickSetupRacketScore(entry, selectedRacketFamily = "Any") {
+  if (!selectedRacketFamily || selectedRacketFamily === "Any") {
+    return 0;
+  }
+
+  if (entry.racketFamily === selectedRacketFamily) {
+    return 2.25;
+  }
+
+  if (getRacketFamilyGroup(entry.racketFamily) === getRacketFamilyGroup(selectedRacketFamily)) {
+    return 0.9;
+  }
+
+  return 0;
+}
+
+function getAllPlayersForEntry(entry) {
+  const customAssociations = getCustomProAssociations(entry);
+  return mergeUniqueStrings(
+    [...(entry.atpPlayers || []), ...(entry.wtaPlayers || [])],
+    [...customAssociations.atpPlayers, ...customAssociations.wtaPlayers]
+  );
+}
+
+function findPlayerTensionForEntry(entry, player) {
+  if (!player || player === "Any") {
+    return null;
+  }
+
+  const customAssociations = getCustomProAssociations(entry);
+  return [...(entry.proTensions || []), ...customAssociations.tensions].find((item) => item.player === player) || null;
+}
+
+function findPlayerRacketForEntry(entry, player) {
+  if (!player || player === "Any") {
+    return null;
+  }
+
+  const customAssociations = getCustomProAssociations(entry);
+  return [...(entry.proRackets || []), ...customAssociations.rackets].find((item) => item.player === player) || null;
+}
+
+function buildQuickSetupTensionDisplay(entry, playerTension) {
+  if (playerTension) {
+    return {
+      label: playerTension.tension,
+      detail: playerTension.detail
+    };
+  }
+
+  const band = TENSION_BAND_DETAILS[entry.tensionBand];
+  return {
+    label: band ? band.lbs : entry.tensionBand,
+    detail: `${entry.tensionBand} starting range`
+  };
+}
+
+function renderQuickSetupRecommendation(recommendation) {
+  latestQuickSetupRecommendation = recommendation;
+
+  if (!quickSetupResult) {
     return;
   }
 
-  factors.push({
-    weight,
-    text: weight >= 0 ? positiveText : negativeText
-  });
-}
-
-function getSinglesScoreBand(score) {
-  if (score >= 76) {
-    return {
-      label: "Strong edge",
-      summary: "This matchup looks favorable if you stay disciplined with the pressure lane the engine found."
-    };
-  }
-  if (score >= 64) {
-    return {
-      label: "Slight edge",
-      summary: "You have a real advantage, but it still depends on executing the first-ball patterns cleanly."
-    };
-  }
-  if (score >= 52) {
-    return {
-      label: "Live matchup",
-      summary: "This looks competitive with a small edge. The cleaner tactical decisions should matter."
-    };
-  }
-  if (score >= 40) {
-    return {
-      label: "Tight matchup",
-      summary: "This match needs sharper choices and a quicker move to Plan B if the first pattern stalls."
-    };
-  }
-  return {
-    label: "Tough spot",
-    summary: "This profile looks difficult on paper, so protecting your leaks and simplifying early matters more."
-  };
-}
-
-function calculateSinglesMatchup(input) {
-  const playerAverage = getAverageRating(input.playerRatings, ["firstServe", "secondServe", "forehand", "backhand", "fitness", "mental"]);
-  const opponentAverage = getAverageRating(input.opponentRatings, ["firstServe", "secondServe", "forehand", "backhand", "fitness", "mental"]);
-  const playerFirstStrike = getAverageRating(input.playerRatings, ["firstServe", "forehand", "backhand"]);
-  const opponentResistance = getAverageRating(input.opponentRatings, ["secondServe", "backhand", "fitness"]);
-  const playerComposure = getAverageRating(input.playerRatings, ["fitness", "mental"]);
-  const opponentComposure = getAverageRating(input.opponentRatings, ["fitness", "mental"]);
-  const strengthBalance = (input.playerStrengths.length + input.opponentWeaknesses.length) - (input.playerWeaknesses.length + input.opponentStrengths.length);
-  const matchupBonus = countTraitMatchups(input.playerStrengths, input.opponentWeaknesses, SINGLES_TRAIT_MATCHUPS);
-  const exposurePenalty = countTraitMatchups(input.opponentStrengths, input.playerWeaknesses, SINGLES_TRAIT_MATCHUPS);
-  const playerForehand = getRatingScore(input.playerRatings.forehand);
-  const playerBackhand = getRatingScore(input.playerRatings.backhand);
-  const playerFirstServe = getRatingScore(input.playerRatings.firstServe);
-  const playerSecondServe = getRatingScore(input.playerRatings.secondServe);
-  const playerFitness = getRatingScore(input.playerRatings.fitness);
-  const playerMental = getRatingScore(input.playerRatings.mental);
-  const opponentBackhand = getRatingScore(input.opponentRatings.backhand);
-  const opponentSecondServe = getRatingScore(input.opponentRatings.secondServe);
-  const opponentForehand = getRatingScore(input.opponentRatings.forehand);
-  const opponentFitness = getRatingScore(input.opponentRatings.fitness);
-  const opponentMental = getRatingScore(input.opponentRatings.mental);
-
-  const factors = [];
-  addMatchupFactor(
-    factors,
-    Math.round((playerAverage - opponentAverage) * 8),
-    "Your overall rating profile is a little stronger across serve, baseline, fitness, and mental tools.",
-    "The opponent's overall rating profile is a little stronger, so the plan has to protect more leaks."
-  );
-  addMatchupFactor(
-    factors,
-    Math.round((playerFirstStrike - opponentResistance) * 5),
-    "The first-strike pattern looks available if you own the serve-plus-one or return-plus-one ball.",
-    "The opponent looks capable of absorbing the first strike, so you may need one extra setup ball."
-  );
-  addMatchupFactor(
-    factors,
-    clamp(strengthBalance * 2, -12, 12),
-    "The selected strengths and opponent leaks give you a clearer tactical pressure lane.",
-    "The current strength-vs-leak balance asks you to protect your own problem areas first."
-  );
-  addMatchupFactor(
-    factors,
-    clamp((matchupBonus - exposurePenalty) * 4, -12, 12),
-    "Your chosen strengths line up well with the opponent's likely weaknesses.",
-    "Some of the opponent's strengths line up uncomfortably with your own weaker areas."
-  );
-  addMatchupFactor(
-    factors,
-    Math.round((playerComposure - opponentComposure) * 4),
-    "The fitness and mental profile suggests you can stay more stable if the match gets long or tight.",
-    "The opponent looks a bit better built for long or pressure-heavy stretches."
-  );
-
-  if (playerForehand >= 3 && opponentBackhand <= 2) {
-    addMatchupFactor(
-      factors,
-      6,
-      "Your forehand into their backhand looks like a live scoring pattern from the start.",
-      ""
-    );
-  }
-
-  if (playerFirstServe >= 3 && (input.opponentWeaknesses.includes("return-struggles") || input.opponentWeaknesses.includes("body-serve-trouble"))) {
-    addMatchupFactor(
-      factors,
-      5,
-      "A good first serve should create free or weak replies often enough to tilt serve games your way.",
-      ""
-    );
-  }
-
-  if (input.playerStrengths.includes("return-pressure") && opponentSecondServe <= 2) {
-    addMatchupFactor(
-      factors,
-      5,
-      "Their second serve looks attackable, which should give you real return-game chances.",
-      ""
-    );
-  }
-
-  if (playerSecondServe <= 1 && input.opponentStrengths.includes("return-pressure")) {
-    addMatchupFactor(
-      factors,
-      -6,
-      "",
-      "Your second serve could come under real pressure, so protecting service games matters."
-    );
-  }
-
-  if (playerBackhand <= 1 && opponentForehand >= 3) {
-    addMatchupFactor(
-      factors,
-      -5,
-      "",
-      "If your backhand gets pinned by their stronger forehand wing, the rally shape can get uncomfortable quickly."
-    );
-  }
-
-  if (playerFitness <= 2 && opponentFitness >= 3) {
-    addMatchupFactor(
-      factors,
-      -4,
-      "",
-      "The physical side of the matchup may widen if rallies stretch or the match becomes long."
-    );
-  }
-
-  if (playerMental <= 2 && opponentMental >= 3) {
-    addMatchupFactor(
-      factors,
-      -4,
-      "",
-      "The mental profile suggests you should simplify patterns faster when the score tightens."
-    );
-  }
-
-  const score = clamp(
-    50 + factors.reduce((sum, factor) => sum + factor.weight, 0),
-    8,
-    92
-  );
-  const band = getSinglesScoreBand(score);
-  const reasons = [...factors]
-    .sort((left, right) => Math.abs(right.weight) - Math.abs(left.weight))
-    .slice(0, 4)
-    .map((factor) => factor.text);
-
-  return {
-    score,
-    label: band.label,
-    summary: band.summary,
-    reasons
-  };
-}
-
-function buildSinglesMatchCard(input, plan, rating) {
-  const playerName = getPlayerName(input.playerName, "Player 1");
-  const opponentName = getPlayerName(input.opponentName, "Player 2");
-
-  return {
-    title: `${playerName} vs ${opponentName}`,
-    summary: `${rating.label} | ${rating.score}/100 matchup score`,
-    bullets: [
-      `Open with: ${plan.planA[0] ? plan.planA[0].text : plan.planAHeadline}`,
-      `Primary pressure point: ${plan.pressurePoint}`,
-      `Identity reminder: ${plan.identity}`,
-      `Plan B trigger: ${plan.adjustmentTrigger}`,
-      `Reset cue: ${plan.cues[0] ? plan.cues[0].text : "Early feet. Clear target. One strong pattern."}`,
-      `Trap to avoid: ${plan.avoid[0] ? plan.avoid[0].text : "Do not rush the first change of direction."}`
-    ]
-  };
-}
-
-function renderList(container, items) {
-  container.innerHTML = "";
-  items.forEach((item) => {
-    const li = document.createElement("li");
-    li.textContent = item.text;
-    container.appendChild(li);
-  });
-}
-
-function renderPlan(plan, input) {
-  const playerName = getPlayerName(input.playerName, "Player 1");
-  const opponentName = getPlayerName(input.opponentName, "Player 2");
-  refreshFallbackInitials(playerName, opponentName);
-  elements.matchupHeadline.textContent = `${playerName} vs ${opponentName}`;
-  elements.strategyNarrative.textContent = plan.narrative;
-  elements.summaryPlayerLabel.textContent = `${playerName} | ${getLabel(input.playerStyle)}`;
-  elements.summaryOpponentLabel.textContent = `${opponentName} | ${getLabel(input.opponentStyle)}`;
-  elements.playerStylePill.textContent = `${playerName}: ${getLabel(input.playerStyle)}`;
-  elements.opponentStylePill.textContent = `${opponentName}: ${getLabel(input.opponentStyle)}`;
-  elements.surfacePill.textContent = `Surface: ${getLabel(input.surface)}`;
-  elements.pressurePointText.textContent = plan.pressurePoint;
-  elements.fallbackTriggerText.textContent = plan.adjustmentTrigger;
-  elements.identityReminderText.textContent = plan.identity;
-  elements.planATitle.textContent = "Primary winning pattern";
-  elements.planASummary.textContent = plan.planAHeadline;
-  elements.planBTitle.textContent = "Fallback adjustment when momentum shifts";
-  elements.planBSummary.textContent = plan.planBHeadline;
-  renderList(elements.planAList, plan.planA);
-  renderList(elements.planBList, plan.planB);
-  renderList(elements.cueList, plan.cues);
-  renderList(elements.avoidList, plan.avoid);
-  renderList(elements.reasonList, plan.reasons);
-}
-
-function renderSinglesExtras(rating, matchCard) {
-  elements.matchupRatingValue.textContent = `${rating.score} / 100`;
-  elements.matchupRatingLabel.textContent = rating.label;
-  elements.matchupRatingSummary.textContent = rating.summary;
-  renderList(
-    elements.matchupRatingList,
-    rating.reasons.map((text, index) => ({ key: `rating-${index}`, text }))
-  );
-
-  elements.matchCardTitle.textContent = matchCard.title;
-  elements.matchCardSummary.textContent = matchCard.summary;
-  renderList(
-    elements.matchCardList,
-    matchCard.bullets.map((text, index) => ({ key: `card-${index}`, text }))
-  );
-}
-
-function updateSinglesOutput(input) {
-  const plan = generateGamePlan(input);
-  const rating = calculateSinglesMatchup(input);
-  const matchCard = buildSinglesMatchCard(input, plan, rating);
-
-  currentSinglesView = {
-    input: JSON.parse(JSON.stringify(input)),
-    plan,
-    rating,
-    matchCard
-  };
-
-  renderPlan(plan, input);
-  renderSinglesExtras(rating, matchCard);
-}
-
-function flashButton(button, successText) {
-  if (!button) {
+  if (!recommendation) {
+    quickSetupResult.innerHTML = `<p class="summary-copy">Pick a racket, style, pro, or your preferred spin, power, and control to generate a starting setup.</p>`;
+    if (quickSetupApplyButton) {
+      quickSetupApplyButton.hidden = true;
+      quickSetupApplyButton.textContent = hasPlannerSurface
+        ? "Apply Top Pick to Pre-Populate Tension Calculator fields"
+        : "Open Top Pick in Tension Calculator";
+    }
     return;
   }
-  const originalText = button.textContent;
-  button.textContent = successText;
-  window.setTimeout(() => {
-    button.textContent = originalText;
-  }, 1400);
+
+  const { options, reason, logic } = recommendation;
+  const matchLabel = options.length === 1 ? "1 strong match" : `${options.length} strong matches`;
+  quickSetupResult.innerHTML = `
+    <div class="tool-result-header">
+      <p class="eyebrow">Recommended Setups</p>
+      <h3 class="tool-recommendation-name">${matchLabel}</h3>
+      <p class="tool-note">${reason}</p>
+      <p class="tool-mini-line"><strong>Logic:</strong> ${logic}</p>
+      ${options[0] ? `
+        <div class="tool-inline-actions">
+          <button class="secondary-button compact-button quick-setup-email-stringer" type="button">Email Top Pick to Stringer</button>
+        </div>
+      ` : ""}
+    </div>
+    <div class="quick-setup-option-list">
+      ${options.map((option, index) => `
+        <article class="quick-setup-option${index === 0 ? " is-primary" : ""}">
+          <div class="quick-setup-option-header">
+            <div>
+              <p class="eyebrow">${option.rankLabel}</p>
+              <h4 class="quick-setup-option-name">${option.entry.name}</h4>
+            </div>
+            <button class="secondary-button compact-button quick-setup-option-apply" type="button" data-index="${index}">Use This Setup</button>
+          </div>
+          <div class="tool-stat-grid quick-setup-option-stats">
+            <div class="tool-stat">
+              <span class="tool-stat-label">String Type</span>
+              <strong>${option.entry.type}</strong>
+            </div>
+            <div class="tool-stat">
+              <span class="tool-stat-label">Gauge</span>
+              <strong>${option.entry.gauge}</strong>
+            </div>
+            <div class="tool-stat">
+              <span class="tool-stat-label">Tension</span>
+              <strong>${option.tensionDisplay.label}</strong>
+            </div>
+            <div class="tool-stat">
+              <span class="tool-stat-label">Racket Fit</span>
+              <strong>${option.entry.racketFamily}</strong>
+            </div>
+          </div>
+          <p class="tool-note tool-note-compact">${option.entry.summary}</p>
+          <p class="tool-note tool-note-compact">Reference: ${option.tensionDisplay.detail}${option.playerRacket ? ` | ${option.playerRacket.player} uses ${option.playerRacket.racket}` : ""}</p>
+        </article>
+      `).join("")}
+    </div>
+  `;
+
+  quickSetupResult.querySelectorAll(".quick-setup-option-apply").forEach((button) => {
+    button.addEventListener("click", () => {
+      const optionIndex = Number(button.dataset.index || 0);
+      applyQuickSetupRecommendation(optionIndex);
+    });
+  });
+
+  const quickSetupEmailButton = quickSetupResult.querySelector(".quick-setup-email-stringer");
+  if (quickSetupEmailButton) {
+    quickSetupEmailButton.addEventListener("click", () => {
+      const draft = buildQuickSetupStringerEmailDraft(recommendation, 0);
+      if (!draft) {
+        return;
+      }
+
+      trackToolUsage("quick_setup_email_stringer", "Email Top Pick to Stringer", {
+        recommendedString: recommendation.options?.[0]?.entry?.name || ""
+      });
+      openMailDraft(draft);
+    });
+  }
+
+  if (quickSetupApplyButton) {
+    quickSetupApplyButton.hidden = false;
+    quickSetupApplyButton.textContent = hasPlannerSurface
+      ? "Apply Top Pick to Pre-Populate Tension Calculator fields"
+      : "Open Top Pick in Tension Calculator";
+  }
 }
 
-function readSavedSinglesPlans() {
+function applyQuickSetupRecommendation(optionIndex = 0) {
+  if (!latestQuickSetupRecommendation) {
+    return;
+  }
+
+  const selectedOption = latestQuickSetupRecommendation.options?.[optionIndex] || latestQuickSetupRecommendation.options?.[0];
+  if (!selectedOption) {
+    return;
+  }
+
+  trackToolUsage(
+    optionIndex === 0 ? "quick_setup_apply_top_pick" : "quick_setup_apply_option",
+    optionIndex === 0 ? "Apply Top Pick" : "Use This Setup",
+    {
+      optionIndex,
+      recommendedString: selectedOption.entry?.name || ""
+    }
+  );
+
+  const appliedRecommendation = {
+    ...latestQuickSetupRecommendation,
+    entry: selectedOption.entry,
+    playerTension: selectedOption.playerTension,
+    playerRacket: selectedOption.playerRacket,
+    tensionDisplay: selectedOption.tensionDisplay
+  };
+  applyTensionCalculatorFromQuickSetup(appliedRecommendation);
+  persistTensionCalculatorSource(latestTensionCalculatorSource);
+
+  if (hasPlannerSurface) {
+    const filters = buildPlannerFiltersFromRecommendation(appliedRecommendation);
+    applyPlannerSelection(filters);
+  } else if (pageKey === "quick-setup") {
+    window.location.href = "./tension-calculator.html";
+  }
+}
+
+function applyExampleSetup(exampleIndex = 0) {
+  const example = QUICK_SETUP_EXAMPLES[exampleIndex] || QUICK_SETUP_EXAMPLES[0];
+  if (!example) {
+    return;
+  }
+
+  trackToolUsage("quick_setup_example", "Example Pro Setup", {
+    player: example.player || "",
+    exampleIndex
+  });
+
+  activeQuickSetupExampleIndex = exampleIndex;
+  syncExampleSetupButtons();
+
+  if (quickSetupStyle) {
+    quickSetupStyle.value = example.style;
+  }
+
+  if (quickSetupPro) {
+    quickSetupPro.value = example.player;
+  }
+
+  if (quickSetupSpin) {
+    quickSetupSpin.value = example.preferences.spin;
+  }
+
+  if (quickSetupPower) {
+    quickSetupPower.value = example.preferences.power;
+  }
+
+  if (quickSetupControl) {
+    quickSetupControl.value = example.preferences.control;
+  }
+
+  if (quickSetupRacket) {
+    quickSetupRacket.value = example.racketFamily;
+  }
+
+  if (quickSetupUseProRacket) {
+    quickSetupUseProRacket.checked = Boolean(example.useProRacket);
+  }
+
+  syncQuickSetupProRacketUi();
+
+  const recommendation = buildQuickSetupRecommendation(
+    example.style,
+    example.player,
+    {
+      ...example.preferences,
+      racketFamily: example.racketFamily,
+      useProRacket: example.useProRacket
+    },
+    example.preferredTopEntryName || ""
+  );
+  renderQuickSetupRecommendation(recommendation);
+  if (recommendation) {
+    applyTensionCalculatorFromQuickSetup(recommendation);
+    persistTensionCalculatorSource(latestTensionCalculatorSource);
+  }
+
+  if (hasPlannerSurface) {
+    const filters = recommendation
+      ? buildPlannerFiltersFromRecommendation(recommendation)
+      : buildExampleFallbackFilters(example);
+    applyPlannerSelection(filters);
+  }
+}
+
+function buildExampleFallbackFilters(example) {
+  const filters = {
+    racketFamily: example.racketFamily,
+    gameStyle: example.style
+  };
+
+  if (isKnownAtpPlayer(example.player)) {
+    filters.atpPlayer = example.player;
+  } else if (isKnownWtaPlayer(example.player)) {
+    filters.wtaPlayer = example.player;
+  }
+
+  return filters;
+}
+
+function buildPlannerFiltersFromRecommendation(recommendation) {
+  const entry = recommendation.entry;
+  const filters = {
+    type: entry.type,
+    gauge: entry.gauge,
+    tensionBand: entry.tensionBand,
+    racketFamily: entry.racketFamily
+  };
+
+  if (recommendation.style && recommendation.style !== "Any" && entry.gameStyle === recommendation.style) {
+    filters.gameStyle = recommendation.style;
+  }
+
+  if (recommendation.preferences?.spin && recommendation.preferences.spin !== "Any") {
+    filters.spin = recommendation.preferences.spin;
+  }
+
+  if (recommendation.preferences?.power && recommendation.preferences.power !== "Any") {
+    filters.power = recommendation.preferences.power;
+  }
+
+  if (recommendation.preferences?.control && recommendation.preferences.control !== "Any") {
+    filters.control = recommendation.preferences.control;
+  }
+
+  if (recommendation.player && recommendation.player !== "Any" && getAllPlayersForEntry(entry).includes(recommendation.player)) {
+    if (isKnownAtpPlayer(recommendation.player)) {
+      filters.atpPlayer = recommendation.player;
+    } else if (isKnownWtaPlayer(recommendation.player)) {
+      filters.wtaPlayer = recommendation.player;
+    }
+  }
+
+  return filters;
+}
+
+function applyTensionCalculatorFromQuickSetup(recommendation) {
+  if (!recommendation) {
+    return;
+  }
+
+  const nextType = recommendation.entry?.type || tensionCalcType?.value || "Co-Poly";
+  const nextRacketFamily = recommendation.racketFamily && recommendation.racketFamily !== "Any"
+    ? recommendation.racketFamily
+    : recommendation.entry?.racketFamily || tensionCalcRacket?.value || "Control Frame";
+  const nextPreference = inferTensionPreferenceFromQuickSetup(recommendation);
+  latestTensionCalculatorSource = buildTensionCalculatorSource(recommendation, nextPreference, nextRacketFamily);
+
+  if (tensionCalcType) {
+    tensionCalcType.value = nextType;
+  }
+
+  if (tensionCalcRacket && nextRacketFamily) {
+    tensionCalcRacket.value = nextRacketFamily;
+  }
+
+  if (tensionCalcPreference) {
+    tensionCalcPreference.value = nextPreference;
+  }
+
+  renderTensionCalculatorRecommendation();
+}
+
+function buildTensionCalculatorSource(recommendation, inferredPreference, appliedRacketFamily) {
+  if (!recommendation?.entry) {
+    return null;
+  }
+
+  return {
+    sourceLabel: "Quick String Setup Tool",
+    name: recommendation.entry.name,
+    gauge: recommendation.entry.gauge,
+    type: recommendation.entry.type,
+    entryRacketFamily: recommendation.entry.racketFamily,
+    appliedRacketFamily,
+    inferredPreference,
+    player: recommendation.player || "Any",
+    tensionDisplay: recommendation.tensionDisplay || buildQuickSetupTensionDisplay(recommendation.entry, recommendation.playerTension),
+    playerTension: recommendation.playerTension || null,
+    playerRacket: recommendation.playerRacket || null
+  };
+}
+
+function inferTensionPreferenceFromQuickSetup(recommendation) {
+  const selectedPower = recommendation.preferences?.power;
+  const selectedControl = recommendation.preferences?.control;
+  const powerScore = !selectedPower || selectedPower === "Any"
+    ? 0
+    : mapStringLevelToNumeric(selectedPower);
+  const controlScore = !selectedControl || selectedControl === "Any"
+    ? 0
+    : mapStringLevelToNumeric(selectedControl);
+
+  if (!powerScore && !controlScore) {
+    return "Balanced";
+  }
+
+  if (powerScore === controlScore) {
+    return "Balanced";
+  }
+
+  return controlScore > powerScore ? "Control" : "Comfort";
+}
+
+function isKnownAtpPlayer(player) {
+  return (window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS?.atp || []).includes(player);
+}
+
+function isKnownWtaPlayer(player) {
+  return (window.TENNIS_STRING_PLANNER_PLAYER_OPTIONS?.wta || []).includes(player);
+}
+
+function renderTensionCalculatorRecommendation() {
+  if (!tensionCalcResult) {
+    return;
+  }
+
+  const recommendation = buildTensionCalculatorRecommendation({
+    type: tensionCalcType?.value || "Co-Poly",
+    racketFamily: tensionCalcRacket?.value || "Control Frame",
+    preference: tensionCalcPreference?.value || "Balanced",
+    armComfort: tensionCalcArm?.value || "Normal",
+    source: latestTensionCalculatorSource
+  });
+
+  if (!recommendation) {
+    tensionCalcResult.innerHTML = `<p class="summary-copy">Choose a string type and racket family to calculate a starting range.</p>`;
+    return;
+  }
+
+  const typeDescription = TYPE_DESCRIPTIONS[recommendation.type] || null;
+
+  tensionCalcResult.innerHTML = `
+    <div class="tool-result-header">
+      <p class="eyebrow">Starting Tension</p>
+      <h3 class="tool-recommendation-name">${recommendation.lbsRange}</h3>
+      <p class="tool-note">${recommendation.kgRange}</p>
+      <div class="tool-inline-actions">
+        <button class="secondary-button compact-button tension-calc-email-stringer" type="button">Email Setup to Stringer</button>
+      </div>
+    </div>
+    <div class="tool-stat-grid">
+      ${recommendation.source ? `
+        <div class="tool-stat">
+          <span class="tool-stat-label">Selected String</span>
+          <strong>${recommendation.source.name} ${recommendation.source.gauge}</strong>
+        </div>
+      ` : ""}
+      ${recommendation.proReference ? `
+        <div class="tool-stat">
+          <span class="tool-stat-label">Pro Tension</span>
+          <strong>${recommendation.proReference.tension}</strong>
+          <span class="tool-stat-note">${recommendation.proReference.player}${recommendation.proReference.detail ? ` | ${recommendation.proReference.detail}` : ""}</span>
+        </div>
+      ` : ""}
+      <div class="tool-stat">
+        <span class="tool-stat-label">String Type</span>
+        <strong>${recommendation.type}</strong>
+      </div>
+      <div class="tool-stat">
+        <span class="tool-stat-label">Racket Family</span>
+        <strong>${recommendation.racketFamily}</strong>
+      </div>
+      <div class="tool-stat">
+        <span class="tool-stat-label">Feel Goal</span>
+        <strong>${recommendation.preference}</strong>
+      </div>
+      <div class="tool-stat">
+        <span class="tool-stat-label">Arm Comfort</span>
+        <strong>${recommendation.armComfort}</strong>
+      </div>
+    </div>
+    ${recommendation.sourceNote ? `<p class="tool-note tool-note-compact">${recommendation.sourceNote}</p>` : ""}
+    <p class="tool-mini-line">${recommendation.explanation}</p>
+    ${typeDescription ? `
+      <article class="type-description-card tool-type-description-card">
+        <p class="eyebrow">${typeDescription.eyebrow}</p>
+        <h3>${typeDescription.title}</h3>
+        <p class="summary-copy">${typeDescription.text}</p>
+      </article>
+    ` : ""}
+    ${recommendation.hybridNote ? `<p class="tool-note">${recommendation.hybridNote}</p>` : ""}
+    <details class="tool-logic-details">
+      <summary class="secondary-button compact-button tension-logic-toggle">String Tension Logic</summary>
+      <div class="tool-logic-panel">
+        <p class="tool-note tool-note-compact"><strong>Formula:</strong> ${recommendation.logic.formula}</p>
+        <p class="tool-note tool-note-compact">Range shown: ${recommendation.logic.rangeExplanation}</p>
+        ${recommendation.logic.clampNote ? `<p class="tool-note tool-note-compact">${recommendation.logic.clampNote}</p>` : ""}
+      </div>
+    </details>
+    ${recommendation.references.length > 0 ? `
+      <div class="tool-reference-list">
+        ${recommendation.references.map((entry) => `
+          <div class="tool-reference-item">
+            <strong>${entry.name}</strong>
+            <span>${entry.tensionBand} | ${formatTensionBandRange(entry.tensionBand)}</span>
+          </div>
+        `).join("")}
+      </div>
+    ` : ""}
+  `;
+
+  const tensionEmailButton = tensionCalcResult.querySelector(".tension-calc-email-stringer");
+  if (tensionEmailButton) {
+    tensionEmailButton.addEventListener("click", () => {
+      const draft = buildTensionCalculatorStringerEmailDraft(recommendation);
+      if (!draft) {
+        return;
+      }
+
+      trackToolUsage("tension_calculator_email_stringer", "Email Setup to Stringer", {
+        selectedString: recommendation.source?.name || "",
+        stringType: recommendation.type
+      });
+      openMailDraft(draft);
+    });
+  }
+}
+
+function buildTensionCalculatorRecommendation({ type, racketFamily, preference, armComfort, source = null }) {
+  const base = TENSION_TYPE_BASE[type];
+  if (!base) {
+    return null;
+  }
+
+  const racketAdjustment = TENSION_RACKET_ADJUSTMENTS[racketFamily] || 0;
+  const preferenceAdjustment = TENSION_FEEL_ADJUSTMENTS[preference] || 0;
+  const armAdjustment = TENSION_ARM_ADJUSTMENTS[armComfort] || 0;
+  const rawTargetPounds = base + racketAdjustment + preferenceAdjustment + armAdjustment;
+  const targetPounds = clampNumber(
+    rawTargetPounds,
+    42,
+    58
+  );
+  const min = clampNumber(targetPounds - 1.5, 42, 58);
+  const max = clampNumber(targetPounds + 1.5, 42, 58);
+  const explanationParts = [];
+
+  explanationParts.push((type === "Poly" || type === "Co-Poly")
+    ? `${type} setups usually start lower than softer strings.`
+    : `${type} setups usually start a little higher than stiff poly beds.`);
+  explanationParts.push(preference === "Comfort"
+    ? "Your comfort target pulls the starting point down."
+    : preference === "Control"
+      ? "Your control target nudges the starting point higher."
+      : "Balanced keeps the range near the middle.");
+
+  if (armComfort !== "Normal") {
+    explanationParts.push("Extra arm comfort lowers the recommendation a bit.");
+  }
+
+  const sourceMatchesCurrentFields = Boolean(source)
+    && source.type === type
+    && source.appliedRacketFamily === racketFamily;
+  const proReference = source?.playerTension
+    ? {
+        player: source.playerTension.player || source.player,
+        tension: source.playerTension.tension,
+        detail: source.playerTension.detail || ""
+      }
+    : null;
+  const sourceLabel = source?.sourceLabel || "Quick String Setup Tool";
+  const sourceNote = !source
+    ? ""
+    : sourceMatchesCurrentFields
+      ? source.playerTension
+        ? `From ${sourceLabel}: ${source.player === "Any" ? source.name : `${source.player}'s ${source.name}`} with a documented reference of ${source.tensionDisplay.label}.`
+        : `From ${sourceLabel}: ${source.name} ${source.gauge} using ${source.appliedRacketFamily}.`
+      : `${sourceLabel} source: ${source.name} ${source.gauge}. The current calculator fields have been adjusted from the original handoff.`;
+
+  return {
+    type,
+    racketFamily,
+    preference,
+    armComfort,
+    source,
+    proReference,
+    sourceNote,
+    lbsRange: formatPoundsRange(min, max),
+    kgRange: formatKilogramRange(min, max),
+    explanation: explanationParts.join(" "),
+    logic: {
+      formula: `${formatDecimalNumber(base)} base ${formatSignedAdjustment(racketAdjustment)} racket ${formatSignedAdjustment(preferenceAdjustment)} feel ${formatSignedAdjustment(armAdjustment)} arm = ${formatDecimalNumber(targetPounds)} lbs target`,
+      rangeExplanation: `${formatPoundsRange(min, max)} is shown as a simple starting window around the ${formatDecimalNumber(targetPounds)} lbs target.`,
+      clampNote: rawTargetPounds !== targetPounds
+        ? `The raw result was capped to keep calculator outputs between 42 and 58 lbs.`
+        : ""
+    },
+    hybridNote: type === "Hybrid"
+      ? "Hybrid tip: if you use a softer main with a poly cross, a common starting point is to string the cross 2 lbs lower."
+      : "",
+    references: getClosestTensionExamples(type, racketFamily, targetPounds, source)
+  };
+}
+
+function getClosestTensionExamples(type, racketFamily, targetPounds, source = null) {
+  const sameType = STRINGS.filter((entry) => doesEntryMatchCalculatorType(entry.type, type));
+  const exactFamily = sameType.filter((entry) => entry.racketFamily === racketFamily);
+  const groupedFamily = sameType.filter((entry) => getRacketFamilyGroup(entry.racketFamily) === getRacketFamilyGroup(racketFamily));
+  const candidatePool = exactFamily.length ? exactFamily : groupedFamily.length ? groupedFamily : sameType;
+  const selectedEntry = source?.name ? STRINGS.find((entry) => entry.name === source.name) : null;
+  const ordered = candidatePool
+    .slice()
+    .sort((left, right) => {
+      const leftDifference = Math.abs(getTensionBandCenter(left.tensionBand) - targetPounds);
+      const rightDifference = Math.abs(getTensionBandCenter(right.tensionBand) - targetPounds);
+      if (leftDifference !== rightDifference) {
+        return leftDifference - rightDifference;
+      }
+      return left.name.localeCompare(right.name);
+    });
+
+  if (!selectedEntry) {
+    return ordered.slice(0, 3);
+  }
+
+  const withoutSelected = ordered.filter((entry) => entry.name !== selectedEntry.name);
+  return [selectedEntry, ...withoutSelected].slice(0, 3);
+}
+
+function doesEntryMatchCalculatorType(entryType, selectedType) {
+  if (selectedType === "Poly" || selectedType === "Co-Poly") {
+    return entryType === "Poly" || entryType === "Co-Poly";
+  }
+
+  return entryType === selectedType;
+}
+
+function getRacketFamilyGroup(racketFamily) {
+  if (["Babolat Pure Aero", "Yonex VCORE", "Spin Frame"].includes(racketFamily)) {
+    return "spin";
+  }
+
+  if (["Babolat Pure Drive", "Wilson Clash", "Yonex Ezone", "Power Frame"].includes(racketFamily)) {
+    return "power";
+  }
+
+  return "control";
+}
+
+function getTensionBandCenter(tensionBand) {
+  return TENSION_BAND_DETAILS[tensionBand]?.center || 51;
+}
+
+function formatTensionBandRange(tensionBand) {
+  return TENSION_BAND_DETAILS[tensionBand]?.lbs || tensionBand;
+}
+
+function formatPoundsRange(min, max) {
+  return `${Math.round(min)}-${Math.round(max)} lbs`;
+}
+
+function formatDecimalNumber(value) {
+  return Number(value).toFixed(1);
+}
+
+function formatSignedAdjustment(value) {
+  return `${value >= 0 ? "+" : "-"} ${formatDecimalNumber(Math.abs(value))}`;
+}
+
+function formatKilogramRange(min, max) {
+  const poundsToKg = (value) => (value * 0.45359237).toFixed(1);
+  return `${poundsToKg(min)}-${poundsToKg(max)} kg`;
+}
+
+function clampNumber(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function clearNonSearchFilters() {
+  FILTERS.forEach((filter) => {
+    state[filter.key] = "Any";
+    const select = document.getElementById(`filter-${filter.key}`);
+    if (select) {
+      select.value = "Any";
+    }
+  });
+
+  syncTypeMenu();
+  syncMobileQuickPlayerFilter();
+  syncMobileQuickTypeFilter();
+}
+
+function clearPrimaryMenuModeInputs() {
+  clearNonSearchFilters();
+  searchQuery = "";
+  autoCollapsedToolsForSearch = false;
+  toolsHiddenBeforeSearch = false;
+
+  if (stringSearchInput) {
+    stringSearchInput.value = "";
+  }
+
+  syncClearSearchButton();
+}
+
+if (mobileQuickTypeFilter) {
+  mobileQuickTypeFilter.addEventListener("change", (event) => {
+    const selectedType = event.currentTarget.value || "Any";
+    state.type = selectedType;
+
+    const typeSelect = document.getElementById("filter-type");
+    if (typeSelect) {
+      typeSelect.value = selectedType;
+    }
+
+    syncTypeMenu();
+    syncMobileQuickTypeFilter();
+    renderResults();
+  });
+}
+
+function syncMobileQuickPlayerFilter() {
+  if (!mobileQuickPlayerFilter) {
+    return;
+  }
+
+  if (state.atpPlayer && state.atpPlayer !== "Any") {
+    mobileQuickPlayerFilter.value = state.atpPlayer;
+    return;
+  }
+
+  if (state.wtaPlayer && state.wtaPlayer !== "Any") {
+    mobileQuickPlayerFilter.value = state.wtaPlayer;
+    return;
+  }
+
+  mobileQuickPlayerFilter.value = "Any";
+}
+
+function syncMobileQuickTypeFilter() {
+  if (!mobileQuickTypeFilter) {
+    return;
+  }
+
+  mobileQuickTypeFilter.value = state.type || "Any";
+}
+
+function getFilterLabel(key) {
+  const labels = {
+    brand: {
+      en: "String Brand",
+      fr: "Marque de cordage",
+      es: "Marca de cuerda",
+      it: "Marca della corda"
+    },
+    type: {
+      en: "Type of String",
+      fr: "Type de cordage",
+      es: "Tipo de cuerda",
+      it: "Tipo di corda"
+    },
+    atpPlayer: {
+      en: "ATP Player",
+      fr: "Joueur ATP",
+      es: "Jugador ATP",
+      it: "Giocatore ATP"
+    },
+    wtaPlayer: {
+      en: "WTA Player",
+      fr: "Joueuse WTA",
+      es: "Jugadora WTA",
+      it: "Giocatrice WTA"
+    },
+    stringColor: {
+      en: "String Color",
+      fr: "Couleur du cordage",
+      es: "Color de cuerda",
+      it: "Colore della corda"
+    },
+    stringShape: {
+      en: "String Shape",
+      fr: "Forme du cordage",
+      es: "Forma de cuerda",
+      it: "Forma della corda"
+    },
+    spin: {
+      en: "Spin",
+      fr: "Spin",
+      es: "Spin",
+      it: "Spin"
+    },
+    power: {
+      en: "Power",
+      fr: "Puissance",
+      es: "Potencia",
+      it: "Potenza"
+    },
+    control: {
+      en: "Control",
+      fr: "Controle",
+      es: "Control",
+      it: "Controllo"
+    },
+    durability: {
+      en: "Durability",
+      fr: "Durabilite",
+      es: "Durabilidad",
+      it: "Durata"
+    },
+    comfort: {
+      en: "Comfort",
+      fr: "Confort",
+      es: "Comodidad",
+      it: "Comfort"
+    },
+    feel: {
+      en: "Feel",
+      fr: "Sensation",
+      es: "Sensacion",
+      it: "Feeling"
+    },
+    gauge: {
+      en: "Gauge",
+      fr: "Jauge",
+      es: "Calibre",
+      it: "Calibro"
+    },
+    playerLevel: {
+      en: "Player Level",
+      fr: "Niveau du joueur",
+      es: "Nivel del jugador",
+      it: "Livello del giocatore"
+    },
+    gameStyle: {
+      en: "Game Style",
+      fr: "Style de jeu",
+      es: "Estilo de juego",
+      it: "Stile di gioco"
+    },
+    tensionBand: {
+      en: "Tension Feel",
+      fr: "Sensation de tension",
+      es: "Sensacion de tension",
+      it: "Sensazione di tensione"
+    },
+    racketFamily: {
+      en: "Racket Fit",
+      fr: "Compatibilite raquette",
+      es: "Compatibilidad con raqueta",
+      it: "Compatibilita con racchetta"
+    },
+    armFriendliness: {
+      en: "Arm Friendliness",
+      fr: "Confort bras",
+      es: "Comodidad para el brazo",
+      it: "Comfort per il braccio"
+    },
+    surface: {
+      en: "Best Court Fit",
+      fr: "Surface ideale",
+      es: "Mejor pista",
+      it: "Superficie ideale"
+    },
+    priceTier: {
+      en: "Price / Value",
+      fr: "Prix / valeur",
+      es: "Precio / valor",
+      it: "Prezzo / valore"
+    }
+  };
+  const language = siteI18n.getLanguage();
+  return labels[key]?.[language] || labels[key]?.en || key;
+}
+
+function updateLocalizedUiText() {
+  const sliderTitle = document.getElementById("sliderPanelTitle");
+  const sliderCopy = document.querySelector(".slider-panel-copy");
+  const mobileQuickPlayerLabel = document.querySelector('label[for="mobileQuickPlayerFilter"]');
+  const mobileQuickTypeLabel = document.querySelector('label[for="mobileQuickTypeFilter"]');
+  const quickFiltersEyebrow = document.querySelector(".panel-header .eyebrow");
+  const stringFiltersTitle = document.querySelector(".panel-header h2");
+
+  if (sliderTitle) sliderTitle.textContent = getUiText("sliderPanelTitle", "Preference Sliders");
+  if (sliderCopy) sliderCopy.textContent = getUiText("sliderPanelCopy", "Move the sliders toward what matters most and the rankings will rebalance live.");
+  if (mobileQuickPlayerLabel) mobileQuickPlayerLabel.textContent = getUiText("mobileQuickPlayer", "Pro Player");
+  if (mobileQuickTypeLabel) mobileQuickTypeLabel.textContent = getUiText("mobileQuickType", "String Type");
+  if (quickFiltersEyebrow) quickFiltersEyebrow.textContent = getUiText("quickFiltersEyebrow", "Quick Filters");
+  if (stringFiltersTitle) stringFiltersTitle.textContent = getUiText("stringFiltersTitle", "String Filters");
+  if (resetButton) resetButton.textContent = getUiText("reset", "Reset");
+  if (mobileFilterToggle) {
+    const collapsed = filterGrid.classList.contains("is-collapsed");
+    mobileFilterToggle.textContent = collapsed ? getUiText("mobileShowFilters", "Show Filters") : getUiText("mobileHideFilters", "Hide Filters");
+  }
+  if (sliderPanelToggle) {
+    const collapsed = sliderPanelBody?.classList.contains("is-collapsed");
+    sliderPanelToggle.textContent = collapsed ? getUiText("sliderShow", "Show Sliders") : getUiText("sliderHide", "Hide Sliders");
+  }
+
+  if (typeDescriptionEyebrow) typeDescriptionEyebrow.textContent = getUiText("stringTypeGuide", "String Type Guide");
+  if (typeDescriptionTitle && state.type === "Any") typeDescriptionTitle.textContent = getUiText("allStringTypeTitle", "All String Types");
+  if (typeDescriptionText && state.type === "Any") typeDescriptionText.textContent = getUiText("allStringTypeText", "Compare different string families to find the blend of spin, comfort, control, and power that best fits your game.");
+  if (resultsTypeDescriptionEyebrow) resultsTypeDescriptionEyebrow.textContent = getUiText("stringTypeGuide", "String Type Guide");
+  if (resultsTypeDescriptionTitle && state.type === "Any") resultsTypeDescriptionTitle.textContent = getUiText("allStringTypeTitle", "All String Types");
+  if (resultsTypeDescriptionText && state.type === "Any") resultsTypeDescriptionText.textContent = getUiText("allStringTypeText", "Compare different string families to find the blend of spin, comfort, control, and power that best fits your game.");
+
+  const sliderFieldLabels = document.querySelectorAll(".slider-field > span");
+  const sliderScales = document.querySelectorAll(".slider-scale-labels");
+  if (sliderFieldLabels[0]) sliderFieldLabels[0].textContent = getUiText("sliderPower", "Power");
+  if (sliderFieldLabels[1]) sliderFieldLabels[1].textContent = getUiText("sliderSpin", "Spin");
+  if (sliderFieldLabels[2]) sliderFieldLabels[2].textContent = getUiText("sliderControl", "Control");
+  if (sliderFieldLabels[3]) sliderFieldLabels[3].textContent = getUiText("sliderPros", "Pro Players Using");
+  sliderScales.forEach((scale, index) => {
+    const spans = scale.querySelectorAll("span");
+    if (spans.length !== 3) return;
+    if (index === 3) {
+      spans[0].textContent = getUiText("scaleFew", "Few");
+    } else {
+      spans[0].textContent = getUiText("scaleLow", "Low");
+    }
+    spans[1].textContent = getUiText("scaleBalanced", "Balanced");
+    spans[2].textContent = getUiText("scaleHigh", "High");
+  });
+
+  if (mobileQuickPlayerFilter) {
+    const anyOption = mobileQuickPlayerFilter.querySelector('option[value="Any"]');
+    if (anyOption) anyOption.textContent = getUiText("allProPlayers", "All Pro Players");
+  }
+  if (mobileQuickTypeFilter) {
+    const anyTypeOption = mobileQuickTypeFilter.querySelector('option[value="Any"]');
+    if (anyTypeOption) anyTypeOption.textContent = getUiText("allStringTypes", "All String Types");
+  }
+}
+
+function buildFilterOptions(filter, playerCoverage) {
+  if (filter.key !== "atpPlayer" && filter.key !== "wtaPlayer") {
+    const brandCounts = filter.key === "brand" ? getBrandFilterCounts() : null;
+    return filter.options.map((option) => {
+      let label = option;
+      if (option === "Any" && filter.key === "type") {
+        label = getUiText("allStringTypes", "All String Types");
+      }
+      if (option !== "Any" && filter.key === "brand") {
+        const count = brandCounts[option] || 0;
+        label = `${option} (${count})`;
+      }
+      return `<option value="${option}">${label}</option>`;
+    }).join("");
+  }
+
+  const coveredPlayers = filter.key === "atpPlayer" ? playerCoverage.atp : playerCoverage.wta;
+  const orderedOptions = ["Any", ...sortNamesBySurname(filter.options.filter((option) => option !== "Any"))];
+
+  return orderedOptions.map((option) => {
+    if (option === "Any") {
+      return `<option value="Any">${filter.key === "atpPlayer" || filter.key === "wtaPlayer" ? getUiText("allProPlayers", "All Pro Players") : "Any"}</option>`;
+    }
+
+    const isCovered = coveredPlayers.has(option);
+    const label = isCovered ? option : `${option}  |  no string yet`;
+    const style = isCovered ? ` style="background:#e5f4ff;color:#134d82;font-weight:600;"` : ` style="color:#7d8ea0;"`;
+    const disabled = isCovered ? "" : " disabled";
+    const selected = state[filter.key] === option ? " selected" : "";
+
+    return `<option value="${option}"${style}${disabled}${selected}>${label}</option>`;
+  }).join("");
+}
+
+function getBrandFilterCounts() {
+  return STRINGS.reduce((counts, entry) => {
+    if (entry && entry.brand) {
+      counts[entry.brand] = (counts[entry.brand] || 0) + 1;
+    }
+    return counts;
+  }, {});
+}
+
+function buildFilterNote(filter, playerCoverage) {
+  if (filter.key !== "atpPlayer" && filter.key !== "wtaPlayer") {
+    return "";
+  }
+
+  const listedPlayers = filter.options.filter((option) => option !== "Any");
+  const coveredPlayers = filter.key === "atpPlayer" ? playerCoverage.atp : playerCoverage.wta;
+  const totalPlayers = listedPlayers.length;
+  const coveredCount = listedPlayers.filter((player) => coveredPlayers.has(player)).length;
+  return `<p class="field-note">${coveredCount} of ${totalPlayers} players currently have string associations.</p>`;
+}
+
+function getPlayerCoverage() {
+  const customRecords = getStoredCustomProPlayers();
+  const atp = new Set();
+  const wta = new Set();
+
+  STRINGS.forEach((entry) => {
+    (entry.atpPlayers || []).forEach((player) => atp.add(player));
+    (entry.wtaPlayers || []).forEach((player) => wta.add(player));
+  });
+
+  customRecords.forEach((record) => {
+    if (record.tour === "ATP") {
+      atp.add(record.name);
+    }
+    if (record.tour === "WTA") {
+      wta.add(record.name);
+    }
+  });
+
+  return { atp, wta };
+}
+
+function getStoredCustomProPlayers() {
   try {
-    const raw = window.localStorage.getItem(SINGLES_STORAGE_KEY);
+    const raw = window.localStorage.getItem(PRO_PLAYER_STORAGE_KEY);
     const parsed = raw ? JSON.parse(raw) : [];
     return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
+  } catch {
     return [];
   }
 }
 
-function writeSavedSinglesPlans(plans) {
-  window.localStorage.setItem(SINGLES_STORAGE_KEY, JSON.stringify(plans));
-}
+function renderResults() {
+  const hasHardFilters = FILTERS.some((filter) => state[filter.key] && state[filter.key] !== "Any");
+  const hasSliderOnlyFocus = hasActiveSliderPreferences() && !hasHardFilters && !searchQuery && !popularOnly && !proOnly;
+  const shouldRequirePositiveScore = hasHardFilters;
+  const sliderScoreThreshold = hasSliderOnlyFocus ? 6.4 : 0;
+  const ranked = STRINGS
+    .map((entry) => ({
+      string: entry,
+      ...scoreString(entry)
+    }))
+    .filter((entry) => {
+      if (shouldRequirePositiveScore && entry.score <= 0) {
+        return false;
+      }
+      if (hasSliderOnlyFocus && entry.score < sliderScoreThreshold) {
+        return false;
+      }
+      return matchesSearch(entry.string) && matchesPopular(entry.string) && matchesProPlayers(entry.string);
+    })
+    .sort(compareRankedStrings);
 
-function formatSavedTimestamp(iso) {
-  try {
-    return new Date(iso).toLocaleString([], {
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit"
-    });
-  } catch (error) {
-    return "recently";
+  renderTypeDescription();
+  renderGuideMatches();
+  syncFocusedMode();
+  updateDatabaseCountLabels();
+  const resultsTitle = document.getElementById("resultsTitle");
+  if (resultsTitle) {
+    resultsTitle.textContent = popularOnly
+      ? siteI18n.t("resultsTitlePopular", "Most Popular Strings")
+      : proOnly
+        ? siteI18n.t("resultsTitlePros", "Pro Player Strings")
+        : searchQuery
+          ? siteI18n.t("resultsTitleSearch", "Search Results")
+          : siteI18n.t("resultsTitleDefault", "String Recommendations");
   }
-}
+  const baseResultsText = popularOnly
+    ? siteI18n.t("popularStringsCount", "{count} popular strings", { count: ranked.length })
+    : proOnly
+      ? siteI18n.t("proStringsCount", "{count} pro-player strings", { count: ranked.length })
+      : searchQuery
+        ? siteI18n.t("searchMatchesCount", "{count} search matches", { count: ranked.length })
+        : siteI18n.t("matchesCount", "{count} matches", { count: ranked.length });
+  resultsCount.textContent = hasSliderOnlyFocus
+    ? siteI18n.t("sliderMatchesCount", "{count} of {total} matches", { count: ranked.length, total: STRINGS.length })
+    : baseResultsText;
+  if (sliderResultsSummary) {
+    sliderResultsSummary.textContent = siteI18n.t("sliderShowingCount", "Showing {count} of {total} strings", { count: ranked.length, total: STRINGS.length });
+  }
 
-function applySavedSinglesInput(input) {
-  elements.playerName.value = input.playerName || "";
-  elements.opponentName.value = input.opponentName || "";
-  elements.playerStyle.value = input.playerStyle || STYLE_OPTIONS[0].value;
-  elements.opponentStyle.value = input.opponentStyle || STYLE_OPTIONS[1].value;
-  elements.surface.value = input.surface || SURFACE_OPTIONS[0].value;
-  elements.priority.value = input.priority || "balanced";
-  clearImageSelection(
-    elements.playerPhotoPreview,
-    elements.playerPhotoFallback,
-    elements.summaryPlayerPhoto,
-    elements.summaryPlayerFallback
-  );
-  clearImageSelection(
-    elements.opponentPhotoPreview,
-    elements.opponentPhotoFallback,
-    elements.summaryOpponentPhoto,
-    elements.summaryOpponentFallback
-  );
-  setBuilderPhotoVisibility(elements.playerPhotoPreview, false);
-  setBuilderPhotoVisibility(elements.opponentPhotoPreview, false);
-  setSummaryPhotoVisibility(elements.summaryPlayerPhoto, false);
-  setSummaryPhotoVisibility(elements.summaryOpponentPhoto, false);
-  setRatings("player", input.playerRatings || createDefaultRatings());
-  setRatings("opponent", input.opponentRatings || createDefaultRatings());
-  setChipGroupSelection("playerStrengths", input.playerStrengths || []);
-  setChipGroupSelection("playerWeaknesses", input.playerWeaknesses || []);
-  setChipGroupSelection("opponentStrengths", input.opponentStrengths || []);
-  setChipGroupSelection("opponentWeaknesses", input.opponentWeaknesses || []);
-  hidePresetNote();
-  updateSinglesOutput(collectInput());
-}
-
-function renderSavedSinglesPlans() {
-  const savedPlans = readSavedSinglesPlans();
-  elements.savedPlansList.innerHTML = "";
-  elements.savedPlansEmpty.hidden = savedPlans.length > 0;
-
-  savedPlans.forEach((savedPlan) => {
-    const row = document.createElement("article");
-    row.className = "saved-plan-row";
-    row.innerHTML = `
-      <div class="saved-plan-copy">
-        <h3>${savedPlan.title}</h3>
-        <p class="saved-plan-meta">Score ${savedPlan.score}/100 | ${savedPlan.scoreLabel} | ${savedPlan.surfaceLabel} | Saved ${formatSavedTimestamp(savedPlan.savedAt)}</p>
-      </div>
-      <div class="saved-plan-actions">
-        <button type="button" class="btn btn-secondary btn-compact">Load</button>
-        <button type="button" class="btn btn-ghost btn-compact">Delete</button>
-      </div>
+  if (ranked.length === 0) {
+    resultsList.innerHTML = `
+      <article class="empty-state">
+        ${siteI18n.t("emptyResults", "No strings matched the current setup. Try relaxing one or two filters to see more options.")}
+      </article>
     `;
-
-    const [loadButton, deleteButton] = row.querySelectorAll("button");
-    loadButton.addEventListener("click", () => {
-      applySavedSinglesInput(savedPlan.input);
-    });
-    deleteButton.addEventListener("click", () => {
-      const nextPlans = readSavedSinglesPlans().filter((entry) => entry.id !== savedPlan.id);
-      writeSavedSinglesPlans(nextPlans);
-      renderSavedSinglesPlans();
-    });
-
-    elements.savedPlansList.appendChild(row);
-  });
-}
-
-function saveCurrentSinglesPlan() {
-  if (!currentSinglesView) {
     return;
   }
 
-  try {
-    const savedPlans = readSavedSinglesPlans();
-    const playerName = getPlayerName(currentSinglesView.input.playerName, "Player 1");
-    const opponentName = getPlayerName(currentSinglesView.input.opponentName, "Player 2");
-    const entry = {
-      id: `singles-${Date.now()}`,
-      title: `${playerName} vs ${opponentName}`,
-      score: currentSinglesView.rating.score,
-      scoreLabel: currentSinglesView.rating.label,
-      surfaceLabel: getLabel(currentSinglesView.input.surface),
-      savedAt: new Date().toISOString(),
-      input: currentSinglesView.input
-    };
+  resultsList.innerHTML = ranked
+    .map(({ string, score, matchedTags }) => renderStringCard(string, score, matchedTags))
+    .join("");
+}
 
-    savedPlans.unshift(entry);
-    writeSavedSinglesPlans(savedPlans.slice(0, 8));
-    renderSavedSinglesPlans();
-    flashButton(elements.saveButton, "Saved");
-  } catch (error) {
-    flashButton(elements.saveButton, "Not Saved");
+function renderGuideMatches() {
+  if (!guideMatchesSection || !guideMatchesList || !guideMatchesCount) {
+    return;
   }
+
+  const matches = getGuideMatches(searchQuery);
+  const showGuides = Boolean(searchQuery) && matches.length > 0;
+
+  guideMatchesSection.hidden = !showGuides;
+  if (!showGuides) {
+    guideMatchesList.innerHTML = "";
+    guideMatchesCount.textContent = siteI18n.t("guidesZero", "0 guides");
+    return;
+  }
+
+  guideMatchesCount.textContent = matches.length === 1
+    ? siteI18n.t("guidesCount", "{count} guide", { count: matches.length })
+    : siteI18n.t("guidesCountPlural", "{count} guides", { count: matches.length });
+  guideMatchesList.innerHTML = matches.map((guide) => `
+    <a class="guide-match-card" href="${guide.href}">
+      <p class="eyebrow">${siteI18n.t("referenceGuide", "Reference Guide")}</p>
+      <h3>${guide.title}</h3>
+      <p class="summary-copy">${guide.description}</p>
+    </a>
+  `).join("");
+}
+
+function getGuideMatches(query) {
+  const source = String(query || "").trim().toLowerCase();
+  if (!source) {
+    return [];
+  }
+
+  return GUIDE_PAGES
+    .map((guide) => {
+      const haystack = [guide.title, guide.description, ...(guide.keywords || [])]
+        .join(" ")
+        .toLowerCase();
+
+      let score = 0;
+      if (guide.title.toLowerCase().includes(source)) {
+        score += 6;
+      }
+      if (haystack.includes(source)) {
+        score += 3;
+      }
+      for (const keyword of guide.keywords || []) {
+        const normalizedKeyword = String(keyword).toLowerCase();
+        if (normalizedKeyword === source) {
+          score += 10;
+        } else if (normalizedKeyword.includes(source) || source.includes(normalizedKeyword)) {
+          score += 4;
+        }
+      }
+
+      return { guide, score };
+    })
+    .filter((entry) => entry.score > 0)
+    .sort((left, right) => {
+      if (right.score !== left.score) {
+        return right.score - left.score;
+      }
+      return left.guide.title.localeCompare(right.guide.title);
+    })
+    .slice(0, 4)
+    .map((entry) => entry.guide);
+}
+
+function renderTypeDescription() {
+  if (!typeDescriptionCard || !typeDescriptionEyebrow || !typeDescriptionTitle || !typeDescriptionText) {
+    return;
+  }
+
+  const typeKey = state.type || "Any";
+  const content = TYPE_DESCRIPTIONS[typeKey] || TYPE_DESCRIPTIONS.Any;
+  const showDescription = typeKey !== "Any" && activeQuickSetupExampleIndex === -1;
+
+  typeDescriptionCard.hidden = !showDescription;
+
+  typeDescriptionEyebrow.textContent = content.eyebrow;
+  typeDescriptionTitle.textContent = content.title;
+  typeDescriptionText.textContent = content.text;
+
+  if (resultsTypeDescriptionCard && resultsTypeDescriptionEyebrow && resultsTypeDescriptionTitle && resultsTypeDescriptionText) {
+    resultsTypeDescriptionCard.hidden = !showDescription;
+    resultsTypeDescriptionEyebrow.textContent = content.eyebrow;
+    resultsTypeDescriptionTitle.textContent = content.title;
+    resultsTypeDescriptionText.textContent = content.text;
+  }
+}
+
+function matchesSearch(entry) {
+  if (!searchQuery) {
+    return true;
+  }
+
+  const customAssociations = getCustomProAssociations(entry);
+
+  const haystack = [
+    entry.name,
+    entry.brand,
+    entry.type,
+    entry.stringColor,
+    entry.stringShape,
+    entry.playerLevel,
+    entry.gameStyle,
+    entry.racketFamily,
+    entry.tensionBand,
+    entry.surface,
+    entry.priceTier,
+    entry.summary,
+    entry.note,
+    ...(entry.atpPlayers || []),
+    ...(entry.wtaPlayers || []),
+    ...customAssociations.atpPlayers,
+    ...customAssociations.wtaPlayers,
+    ...customAssociations.tensions.map((item) => `${item.player} ${item.tension} ${item.detail}`)
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return haystack.includes(searchQuery);
+}
+
+function matchesPopular(entry) {
+  if (!popularOnly) {
+    return true;
+  }
+
+  return POPULAR_STRING_NAMES.includes(entry.name);
+}
+
+function matchesProPlayers(entry) {
+  if (!proOnly) {
+    return true;
+  }
+
+  const customAssociations = getCustomProAssociations(entry);
+  return (entry.atpPlayers && entry.atpPlayers.length > 0)
+    || (entry.wtaPlayers && entry.wtaPlayers.length > 0)
+    || customAssociations.atpPlayers.length > 0
+    || customAssociations.wtaPlayers.length > 0;
+}
+
+function syncPopularButton() {
+  if (!popularStringsButton) {
+    return;
+  }
+
+  popularStringsButton.classList.toggle("is-active", popularOnly);
+}
+
+function syncProButton() {
+  if (!proPlayersButton) {
+    return;
+  }
+
+  proPlayersButton.classList.toggle("is-active", proOnly);
+}
+
+function syncClearSearchButton() {
+  if (!clearSearchButton) {
+    return;
+  }
+
+  clearSearchButton.hidden = !searchQuery;
+}
+
+function syncFocusedMode() {
+  const selectedPlayer = state.atpPlayer !== "Any" ? state.atpPlayer : state.wtaPlayer !== "Any" ? state.wtaPlayer : "";
+  const hasSliderFocus = hasActiveSliderPreferences();
+  const isFocused = popularOnly || proOnly || Boolean(searchQuery) || state.type !== "Any" || Boolean(selectedPlayer) || hasSliderFocus;
+  const hasPrimaryMainMode = popularOnly || proOnly;
+  const hasActiveExampleFocus = activeQuickSetupExampleIndex !== -1
+    && QUICK_SETUP_EXAMPLES[activeQuickSetupExampleIndex]?.player === selectedPlayer;
+  const showStandaloneToolsToggle = !hasPrimaryMainMode && toolsHiddenForPrimaryModes;
+  const modeLabel = popularOnly
+    ? siteI18n.t("activePopular", "Showing 20 Most Popular")
+    : proOnly
+      ? siteI18n.t("activePros", "Showing Pro Player Strings")
+      : searchQuery
+        ? siteI18n.t("activeSearch", 'Searching for "{query}"', { query: searchQuery })
+        : selectedPlayer
+          ? siteI18n.t("activeShowing", "Showing {value}", { value: selectedPlayer })
+          : state.type !== "Any"
+            ? siteI18n.t("activeShowing", "Showing {value}", { value: state.type })
+            : siteI18n.t("activeSliders", "Using preference sliders");
+  const showModePill = !(hasPrimaryMainMode && !toolsHiddenForPrimaryModes) && !hasActiveExampleFocus;
+  const hasActiveModeControls = showModePill || hasPrimaryMainMode;
+
+  if (heroSection) {
+    heroSection.classList.toggle("is-results-focused", isFocused);
+  }
+
+  if (layoutGrid) {
+    layoutGrid.classList.toggle("is-results-focused", isFocused);
+  }
+
+  if (mobileQuickTypeRow) {
+    mobileQuickTypeRow.hidden = Boolean(selectedPlayer);
+  }
+
+  if (toolWorkbench) {
+    toolWorkbench.hidden = toolsHiddenForPrimaryModes;
+  }
+
+  if (toolWorkbenchToggleRow) {
+    toolWorkbenchToggleRow.hidden = !showStandaloneToolsToggle;
+  }
+
+  if (toolWorkbenchToggleButton) {
+    toolWorkbenchToggleButton.textContent = siteI18n.t("showTools", "Show Tools");
+  }
+
+  if (toolWorkbenchHeaderToggleButton) {
+    toolWorkbenchHeaderToggleButton.hidden = hasPrimaryMainMode || toolsHiddenForPrimaryModes;
+    toolWorkbenchHeaderToggleButton.textContent = siteI18n.t("hideTools", "Hide Tools");
+  }
+
+  if (heroHomeButton) {
+    heroHomeButton.hidden = !isFocused;
+  }
+
+  if (activeModeBar) {
+    if (!isFocused || !hasActiveModeControls) {
+      activeModeBar.hidden = true;
+      activeModeBar.innerHTML = "";
+    } else {
+      activeModeBar.hidden = false;
+      activeModeBar.innerHTML = `
+        ${showModePill ? `<span class="active-mode-pill">${modeLabel}</span>` : ""}
+        ${hasPrimaryMainMode ? `<button class="active-mode-clear active-mode-tools-toggle" type="button">${toolsHiddenForPrimaryModes ? siteI18n.t("showTools", "Show Tools") : siteI18n.t("hideTools", "Hide Tools")}</button>` : ""}
+      `;
+
+      const toolsToggleButton = activeModeBar.querySelector(".active-mode-tools-toggle");
+      if (toolsToggleButton) {
+        toolsToggleButton.addEventListener("click", () => {
+          toolsHiddenForPrimaryModes = !toolsHiddenForPrimaryModes;
+          syncFocusedMode();
+        });
+      }
+    }
+  }
+
+  const shouldAutoScrollResults = isFocused && !searchQuery;
+  if (shouldAutoScrollResults) {
+    scrollToResultsOnMobile();
+  }
+}
+
+function hasActiveSliderPreferences() {
+  return false;
+}
+
+function getActiveSliderKeys() {
+  return [];
+}
+
+function compareRankedStrings(left, right) {
+  if (proOnly) {
+    const proCountDifference = getKnownProPlayerCount(right.string) - getKnownProPlayerCount(left.string);
+    if (proCountDifference !== 0) {
+      return proCountDifference;
+    }
+  }
+
+  const scoreDifference = right.score - left.score;
+  if (Math.abs(scoreDifference) > 0.001) {
+    return scoreDifference;
+  }
+
+  const activeSliderKeys = getActiveSliderKeys();
+  for (const key of activeSliderKeys) {
+    const preferredDirection = Number(sliderPreferences[key]) >= 5 ? "desc" : "asc";
+    const leftValue = getSliderMetricSortValue(left.string, key);
+    const rightValue = getSliderMetricSortValue(right.string, key);
+
+    if (leftValue !== rightValue) {
+      return preferredDirection === "desc" ? rightValue - leftValue : leftValue - rightValue;
+    }
+  }
+
+  return left.string.name.localeCompare(right.string.name);
+}
+
+function getSliderMetricSortValue(entry, key) {
+  if (key === "proPlayers") {
+    return getKnownProPlayerCount(entry);
+  }
+
+  return mapStringLevelToNumeric(entry[key]);
+}
+
+function scrollToResultsOnMobile() {
+  if (!resultsPanel || typeof window === "undefined" || window.innerWidth > 760 || sliderInteractionActive) {
+    return;
+  }
+
+  window.requestAnimationFrame(() => {
+    resultsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function applyPlannerSelection(nextFilters = {}) {
+  FILTERS.forEach((filter) => {
+    state[filter.key] = nextFilters[filter.key] || "Any";
+    const select = document.getElementById(`filter-${filter.key}`);
+    if (select) {
+      select.value = state[filter.key];
+    }
+  });
+
+  searchQuery = "";
+  popularOnly = false;
+  proOnly = false;
+  toolsHiddenForPrimaryModes = false;
+  autoCollapsedToolsForSearch = false;
+  toolsHiddenBeforeSearch = false;
+
+  if (stringSearchInput) {
+    stringSearchInput.value = "";
+  }
+
+  syncClearSearchButton();
+  syncPopularButton();
+  syncProButton();
+  syncTypeMenu();
+  syncMobileQuickPlayerFilter();
+  syncMobileQuickTypeFilter();
+
+  if (hasPlannerSurface) {
+    renderResults();
+  }
+}
+
+function resetToMainChoices() {
+  applyPlannerSelection();
+}
+
+function syncTypeMenu() {
+  if (!typeMenu) {
+    return;
+  }
+
+  typeMenu.querySelectorAll("[data-type]").forEach((button) => {
+    button.classList.toggle("is-active", (button.dataset.type || "Any") === state.type);
+  });
+}
+
+document.addEventListener("tsl-language-change", () => {
+  if (!(filterGrid && resultsList && resultsCount && databaseCount && resetButton)) {
+    return;
+  }
+
+  updateLocalizedUiText();
+  updateHomepageStaticTranslations();
+  renderFilters();
+  populateMobileQuickPlayerFilter();
+  syncMobileQuickPlayerFilter();
+  syncMobileQuickTypeFilter();
+  renderResults();
+});
+
+function scoreString(entry) {
+  const activeFilters = FILTERS.filter((filter) => state[filter.key] && state[filter.key] !== "Any");
+  const weights = {
+    brand: 1.2,
+    type: 1.8,
+    stringColor: 1.1,
+    stringShape: 1.1,
+    spin: 1.7,
+    power: 1.5,
+    control: 1.8,
+    durability: 1.5,
+    comfort: 1.4,
+    feel: 1.1,
+    gauge: 1.1,
+    playerLevel: 1.6,
+    gameStyle: 1.7,
+    tensionBand: 1.2,
+    racketFamily: 1.7,
+    atpPlayer: 1.3,
+    wtaPlayer: 1.3,
+    armFriendliness: 1.4,
+    surface: 1.1,
+    priceTier: 0.9
+  };
+
+  if (activeFilters.length === 0) {
+    return {
+      score: 10,
+      matchedTags: buildMatchedTags(entry, FILTERS.slice(0, 6))
+    };
+  }
+
+  let matchedWeight = 0;
+  let totalWeight = 0;
+  const matchedTags = [];
+
+  for (const filter of activeFilters) {
+    const weight = weights[filter.key] || 1;
+    const matchesFilter = doesStringMatchFilter(entry, filter.key, state[filter.key]);
+
+    if (strictFilterKeys.has(filter.key) && !matchesFilter) {
+      return {
+        score: 0,
+        matchedTags: []
+      };
+    }
+
+    totalWeight += weight;
+
+    if (matchesFilter) {
+      matchedWeight += weight;
+      matchedTags.push({
+        label: filter.label,
+        value: getFilterDisplayValue(entry, filter.key)
+      });
+    }
+  }
+
+  const baseScore = totalWeight > 0 ? (matchedWeight / totalWeight) * 10 : 0;
+
+  return {
+    score: Math.max(0, Math.min(10, baseScore)),
+    matchedTags: matchedTags.length > 0 ? matchedTags : buildMatchedTags(entry, FILTERS.slice(0, 5))
+  };
+}
+
+function calculateSliderPreferenceScore(entry) {
+  const targets = {
+    power: mapStringLevelToNumeric(entry.power),
+    spin: mapStringLevelToNumeric(entry.spin),
+    control: mapStringLevelToNumeric(entry.control),
+    proPlayers: mapProPlayerCountToNumeric(getKnownProPlayerCount(entry))
+  };
+
+  const activeSliderKeys = Object.keys(sliderPreferences).filter((key) => Number(sliderPreferences[key]) !== 5);
+
+  if (!activeSliderKeys.length) {
+    return 5;
+  }
+
+  const weightedScores = activeSliderKeys.map((key) => {
+    const desired = mapSliderToTarget(sliderPreferences[key]);
+    const difference = Math.abs(targets[key] - desired);
+    return Math.max(0, 1 - difference / 4);
+  });
+
+  const average = weightedScores.reduce((sum, value) => sum + value, 0) / weightedScores.length;
+  return average * 10;
+}
+
+function mapSliderToTarget(value) {
+  return (Number(value || 5) / 10) * 4;
+}
+
+function mapStringLevelToNumeric(value) {
+  const scale = {
+    Low: 1,
+    Medium: 2,
+    High: 3,
+    "Very High": 4
+  };
+
+  return scale[value] || 2;
+}
+
+function getKnownProPlayerCount(entry) {
+  const customAssociations = getCustomProAssociations(entry);
+  return mergeUniqueStrings(
+    [...(entry.atpPlayers || []), ...(entry.wtaPlayers || [])],
+    [...customAssociations.atpPlayers, ...customAssociations.wtaPlayers]
+  ).length;
+}
+
+function mapProPlayerCountToNumeric(count) {
+  if (count <= 0) return 0;
+  if (count <= 2) return 1;
+  if (count <= 5) return 2;
+  if (count <= 9) return 3;
+  return 4;
+}
+
+function doesStringMatchFilter(entry, key, selectedValue) {
+  if (!selectedValue || selectedValue === "Any") {
+    return true;
+  }
+
+  const customAssociations = getCustomProAssociations(entry);
+
+  if (key === "atpPlayer") {
+    return mergeUniqueStrings(entry.atpPlayers || [], customAssociations.atpPlayers).includes(selectedValue);
+  }
+
+  if (key === "wtaPlayer") {
+    return mergeUniqueStrings(entry.wtaPlayers || [], customAssociations.wtaPlayers).includes(selectedValue);
+  }
+
+  return entry[key] === selectedValue;
+}
+
+function buildMatchedTags(entry, filters) {
+  return filters.map((filter) => ({
+    label: filter.label,
+    value: getFilterDisplayValue(entry, filter.key)
+  }));
+}
+
+function getFilterDisplayValue(entry, key) {
+  const customAssociations = getCustomProAssociations(entry);
+
+  if (key === "atpPlayer") {
+    const atpPlayers = sortNamesBySurname(mergeUniqueStrings(entry.atpPlayers || [], customAssociations.atpPlayers));
+    return atpPlayers.length > 0 ? atpPlayers.join(", ") : "No ATP player noted yet";
+  }
+
+  if (key === "wtaPlayer") {
+    const wtaPlayers = sortNamesBySurname(mergeUniqueStrings(entry.wtaPlayers || [], customAssociations.wtaPlayers));
+    return wtaPlayers.length > 0 ? wtaPlayers.join(", ") : "No WTA player noted yet";
+  }
+
+  return entry[key];
+}
+
+function renderStringCard(entry, score, matchedTags) {
+  const fallbackImage = entry.fallbackImage || createStringImage(entry.name, entry.imageTone);
+  const customAssociations = getCustomProAssociations(entry);
+  const atpPlayers = sortNamesBySurname(mergeUniqueStrings(entry.atpPlayers || [], customAssociations.atpPlayers));
+  const wtaPlayers = sortNamesBySurname(mergeUniqueStrings(entry.wtaPlayers || [], customAssociations.wtaPlayers));
+  const allProPlayers = sortNamesBySurname(mergeUniqueStrings(atpPlayers, wtaPlayers));
+  const totalProPlayers = allProPlayers.length;
+  const proBadgeTitle = totalProPlayers ? escapeHtml(allProPlayers.join(", ")) : "No pros listed";
+  const proTensions = [...(entry.proTensions || []), ...customAssociations.tensions];
+  const proRackets = [...(entry.proRackets || []), ...customAssociations.rackets];
+  const compactMatchedTags = matchedTags.filter((tag) => tag.label !== "ATP Player" && tag.label !== "WTA Player");
+  const officialLink = getOfficialStringLink(entry);
+  const shopListingLink = buildShopListingUrl(entry);
+
+  return `
+    <details class="result-card result-card-collapsible">
+      <summary class="result-summary">
+        <div class="result-summary-main">
+          <div class="plant-image plant-image-compact">
+            <img
+              src="${entry.image}"
+              alt="${entry.name}"
+              data-fallback="${fallbackImage}"
+              onerror="this.onerror=null;this.src=this.dataset.fallback;"
+            >
+          </div>
+          <div class="result-title">
+            <h3>${entry.name}</h3>
+            <p class="latin-name">${entry.brand} | ${entry.type} | ${entry.gauge}</p>
+          </div>
+        </div>
+        <div class="result-badge-stack">
+          ${totalProPlayers > 0 ? `
+            <div class="pro-count-badge" aria-label="${totalProPlayers} pro players use this string" title="${proBadgeTitle}">
+              <span>${totalProPlayers}</span>
+              <small>Pros</small>
+              <div class="pro-count-tooltip">${proBadgeTitle}</div>
+            </div>
+          ` : ""}
+          <div class="score-pill">
+            <span>${score.toFixed(1)}/10</span>
+            <small>Match Score</small>
+          </div>
+          <div class="result-details-action">
+            <span class="details-label">Details</span>
+            <span class="hide-label">Hide</span>
+          </div>
+        </div>
+      </summary>
+      <div class="result-content">
+        <p class="summary-copy">${entry.summary}</p>
+        <p class="summary-note">${entry.note}</p>
+        <div class="tag-grid">
+          <span class="tag"><strong>Spin:</strong> ${entry.spin}</span>
+          <span class="tag"><strong>Power:</strong> ${entry.power}</span>
+          <span class="tag"><strong>Control:</strong> ${entry.control}</span>
+          <span class="tag"><strong>Durability:</strong> ${entry.durability}</span>
+          <span class="tag"><strong>Color:</strong> ${entry.stringColor}</span>
+          <span class="tag"><strong>Shape:</strong> ${entry.stringShape}</span>
+          <span class="tag"><strong>Tension:</strong> ${entry.tensionBand}</span>
+          <span class="tag"><strong>Value:</strong> ${entry.priceTier}</span>
+          <span class="tag"><strong>Set:</strong> ${formatPrice(entry.costPerSet)}</span>
+          <span class="tag"><strong>Reel:</strong> ${formatPrice(entry.costPerReel)}</span>
+          <span class="tag"><strong>Racket Fit:</strong> ${entry.racketFamily}</span>
+          ${compactMatchedTags.map((tag) => `<span class="tag"><strong>${tag.label}:</strong> ${tag.value}</span>`).join("")}
+        </div>
+        <div class="result-actions">
+          ${officialLink ? `<a class="secondary-button compact-button official-brand-button" href="${officialLink}" target="_blank" rel="noopener noreferrer">Official Brand Page</a>` : ""}
+          <a class="secondary-button compact-button result-buy-link shop-listing-button" href="${shopListingLink}">Closest Pro Shops</a>
+        </div>
+        <div class="pro-player-panel">
+          <div class="pro-player-tag">
+            <strong>ATP:</strong> ${atpPlayers.length > 0 ? atpPlayers.join(", ") : "None listed"}
+          </div>
+          <div class="pro-player-tag">
+            <strong>WTA:</strong> ${wtaPlayers.length > 0 ? wtaPlayers.join(", ") : "None listed"}
+          </div>
+          ${proTensions.length > 0 ? `
+            <div class="pro-tension-box">
+              <strong>Known Pro Tensions</strong>
+              <div class="pro-tension-list">
+                ${proTensions.map((item) => `
+                  <div class="pro-tension-item">
+                    <span class="pro-tension-player">${item.player}</span>
+                    <span class="pro-tension-detail">${item.detail}</span>
+                    <span class="pro-tension-value">${item.tension}</span>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          ` : ""}
+          ${proRackets.length > 0 ? `
+            <div class="pro-tension-box">
+              <strong>Known Pro Rackets</strong>
+              <div class="pro-tension-list">
+                ${proRackets.map((item) => `
+                  <div class="pro-tension-item">
+                    <span class="pro-tension-player">${item.player}</span>
+                    <span class="pro-tension-value">${item.racket}</span>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          ` : ""}
+        </div>
+      </div>
+    </details>
+  `;
+}
+
+function getCustomProAssociations(entry) {
+  const records = getCustomProPlayers().filter((record) => record.stringName === entry.name);
+  return {
+    atpPlayers: records.filter((record) => record.tour === "ATP").map((record) => record.name),
+    wtaPlayers: records.filter((record) => record.tour === "WTA").map((record) => record.name),
+    tensions: records.map((record) => ({
+      player: record.name,
+      detail: record.note || `Saved ${record.tour} note`,
+      tension: record.tension
+    })),
+    rackets: records
+      .filter((record) => record.racket)
+      .map((record) => ({
+        player: record.name,
+        racket: record.racket
+      }))
+  };
+}
+
+function getCustomProPlayers() {
+  try {
+    const raw = window.localStorage.getItem(PRO_PLAYER_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function mergeUniqueStrings(primary, secondary) {
+  return [...new Set([...(primary || []), ...(secondary || [])])];
+}
+
+function sortNamesBySurname(names) {
+  return [...(names || [])].sort((left, right) => {
+    const leftKey = getSurnameSortKey(left);
+    const rightKey = getSurnameSortKey(right);
+
+    if (leftKey !== rightKey) {
+      return leftKey.localeCompare(rightKey);
+    }
+
+    return String(left || "").localeCompare(String(right || ""));
+  });
+}
+
+function getSurnameSortKey(name) {
+  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+  if (parts.length <= 1) {
+    return String(name || "").toLowerCase();
+  }
+
+  const surnameParts = [parts[parts.length - 1]];
+  let index = parts.length - 2;
+  const surnamePrefixes = new Set(["de", "del", "della", "di", "du", "la", "le", "van", "von"]);
+
+  while (index >= 0 && surnamePrefixes.has(parts[index].toLowerCase())) {
+    surnameParts.unshift(parts[index]);
+    index -= 1;
+  }
+
+  return surnameParts.join(" ").toLowerCase();
 }
 
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
-function openPrintWindow(config) {
-  const printWindow = window.open("", "_blank", "width=900,height=720");
-  if (!printWindow) {
-    return;
-  }
+function stringEntry(name, attributes) {
+  const estimatedPricing = estimateStringPricing(attributes);
+  const normalizedAttributes = {
+    atpPlayers: attributes.atpPlayers || [],
+    wtaPlayers: attributes.wtaPlayers || [],
+    proTensions: attributes.proTensions || [],
+    proRackets: attributes.proRackets || [],
+    costPerSet: attributes.costPerSet ?? estimatedPricing.costPerSet,
+    costPerReel: attributes.costPerReel ?? estimatedPricing.costPerReel,
+    stringColor: attributes.stringColor || resolveStringColor(name, attributes),
+    officialUrl: attributes.officialUrl || "",
+    ...attributes
+  };
+  const resolvedImage = resolveStringImage(name, normalizedAttributes);
+  const fallbackImage = createStringImage(name, normalizedAttributes.imageTone, normalizedAttributes.stringColor, normalizedAttributes.brand);
 
-  const sectionsHtml = config.sections
-    .map((section) => `
-      <section class="print-section">
-        <h2>${escapeHtml(section.title)}</h2>
-        <ul>
-          ${section.items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
-        </ul>
-      </section>
-    `)
-    .join("");
-
-  printWindow.document.write(`
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <title>${escapeHtml(config.title)}</title>
-      <style>
-        body { font-family: Arial, sans-serif; color: #13273f; margin: 28px; }
-        h1 { margin: 0 0 6px; font-size: 28px; }
-        .subhead { margin: 0 0 14px; color: #47617d; font-weight: 700; }
-        .summary { margin: 0 0 18px; line-height: 1.6; }
-        .badge { display: inline-block; padding: 8px 12px; border-radius: 999px; background: #daf8c6; color: #143c28; font-weight: 700; }
-        .print-section { margin-top: 18px; padding: 16px 18px; border: 1px solid #d6e3ef; border-radius: 14px; }
-        h2 { margin: 0 0 10px; font-size: 18px; }
-        ul { margin: 0; padding-left: 20px; line-height: 1.6; }
-        li + li { margin-top: 8px; }
-      </style>
-    </head>
-    <body>
-      <h1>${escapeHtml(config.title)}</h1>
-      <p class="subhead">${escapeHtml(config.subtitle)}</p>
-      <p class="summary"><span class="badge">${escapeHtml(config.badge)}</span></p>
-      <p class="summary">${escapeHtml(config.summary)}</p>
-      ${sectionsHtml}
-    </body>
-    </html>
-  `);
-  printWindow.document.close();
-  printWindow.focus();
-  window.setTimeout(() => {
-    printWindow.print();
-  }, 250);
+  return {
+    name,
+    image: resolvedImage,
+    fallbackImage,
+    ...normalizedAttributes
+  };
 }
 
-function printCurrentSinglesMatchCard() {
-  if (!currentSinglesView) {
-    return;
+function getOfficialStringLink(entry) {
+  if (entry.officialUrl) {
+    return entry.officialUrl;
   }
 
-  openPrintWindow({
-    title: currentSinglesView.matchCard.title,
-    subtitle: "TennisTacticsIQ Singles Match Card",
-    badge: `${currentSinglesView.rating.score}/100 | ${currentSinglesView.rating.label}`,
-    summary: currentSinglesView.matchCard.summary,
-    sections: [
-      {
-        title: "Court-side Match Card",
-        items: currentSinglesView.matchCard.bullets
-      },
-      {
-        title: "Plan A",
-        items: currentSinglesView.plan.planA.map((item) => item.text).slice(0, 4)
-      },
-      {
-        title: "Plan B",
-        items: currentSinglesView.plan.planB.map((item) => item.text).slice(0, 3)
-      },
-      {
-        title: "In-Match Cues",
-        items: currentSinglesView.plan.cues.map((item) => item.text).slice(0, 3)
-      }
-    ]
-  });
+  return OFFICIAL_BRAND_PAGES[entry.brand] || "";
 }
 
-function copyPlanToClipboard() {
-  const text = [
-    elements.matchupHeadline.textContent,
-    "",
-    elements.strategyNarrative.textContent,
-    "",
-    `Plan A: ${elements.planASummary.textContent}`,
-    ...[...elements.planAList.querySelectorAll("li")].map((item) => `- ${item.textContent}`),
-    "",
-    `Plan B: ${elements.planBSummary.textContent}`,
-    ...[...elements.planBList.querySelectorAll("li")].map((item) => `- ${item.textContent}`),
-    "",
-    "In-Match Cues",
-    ...[...elements.cueList.querySelectorAll("li")].map((item) => `- ${item.textContent}`),
-    "",
-    "What to Avoid",
-    ...[...elements.avoidList.querySelectorAll("li")].map((item) => `- ${item.textContent}`)
-  ].join("\n");
+function buildShopListingUrl(entry) {
+  const params = new URLSearchParams();
+  params.set("string", entry.name);
 
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(() => {
-      const original = elements.copyButton.textContent;
-      elements.copyButton.textContent = "Copied";
-      window.setTimeout(() => {
-        elements.copyButton.textContent = original;
-      }, 1400);
-    });
+  if (entry.brand) {
+    params.set("brand", entry.brand);
+  }
+
+  params.set("source", "database");
+
+  return `./proshops.html?${params.toString()}`;
+}
+
+function estimateStringPricing(attributes) {
+  const type = attributes.type || "";
+  const tier = attributes.priceTier || "Mid-Range";
+
+  const pricingMatrix = {
+    Premium: {
+      Poly: { set: 22, reel: 280 },
+      "Co-Poly": { set: 21, reel: 260 },
+      "Synthetic Gut": { set: 8, reel: 70 },
+      Multifilament: { set: 22, reel: 270 },
+      "Natural Gut": { set: 45, reel: 0 },
+      Hybrid: { set: 32, reel: 0 }
+    },
+    "Mid-Range": {
+      Poly: { set: 16, reel: 150 },
+      "Co-Poly": { set: 15, reel: 145 },
+      "Synthetic Gut": { set: 6, reel: 45 },
+      Multifilament: { set: 14, reel: 135 },
+      "Natural Gut": { set: 35, reel: 0 },
+      Hybrid: { set: 24, reel: 0 }
+    },
+    Budget: {
+      Poly: { set: 10, reel: 80 },
+      "Co-Poly": { set: 10, reel: 85 },
+      "Synthetic Gut": { set: 4, reel: 35 },
+      Multifilament: { set: 9, reel: 90 },
+      "Natural Gut": { set: 30, reel: 0 },
+      Hybrid: { set: 18, reel: 0 }
+    }
+  };
+
+  const tierPricing = pricingMatrix[tier] || pricingMatrix["Mid-Range"];
+  const typePricing = tierPricing[type] || tierPricing["Co-Poly"];
+
+  return {
+    costPerSet: typePricing.set,
+    costPerReel: typePricing.reel
+  };
+}
+
+function formatPrice(value) {
+  if (!value) {
+    return "Varies";
+  }
+
+  return `$${Number(value).toFixed(0)}`;
+}
+
+function resolveStringColor(name, attributes) {
+  if (attributes.stringColor) {
+    return attributes.stringColor;
+  }
+
+  return STRING_COLOR_OVERRIDES[name] || "Natural";
+}
+
+function resolveStringImage(name, attributes) {
+  const explicitImage = attributes.image || attributes.imageUrl || attributes.photo || attributes.photoUrl;
+  if (explicitImage) {
+    return explicitImage;
+  }
+
+  const localSource = attributes.imagePath || attributes.photoPath || attributes.imageFile || attributes.photoFile;
+  if (localSource) {
+    return normalizeImagePath(localSource);
+  }
+
+  const storedImage = getStoredStringImage(name);
+  if (storedImage) {
+    return storedImage;
+  }
+
+  return createStringImage(name, attributes.imageTone);
+}
+
+function normalizeImagePath(path) {
+  if (/^(data:|https?:\/\/|\.\/|\/)/i.test(path)) {
+    return path;
+  }
+
+  return `./images/${path}`;
+}
+
+function getStoredStringImage(name) {
+  try {
+    return window.localStorage.getItem(`${IMAGE_STORAGE_PREFIX}${slugifyName(name)}`) || "";
+  } catch {
+    return "";
   }
 }
 
-function applyScenario(scenario) {
-  elements.playerName.value = scenario.playerName || "";
-  elements.opponentName.value = scenario.opponentName || "";
-  elements.playerStyle.value = scenario.playerStyle;
-  elements.opponentStyle.value = scenario.opponentStyle;
-  elements.surface.value = scenario.surface;
-  elements.priority.value = scenario.priority;
-  if (scenario.playerImage) {
-    setBuilderPhotoVisibility(elements.playerPhotoPreview, true);
-    setSummaryPhotoVisibility(elements.summaryPlayerPhoto, true);
-    syncImagePreview(
-      elements.playerPhotoPreview,
-      elements.playerPhotoFallback,
-      scenario.playerImage,
-      scenario.playerImageFallback || ""
-    );
-    syncImagePreview(
-      elements.summaryPlayerPhoto,
-      elements.summaryPlayerFallback,
-      scenario.playerImage,
-      scenario.playerImageFallback || ""
-    );
-  } else {
-    clearImageSelection(
-      elements.playerPhotoPreview,
-      elements.playerPhotoFallback,
-      elements.summaryPlayerPhoto,
-      elements.summaryPlayerFallback
-    );
-    setBuilderPhotoVisibility(elements.playerPhotoPreview, false);
-    setSummaryPhotoVisibility(elements.summaryPlayerPhoto, false);
-  }
-  if (scenario.opponentImage) {
-    setBuilderPhotoVisibility(elements.opponentPhotoPreview, true);
-    setSummaryPhotoVisibility(elements.summaryOpponentPhoto, true);
-    syncImagePreview(
-      elements.opponentPhotoPreview,
-      elements.opponentPhotoFallback,
-      scenario.opponentImage,
-      scenario.opponentImageFallback || ""
-    );
-    syncImagePreview(
-      elements.summaryOpponentPhoto,
-      elements.summaryOpponentFallback,
-      scenario.opponentImage,
-      scenario.opponentImageFallback || ""
-    );
-  } else {
-    clearImageSelection(
-      elements.opponentPhotoPreview,
-      elements.opponentPhotoFallback,
-      elements.summaryOpponentPhoto,
-      elements.summaryOpponentFallback
-    );
-    setBuilderPhotoVisibility(elements.opponentPhotoPreview, false);
-    setSummaryPhotoVisibility(elements.summaryOpponentPhoto, false);
-  }
-  setRatings("player", scenario.playerRatings);
-  setRatings("opponent", scenario.opponentRatings);
-  setChipGroupSelection("playerStrengths", scenario.playerStrengths);
-  setChipGroupSelection("playerWeaknesses", scenario.playerWeaknesses);
-  setChipGroupSelection("opponentStrengths", scenario.opponentStrengths);
-  setChipGroupSelection("opponentWeaknesses", scenario.opponentWeaknesses);
-  updateSinglesOutput(collectInput());
+function slugifyName(name) {
+  return String(name)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
-function loadPreset(presetId) {
-  const preset = getPresetById(presetId);
-  elements.presetMatchup.value = preset.id;
-  applyScenario(preset.scenario);
-  showPresetNote(preset.label);
+function createStringImage(name, tone, stringColor, brand) {
+  const accent = stringColor || "Natural";
+  const fill = STRING_COLOR_HEX[accent] || tone || "#d7f36a";
+  const safeSvg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 420">
+      <rect width="500" height="420" rx="32" fill="#eef5ff"/>
+      <ellipse cx="250" cy="214" rx="152" ry="138" fill="#c9d2db" opacity="0.32"/>
+      <circle cx="250" cy="196" r="140" fill="#f5f6f8" stroke="#bcc4cb" stroke-width="6"/>
+      <circle cx="250" cy="196" r="110" fill="none" stroke="${fill}" stroke-width="30"/>
+      <circle cx="250" cy="196" r="94" fill="none" stroke="${fill}" stroke-width="4" opacity="0.75"/>
+      <circle cx="250" cy="196" r="82" fill="none" stroke="${fill}" stroke-width="4" opacity="0.75"/>
+      <circle cx="250" cy="196" r="70" fill="none" stroke="${fill}" stroke-width="4" opacity="0.75"/>
+      <circle cx="250" cy="196" r="58" fill="none" stroke="${fill}" stroke-width="4" opacity="0.75"/>
+      <circle cx="250" cy="196" r="48" fill="#d7dce1" stroke="#9aa4ad" stroke-width="4"/>
+      <circle cx="250" cy="196" r="38" fill="#eceff2" stroke="#ffffff" stroke-width="2"/>
+      <rect x="198" y="160" width="104" height="24" rx="8" fill="#2f3338"/>
+      <text x="250" y="176" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff">${brand || "STRING"}</text>
+      <text x="250" y="197" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#46525d">${accent.toUpperCase()}</text>
+      <text x="250" y="210" text-anchor="middle" font-family="Arial" font-size="8" fill="#5d6771">TENNIS STRING</text>
+      <circle cx="250" cy="224" r="11" fill="#d84747"/>
+      <text x="250" y="228" text-anchor="middle" font-family="Arial" font-size="8" font-weight="700" fill="#ffffff">${accent.charAt(0)}</text>
+      <rect x="88" y="332" width="324" height="30" rx="15" fill="#ffffff" stroke="#d3dce6"/>
+      <text x="250" y="352" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#17385c">${name}</text>
+    </svg>
+  `;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(safeSvg)}`;
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 420">
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#f8fbff"/>
+          <stop offset="100%" stop-color="#ddeafb"/>
+        </linearGradient>
+        <radialGradient id="shadow" cx="50%" cy="50%" r="55%">
+          <stop offset="0%" stop-color="#000000" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="reelRing" cx="50%" cy="45%" r="60%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="65%" stop-color="#edf1f4"/>
+          <stop offset="100%" stop-color="#cfd7de"/>
+        </linearGradient>
+        <radialGradient id="centerDisc" cx="50%" cy="40%" r="62%">
+          <stop offset="0%" stop-color="#f3f5f7"/>
+          <stop offset="70%" stop-color="#c8ced4"/>
+          <stop offset="100%" stop-color="#9aa4ad"/>
+        </radialGradient>
+        <linearGradient id="labelBand" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#4a4f56"/>
+          <stop offset="100%" stop-color="#20252b"/>
+        </linearGradient>
+      </defs>
+      <rect width="500" height="420" rx="32" fill="url(#bg)"/>
+      <ellipse cx="250" cy="218" rx="164" ry="148" fill="url(#shadow)"/>
+      <circle cx="250" cy="202" r="142" fill="url(#reelRing)" stroke="#bcc4cb" stroke-width="6"/>
+      <circle cx="250" cy="202" r="112" fill="none" stroke="${fill}" stroke-width="28"/>
+      <circle cx="250" cy="202" r="97" fill="none" stroke="${fill}" stroke-width="5" opacity="0.75"/>
+      <circle cx="250" cy="202" r="84" fill="none" stroke="${fill}" stroke-width="5" opacity="0.75"/>
+      <circle cx="250" cy="202" r="71" fill="none" stroke="${fill}" stroke-width="5" opacity="0.75"/>
+      <circle cx="250" cy="202" r="58" fill="none" stroke="${fill}" stroke-width="5" opacity="0.75"/>
+      <circle cx="250" cy="202" r="50" fill="url(#centerDisc)" stroke="#8a939b" stroke-width="4"/>
+      <circle cx="250" cy="202" r="41" fill="#d9dee3" stroke="#ffffff" stroke-width="2"/>
+      <rect x="205" y="166" width="90" height="26" rx="8" fill="url(#labelBand)"/>
+      <text x="250" y="183" text-anchor="middle" font-family="Segoe UI, Arial" font-size="13" font-weight="700" fill="#ffffff">${brand || "STRING"}</text>
+      <text x="250" y="206" text-anchor="middle" font-family="Segoe UI, Arial" font-size="8.8" font-weight="700" fill="#35414d">${accent.toUpperCase()}</text>
+      <text x="250" y="218" text-anchor="middle" font-family="Segoe UI, Arial" font-size="7.6" fill="#4e5b68">TENNIS STRING</text>
+      <circle cx="250" cy="231" r="12" fill="#bf2c2c"/>
+      <circle cx="250" cy="231" r="9" fill="#e54a4a"/>
+      <text x="250" y="235" text-anchor="middle" font-family="Segoe UI, Arial" font-size="8" font-weight="700" fill="#ffffff">${accent.charAt(0)}</text>
+      <rect x="92" y="334" width="316" height="30" rx="15" fill="#ffffff" fill-opacity="0.76" stroke="#d3dce6"/>
+      <text x="250" y="354" text-anchor="middle" font-family="Segoe UI, Arial" font-size="19" font-weight="600" fill="#17385c">${name}</text>
+    </svg>
+  `;
+
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
-function resetAll() {
-  elements.playerName.value = "";
-  elements.opponentName.value = "";
-  elements.playerStyle.value = STYLE_OPTIONS[0].value;
-  elements.opponentStyle.value = STYLE_OPTIONS[1].value;
-  elements.surface.value = SURFACE_OPTIONS[0].value;
-  elements.priority.value = "balanced";
-  clearImageSelection(
-    elements.playerPhotoPreview,
-    elements.playerPhotoFallback,
-    elements.summaryPlayerPhoto,
-    elements.summaryPlayerFallback
-  );
-  clearImageSelection(
-    elements.opponentPhotoPreview,
-    elements.opponentPhotoFallback,
-    elements.summaryOpponentPhoto,
-    elements.summaryOpponentFallback
-  );
-  setBuilderPhotoVisibility(elements.playerPhotoPreview, false);
-  setBuilderPhotoVisibility(elements.opponentPhotoPreview, false);
-  setSummaryPhotoVisibility(elements.summaryPlayerPhoto, false);
-  setSummaryPhotoVisibility(elements.summaryOpponentPhoto, false);
-  setRatings("player", createDefaultRatings());
-  setRatings("opponent", createDefaultRatings());
-  setChipGroupSelection("playerStrengths", []);
-  setChipGroupSelection("playerWeaknesses", []);
-  setChipGroupSelection("opponentStrengths", []);
-  setChipGroupSelection("opponentWeaknesses", []);
-  hidePresetNote();
-  updateSinglesOutput(collectInput());
+
+
+if (typeof window !== "undefined") {
+  window.TENNIS_SETUP_ANALYZER_API = {
+    STRINGS,
+    FILTERS,
+    TENSION_TYPE_BASE,
+    TENSION_RACKET_ADJUSTMENTS,
+    TENSION_FEEL_ADJUSTMENTS,
+    TENSION_ARM_ADJUSTMENTS,
+    mapStringLevelToNumeric,
+    getRacketFamilyGroup,
+    clampNumber,
+    formatDecimalNumber,
+    doesEntryMatchCalculatorType,
+    buildTensionCalculatorRecommendation,
+    persistTensionCalculatorSource,
+    trackToolUsage,
+    openMailDraft
+  };
 }
-
-function initialize() {
-  populateSelect(elements.playerStyle, STYLE_OPTIONS);
-  populateSelect(elements.opponentStyle, STYLE_OPTIONS);
-  populateSelect(elements.surface, SURFACE_OPTIONS);
-  populatePresetSelect();
-  renderRatingGrid(elements.playerRatings, "player");
-  renderRatingGrid(elements.opponentRatings, "opponent");
-  renderChipGroup(elements.playerStrengths, STRENGTH_OPTIONS, "playerStrengths");
-  renderChipGroup(elements.playerWeaknesses, WEAKNESS_OPTIONS, "playerWeaknesses");
-  renderChipGroup(elements.opponentStrengths, STRENGTH_OPTIONS, "opponentStrengths");
-  renderChipGroup(elements.opponentWeaknesses, WEAKNESS_OPTIONS, "opponentWeaknesses");
-  updateCounts();
-
-  elements.playerName.addEventListener("input", () => {
-    refreshFallbackInitials(elements.playerName.value, elements.opponentName.value);
-  });
-
-  elements.opponentName.addEventListener("input", () => {
-    refreshFallbackInitials(elements.playerName.value, elements.opponentName.value);
-  });
-
-  elements.form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    updateSinglesOutput(collectInput());
-  });
-
-  elements.loadPresetButton.addEventListener("click", () => {
-    loadPreset(elements.presetMatchup.value);
-  });
-
-  elements.demoButton.addEventListener("click", () => {
-    loadPreset("sinner-alcaraz");
-  });
-
-  if (elements.demoSummaryButton) {
-    elements.demoSummaryButton.addEventListener("click", () => {
-      loadPreset("sinner-alcaraz");
-    });
-  }
-
-  elements.resetButton.addEventListener("click", resetAll);
-  if (elements.resetSummaryButton) {
-    elements.resetSummaryButton.addEventListener("click", resetAll);
-  }
-  elements.copyButton.addEventListener("click", copyPlanToClipboard);
-  if (elements.saveButton) {
-    elements.saveButton.addEventListener("click", saveCurrentSinglesPlan);
-  }
-  if (elements.printButton) {
-    elements.printButton.addEventListener("click", printCurrentSinglesMatchCard);
-  }
-
-  renderSavedSinglesPlans();
-
-  loadPreset("sinner-alcaraz");
-}
-
-initialize();
-
