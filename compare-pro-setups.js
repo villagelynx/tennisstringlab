@@ -32,6 +32,7 @@
   }
 
   populateControls();
+  applyPrefillFromQuery();
 
   elements.button.addEventListener("click", () => {
     const comparison = buildComparison();
@@ -53,6 +54,29 @@
     elements.setupB.innerHTML = `<option value="">Choose the second pro setup</option>${options}`;
     elements.setupA.value = "0";
     elements.setupB.value = "1";
+  }
+
+  function applyPrefillFromQuery() {
+    const params = new URLSearchParams(window.location.search);
+    const requestedPlayer = (params.get("player") || "").trim().toLowerCase();
+
+    if (!requestedPlayer) {
+      return;
+    }
+
+    const selectedIndex = PRO_SETUP_EXAMPLES.findIndex(
+      (example) => example.player.toLowerCase() === requestedPlayer
+    );
+
+    if (selectedIndex === -1) {
+      return;
+    }
+
+    const fallbackIndex = selectedIndex === 1 ? 0 : 1;
+
+    elements.setupA.value = String(selectedIndex);
+    elements.setupB.value = String(fallbackIndex === selectedIndex ? 0 : fallbackIndex);
+    renderComparison(buildComparison());
   }
 
   function buildComparison() {
