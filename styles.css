@@ -5655,8 +5655,8 @@ body[data-page="home"] .hero-menu-button {
   }
 
   body.has-shared-site-header .language-switcher--header {
-    margin-left: 24px;
-    margin-right: 0;
+    margin-left: 34px;
+    margin-right: -2px;
     align-self: flex-end;
     margin-bottom: 12px;
   }
