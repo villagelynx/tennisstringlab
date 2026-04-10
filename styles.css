@@ -6013,25 +6013,25 @@ body.tool-page-body .tool-page-shell .setup-analyzer-group .eyebrow {
     display: grid;
     gap: 7px;
     width: 100%;
-    min-height: calc(100dvh - var(--home-header-height) - 28px);
+    min-height: 0;
     padding: 2px 0 0;
     align-content: start;
   }
 
   .home-cross-site-banner {
     width: min(100%, calc(100% - 20px));
-    margin: 10px auto 24px;
-    padding: 10px 14px;
-    gap: 8px;
+    margin: 6px auto 18px;
+    padding: 14px 16px;
+    gap: 10px;
     border-radius: 14px;
   }
 
   .home-cross-site-banner-label {
-    font-size: 0.82rem;
+    font-size: 0.96rem;
   }
 
   .home-cross-site-banner-link {
-    font-size: 0.94rem;
+    font-size: 1.1rem;
   }
 
   body[data-page="home"] .mobile-home-site-tagline {
