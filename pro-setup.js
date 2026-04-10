@@ -142,7 +142,6 @@
         <div class="tool-result-header">
           <p class="eyebrow">Pro Setup</p>
           <h3 class="tool-recommendation-name">${escapeHtml(setup.player)}</h3>
-          <p class="tool-note">${escapeHtml(buildSummary(setup))}</p>
         </div>
       </section>
 
@@ -216,10 +215,6 @@
         <strong>${escapeHtml(String(score))}/10</strong>
       </div>
     `;
-  }
-
-  function buildSummary(setup) {
-    return `${setup.player} is modeled here as a ${setup.style.toLowerCase()} setup built around ${setup.stringName}, with ${setup.racketFamily} as the frame-family anchor.`;
   }
 
   function buildQuickRead(setup) {
