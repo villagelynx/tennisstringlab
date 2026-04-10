@@ -2443,15 +2443,16 @@ h1 {
 
 .home-cross-site-banner-label {
   margin: 0;
-  font-size: 0.92rem;
+  font-size: 1.08rem;
   font-weight: 700;
   line-height: 1.2;
+  color: #0b2f52;
 }
 
 .home-cross-site-banner-link {
-  color: #ffffff;
-  font-size: 1rem;
-  font-weight: 800;
+  color: #0b2f52;
+  font-size: 1.26rem;
+  font-weight: 900;
   line-height: 1.2;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -2459,7 +2460,7 @@ h1 {
 
 .home-cross-site-banner-link:hover,
 .home-cross-site-banner-link:focus-visible {
-  color: #fff4dd;
+  color: #07213b;
 }
 
 .official-brand-button {
@@ -6027,11 +6028,11 @@ body.tool-page-body .tool-page-shell .setup-analyzer-group .eyebrow {
   }
 
   .home-cross-site-banner-label {
-    font-size: 0.96rem;
+    font-size: 1.08rem;
   }
 
   .home-cross-site-banner-link {
-    font-size: 1.1rem;
+    font-size: 1.28rem;
   }
 
   body[data-page="home"] .mobile-home-site-tagline {
