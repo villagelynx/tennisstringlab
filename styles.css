@@ -3787,22 +3787,22 @@ body[data-page="hybrid-builder"] .setup-analyzer-report-card .tool-recommendatio
 }
 
 body[data-page="pro-setup"] .compare-tool-report-card {
-  gap: 10px;
-  padding: 16px;
+  gap: 12px;
+  padding: 18px;
 }
 
 body[data-page="pro-setup"] .tool-result-header {
-  gap: 6px;
+  gap: 8px;
 }
 
 body[data-page="pro-setup"] .compare-tool-report-card .tool-recommendation-name {
-  font-size: 1.28rem;
+  font-size: 1.42rem;
   line-height: 1.12;
 }
 
 body[data-page="pro-setup"] .compare-tool-string-card h4,
 body[data-page="pro-setup"] .compare-tool-report-card h3 {
-  font-size: 1.18rem;
+  font-size: 1.3rem;
   line-height: 1.18;
 }
 
@@ -3810,8 +3810,8 @@ body[data-page="pro-setup"] .compare-tool-report-card .summary-copy,
 body[data-page="pro-setup"] .compare-tool-report-card .tool-note,
 body[data-page="pro-setup"] .compare-tool-report-card .field-note,
 body[data-page="pro-setup"] .setup-analyzer-point-list {
-  font-size: 1.02rem;
-  line-height: 1.52;
+  font-size: 1.12rem;
+  line-height: 1.58;
 }
 
 body[data-page="compare-strings"] .compare-tool-report-card .tool-stat,
@@ -3834,18 +3834,18 @@ body[data-page="hybrid-builder"] .compare-tool-report-card .tool-stat-label {
 
 body[data-page="pro-setup"] .compare-tool-report-card .tool-stat {
   gap: 4px;
-  padding: 10px;
+  padding: 12px;
 }
 
 body[data-page="pro-setup"] .compare-tool-report-card .tool-stat strong {
-  font-size: 1.04rem;
+  font-size: 1.16rem;
   line-height: 1.18;
 }
 
 body[data-page="pro-setup"] .compare-tool-report-card .tool-stat-label,
 body[data-page="pro-setup"] .compare-tool-report-card .tool-stat-note {
-  font-size: 0.78rem;
-  line-height: 1.25;
+  font-size: 0.86rem;
+  line-height: 1.32;
 }
 
 body[data-page="hybrid-builder"] .tool-page-card-hybrid-builder-reference {
@@ -5204,6 +5204,7 @@ body.has-shared-site-header .brand-lockup {
   display: inline-flex !important;
   flex: 0 0 auto;
   gap: 10px;
+  align-items: flex-end;
 }
 
 body.has-shared-site-header .brand-mark {
@@ -5213,7 +5214,7 @@ body.has-shared-site-header .brand-mark {
 
 body.has-shared-site-header .brand-text {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 }
 
 body.has-shared-site-header .brand-wordmark {
@@ -5306,7 +5307,7 @@ body.has-shared-site-header .hero-button.is-active {
 body.has-shared-site-header .hero-overflow-menu {
   position: static;
   transform: none;
-  margin-left: 8px;
+  margin-left: 14px;
   z-index: 244;
 }
 
@@ -5617,15 +5618,17 @@ body[data-page="home"] .hero-menu-button {
 
   body.has-shared-site-header .site-header .brand-row {
     padding: 0 14px;
-    gap: 12px;
+    gap: 16px;
     height: 100%;
+    align-items: flex-end;
   }
 
   body.has-shared-site-header .hero-actions {
     display: flex !important;
-    align-items: center;
+    align-items: flex-end;
     margin-left: auto;
-    gap: 12px;
+    gap: 16px;
+    padding-bottom: 2px;
   }
 
   body.has-shared-site-header .hero-actions > :not(#sharedHeaderHomeLink) {
@@ -5636,10 +5639,16 @@ body[data-page="home"] .hero-menu-button {
     display: inline-flex !important;
     align-items: center;
     flex: 0 0 auto;
-    font-size: 0.94rem !important;
+    font-size: 1rem !important;
     font-weight: 800 !important;
     line-height: 1.15 !important;
     white-space: nowrap;
+    margin-left: 14px;
+  }
+
+  body.has-shared-site-header .brand-wordmark {
+    font-size: clamp(1.94rem, 7.4vw, 2.24rem);
+    line-height: 0.98;
   }
 
   body.has-shared-site-header .language-switcher--header {
