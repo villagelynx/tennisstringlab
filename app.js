@@ -4181,6 +4181,7 @@ function initializeSetupWorkbench() {
   renderTensionCalculatorRecommendation();
   syncQuickSetupProRacketUi();
   syncExampleSetupButtons();
+  applyQuickSetupExampleFromQuery();
 }
 
 function syncExampleSetupButtons() {
@@ -4269,6 +4270,34 @@ function populateQuickSetupExampleSelect() {
     <option value="">Choose an example pro setup</option>
     ${QUICK_SETUP_EXAMPLES.map((example, index) => `<option value="${index}">${example.player}</option>`).join("")}
   `;
+}
+
+function applyQuickSetupExampleFromQuery() {
+  if (pageKey !== "quick-setup") {
+    return;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const requestedPlayer = (params.get("player") || "").trim().toLowerCase();
+  const requestedExample = (params.get("example") || "").trim();
+
+  let exampleIndex = -1;
+
+  if (requestedExample !== "" && Number.isFinite(Number(requestedExample))) {
+    exampleIndex = Number(requestedExample);
+  }
+
+  if (exampleIndex < 0 && requestedPlayer) {
+    exampleIndex = QUICK_SETUP_EXAMPLES.findIndex(
+      (example) => example.player.toLowerCase() === requestedPlayer
+    );
+  }
+
+  if (exampleIndex < 0 || !QUICK_SETUP_EXAMPLES[exampleIndex]) {
+    return;
+  }
+
+  applyExampleSetup(exampleIndex);
 }
 
 function populateTensionCalculatorControls() {
