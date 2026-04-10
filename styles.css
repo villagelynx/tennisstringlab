@@ -3136,6 +3136,14 @@ h1 {
   font-size: 1.12rem;
 }
 
+.tool-page-card .search-input {
+  font-size: 1.24rem;
+}
+
+.tool-page-example-picker .search-input {
+  font-size: 1.22rem;
+}
+
 body[data-page="setup-analyzer"] .tool-page-title-row h1,
 body[data-page="tension-calculator"] .tool-page-title-row h1 {
   font-size: clamp(2.4rem, 5vw, 3.25rem);
@@ -3730,19 +3738,28 @@ body[data-page="compare-pro-setups"] .tool-page-card .compact-button,
 body[data-page="hybrid-builder"] .tool-page-card .search-input,
 body[data-page="hybrid-builder"] .tool-page-card .secondary-button,
 body[data-page="hybrid-builder"] .tool-page-card .compact-button {
-  min-height: 38px;
-  font-size: 0.82rem;
+  min-height: 54px;
+  font-size: 1.12rem;
 }
 
 body[data-page="compare-strings"] .compare-tool-form-card .search-input,
 body[data-page="compare-pro-setups"] .compare-tool-form-card .search-input,
 body[data-page="hybrid-builder"] .compare-tool-form-card .search-input {
-  min-height: 34px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  padding-left: 9px;
-  padding-right: 9px;
-  font-size: 0.76rem;
+  min-height: 52px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 1.08rem;
+}
+
+body[data-page="compare-strings"] .compare-tool-form-card .search-input,
+body[data-page="compare-pro-setups"] .compare-tool-form-card .search-input,
+body[data-page="hybrid-builder"] .compare-tool-form-card .search-input,
+body[data-page="compare-strings"] .tool-page-card .search-input,
+body[data-page="compare-pro-setups"] .tool-page-card .search-input,
+body[data-page="hybrid-builder"] .tool-page-card .search-input {
+  font-size: 1.16rem;
 }
 
 body[data-page="compare-strings"] #compareStringsButton,
