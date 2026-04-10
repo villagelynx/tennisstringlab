@@ -3,6 +3,7 @@ const masterBrandFilter = document.getElementById("masterBrandFilter");
 const masterTypeFilter = document.getElementById("masterTypeFilter");
 const masterPlayerFilter = document.getElementById("masterPlayerFilter");
 const masterSortSelect = document.getElementById("masterSortSelect");
+const masterResetButton = document.getElementById("masterResetButton");
 const masterDatabaseCount = document.getElementById("masterDatabaseCount");
 const masterResultsCount = document.getElementById("masterResultsCount");
 const masterListTable = document.getElementById("masterListTable");
@@ -48,6 +49,7 @@ const masterPageTranslations = {
     mostPros: "Most Pros Using",
     az: "Alphabetical A-Z",
     za: "Alphabetical Z-A",
+    reset: "Reset Search + Filters",
     completeCatalog: "Complete Catalog",
     masterList: "Master String List"
   },
@@ -63,6 +65,7 @@ const masterPageTranslations = {
     mostPros: "Le plus de pros",
     az: "Alphabetique A-Z",
     za: "Alphabetique Z-A",
+    reset: "Reinitialiser la recherche",
     completeCatalog: "Catalogue complet",
     masterList: "Liste complete des cordages"
   },
@@ -78,6 +81,7 @@ const masterPageTranslations = {
     mostPros: "Mas profesionales",
     az: "Alfabetico A-Z",
     za: "Alfabetico Z-A",
+    reset: "Restablecer busqueda",
     completeCatalog: "Catalogo completo",
     masterList: "Lista maestra de cuerdas"
   },
@@ -93,6 +97,7 @@ const masterPageTranslations = {
     mostPros: "Piu professionisti",
     az: "Alfabetico A-Z",
     za: "Alfabetico Z-A",
+    reset: "Reimposta ricerca e filtri",
     completeCatalog: "Catalogo completo",
     masterList: "Elenco completo corde"
   }
@@ -331,6 +336,7 @@ function updateMasterPageStaticText() {
   const playerMost = masterPlayerFilter ? masterPlayerFilter.querySelector('option[value="__most_pros__"]') : null;
   const sortAz = masterSortSelect ? masterSortSelect.querySelector('option[value="az"]') : null;
   const sortZa = masterSortSelect ? masterSortSelect.querySelector('option[value="za"]') : null;
+  const resetButton = masterResetButton;
   const resultsEyebrow = document.querySelector(".master-results-panel .results-header .eyebrow");
   const resultsTitle = document.querySelector(".master-results-panel .results-header h2");
 
@@ -345,8 +351,37 @@ function updateMasterPageStaticText() {
   if (playerMost) playerMost.textContent = content.mostPros;
   if (sortAz) sortAz.textContent = content.az;
   if (sortZa) sortZa.textContent = content.za;
+  if (resetButton) resetButton.textContent = content.reset;
   if (resultsEyebrow) resultsEyebrow.textContent = content.completeCatalog;
   if (resultsTitle) resultsTitle.textContent = content.masterList;
+}
+
+function resetMasterFilters() {
+  if (masterSearchInput) {
+    masterSearchInput.value = "";
+  }
+  if (masterBrandFilter) {
+    masterBrandFilter.value = "Any";
+    syncSelectDefaultState(masterBrandFilter);
+  }
+  if (masterTypeFilter) {
+    masterTypeFilter.value = "Any";
+    syncSelectDefaultState(masterTypeFilter);
+  }
+  if (masterPlayerFilter) {
+    masterPlayerFilter.value = "Any";
+    syncSelectDefaultState(masterPlayerFilter);
+  }
+  if (masterSortSelect) {
+    masterSortSelect.value = "az";
+    syncSelectDefaultState(masterSortSelect);
+  }
+
+  renderMasterList();
+
+  if (masterSearchInput) {
+    masterSearchInput.focus();
+  }
 }
 
 function styleSpecialSelectOptions(select) {
@@ -631,6 +666,10 @@ function initializeMasterList() {
     element.addEventListener("input", renderMasterList);
     element.addEventListener("change", renderMasterList);
   });
+
+  if (masterResetButton) {
+    masterResetButton.addEventListener("click", resetMasterFilters);
+  }
 
   populateMasterFilters();
   updateMasterPageStaticText();
