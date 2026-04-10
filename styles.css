@@ -5765,13 +5765,15 @@ body.tool-page-body .tool-page-shell .setup-analyzer-group .eyebrow {
   }
 
   body[data-page="home"] .mobile-home-site-tagline {
-    margin: 0 0 4px;
-    color: #7fc5ff;
+    margin: 10px auto 6px;
+    color: #5b9bdd;
     font-size: clamp(1.34rem, 5.8vw, 1.68rem);
     font-weight: 800;
     line-height: 1.18;
     letter-spacing: 0;
     max-width: 92%;
+    justify-self: center;
+    text-align: center;
   }
 
   body[data-page="home"] .mobile-home-launcher-title {
@@ -5789,13 +5791,13 @@ body.tool-page-body .tool-page-shell .setup-analyzer-group .eyebrow {
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    min-height: 48px;
-    padding: 13px 14px;
+    min-height: 58px;
+    padding: 16px 16px;
     border-radius: 16px;
     background: #ffffff;
     border: 1px solid rgba(18, 55, 87, 0.08);
     color: #123757;
-    font-size: 0.98rem;
+    font-size: 1.08rem;
     font-weight: 800;
     line-height: 1.18;
     text-decoration: none;
@@ -5803,7 +5805,7 @@ body.tool-page-body .tool-page-shell .setup-analyzer-group .eyebrow {
   }
 
   body[data-page="home"] .mobile-home-pill-primary {
-    font-size: 1rem;
+    font-size: 1.12rem;
     background: #dfeeff;
     border-color: rgba(49, 127, 240, 0.18);
   }
@@ -5811,8 +5813,6 @@ body.tool-page-body .tool-page-shell .setup-analyzer-group .eyebrow {
   body[data-page="home"] .mobile-home-pill-dropdown-trigger {
     position: relative;
     padding-right: 42px;
-    background: #dfeeff;
-    border-color: rgba(49, 127, 240, 0.18);
   }
 
   body[data-page="home"] .mobile-home-pill-dropdown-trigger::after {
@@ -5839,16 +5839,11 @@ body.tool-page-body .tool-page-shell .setup-analyzer-group .eyebrow {
   }
 
   body[data-page="home"] .mobile-home-pill-dropdown-link {
-    min-height: 44px;
-    padding: 12px 14px;
+    min-height: 50px;
+    padding: 13px 15px;
     border-radius: 14px;
-    font-size: 0.94rem;
+    font-size: 1rem;
     font-weight: 700;
-  }
-
-  body[data-page="home"] .mobile-home-pill-analyze {
-    background: #dfeeff;
-    border-color: rgba(49, 127, 240, 0.18);
   }
 
   .search-input,
