@@ -3772,6 +3772,7 @@ body[data-page="hybrid-builder"] #hybridBuilderButton {
 
 body[data-page="compare-strings"] .compare-tool-report-card .tool-recommendation-name,
 body[data-page="compare-pro-setups"] .compare-tool-report-card .tool-recommendation-name,
+body[data-page="pro-setup"] .compare-tool-report-card .tool-recommendation-name,
 body[data-page="hybrid-builder"] .setup-analyzer-report-card .tool-recommendation-name {
   font-size: 1rem;
   line-height: 1.1;
@@ -3779,6 +3780,7 @@ body[data-page="hybrid-builder"] .setup-analyzer-report-card .tool-recommendatio
 
 body[data-page="compare-strings"] .compare-tool-report-card .tool-stat,
 body[data-page="compare-pro-setups"] .compare-tool-report-card .tool-stat,
+body[data-page="pro-setup"] .compare-tool-report-card .tool-stat,
 body[data-page="hybrid-builder"] .setup-analyzer-report-card .tool-stat,
 body[data-page="hybrid-builder"] .compare-tool-report-card .tool-stat {
   gap: 3px;
@@ -3788,6 +3790,7 @@ body[data-page="hybrid-builder"] .compare-tool-report-card .tool-stat {
 
 body[data-page="compare-strings"] .compare-tool-report-card .tool-stat-label,
 body[data-page="compare-pro-setups"] .compare-tool-report-card .tool-stat-label,
+body[data-page="pro-setup"] .compare-tool-report-card .tool-stat-label,
 body[data-page="hybrid-builder"] .setup-analyzer-report-card .tool-stat-label,
 body[data-page="hybrid-builder"] .compare-tool-report-card .tool-stat-label {
   font-size: 0.68rem;
@@ -5534,6 +5537,7 @@ body[data-page="home"] .hero-menu-button {
   body.has-shared-site-header main,
   body.has-shared-site-header .page-shell,
   body.has-shared-site-header .tool-page-shell,
+  body.has-shared-site-header .site-shell,
   body.tool-page-body,
   body.tool-page-body main,
   body.tool-page-body .tool-page-shell {
@@ -5543,6 +5547,11 @@ body[data-page="home"] .hero-menu-button {
 
   body.has-shared-site-header {
     --shared-site-header-height: 48px;
+  }
+
+  body.has-shared-site-header .site-shell {
+    padding-top: calc(var(--shared-site-header-height) + 16px) !important;
+    padding-bottom: 24px !important;
   }
 
   body.has-shared-site-header .site-header {
@@ -5600,6 +5609,36 @@ body[data-page="home"] .hero-menu-button {
     color: #c9ecff !important;
   }
 
+  body.has-shared-site-header .site-shell > .hero-card,
+  body.has-shared-site-header .site-shell > .planner-card {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 0 8px !important;
+  }
+
+  body.has-shared-site-header .site-shell > .hero-card .hero-copy,
+  body.has-shared-site-header .site-shell > .planner-card .hero-copy {
+    padding: 0 4px !important;
+  }
+
+  body.has-shared-site-header .site-shell > .hero-card .eyebrow,
+  body.has-shared-site-header .site-shell > .planner-card .eyebrow {
+    color: #ffea63 !important;
+  }
+
+  body.has-shared-site-header .site-shell > .hero-card h1,
+  body.has-shared-site-header .site-shell > .planner-card h1,
+  body.has-shared-site-header .site-shell > .hero-card h2,
+  body.has-shared-site-header .site-shell > .planner-card h2,
+  body.has-shared-site-header .site-shell > .hero-card .summary-copy,
+  body.has-shared-site-header .site-shell > .planner-card .summary-copy,
+  body.has-shared-site-header .site-shell > .hero-card p:not(.eyebrow),
+  body.has-shared-site-header .site-shell > .planner-card p:not(.eyebrow) {
+    color: #ffffff !important;
+  }
+
   body[data-page="home"] {
     --home-header-height: 48px;
     background: #0b2f52;
@@ -5616,6 +5655,11 @@ body[data-page="home"] .hero-menu-button {
 
   body[data-page="home"] .site-header {
     background: #0b2f52;
+  }
+
+  body[data-page="home"] .site-footer,
+  body.has-shared-site-header .site-footer {
+    display: none !important;
   }
 
   body[data-page="home"] .site-header .brand-row {

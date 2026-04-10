@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Tennis Setup">
+  <meta name="theme-color" content="#0b2f52">
+  <title>Pro Setup | Tennis Setup</title>
+  <meta name="description" content="Open a dedicated pro-inspired setup page for a single player, including string choice, racket fit, tension reference, and likely setup profile.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://tennisstringlab.com/pro-setup.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Tennis Setup">
+  <meta property="og:title" content="Pro Setup | Tennis Setup">
+  <meta property="og:description" content="Open a dedicated pro-inspired setup page for a single player, including string choice, racket fit, tension reference, and likely setup profile.">
+  <meta property="og:url" content="https://tennisstringlab.com/pro-setup.html">
+  <meta property="og:image" content="https://tennisstringlab.com/social-share.png">
+  <meta property="og:image:alt" content="Tennis Setup pro setup page">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pro Setup | Tennis Setup">
+  <meta name="twitter:description" content="Open a dedicated pro-inspired setup page for a single player, including string choice, racket fit, tension reference, and likely setup profile.">
+  <meta name="twitter:image" content="https://tennisstringlab.com/social-share.png">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="stylesheet" href="./styles.css?v=20260410y">
+</head>
+<body class="tool-page-body" data-page="pro-setup">
+  <main class="tool-page-shell">
+    <section class="tool-page-header">
+      <div class="tool-page-title-row">
+        <div>
+          <p class="eyebrow">Tennis Setup</p>
+          <h1>Pro Setup</h1>
+          <p class="tool-page-copy">Open one curated pro-inspired setup at a time. This page is designed as a cleaner read-only view than Quick String Setup, so players can jump straight from the home page dropdown into the pro setup itself.</p>
+        </div>
+      </div>
+      <nav class="tool-page-nav" aria-label="Pro Setup navigation">
+        <a class="tool-page-nav-link" href="/">Home</a>
+        <a class="tool-page-nav-link" href="./quick-setup.html">Quick String Setup</a>
+        <a class="tool-page-nav-link" href="./compare-pro-setups.html">Compare Pro Setups</a>
+        <a class="tool-page-nav-link" href="./tension-calculator.html">Tension Calculator</a>
+        <a class="tool-page-nav-link" href="./compare-strings.html">Compare Strings</a>
+      </nav>
+    </section>
+
+    <section class="tool-page-card tool-page-card-compare tool-page-card-pro-single">
+      <div class="compare-tool-layout">
+        <article class="tool-card compare-tool-form-card">
+          <div>
+            <p class="eyebrow">Pro Setup Tool</p>
+            <h3>Choose a player</h3>
+            <p class="summary-copy">Pick one player from the curated pro list to see the string anchor, racket fit, tension reference, and the likely setup profile in one place.</p>
+          </div>
+          <div class="tool-form-grid tool-form-grid-compact">
+            <div class="field is-wide">
+              <label for="proSetupPlayerSelect">Pro Player</label>
+              <select id="proSetupPlayerSelect" class="search-input">
+                <option value="">Choose a pro player</option>
+              </select>
+            </div>
+          </div>
+          <div class="tool-actions tool-actions-compact">
+            <button id="showProSetupButton" class="secondary-button tool-primary-button" type="button">Show Pro Setup</button>
+          </div>
+          <p class="field-note">These are curated pro-inspired examples matched against the current string database. They are meant to be practical starting points, not a complete live tour equipment audit.</p>
+        </article>
+
+        <div id="proSetupReport" class="compare-tool-report-shell">
+          <section class="compare-tool-report-card compare-tool-report-card-empty">
+            <p class="eyebrow">Pro Setup</p>
+            <h3>Open one player's setup</h3>
+            <p class="summary-copy">Choose a pro to see the example setup direction, racket fit, string choice, tension reference, and likely spin, control, comfort, power, and durability profile.</p>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./analytics.js?v=20260409c"></script>
+  <script src="./strings-data.js"></script>
+  <script src="./pro-setup.js?v=20260410a"></script>
+</body>
+</html>
