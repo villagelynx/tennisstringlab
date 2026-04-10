@@ -36,6 +36,7 @@ const masterStringsSource = Array.isArray(window.TENNIS_STRING_DATA)
     : [];
 const masterStrings = masterStringsSource.slice();
 const masterTypeDescriptions = window.TENNIS_STRING_TYPE_DESCRIPTIONS || {};
+const masterSearchParams = new URLSearchParams(window.location.search || "");
 const masterPageTranslations = {
   en: {
     backHome: "Back to Home",
@@ -384,6 +385,13 @@ function resetMasterFilters() {
   }
 }
 
+function applyMasterSearchParams() {
+  const query = (masterSearchParams.get("q") || "").trim();
+  if (query && masterSearchInput) {
+    masterSearchInput.value = query;
+  }
+}
+
 function styleSpecialSelectOptions(select) {
   if (!select) {
     return;
@@ -673,6 +681,7 @@ function initializeMasterList() {
 
   populateMasterFilters();
   updateMasterPageStaticText();
+  applyMasterSearchParams();
   styleSpecialSelectOptions(masterBrandFilter);
   styleSpecialSelectOptions(masterTypeFilter);
   styleSpecialSelectOptions(masterPlayerFilter);

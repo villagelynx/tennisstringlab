@@ -1,0 +1,255 @@
+.result-main {
+  padding-top: 24px;
+}
+
+.setup-result-page .landing-main {
+  display: grid;
+  gap: 22px;
+}
+
+.result-hero-card,
+.result-detail-card,
+.next-step-card,
+.result-improvement-card {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.result-hero-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+  gap: 20px;
+  padding: 26px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(245,248,252,0.98));
+}
+
+.result-hero-copy h1,
+.result-detail-card h2,
+.next-step-card h3 {
+  margin: 0;
+  color: var(--navy-900);
+  letter-spacing: -0.04em;
+}
+
+.result-hero-copy h1 {
+  font-size: clamp(2.55rem, 4vw, 4.2rem);
+  line-height: 0.98;
+}
+
+.result-hero-summary,
+.result-meta-copy,
+.next-step-card p {
+  margin: 14px 0 0;
+  color: var(--ink-700);
+  font-size: 1.04rem;
+  line-height: 1.58;
+}
+
+.result-selection-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.result-selection-strip span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--sky-100);
+  color: var(--navy-900);
+  font-size: 0.94rem;
+  font-weight: 800;
+}
+
+.result-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.setup-result-page .landing-button-secondary {
+  background: var(--navy-900);
+  color: #ffffff;
+  border-color: var(--navy-900);
+}
+
+.setup-result-page .landing-button-ghost {
+  background: #ffffff;
+  color: var(--navy-900);
+  border-color: rgba(11, 47, 82, 0.14);
+}
+
+.result-improvement-card {
+  padding: 22px;
+}
+
+.improvement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.improvement-item {
+  padding: 16px 14px;
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.improvement-item strong {
+  display: block;
+  color: var(--navy-900);
+  font-size: 1.5rem;
+}
+
+.improvement-item span {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-700);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.result-detail-layout,
+.next-step-strip {
+  display: grid;
+  gap: 20px;
+}
+
+.result-detail-layout {
+  grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
+}
+
+.result-detail-card {
+  padding: 24px;
+}
+
+.result-chip-row-dark {
+  margin-top: 14px;
+}
+
+.result-chip-row-dark span {
+  background: var(--navy-900);
+  color: #ffffff;
+}
+
+.result-copy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.result-copy-grid section,
+.result-detail-card-side {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 18px;
+}
+
+.result-list {
+  margin: 14px 0 0;
+  padding-left: 20px;
+}
+
+.result-list li {
+  margin-top: 10px;
+  color: var(--ink-700);
+  line-height: 1.55;
+}
+
+.result-detail-card-side {
+  background: #fff2e0;
+}
+
+.result-side-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.next-step-strip {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.next-step-card {
+  padding: 22px;
+}
+
+.next-step-card-highlight {
+  background: var(--navy-900);
+  border-color: var(--navy-900);
+}
+
+.next-step-card-highlight h3,
+.next-step-card-highlight p,
+.next-step-card-highlight a,
+.next-step-card-highlight .landing-eyebrow {
+  color: #ffffff;
+}
+
+@media (max-width: 980px) {
+  .result-hero-card,
+  .result-detail-layout,
+  .next-step-strip,
+  .result-copy-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-hero-card,
+  .result-detail-card,
+  .next-step-card,
+  .result-improvement-card {
+    border-radius: 22px;
+  }
+
+  .result-hero-card,
+  .result-detail-card,
+  .next-step-card {
+    padding: 22px;
+  }
+
+  .result-hero-copy h1 {
+    font-size: clamp(2.3rem, 9.5vw, 3.5rem);
+  }
+
+  .result-hero-actions,
+  .result-side-actions {
+    flex-direction: column;
+  }
+
+  .result-hero-actions .landing-button,
+  .result-side-actions .landing-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .result-main {
+    padding-top: 18px;
+  }
+
+  .result-hero-card,
+  .result-detail-card,
+  .next-step-card {
+    padding: 20px;
+  }
+
+  .improvement-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-hero-summary,
+  .result-meta-copy,
+  .result-list li,
+  .next-step-card p {
+    font-size: 1rem;
+  }
+}

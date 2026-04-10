@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b2f52">
+  <title>Your Setup Result | TennisSetup</title>
+  <meta name="description" content="See your TennisSetup recommendation, expected improvement areas, tension range, and the best next action to take.">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="stylesheet" href="./homepage.css?v=20260410a">
+  <link rel="stylesheet" href="./setup-result.css?v=20260410a">
+</head>
+<body class="landing-page setup-result-page">
+  <header class="landing-header">
+    <div class="landing-header-inner">
+      <a class="landing-brand" href="./index.html" aria-label="Go to TennisSetup home">
+        <span class="landing-brand-mark" aria-hidden="true"></span>
+        <span class="landing-brand-wordmark">TennisSetup</span>
+      </a>
+
+      <nav class="landing-nav" aria-label="Primary">
+        <a href="./index.html">Home</a>
+        <a href="./master-list.html">String Database</a>
+        <a href="./quick-setup.html">Quick Setup</a>
+        <a href="./string-library.html">Guides</a>
+      </nav>
+
+      <details class="landing-menu">
+        <summary aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </summary>
+        <div class="landing-menu-panel">
+          <a href="./index.html">Home</a>
+          <a href="./master-list.html">String Database</a>
+          <a href="./quick-setup.html">Quick Setup</a>
+          <a href="./compare-strings.html">Compare Strings</a>
+          <a href="./analyze-current-setup.html">Analyze Current Setup</a>
+          <a href="./string-library.html">Reference Guide</a>
+        </div>
+      </details>
+    </div>
+  </header>
+
+  <main class="landing-main result-main">
+    <section class="result-hero-card">
+      <div class="result-hero-copy">
+        <p class="landing-eyebrow">Your setup result</p>
+        <h1 id="resultHeroTitle">Solinco Hyper-G 17 @ 48-50 lbs</h1>
+        <p id="resultHeroSummary" class="result-hero-summary">High-spin poly recommendation for players who want heavier ball shape and a lower launch window without giving away control.</p>
+
+        <div class="result-selection-strip">
+          <span id="selectionProblem">Need more spin</span>
+          <span id="selectionStyle">Aggressive baseline player</span>
+          <span id="selectionFeel">Balanced feel</span>
+        </div>
+
+        <div class="result-hero-actions">
+          <a id="shopSetupButton" class="landing-button landing-button-primary" href="./master-list.html">Shop This Setup</a>
+          <a class="landing-button landing-button-ghost" href="./index.html#analyzer">Change My Inputs</a>
+        </div>
+      </div>
+
+      <aside class="result-improvement-card">
+        <p class="landing-eyebrow landing-eyebrow-muted">Expected improvement</p>
+        <div class="improvement-grid">
+          <div class="improvement-item">
+            <strong id="resultMetricSpin">+15%</strong>
+            <span>Spin feel</span>
+          </div>
+          <div class="improvement-item">
+            <strong id="resultMetricControl">+10%</strong>
+            <span>Control feel</span>
+          </div>
+          <div class="improvement-item">
+            <strong id="resultMetricComfort">+6%</strong>
+            <span>Comfort</span>
+          </div>
+        </div>
+        <p id="resultMeta" class="result-meta-copy">Start around 48-50 lbs in a 98-100 sq in frame when you want heavier spin without losing the court.</p>
+      </aside>
+    </section>
+
+    <section class="result-detail-layout">
+      <article class="result-detail-card result-detail-card-main">
+        <p class="landing-eyebrow landing-eyebrow-muted">Why this setup fits</p>
+        <div class="result-chip-row result-chip-row-dark">
+          <span id="resultChipA">+15% spin feel</span>
+          <span id="resultChipB">+10% control feel</span>
+          <span id="resultChipC">Lower launch</span>
+        </div>
+
+        <div class="result-copy-grid">
+          <section>
+            <h2>What this gives you</h2>
+            <ul id="resultBenefitsList" class="result-list"></ul>
+          </section>
+          <section>
+            <h2>How to set it up</h2>
+            <ul id="resultSetupNotes" class="result-list"></ul>
+          </section>
+        </div>
+      </article>
+
+      <aside class="result-detail-card result-detail-card-side">
+        <p class="landing-eyebrow landing-eyebrow-muted">Plan B</p>
+        <h2>What to try if this feels too firm or too hot</h2>
+        <ul id="resultAltList" class="result-list"></ul>
+        <div class="result-side-actions">
+          <a class="landing-button landing-button-secondary" href="./compare-strings.html">Compare Alternatives</a>
+          <a class="landing-button landing-button-ghost" href="./analyze-current-setup.html">Analyze Current Setup</a>
+        </div>
+      </aside>
+    </section>
+
+    <section class="next-step-strip">
+      <article class="next-step-card">
+        <p class="landing-eyebrow landing-eyebrow-muted">Next best move</p>
+        <h3>Open the database already filtered to this string.</h3>
+        <p>That gives players a fast path from recommendation to actual product detail, brand context, and comparable alternatives.</p>
+        <a id="databaseLinkButton" class="landing-text-link" href="./master-list.html">Go to filtered string database</a>
+      </article>
+      <article class="next-step-card next-step-card-highlight">
+        <p class="landing-eyebrow">Upgrade path</p>
+        <h3>Turn this into a paid setup report later.</h3>
+        <p>Same result page, stronger monetization: backup setup, tension decision tree, and a clearer shop flow.</p>
+        <a class="landing-text-link" href="./contact.html">Unlock full report concept</a>
+      </article>
+    </section>
+  </main>
+
+  <script src="./setup-recommendations.js?v=20260410a"></script>
+  <script src="./setup-result.js?v=20260410a"></script>
+</body>
+</html>
