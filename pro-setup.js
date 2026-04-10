@@ -23,7 +23,9 @@
   const elements = {
     select: document.getElementById("proSetupPlayerSelect"),
     button: document.getElementById("showProSetupButton"),
-    report: document.getElementById("proSetupReport")
+    report: document.getElementById("proSetupReport"),
+    layout: document.getElementById("proSetupLayout"),
+    pickerCard: document.getElementById("proSetupPickerCard")
   };
 
   if (!elements.select || !elements.button || !elements.report || !strings.length) {
@@ -57,6 +59,7 @@
     const params = new URLSearchParams(window.location.search);
     const requestedPlayer = (params.get("player") || "").trim().toLowerCase();
     if (!requestedPlayer) {
+      showPickerCard();
       return;
     }
 
@@ -65,10 +68,12 @@
     );
 
     if (!match) {
+      showPickerCard();
       return;
     }
 
     elements.select.value = match.player;
+    hidePickerCard();
     renderSetup(buildSelectedSetup());
   }
 
@@ -243,6 +248,24 @@
     const url = new URL(window.location.href);
     url.searchParams.set("player", player);
     window.history.replaceState({}, "", url.toString());
+  }
+
+  function hidePickerCard() {
+    if (elements.pickerCard) {
+      elements.pickerCard.hidden = true;
+    }
+    if (elements.layout) {
+      elements.layout.classList.add("is-direct-player-view");
+    }
+  }
+
+  function showPickerCard() {
+    if (elements.pickerCard) {
+      elements.pickerCard.hidden = false;
+    }
+    if (elements.layout) {
+      elements.layout.classList.remove("is-direct-player-view");
+    }
   }
 
   function blendScores(preferenceLevel, stringLevel) {

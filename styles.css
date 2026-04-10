@@ -3579,6 +3579,10 @@ body[data-page="tension-calculator"] .tool-reference-item {
   align-items: start;
 }
 
+.compare-tool-layout.is-direct-player-view {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .compare-tool-form-card {
   gap: 12px;
   padding: 15px !important;
@@ -3586,6 +3590,10 @@ body[data-page="tension-calculator"] .tool-reference-item {
   background: rgba(255, 255, 255, 0.8) !important;
   border: 1px solid rgba(110, 86, 166, 0.14) !important;
   box-shadow: 0 10px 24px rgba(20, 51, 85, 0.06) !important;
+}
+
+.compare-tool-form-card[hidden] {
+  display: none !important;
 }
 
 .compare-tool-report-shell {
