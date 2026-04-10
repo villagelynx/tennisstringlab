@@ -5655,10 +5655,10 @@ body[data-page="home"] .hero-menu-button {
   }
 
   body.has-shared-site-header .language-switcher--header {
-    margin-left: 12px;
+    margin-left: 24px;
     margin-right: 0;
     align-self: flex-end;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
   }
 
   body.tool-page-body .tool-page-header {
