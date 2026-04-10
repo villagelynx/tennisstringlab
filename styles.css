@@ -2434,24 +2434,27 @@ h1 {
   gap: 10px;
   width: min(100%, calc(100% - 28px));
   margin: 16px auto 28px;
-  padding: 12px 16px;
+  min-height: 66px;
+  padding: 14px 18px;
   border-radius: 16px;
   background: #f28d2f;
   color: #ffffff;
+  border: 1px solid rgba(11, 47, 82, 0.18);
   box-shadow: 0 10px 24px rgba(20, 51, 85, 0.08);
+  box-sizing: border-box;
 }
 
 .home-cross-site-banner-label {
   margin: 0;
-  font-size: 1.08rem;
-  font-weight: 700;
+  font-size: 1.34rem;
+  font-weight: 800;
   line-height: 1.2;
   color: #0b2f52;
 }
 
 .home-cross-site-banner-link {
   color: #0b2f52;
-  font-size: 1.26rem;
+  font-size: 1.68rem;
   font-weight: 900;
   line-height: 1.2;
   text-decoration: underline;
@@ -6020,19 +6023,20 @@ body.tool-page-body .tool-page-shell .setup-analyzer-group .eyebrow {
   }
 
   .home-cross-site-banner {
-    width: min(100%, calc(100% - 20px));
-    margin: 6px auto 18px;
-    padding: 14px 16px;
-    gap: 10px;
-    border-radius: 14px;
+    width: 100%;
+    min-height: 72px;
+    margin: 6px 0 18px;
+    padding: 16px 18px;
+    gap: 12px;
+    border-radius: 16px;
   }
 
   .home-cross-site-banner-label {
-    font-size: 1.08rem;
+    font-size: 1.28rem;
   }
 
   .home-cross-site-banner-link {
-    font-size: 1.28rem;
+    font-size: 1.72rem;
   }
 
   body[data-page="home"] .mobile-home-site-tagline {
