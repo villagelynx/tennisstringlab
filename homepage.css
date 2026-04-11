@@ -180,7 +180,7 @@ textarea {
 
 .landing-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 28px;
   align-items: stretch;
   padding: 0 0 18px;
@@ -207,6 +207,11 @@ textarea {
   color: #ffffff;
   position: relative;
   overflow: hidden;
+}
+
+.landing-hero-copy > * {
+  position: relative;
+  z-index: 1;
 }
 
 .landing-hero-copy::before,
@@ -262,8 +267,6 @@ textarea {
 }
 
 .landing-hero-lead {
-  position: relative;
-  z-index: 1;
   max-width: 40rem;
   margin: 18px 0 0;
   color: rgba(255, 255, 255, 0.82);
@@ -366,6 +369,15 @@ textarea {
   align-self: stretch;
 }
 
+.landing-preview-card-inline {
+  margin-top: 26px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: none;
+  backdrop-filter: blur(10px);
+}
+
 .preview-card-topline {
   display: flex;
   align-items: flex-start;
@@ -375,6 +387,10 @@ textarea {
 
 .preview-card-topline .landing-eyebrow {
   margin-bottom: 0;
+}
+
+.landing-preview-card-inline .landing-eyebrow-muted {
+  color: #d8eaff;
 }
 
 .preview-badge {
@@ -389,6 +405,11 @@ textarea {
   font-weight: 800;
 }
 
+.landing-preview-card-inline .preview-badge {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
 .landing-preview-card h2,
 .analyzer-result-card h3,
 .monetization-card h3 {
@@ -396,6 +417,10 @@ textarea {
   font-size: clamp(2rem, 2.3vw, 2.7rem);
   line-height: 1.02;
   letter-spacing: -0.04em;
+}
+
+.landing-preview-card-inline h2 {
+  color: #ffffff;
 }
 
 .preview-meta,
@@ -408,6 +433,12 @@ textarea {
 .credibility-card span {
   color: var(--ink-700);
   font-size: 1rem;
+}
+
+.landing-preview-card-inline .preview-meta,
+.landing-preview-card-inline .preview-bullet-list li,
+.landing-preview-card-inline .landing-text-link {
+  color: rgba(255, 255, 255, 0.86);
 }
 
 .preview-meta,
@@ -440,6 +471,18 @@ textarea {
   color: var(--ink-700);
   font-size: 0.92rem;
   font-weight: 700;
+}
+
+.landing-preview-card-inline .preview-metric {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.landing-preview-card-inline .preview-metric strong {
+  color: #ffffff;
+}
+
+.landing-preview-card-inline .preview-metric span {
+  color: rgba(255, 255, 255, 0.76);
 }
 
 .preview-bullet-list,
