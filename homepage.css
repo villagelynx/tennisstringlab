@@ -545,6 +545,10 @@ textarea {
   margin-top: 26px;
 }
 
+.analyzer-section {
+  scroll-margin-top: 96px;
+}
+
 .section-heading {
   max-width: 760px;
 }
@@ -935,6 +939,10 @@ textarea {
 
   .landing-hero h1 {
     font-size: clamp(2.55rem, 13vw, 3.4rem);
+  }
+
+  .analyzer-section {
+    scroll-margin-top: 84px;
   }
 
   .preview-metrics {
