@@ -331,10 +331,10 @@ textarea {
 }
 
 .landing-button-secondary {
-  background: #e6f6e8;
-  color: #2e6b3f;
-  border-color: rgba(46, 107, 63, 0.18);
-  box-shadow: 0 10px 24px rgba(100, 168, 113, 0.16);
+  background: #2f8b57;
+  color: #ffffff;
+  border-color: rgba(47, 139, 87, 0.22);
+  box-shadow: 0 12px 26px rgba(47, 139, 87, 0.24);
 }
 
 .landing-button-soft {

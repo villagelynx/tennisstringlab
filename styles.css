@@ -78,6 +78,22 @@ body[data-page="pro-setup"] .compare-tool-report-card {
   border-color: rgba(122, 84, 216, 0.16) !important;
 }
 
+body[data-page="pro-setup"] #showProSetupButton {
+  width: 100% !important;
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: 58px !important;
+  padding: 0 20px !important;
+  font-size: 1.04rem !important;
+  font-weight: 800 !important;
+  background: #6d45cf !important;
+  border: 1px solid #6d45cf !important;
+  color: #ffffff !important;
+  border-radius: 16px !important;
+  box-shadow: 0 12px 26px rgba(109, 69, 207, 0.24) !important;
+}
+
 body[data-page="setup-analyzer"] #setupAnalyzerButton {
   width: 100% !important;
   display: inline-flex !important;
