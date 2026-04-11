@@ -7,7 +7,8 @@ if (!recommendationApi) {
 const state = recommendationApi.normalizeState({
   problem: "spin",
   style: "baseline",
-  feel: "balanced"
+  feel: "balanced",
+  racket: "pureaero"
 });
 
 const previewBadge = document.getElementById("previewBadge");
@@ -29,6 +30,8 @@ const resultAltList = document.getElementById("resultAltList");
 const heroSetupCta = document.getElementById("heroSetupCta");
 const analyzerSetupCta = document.getElementById("analyzerSetupCta");
 const resultSetupCta = document.getElementById("resultSetupCta");
+const analyzerStyleSelect = document.getElementById("analyzerStyleSelect");
+const analyzerRacketSelect = document.getElementById("analyzerRacketSelect");
 
 function renderList(target, items) {
   if (!target) return;
@@ -51,7 +54,7 @@ function updateRecommendation() {
 
   if (previewBadge) previewBadge.textContent = recommendation.styleLabel;
   if (previewTitle) previewTitle.textContent = recommendation.shortTitle;
-  if (previewMeta) previewMeta.textContent = recommendation.meta;
+  if (previewMeta) previewMeta.textContent = `${recommendation.meta} ${recommendation.racketNote}`;
   if (metricSpin) metricSpin.textContent = recommendation.metrics.spin;
   if (metricControl) metricControl.textContent = recommendation.metrics.control;
   if (metricComfort) metricComfort.textContent = recommendation.metrics.comfort;
@@ -83,5 +86,24 @@ document.querySelectorAll(".choice-pill").forEach((button) => {
     updateRecommendation();
   });
 });
+
+[analyzerStyleSelect, analyzerRacketSelect].forEach((select) => {
+  if (!select) return;
+
+  select.addEventListener("change", () => {
+    const group = select.dataset.group;
+    if (!group) return;
+    state[group] = select.value;
+    updateRecommendation();
+  });
+});
+
+if (analyzerStyleSelect) {
+  analyzerStyleSelect.value = state.style;
+}
+
+if (analyzerRacketSelect) {
+  analyzerRacketSelect.value = state.racket;
+}
 
 updateRecommendation();

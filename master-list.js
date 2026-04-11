@@ -358,7 +358,13 @@ function updateMasterPageStaticText() {
 }
 
 function resetMasterFilters() {
+  if (document.activeElement && typeof document.activeElement.blur === "function") {
+    document.activeElement.blur();
+  }
+
   if (masterSearchInput) {
+    masterSearchInput.blur();
+    masterSearchInput.setAttribute("readonly", "readonly");
     masterSearchInput.value = "";
   }
   if (masterBrandFilter) {
@@ -381,7 +387,12 @@ function resetMasterFilters() {
   renderMasterList();
 
   if (masterSearchInput) {
-    masterSearchInput.focus();
+    window.setTimeout(() => {
+      masterSearchInput.removeAttribute("readonly");
+      if (document.activeElement === masterSearchInput) {
+        masterSearchInput.blur();
+      }
+    }, 60);
   }
 }
 

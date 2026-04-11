@@ -82,14 +82,42 @@
     baseline: "Aggressive baseline player",
     allcourt: "All-court player",
     topspin: "Heavy topspin player",
-    flat: "Flat ball striker"
+    flat: "Flat ball striker",
+    counterpuncher: "Counterpuncher",
+    bigserver: "Big server + first-strike player",
+    servevolley: "Serve + volley / doubles-minded player",
+    defender: "Defensive grinder"
   };
 
   const styleNotes = {
     baseline: "Built to reward faster baseline acceleration without giving away the middle of the court.",
     allcourt: "Keeps enough feel and directional trust for transition play, returns, and first volleys.",
     topspin: "Leans into shape, net clearance, and heavier ball rotation when you swing up hard.",
-    flat: "Stays cleaner through flatter contact so the ball does not jump unexpectedly off the strings."
+    flat: "Stays cleaner through flatter contact so the ball does not jump unexpectedly off the strings.",
+    counterpuncher: "Keeps the response predictable when you redirect pace and stretch points longer.",
+    bigserver: "Supports first-strike tennis with a tighter launch and enough trust on aggressive swings.",
+    servevolley: "Keeps touch, first-volley control, and transition feel more connected.",
+    defender: "Helps you stay in rallies longer without the setup feeling jumpy or unpredictable."
+  };
+
+  const racketLabels = {
+    pureaero: "Babolat Pure Aero / spin frame",
+    blade: "Wilson Blade / control frame",
+    puredrive: "Babolat Pure Drive / power frame",
+    speed: "Head Speed / balanced frame",
+    clash: "Wilson Clash / comfort frame",
+    ezone: "Yonex EZONE / modern power frame",
+    other: "Other / not sure"
+  };
+
+  const racketNotes = {
+    pureaero: "This recommendation assumes a spin-friendly frame that already helps with shape and net clearance.",
+    blade: "This recommendation assumes a lower-powered control frame that can handle a cleaner, firmer response.",
+    puredrive: "This recommendation assumes a livelier power frame, so control and launch management matter more.",
+    speed: "This recommendation assumes a balanced modern frame where you can tune either control or comfort without overcorrecting.",
+    clash: "This recommendation assumes a softer comfort frame, so you can usually handle a slightly firmer string choice.",
+    ezone: "This recommendation assumes a modern power frame with easy pop, so directional trust stays important.",
+    other: "This recommendation is meant as a safe starting point even if you are not fully sure how your frame should be classified."
   };
 
   const feelNotes = {
@@ -102,7 +130,8 @@
     return {
       problem: setupPresets[input && input.problem] ? input.problem : "spin",
       style: styleLabels[input && input.style] ? input.style : "baseline",
-      feel: feelNotes[input && input.feel] ? input.feel : "balanced"
+      feel: feelNotes[input && input.feel] ? input.feel : "balanced",
+      racket: racketLabels[input && input.racket] ? input.racket : "pureaero"
     };
   }
 
@@ -111,13 +140,16 @@
     const preset = setupPresets[state.problem];
     const feelNote = feelNotes[state.feel];
     const styleNote = styleNotes[state.style];
+    const racketNote = racketNotes[state.racket];
 
     return {
       state,
       preset,
       styleLabel: styleLabels[state.style],
+      racketLabel: racketLabels[state.racket],
       feelNote,
       styleNote,
+      racketNote,
       title: preset.title,
       shortTitle: preset.shortTitle,
       meta: `${preset.meta} ${feelNote}`,
@@ -125,7 +157,7 @@
       metrics: preset.metrics,
       chips: preset.chips.slice(),
       benefits: preset.benefits.slice(),
-      alt: [...preset.alt, feelNote],
+      alt: [...preset.alt, racketNote],
       shopHref: `./master-list.html?q=${encodeURIComponent(preset.shortTitle)}`,
       compareHref: `./compare-strings.html`,
       quickSetupHref: `./quick-setup.html`
@@ -134,7 +166,7 @@
 
   function toQueryString(input) {
     const state = normalizeState(input || {});
-    return `problem=${encodeURIComponent(state.problem)}&style=${encodeURIComponent(state.style)}&feel=${encodeURIComponent(state.feel)}`;
+    return `problem=${encodeURIComponent(state.problem)}&style=${encodeURIComponent(state.style)}&feel=${encodeURIComponent(state.feel)}&racket=${encodeURIComponent(state.racket)}`;
   }
 
   function fromSearch(search) {
@@ -142,7 +174,8 @@
     return normalizeState({
       problem: params.get("problem") || "spin",
       style: params.get("style") || "baseline",
-      feel: params.get("feel") || "balanced"
+      feel: params.get("feel") || "balanced",
+      racket: params.get("racket") || "pureaero"
     });
   }
 
@@ -150,6 +183,8 @@
     setupPresets,
     styleLabels,
     styleNotes,
+    racketLabels,
+    racketNotes,
     feelNotes,
     normalizeState,
     buildRecommendation,

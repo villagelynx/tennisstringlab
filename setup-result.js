@@ -24,6 +24,7 @@ const resultHeroTitle = document.getElementById("resultHeroTitle");
 const resultHeroSummary = document.getElementById("resultHeroSummary");
 const selectionProblem = document.getElementById("selectionProblem");
 const selectionStyle = document.getElementById("selectionStyle");
+const selectionRacket = document.getElementById("selectionRacket");
 const selectionFeel = document.getElementById("selectionFeel");
 const shopSetupButton = document.getElementById("shopSetupButton");
 const resultMetricSpin = document.getElementById("resultMetricSpin");
@@ -47,6 +48,7 @@ if (resultHeroTitle) resultHeroTitle.textContent = recommendation.title;
 if (resultHeroSummary) resultHeroSummary.textContent = recommendation.summary;
 if (selectionProblem) selectionProblem.textContent = problemLabels[recommendation.state.problem] || "Need a better setup";
 if (selectionStyle) selectionStyle.textContent = recommendation.styleLabel;
+if (selectionRacket) selectionRacket.textContent = recommendation.racketLabel;
 if (selectionFeel) selectionFeel.textContent = feelLabels[recommendation.state.feel] || "Balanced feel";
 if (shopSetupButton) shopSetupButton.href = recommendation.shopHref;
 if (databaseLinkButton) databaseLinkButton.href = recommendation.shopHref;
@@ -62,6 +64,7 @@ renderList(resultBenefitsList, recommendation.benefits);
 renderList(resultSetupNotes, [
   recommendation.meta,
   recommendation.styleNote,
+  recommendation.racketNote,
   recommendation.feelNote
 ]);
 renderList(resultAltList, recommendation.alt);
