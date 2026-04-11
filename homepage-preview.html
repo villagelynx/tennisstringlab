@@ -109,6 +109,22 @@
       line-height: 1.55;
     }
 
+    .hero-panel {
+      margin-top: 16px;
+      padding: 20px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, #1660cc 0%, #0b2f52 100%);
+      color: #fff;
+      box-shadow: 0 22px 44px rgba(8, 35, 62, 0.24);
+    }
+
+    .hero-panel-copy {
+      margin: 0 0 16px;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
     .cta {
       display: block;
       width: 100%;
@@ -126,10 +142,10 @@
     .preview-card {
       margin-top: 16px;
       padding: 18px;
-      border-radius: var(--radius);
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(8px);
     }
 
     .preview-head {
@@ -141,7 +157,7 @@
     }
 
     .preview-label {
-      color: var(--blue);
+      color: #d8ebff;
       font-size: 0.8rem;
       font-weight: 800;
       letter-spacing: 0.08em;
@@ -151,24 +167,56 @@
     .preview-badge {
       padding: 7px 10px;
       border-radius: 999px;
-      background: #eff7ff;
-      color: var(--navy);
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
       font-size: 0.78rem;
       font-weight: 800;
     }
 
     .preview-title {
       margin: 0;
-      font-size: 1.5rem;
-      line-height: 1.05;
+      font-size: 1.56rem;
+      line-height: 1.08;
       letter-spacing: -0.04em;
+      color: #fff;
     }
 
     .preview-copy {
       margin: 8px 0 0;
-      color: var(--muted);
+      color: rgba(255, 255, 255, 0.82);
       font-size: 0.96rem;
       line-height: 1.5;
+    }
+
+    .preview-bullets {
+      display: grid;
+      gap: 7px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+      color: #fff;
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+
+    .preview-bullets li {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .preview-bullets li::before {
+      content: "+";
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(255, 213, 74, 0.2);
+      color: var(--yellow);
+      font-weight: 900;
+      flex: 0 0 20px;
     }
 
     .metric-grid {
@@ -181,8 +229,8 @@
     .metric {
       padding: 12px 10px;
       border-radius: 18px;
-      background: #f7fbff;
-      border: 1px solid rgba(47, 128, 255, 0.12);
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       text-align: center;
     }
 
@@ -190,14 +238,14 @@
       display: block;
       font-size: 1.2rem;
       line-height: 1;
-      color: var(--blue);
+      color: #fff;
     }
 
     .metric span {
       display: block;
       margin-top: 6px;
       font-size: 0.82rem;
-      color: var(--muted);
+      color: rgba(255, 255, 255, 0.78);
       font-weight: 700;
     }
 
@@ -304,34 +352,45 @@
       <span class="eyebrow">Mobile Homepage Mockup</span>
       <h1>Most players are using the wrong setup. Fix yours in 60 seconds.</h1>
       <p class="subcopy">
-        This version leads with one strong preview card first, then the 3 input boxes underneath so the page feels guided instead of crowded.
+        This version keeps the blue hero window, but makes the recommendation preview feel built into that same premium card.
       </p>
-      <button class="cta" type="button">Get My Perfect Setup</button>
 
-      <article class="preview-card">
-        <div class="preview-head">
-          <div class="preview-label">Your Preview</div>
-          <div class="preview-badge">Control + Spin</div>
-        </div>
-        <h2 class="preview-title">Solinco Hyper-G 17 at 50-52 lbs</h2>
-        <p class="preview-copy">
-          Good fit for a baseline player who wants more control without giving up too much pop.
+      <div class="hero-panel">
+        <p class="hero-panel-copy">
+          See the recommendation first, then use the boxes below to tune it around your playing style and racket.
         </p>
-        <div class="metric-grid">
-          <div class="metric">
-            <strong>+15%</strong>
-            <span>Spin</span>
+        <button class="cta" type="button">Get My Perfect Setup</button>
+
+        <article class="preview-card">
+          <div class="preview-head">
+            <div class="preview-label">Your Preview</div>
+            <div class="preview-badge">Control + Spin</div>
           </div>
-          <div class="metric">
-            <strong>+10%</strong>
-            <span>Control</span>
+          <h2 class="preview-title">Solinco Hyper-G 17 at 50-52 lbs</h2>
+          <p class="preview-copy">
+            Good fit for a baseline player who wants more control without giving up too much pop.
+          </p>
+          <ul class="preview-bullets">
+            <li>Helps the ball drop with more confidence off the baseline</li>
+            <li>Keeps launch angle more predictable when you swing faster</li>
+            <li>Feels cleaner and firmer without getting overly harsh</li>
+          </ul>
+          <div class="metric-grid">
+            <div class="metric">
+              <strong>+15%</strong>
+              <span>Spin</span>
+            </div>
+            <div class="metric">
+              <strong>+10%</strong>
+              <span>Control</span>
+            </div>
+            <div class="metric">
+              <strong>-8%</strong>
+              <span>Arm Stress</span>
+            </div>
           </div>
-          <div class="metric">
-            <strong>-8%</strong>
-            <span>Arm Stress</span>
-          </div>
-        </div>
-      </article>
+        </article>
+      </div>
     </section>
 
     <section class="analyzer">
@@ -351,7 +410,7 @@
         <p>Keep this as one large dropdown-style pill instead of a long wall of buttons.</p>
         <div class="select-pill">
           <span>Heavy Topspin Baseliner</span>
-          <span>▾</span>
+          <span>v</span>
         </div>
       </article>
 
@@ -360,7 +419,7 @@
         <p>This can feel more premium as a second dropdown pill.</p>
         <div class="select-pill">
           <span>Babolat Pure Aero</span>
-          <span>▾</span>
+          <span>v</span>
         </div>
       </article>
     </section>
