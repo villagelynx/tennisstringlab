@@ -87,11 +87,11 @@ body[data-page="pro-setup"] #showProSetupButton {
   padding: 0 20px !important;
   font-size: 1.04rem !important;
   font-weight: 800 !important;
-  background: #6d45cf !important;
-  border: 1px solid #6d45cf !important;
+  background: #5b31c2 !important;
+  border: 1px solid #5b31c2 !important;
   color: #ffffff !important;
   border-radius: 16px !important;
-  box-shadow: 0 12px 26px rgba(109, 69, 207, 0.24) !important;
+  box-shadow: 0 12px 26px rgba(91, 49, 194, 0.24) !important;
 }
 
 body[data-page="setup-analyzer"] #setupAnalyzerButton {
@@ -6354,7 +6354,7 @@ body[data-page="tension-calculator"] .tool-actions .secondary-button:not(#tensio
 }
 
 body[data-page="pro-setup"] .tool-page-header {
-  background: #6d45cf !important;
+  background: #5b31c2 !important;
   background-image: none !important;
   border: 0 !important;
   box-shadow: none !important;
@@ -6375,6 +6375,6 @@ body[data-page="pro-setup"] .tool-page-header .results-count {
 body[data-page="pro-setup"],
 body[data-page="pro-setup"] main,
 body[data-page="pro-setup"] .tool-page-shell {
-  background: #6d45cf !important;
+  background: #5b31c2 !important;
 }
 

@@ -356,10 +356,10 @@ textarea {
   justify-content: center;
   position: relative;
   text-align: center;
-  background: #6d45cf;
+  background: #5b31c2;
   color: #ffffff;
-  border-color: rgba(109, 69, 207, 0.22);
-  box-shadow: 0 12px 26px rgba(109, 69, 207, 0.26);
+  border-color: rgba(91, 49, 194, 0.22);
+  box-shadow: 0 12px 26px rgba(91, 49, 194, 0.26);
   cursor: pointer;
 }
 
