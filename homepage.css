@@ -324,16 +324,17 @@ textarea {
 }
 
 .landing-button-primary {
-  background: #ffe6cf;
-  color: #9a4e0d;
-  border-color: rgba(242, 141, 47, 0.2);
-  box-shadow: 0 12px 26px rgba(242, 141, 47, 0.18);
+  background: var(--orange-400);
+  color: var(--navy-950);
+  border-color: rgba(242, 141, 47, 0.22);
+  box-shadow: 0 12px 26px rgba(242, 141, 47, 0.28);
 }
 
 .landing-button-secondary {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.18);
+  background: #e6f6e8;
+  color: #2e6b3f;
+  border-color: rgba(46, 107, 63, 0.18);
+  box-shadow: 0 10px 24px rgba(100, 168, 113, 0.16);
 }
 
 .landing-button-soft {
@@ -345,16 +346,22 @@ textarea {
 
 .landing-button-purple {
   width: 100%;
-  justify-content: space-between;
-  background: #ece3ff;
-  color: #5c37b6;
-  border-color: rgba(122, 84, 216, 0.22);
-  box-shadow: 0 12px 26px rgba(122, 84, 216, 0.16);
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  background: #6d45cf;
+  color: #ffffff;
+  border-color: rgba(109, 69, 207, 0.22);
+  box-shadow: 0 12px 26px rgba(109, 69, 207, 0.26);
   cursor: pointer;
 }
 
 .landing-button-purple::after {
   content: "v";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 0.92rem;
   font-weight: 900;
 }
@@ -442,8 +449,8 @@ textarea {
 .landing-preview-card-inline {
   margin-top: 26px;
   padding: 24px;
-  background: #e7f6dd;
-  border-color: rgba(143, 209, 79, 0.3);
+  background: #fff2e0;
+  border-color: rgba(242, 141, 47, 0.24);
   box-shadow: none;
   backdrop-filter: none;
 }
@@ -460,7 +467,7 @@ textarea {
 }
 
 .landing-preview-card-inline .landing-eyebrow-muted {
-  color: #467426;
+  color: #b5681b;
 }
 
 .preview-badge {
@@ -476,8 +483,8 @@ textarea {
 }
 
 .landing-preview-card-inline .preview-badge {
-  background: rgba(143, 209, 79, 0.18);
-  color: #355d18;
+  background: rgba(242, 141, 47, 0.16);
+  color: #9a4e0d;
 }
 
 .landing-preview-card h2,
@@ -548,7 +555,7 @@ textarea {
 }
 
 .landing-preview-card-inline .preview-metric strong {
-  color: #355d18;
+  color: #9a4e0d;
 }
 
 .landing-preview-card-inline .preview-metric span {
@@ -740,8 +747,8 @@ textarea {
 }
 
 .analyzer-result-card {
-  background: #eef8e8;
-  border-color: rgba(143, 209, 79, 0.28);
+  background: #fff3e4;
+  border-color: rgba(242, 141, 47, 0.24);
 }
 
 .result-chip-row {
