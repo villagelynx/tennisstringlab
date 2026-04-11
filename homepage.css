@@ -283,8 +283,12 @@ textarea {
   gap: 12px;
 }
 
+.landing-hero-quicklink {
+  margin-top: 22px;
+}
+
 .landing-hero-actions {
-  margin-top: 24px;
+  margin-top: 12px;
 }
 
 .landing-button {
@@ -316,6 +320,13 @@ textarea {
   background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.18);
+}
+
+.landing-button-soft {
+  background: var(--sky-200);
+  color: var(--navy-900);
+  border-color: rgba(17, 73, 118, 0.12);
+  box-shadow: 0 10px 24px rgba(178, 214, 255, 0.2);
 }
 
 .analyzer-result-card .landing-button-secondary,
