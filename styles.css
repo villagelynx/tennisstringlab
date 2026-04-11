@@ -6301,3 +6301,55 @@ body.tool-page-body .tool-page-shell .setup-analyzer-group .eyebrow {
   }
 }
 
+body[data-page="tension-calculator"] .tool-page-header {
+  background: #1f8b9c !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body[data-page="tension-calculator"] .tool-page-header .eyebrow {
+  color: #d7f6fb !important;
+}
+
+body[data-page="tension-calculator"] .tool-page-header h1,
+body[data-page="tension-calculator"] .tool-page-header h2,
+body[data-page="tension-calculator"] .tool-page-header p,
+body[data-page="tension-calculator"] .tool-page-header .tool-page-copy,
+body[data-page="tension-calculator"] .tool-page-header .results-count {
+  color: #ffffff !important;
+}
+
+body[data-page="tension-calculator"] .tool-page-card-tension-page {
+  background: #e8f8fb !important;
+  border: 1px solid rgba(31, 139, 156, 0.2) !important;
+}
+
+body[data-page="tension-calculator"] #tensionCalcButton {
+  width: 100% !important;
+  min-height: 54px !important;
+  padding: 0 20px !important;
+  border-radius: 16px !important;
+  background: #1f8b9c !important;
+  background-image: none !important;
+  border: 1px solid rgba(31, 139, 156, 0.28) !important;
+  box-shadow: 0 12px 26px rgba(31, 139, 156, 0.24) !important;
+  color: #ffffff !important;
+  font-size: 1rem !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+  justify-content: center !important;
+}
+
+body[data-page="tension-calculator"] .tool-actions {
+  display: grid;
+  gap: 10px;
+}
+
+body[data-page="tension-calculator"] .tool-actions .secondary-button:not(#tensionCalcButton) {
+  min-height: 48px !important;
+  padding: 0 16px !important;
+  border-radius: 16px !important;
+  justify-content: center !important;
+}
+

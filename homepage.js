@@ -21,9 +21,6 @@ const metricComfort = document.getElementById("metricComfort");
 
 const resultTitle = document.getElementById("resultTitle");
 const resultSummary = document.getElementById("resultSummary");
-const resultChip1 = document.getElementById("resultChip1");
-const resultChip2 = document.getElementById("resultChip2");
-const resultChip3 = document.getElementById("resultChip3");
 const resultBenefits = document.getElementById("resultBenefits");
 const resultAltList = document.getElementById("resultAltList");
 
@@ -62,9 +59,6 @@ function updateRecommendation() {
 
   if (resultTitle) resultTitle.textContent = recommendation.title;
   if (resultSummary) resultSummary.textContent = recommendation.summary;
-  if (resultChip1) resultChip1.textContent = recommendation.chips[0];
-  if (resultChip2) resultChip2.textContent = recommendation.chips[1];
-  if (resultChip3) resultChip3.textContent = recommendation.chips[2];
   renderList(resultBenefits, recommendation.benefits);
   renderList(resultAltList, recommendation.alt);
 
