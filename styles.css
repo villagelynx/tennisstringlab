@@ -6353,3 +6353,28 @@ body[data-page="tension-calculator"] .tool-actions .secondary-button:not(#tensio
   justify-content: center !important;
 }
 
+body[data-page="pro-setup"] .tool-page-header {
+  background: #6d45cf !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body[data-page="pro-setup"] .tool-page-header .eyebrow {
+  color: #efe7ff !important;
+}
+
+body[data-page="pro-setup"] .tool-page-header h1,
+body[data-page="pro-setup"] .tool-page-header h2,
+body[data-page="pro-setup"] .tool-page-header p,
+body[data-page="pro-setup"] .tool-page-header .tool-page-copy,
+body[data-page="pro-setup"] .tool-page-header .results-count {
+  color: #ffffff !important;
+}
+
+body[data-page="pro-setup"],
+body[data-page="pro-setup"] main,
+body[data-page="pro-setup"] .tool-page-shell {
+  background: #6d45cf !important;
+}
+
