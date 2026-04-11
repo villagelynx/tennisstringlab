@@ -42,7 +42,7 @@ function syncSetupLinks() {
   const query = recommendationApi.toQueryString(state);
   const href = new URL(`./setup-result.html?${query}`, window.location.href).href;
 
-  [heroSetupCta, analyzerSetupCta, resultSetupCta].forEach((link) => {
+  [analyzerSetupCta, resultSetupCta].forEach((link) => {
     if (link) {
       link.href = href;
     }
