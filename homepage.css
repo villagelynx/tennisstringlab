@@ -650,12 +650,12 @@ textarea {
 }
 
 .analyzer-section .section-heading .landing-eyebrow {
-  color: #ffe4bf;
+  color: var(--navy-950);
 }
 
 .analyzer-section .section-heading h2,
 .analyzer-section .section-heading p {
-  color: #ffffff;
+  color: var(--navy-950);
 }
 
 .section-heading h2,
