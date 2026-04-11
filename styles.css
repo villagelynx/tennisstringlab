@@ -11,6 +11,132 @@
   --shadow-soft: 0 12px 28px rgba(52, 28, 112, 0.08);
 }
 
+body[data-page="setup-analyzer"] .tool-page-card-setup-analyzer {
+  background: linear-gradient(180deg, #e7f3ff, #f9fcff) !important;
+  border-color: rgba(49, 127, 240, 0.22) !important;
+}
+
+body[data-page="setup-analyzer"] .setup-analyzer-form-card,
+body[data-page="setup-analyzer"] .setup-analyzer-group,
+body[data-page="setup-analyzer"] .setup-analyzer-toggle-row {
+  background: rgba(232, 243, 255, 0.86) !important;
+  border-color: rgba(49, 127, 240, 0.18) !important;
+}
+
+body[data-page="setup-analyzer"] .setup-analyzer-report-card-highlight,
+body[data-page="setup-analyzer"] .setup-analyzer-recommendation-card,
+body[data-page="setup-analyzer"] .setup-analyzer-report-card-empty {
+  background: linear-gradient(135deg, rgba(236, 248, 232, 0.98), rgba(255, 255, 255, 0.96)) !important;
+  border-color: rgba(143, 209, 79, 0.24) !important;
+}
+
+body[data-page="setup-analyzer"] .tool-page-card .search-input,
+body[data-page="setup-analyzer"] .setup-analyzer-form-card .search-input {
+  min-height: 58px !important;
+  padding: 10px 14px !important;
+  font-size: 1.04rem !important;
+  line-height: 1.25 !important;
+}
+
+body[data-page="setup-analyzer"] #setupAnalyzerRacket,
+body[data-page="setup-analyzer"] #setupAnalyzerGauge,
+body[data-page="setup-analyzer"] #setupAnalyzerString,
+body[data-page="setup-analyzer"] #setupAnalyzerTension,
+body[data-page="setup-analyzer"] #setupAnalyzerGoal {
+  font-size: 1.04rem !important;
+}
+
+body[data-page="setup-analyzer"] .tool-page-card label,
+body[data-page="setup-analyzer"] .setup-analyzer-form-card label {
+  font-size: 0.92rem !important;
+}
+
+body[data-page="setup-analyzer"] .setup-analyzer-form-card .field-note,
+body[data-page="setup-analyzer"] .setup-analyzer-form-card .summary-copy {
+  font-size: 0.9rem !important;
+  line-height: 1.45 !important;
+}
+
+body[data-page="setup-analyzer"] #setupAnalyzerButton {
+  min-height: 54px !important;
+  padding: 0 18px !important;
+  font-size: 1rem !important;
+  background: #317ff0 !important;
+  border-color: #317ff0 !important;
+  color: #ffffff !important;
+  border-radius: 16px !important;
+}
+
+body[data-page="pro-setup"] .tool-page-card-pro-single {
+  background: linear-gradient(180deg, #f4eeff, #fcfaff) !important;
+  border-color: rgba(122, 84, 216, 0.22) !important;
+}
+
+body[data-page="pro-setup"] .compare-tool-form-card,
+body[data-page="pro-setup"] .compare-tool-report-card {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(122, 84, 216, 0.16) !important;
+}
+
+body[data-page="setup-analyzer"] #setupAnalyzerButton {
+  min-height: 58px !important;
+  padding: 0 20px !important;
+  font-size: 1.04rem !important;
+  font-weight: 800 !important;
+  background: #dff0ff !important;
+  border: 1px solid rgba(47, 128, 255, 0.22) !important;
+  color: #123f69 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 24px rgba(178, 214, 255, 0.22) !important;
+}
+
+body[data-page="setup-analyzer"] .setup-analyzer-report-card,
+body[data-page="setup-analyzer"] .setup-analyzer-recommendation-card {
+  padding: 18px !important;
+}
+
+body[data-page="setup-analyzer"] .setup-analyzer-report-card h3,
+body[data-page="setup-analyzer"] .setup-analyzer-card-header h3,
+body[data-page="setup-analyzer"] .setup-analyzer-recommendation-card h4,
+body[data-page="setup-analyzer"] .tool-recommendation-name {
+  font-size: 1.34rem !important;
+  line-height: 1.22 !important;
+}
+
+body[data-page="setup-analyzer"] .setup-analyzer-report-card .summary-copy,
+body[data-page="setup-analyzer"] .setup-analyzer-report-card .tool-note,
+body[data-page="setup-analyzer"] .setup-analyzer-report-card .tool-mini-line,
+body[data-page="setup-analyzer"] .setup-analyzer-point-list,
+body[data-page="setup-analyzer"] .setup-analyzer-report-card li,
+body[data-page="setup-analyzer"] .setup-analyzer-report-card p:not(.eyebrow),
+body[data-page="setup-analyzer"] .setup-analyzer-report-card .field-note {
+  font-size: 1rem !important;
+  line-height: 1.56 !important;
+}
+
+body[data-page="setup-analyzer"] .setup-analyzer-score-head {
+  font-size: 1.02rem !important;
+}
+
+body[data-page="setup-analyzer"] .tool-stat-grid {
+  gap: 10px !important;
+}
+
+body[data-page="setup-analyzer"] .tool-stat {
+  padding: 12px !important;
+}
+
+body[data-page="setup-analyzer"] .tool-stat strong {
+  font-size: 1.18rem !important;
+  line-height: 1.2 !important;
+}
+
+body[data-page="setup-analyzer"] .tool-stat-label,
+body[data-page="setup-analyzer"] .tool-stat-note {
+  font-size: 0.9rem !important;
+  line-height: 1.34 !important;
+}
+
 
 * {
   box-sizing: border-box;

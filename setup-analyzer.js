@@ -6,7 +6,6 @@
     racket: document.getElementById("setupAnalyzerRacket"),
     gauge: document.getElementById("setupAnalyzerGauge"),
     string: document.getElementById("setupAnalyzerString"),
-    stringList: document.getElementById("setupAnalyzerStringList"),
     stringNote: document.getElementById("setupAnalyzerStringNote"),
     tension: document.getElementById("setupAnalyzerTension"),
     goal: document.getElementById("setupAnalyzerGoal"),
@@ -29,7 +28,6 @@
   populateControls();
   renderReport(null);
 
-  elements.string?.addEventListener("input", () => syncGaugeWithString(false));
   elements.string?.addEventListener("change", () => syncGaugeWithString(true));
   elements.gauge?.addEventListener("change", () => {
     elements.gauge.dataset.autofilled = "false";
@@ -278,6 +276,11 @@
     const rackets = (api.FILTERS.find((filter) => filter.key === "racketFamily")?.options || []).filter((value) => value !== "Any");
     const gauges = (api.FILTERS.find((filter) => filter.key === "gauge")?.options || []).filter((value) => value !== "Any");
     const names = [...new Set(api.STRINGS.map((entry) => entry.name))].sort((left, right) => left.localeCompare(right));
+    const tensions = [];
+
+    for (let tension = 35; tension <= 65; tension += 0.5) {
+      tensions.push(Number(tension.toFixed(1)));
+    }
 
     if (elements.racket) {
       elements.racket.innerHTML = `
@@ -294,8 +297,19 @@
       elements.gauge.dataset.autofilled = "false";
     }
 
-    if (elements.stringList) {
-      elements.stringList.innerHTML = names.map((name) => `<option value="${escapeHtml(name)}"></option>`).join("");
+    if (elements.string) {
+      elements.string.innerHTML = `
+        <option value="">Choose your current string</option>
+        ${names.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("")}
+      `;
+    }
+
+    if (elements.tension) {
+      elements.tension.innerHTML = `
+        <option value="">Choose your current tension</option>
+        ${tensions.map((tension) => `<option value="${tension}">${escapeHtml(formatTensionOption(tension))}</option>`).join("")}
+      `;
+      elements.tension.value = "50";
     }
 
     if (elements.goal) {
@@ -311,7 +325,7 @@
     const entry = findStringEntryByName(elements.string?.value || "");
     if (!entry) {
       if (elements.stringNote) {
-        elements.stringNote.textContent = "Choose a string name from the database so the report can use the stored string profile.";
+        elements.stringNote.textContent = "Choose your current string from the database so the report can use its stored string profile.";
       }
       return;
     }
@@ -1313,5 +1327,9 @@
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;");
+  }
+
+  function formatTensionOption(value) {
+    return Number.isInteger(value) ? `${value} lbs` : `${value.toFixed(1)} lbs`;
   }
 })();

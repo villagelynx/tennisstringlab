@@ -26,7 +26,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
   <link rel="manifest" href="./site.webmanifest">
-  <link rel="stylesheet" href="./styles.css?v=20260410y">
+  <link rel="stylesheet" href="./styles.css?v=20260411e">
   <script type="application/ld+json">
 {
     "headline":  "Analyze Your Current Setup",
@@ -97,13 +97,16 @@
               </div>
               <div class="field is-wide">
                 <label for="setupAnalyzerString">String</label>
-                <input id="setupAnalyzerString" class="search-input" type="text" list="setupAnalyzerStringList" placeholder="Start typing your current string">
-                <datalist id="setupAnalyzerStringList"></datalist>
-                <p id="setupAnalyzerStringNote" class="field-note">Start typing a string from the database. If we recognize it, we can auto-fill the common gauge listing.</p>
+                <select id="setupAnalyzerString" class="search-input">
+                  <option value="">Choose your current string</option>
+                </select>
+                <p id="setupAnalyzerStringNote" class="field-note">Choose your current string from the database. We can auto-fill the common gauge listing when it is recognized.</p>
               </div>
               <div class="field">
                 <label for="setupAnalyzerTension">Current Tension</label>
-                <input id="setupAnalyzerTension" class="search-input" type="number" min="35" max="70" step="0.5" inputmode="decimal" value="50" placeholder="e.g. 52">
+                <select id="setupAnalyzerTension" class="search-input">
+                  <option value="">Choose your current tension</option>
+                </select>
               </div>
             </div>
           </section>
@@ -161,7 +164,7 @@
 
   <script src="./analytics.js?v=20260409c"></script>
   <script src="./app.js?v=20260409b"></script>
-  <script src="./setup-analyzer.js"></script>
+  <script src="./setup-analyzer.js?v=20260411b"></script>
 </body>
 </html>
 
