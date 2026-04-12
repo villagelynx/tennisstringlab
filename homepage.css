@@ -315,6 +315,8 @@ textarea {
   gap: 12px;
   margin-top: 22px;
   align-items: start;
+  position: relative;
+  z-index: 40;
 }
 
 .landing-hero-button-grid > * {
@@ -329,6 +331,10 @@ textarea {
   margin-top: 0;
   position: relative;
   z-index: 30;
+}
+
+.landing-hero-prosetups[open] {
+  z-index: 90;
 }
 
 .landing-hero-prosetups summary {
@@ -1263,5 +1269,90 @@ textarea {
   .setup-card a,
   .cross-site-cta a {
     font-size: 0.96rem;
+  }
+}
+
+@media (min-width: 981px) {
+  body.landing-page .landing-brand-wordmark {
+    font-size: clamp(1.22rem, 1.3vw, 1.46rem);
+  }
+
+  body.landing-page .landing-nav a {
+    font-size: 0.84rem;
+  }
+
+  body.landing-page .landing-eyebrow {
+    font-size: 0.72rem;
+  }
+
+  body.landing-page .landing-hero h1 {
+    font-size: clamp(2.2rem, 3.45vw, 3.8rem);
+  }
+
+  body.landing-page .landing-hero-lead {
+    font-size: 0.94rem;
+  }
+
+  body.landing-page .landing-button {
+    min-height: 50px;
+    font-size: 0.9rem;
+  }
+
+  body.landing-page .landing-preview-card h2,
+  body.landing-page .analyzer-result-card h3,
+  body.landing-page .monetization-card h3 {
+    font-size: clamp(1.48rem, 1.75vw, 1.9rem);
+  }
+
+  body.landing-page .preview-meta,
+  body.landing-page .result-summary,
+  body.landing-page .section-heading p,
+  body.landing-page .problem-card p,
+  body.landing-page .monetization-copy p,
+  body.landing-page .monetization-card li,
+  body.landing-page .result-column li,
+  body.landing-page .credibility-card span,
+  body.landing-page .setup-card-meta {
+    font-size: 0.9rem;
+  }
+
+  body.landing-page .preview-metric strong {
+    font-size: 1.16rem;
+  }
+
+  body.landing-page .preview-metric span {
+    font-size: 0.8rem;
+  }
+
+  body.landing-page .credibility-card strong,
+  body.landing-page .problem-card h3,
+  body.landing-page .setup-card-name,
+  body.landing-page .pill-group-label,
+  body.landing-page .result-column h4 {
+    font-size: 0.94rem;
+  }
+
+  body.landing-page .section-heading h2,
+  body.landing-page .monetization-copy h2 {
+    font-size: clamp(1.78rem, 2.1vw, 2.24rem);
+  }
+
+  body.landing-page .analyzer-select-label {
+    font-size: 0.82rem;
+  }
+
+  body.landing-page .analyzer-select {
+    font-size: 1.05rem;
+  }
+
+  body.landing-page .choice-pill {
+    min-height: 48px;
+    font-size: 0.92rem;
+  }
+
+  body.landing-page .setup-card-spec,
+  body.landing-page .setup-card a,
+  body.landing-page .cross-site-cta a {
+    font-size: 0.9rem;
   }
 }

@@ -676,111 +676,74 @@
     }
   }
 
-  function getSharedHeaderMarkup() {
+  function getSharedHeaderMarkup(page) {
+    const isDatabasePage = page === "master-list.html";
+    const isGuidePage = page === "string-library.html" || SHARED_HEADER_REFERENCE_PAGES.has(page);
+    const databaseCurrent = isDatabasePage ? ' aria-current="page"' : "";
+    const guidesCurrent = isGuidePage ? ' aria-current="page"' : "";
+
     return `
-      <div class="brand-row">
-        <a class="brand-lockup brand-home-link" href="./index.html" aria-label="Go to TennisSetup home">
-          <div class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 88 88" role="presentation">
-              <defs>
-                <clipPath id="sharedRacketHeadClip">
-                  <ellipse cx="44" cy="31" rx="17.5" ry="22.5" />
-                </clipPath>
-              </defs>
-              <g>
-                <ellipse cx="44" cy="31" rx="23.8" ry="28.8" fill="#ffffff" />
-                <ellipse cx="44" cy="31" rx="17.5" ry="22.5" fill="#ffffff" stroke="#d7e8e2" stroke-width="2.1" />
-                <g clip-path="url(#sharedRacketHeadClip)">
-                  <path d="M34 10V52" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
-                  <path d="M39 9V53" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
-                  <path d="M44 9V53" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
-                  <path d="M49 9V53" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
-                  <path d="M54 10V52" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
-                  <path d="M30 18H58" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
-                  <path d="M29 25H59" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
-                  <path d="M29 32H59" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
-                  <path d="M30 39H58" stroke="#008f70" stroke-width="2.7" stroke-linecap="round"></path>
-                </g>
-                <rect x="40" y="58" width="8" height="12" rx="2.8" fill="#ffffff"></rect>
-                <rect x="39" y="68" width="10" height="10" rx="3.1" fill="#008f70"></rect>
-              </g>
-            </svg>
-          </div>
-          <div class="brand-text">
-            <h1 class="brand-wordmark">TennisSetup</h1>
-          </div>
+      <div class="landing-header-inner">
+        <a class="landing-brand" href="./index.html" aria-label="Go to TennisSetup home">
+          <span class="landing-brand-mark" aria-hidden="true"></span>
+          <span class="landing-brand-wordmark">TennisSetup</span>
         </a>
-        <div class="hero-actions">
-          <a id="sharedHeaderHomeLink" class="secondary-button hero-top-home-button hero-action-card" href="./index.html">
-            <span class="hero-action-copy"><strong>Home</strong></span>
-          </a>
-          <a id="sharedHeaderMasterListLink" class="hero-link master-list-hero-link hero-action-card" href="./master-list.html">
-            <span class="hero-action-copy">
-              <strong id="sharedHeaderMasterListTitle">All Strings</strong>
-              <span id="sharedHeaderMasterListCopy">Browse every string in one place</span>
-            </span>
-          </a>
-          <div class="hero-action-menu tools-action-menu">
-            <button id="sharedToolsMenuButton" class="hero-link master-list-hero-link hero-button hero-action-card" type="button" aria-expanded="false" aria-controls="sharedToolsMenuPanel">
-              <span class="hero-action-copy"><strong>Tools</strong></span>
-            </button>
-            <div id="sharedToolsMenuPanel" class="hero-action-panel" hidden>
-              <a class="hero-action-panel-link" href="./analyze-current-setup.html">Analyze Current String Setup</a>
-              <a class="hero-action-panel-link" href="./quick-setup.html">Quick String Setup</a>
-              <a class="hero-action-panel-link" href="./tension-calculator.html">Tension Calculator</a>
-              <a class="hero-action-panel-link" href="./compare-strings.html">Compare Strings</a>
-              <a class="hero-action-panel-link" href="./compare-pro-setups.html">Compare Pro Setups</a>
-              <a class="hero-action-panel-link" href="./hybrid-builder.html">Hybrid String Builder</a>
-            </div>
+
+        <nav class="landing-nav" aria-label="Primary">
+          <a href="./master-list.html"${databaseCurrent}>String Database</a>
+          <a href="./index.html#analyzer">Analyzer</a>
+          <a href="./index.html#popular-setups">Popular Setups</a>
+          <a href="./string-library.html"${guidesCurrent}>Guides</a>
+        </nav>
+
+        <details class="landing-menu">
+          <summary aria-label="Open menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </summary>
+          <div class="landing-menu-panel">
+            <a href="./master-list.html"${databaseCurrent}>String Database</a>
+            <a href="./pro-setup.html?player=Carlos%20Alcaraz">Pro Setups</a>
+            <a href="./analyze-current-setup.html">Analyze Current Setup</a>
+            <a href="./quick-setup.html">Quick Setup</a>
+            <a href="./tension-calculator.html">Tension Calculator</a>
+            <a href="./compare-strings.html">Compare Strings</a>
+            <a href="./hybrid-builder.html">Hybrid Builder</a>
+            <a href="./string-library.html"${guidesCurrent}>Reference Guide</a>
+            <a href="./proshops.html">Pro Shops</a>
           </div>
-          <a id="sharedReferenceGuideLink" class="hero-link master-list-hero-link hero-action-card" href="./string-library.html">
-            <span class="hero-action-copy"><strong>Reference Guide</strong></span>
-          </a>
-          <a id="sharedProShopsLink" class="hero-link proshops-hero-link hero-action-card" href="./proshops.html">
-            <span class="hero-action-copy"><strong>Pro Shops</strong></span>
-          </a>
-          <a id="sharedPopularLink" class="hero-link secondary-hero-link hero-action-card" href="./index.html">
-            <span class="hero-action-copy"><strong>20 Most Popular</strong></span>
-          </a>
-          <a id="sharedProPlayersLink" class="hero-link secondary-hero-link hero-action-card" href="./proplayers.html">
-            <span class="hero-action-copy"><strong>Pro Player Strings</strong></span>
-          </a>
-        </div>
-        <div class="hero-overflow-menu">
-          <button id="sharedHeroMenuButton" class="hero-menu-button" type="button" aria-expanded="false" aria-controls="sharedHeroMenuPanel" aria-label="Open menu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-          <div id="sharedHeroMenuPanel" class="hero-menu-panel" hidden>
-            <a class="hero-menu-link" href="./index.html">Home</a>
-            <a class="hero-menu-link" href="./master-list.html">All Strings</a>
-            <a class="hero-menu-link" href="./string-library.html">Reference Guide</a>
-            <a class="hero-menu-link" href="./proshops.html">Pro Shops</a>
-            <a class="hero-menu-link" href="./index.html">20 Most Popular</a>
-            <a class="hero-menu-link" href="./proplayers.html">Pro Player Strings</a>
-            <a class="hero-menu-link" href="./analyze-current-setup.html">Analyze Current String Setup</a>
-            <a class="hero-menu-link" href="./quick-setup.html">Quick String Setup</a>
-            <a class="hero-menu-link" href="./tension-calculator.html">Tension Calculator</a>
-            <a class="hero-menu-link" href="./compare-strings.html">Compare Strings</a>
-            <a class="hero-menu-link" href="./compare-pro-setups.html">Compare Pro Setups</a>
-            <a class="hero-menu-link" href="./hybrid-builder.html">Hybrid String Builder</a>
-            <a class="hero-menu-link" href="./string-types.html">String Type Descriptions</a>
-            <a class="hero-menu-link" href="./string-materials-guide.html">String Materials Guide</a>
-            <a class="hero-menu-link" href="./how-tennis-string-is-made.html">How Tennis Strings Are Made</a>
-            <a class="hero-menu-link" href="./tension-guide.html">Tension Guide</a>
-            <a class="hero-menu-link" href="./gauge-guide.html">Gauge Guide</a>
-            <a class="hero-menu-link" href="./hybrid-guide.html">Hybrid String Guide</a>
-            <a class="hero-menu-link" href="./arm-friendly.html">Arm-Friendly Strings</a>
-            <a class="hero-menu-link" href="./string-shape-guide.html">String Shape Guide</a>
-            <a class="hero-menu-link" href="./restring-guide.html">How Often to Restring</a>
-            <a class="hero-menu-link" href="./player-type-guide.html">Best Strings by Player Type</a>
-            <a class="hero-menu-link" href="./best-by-need.html">Best Strings by Need</a>
-            <a class="hero-menu-link" href="./popular-comparisons.html">Popular String Comparisons</a>
-          </div>
-        </div>
+        </details>
       </div>
     `;
+  }
+
+  function ensureHomepageHeaderStyles() {
+    const existing = document.querySelector('link[href*="homepage.css"]');
+    if (existing) {
+      if (existing.sheet) {
+        return Promise.resolve();
+      }
+
+      return new Promise((resolve) => {
+        existing.addEventListener("load", resolve, { once: true });
+        existing.addEventListener("error", resolve, { once: true });
+      });
+    }
+
+    return new Promise((resolve) => {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "./homepage.css?v=20260411aa";
+      link.addEventListener("load", resolve, { once: true });
+      link.addEventListener("error", resolve, { once: true });
+      const manifest = document.querySelector('link[rel="manifest"]');
+      if (manifest && manifest.parentNode) {
+        manifest.parentNode.insertBefore(link, manifest.nextSibling);
+      } else {
+        document.head.appendChild(link);
+      }
+    });
   }
 
   function applySharedHeaderActiveStates(page) {
@@ -834,32 +797,22 @@
       return;
     }
 
-    const header = document.createElement("header");
-    header.className = "site-header site-header-shared";
-    header.innerHTML = getSharedHeaderMarkup();
+    ensureHomepageHeaderStyles().then(() => {
+      if (document.querySelector(".landing-header")) {
+        return;
+      }
 
-    const firstMain = document.querySelector("main");
-    if (firstMain && firstMain.parentNode === document.body) {
-      document.body.insertBefore(header, firstMain);
-    } else {
-      document.body.insertBefore(header, document.body.firstChild);
-    }
+      const header = document.createElement("header");
+      header.className = "landing-header";
+      header.innerHTML = getSharedHeaderMarkup(page);
 
-    document.body.classList.add("has-shared-site-header");
-    applySharedHeaderActiveStates(page);
-    updateSharedHeaderDatabaseCount();
-    window.addEventListener("load", updateSharedHeaderDatabaseCount, { once: true });
-
-    setupSharedDropdownMenu(
-      document.getElementById("sharedHeroMenuButton"),
-      document.getElementById("sharedHeroMenuPanel"),
-      ".hero-overflow-menu"
-    );
-    setupSharedDropdownMenu(
-      document.getElementById("sharedToolsMenuButton"),
-      document.getElementById("sharedToolsMenuPanel"),
-      ".tools-action-menu"
-    );
+      const firstMain = document.querySelector("main");
+      if (firstMain && firstMain.parentNode === document.body) {
+        document.body.insertBefore(header, firstMain);
+      } else {
+        document.body.insertBefore(header, document.body.firstChild);
+      }
+    });
   }
 
   function getSelectedLanguage() {
