@@ -3307,6 +3307,13 @@ body.master-list-page #masterSearchInput::placeholder {
   position: relative;
 }
 
+.tool-page-nav-dropdown-pros summary.tool-page-nav-link {
+  min-width: 210px;
+  justify-content: flex-start;
+  padding-right: 56px;
+  white-space: nowrap;
+}
+
 .tool-page-nav-dropdown summary.tool-page-nav-link::after {
   content: "";
   position: absolute;
@@ -3318,6 +3325,10 @@ body.master-list-page #masterSearchInput::placeholder {
   border-bottom: 2px solid currentColor;
   transform: translateY(-62%) rotate(45deg);
   transition: transform 0.18s ease;
+}
+
+.tool-page-nav-dropdown-pros summary.tool-page-nav-link::after {
+  right: 18px;
 }
 
 .tool-page-nav-dropdown[open] summary.tool-page-nav-link::after {
@@ -4176,7 +4187,8 @@ body[data-page="pro-setup"] .compare-tool-report-card .tool-recommendation-name 
   line-height: 1.1;
 }
 
-body[data-page="pro-setup"] .pro-setup-score-row {
+body[data-page="pro-setup"] .pro-setup-score-row,
+body[data-page="compare-pro-setups"] .pro-setup-score-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -4184,7 +4196,8 @@ body[data-page="pro-setup"] .pro-setup-score-row {
   margin: 6px 0 10px;
 }
 
-body[data-page="pro-setup"] .pro-setup-score-badge {
+body[data-page="pro-setup"] .pro-setup-score-badge,
+body[data-page="compare-pro-setups"] .pro-setup-score-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -4199,7 +4212,8 @@ body[data-page="pro-setup"] .pro-setup-score-badge {
   line-height: 1;
 }
 
-body[data-page="pro-setup"] .pro-setup-score-label {
+body[data-page="pro-setup"] .pro-setup-score-label,
+body[data-page="compare-pro-setups"] .pro-setup-score-label {
   color: #5b5f7a;
   font-size: 0.88rem;
   font-weight: 700;
@@ -6602,6 +6616,21 @@ body[data-page="tension-calculator"] .tool-actions .secondary-button:not(#tensio
   padding: 0 16px !important;
   border-radius: 16px !important;
   justify-content: center !important;
+}
+
+body[data-page="tension-calculator"] #tensionCalcType,
+body[data-page="tension-calculator"] #tensionCalcGauge,
+body[data-page="tension-calculator"] #tensionCalcRacket,
+body[data-page="tension-calculator"] #tensionCalcPreference,
+body[data-page="tension-calculator"] #tensionCalcSurface,
+body[data-page="tension-calculator"] #tensionCalcArm {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  min-height: 54px !important;
+  padding: 0 16px !important;
+  line-height: 1.2 !important;
+  background-image: none !important;
 }
 
 body[data-page="pro-setup"] .tool-page-header {

@@ -167,8 +167,10 @@ function buildTensionCalculatorStringerEmailDraft(recommendation) {
     "",
     selectedString ? `String: ${selectedString}` : "",
     `String type: ${recommendation.type}`,
+    `String gauge: ${recommendation.gauge}`,
     `Requested tension range: ${recommendation.lbsRange} (${recommendation.kgRange})`,
     `Racket family: ${recommendation.racketFamily}`,
+    `Court surface: ${recommendation.surface}`,
     `Feel goal: ${recommendation.preference}`,
     `Arm comfort: ${recommendation.armComfort}`,
     referenceLine ? `Reference: ${referenceLine}` : "",
@@ -517,8 +519,10 @@ const quickSetupApplyButton = document.getElementById("quickSetupApplyButton");
 const quickSetupResult = document.getElementById("quickSetupResult");
 const quickSetupExampleSelect = document.getElementById("quickSetupExampleSelect");
 const tensionCalcType = document.getElementById("tensionCalcType");
+const tensionCalcGauge = document.getElementById("tensionCalcGauge");
 const tensionCalcRacket = document.getElementById("tensionCalcRacket");
 const tensionCalcPreference = document.getElementById("tensionCalcPreference");
+const tensionCalcSurface = document.getElementById("tensionCalcSurface");
 const tensionCalcArm = document.getElementById("tensionCalcArm");
 const tensionCalcButton = document.getElementById("tensionCalcButton");
 const tensionCalcResult = document.getElementById("tensionCalcResult");
@@ -1237,6 +1241,20 @@ const TENSION_FEEL_ADJUSTMENTS = {
   Comfort: -2,
   Balanced: 0,
   Control: 2
+};
+const TENSION_GAUGE_ADJUSTMENTS = {
+  "15L": 1,
+  "16": 0.5,
+  "16L": 0,
+  "17": -0.5,
+  "17L": -0.75,
+  "18": -1
+};
+const TENSION_SURFACE_ADJUSTMENTS = {
+  "Hard Court": 0,
+  Clay: 1,
+  Grass: -1,
+  Indoor: 0.5
 };
 const TENSION_ARM_ADJUSTMENTS = {
   Normal: 0,
@@ -4307,6 +4325,12 @@ function populateTensionCalculatorControls() {
     tensionCalcType.value = "Co-Poly";
   }
 
+  if (tensionCalcGauge) {
+    const gauges = FILTERS.find((filter) => filter.key === "gauge")?.options.filter((option) => option !== "Any") || [];
+    tensionCalcGauge.innerHTML = gauges.map((gauge) => `<option value="${gauge}">${gauge}</option>`).join("");
+    tensionCalcGauge.value = "16L";
+  }
+
   if (tensionCalcRacket) {
     const rackets = FILTERS.find((filter) => filter.key === "racketFamily")?.options.filter((option) => option !== "Any") || [];
     tensionCalcRacket.innerHTML = rackets.map((family) => `<option value="${family}">${family}</option>`).join("");
@@ -4315,6 +4339,10 @@ function populateTensionCalculatorControls() {
 
   if (tensionCalcPreference) {
     tensionCalcPreference.value = "Balanced";
+  }
+
+  if (tensionCalcSurface) {
+    tensionCalcSurface.value = "Hard Court";
   }
 
   if (tensionCalcArm) {
@@ -4332,6 +4360,11 @@ function restoreStoredTensionCalculatorSource() {
 
   if (tensionCalcType && storedSource.type) {
     tensionCalcType.value = storedSource.type;
+  }
+
+  const normalizedStoredGauge = normalizeTensionCalculatorGauge(storedSource.gauge);
+  if (tensionCalcGauge && normalizedStoredGauge) {
+    tensionCalcGauge.value = normalizedStoredGauge;
   }
 
   if (tensionCalcRacket && storedSource.appliedRacketFamily) {
@@ -5120,7 +5153,27 @@ function applyTensionCalculatorFromQuickSetup(recommendation) {
     tensionCalcPreference.value = nextPreference;
   }
 
+  const nextGauge = normalizeTensionCalculatorGauge(recommendation.entry?.gauge);
+  if (tensionCalcGauge && nextGauge) {
+    tensionCalcGauge.value = nextGauge;
+  }
+
   renderTensionCalculatorRecommendation();
+}
+
+function normalizeTensionCalculatorGauge(gauge) {
+  if (!gauge) {
+    return "";
+  }
+
+  const normalized = String(gauge).trim().toUpperCase();
+  if (normalized.startsWith("15L")) return "15L";
+  if (normalized.startsWith("16L")) return "16L";
+  if (normalized.startsWith("16")) return "16";
+  if (normalized.startsWith("17L")) return "17L";
+  if (normalized.startsWith("17")) return "17";
+  if (normalized.startsWith("18")) return "18";
+  return "";
 }
 
 function buildTensionCalculatorSource(recommendation, inferredPreference, appliedRacketFamily) {
@@ -5179,14 +5232,16 @@ function renderTensionCalculatorRecommendation() {
 
   const recommendation = buildTensionCalculatorRecommendation({
     type: tensionCalcType?.value || "Co-Poly",
+    gauge: tensionCalcGauge?.value || "16L",
     racketFamily: tensionCalcRacket?.value || "Control Frame",
     preference: tensionCalcPreference?.value || "Balanced",
+    surface: tensionCalcSurface?.value || "Hard Court",
     armComfort: tensionCalcArm?.value || "Normal",
     source: latestTensionCalculatorSource
   });
 
   if (!recommendation) {
-    tensionCalcResult.innerHTML = `<p class="summary-copy">Choose a string type and racket family to calculate a starting range.</p>`;
+    tensionCalcResult.innerHTML = `<p class="summary-copy">Choose a string type, string gauge, racket family, and court surface to calculate a starting range.</p>`;
     return;
   }
 
@@ -5220,12 +5275,20 @@ function renderTensionCalculatorRecommendation() {
         <strong>${recommendation.type}</strong>
       </div>
       <div class="tool-stat">
+        <span class="tool-stat-label">String Gauge</span>
+        <strong>${recommendation.gauge}</strong>
+      </div>
+      <div class="tool-stat">
         <span class="tool-stat-label">Racket Family</span>
         <strong>${recommendation.racketFamily}</strong>
       </div>
       <div class="tool-stat">
         <span class="tool-stat-label">Feel Goal</span>
         <strong>${recommendation.preference}</strong>
+      </div>
+      <div class="tool-stat">
+        <span class="tool-stat-label">Court Surface</span>
+        <strong>${recommendation.surface}</strong>
       </div>
       <div class="tool-stat">
         <span class="tool-stat-label">Arm Comfort</span>
@@ -5279,16 +5342,18 @@ function renderTensionCalculatorRecommendation() {
   }
 }
 
-function buildTensionCalculatorRecommendation({ type, racketFamily, preference, armComfort, source = null }) {
+function buildTensionCalculatorRecommendation({ type, gauge, racketFamily, preference, surface, armComfort, source = null }) {
   const base = TENSION_TYPE_BASE[type];
   if (!base) {
     return null;
   }
 
+  const gaugeAdjustment = TENSION_GAUGE_ADJUSTMENTS[gauge] || 0;
   const racketAdjustment = TENSION_RACKET_ADJUSTMENTS[racketFamily] || 0;
   const preferenceAdjustment = TENSION_FEEL_ADJUSTMENTS[preference] || 0;
+  const surfaceAdjustment = TENSION_SURFACE_ADJUSTMENTS[surface] || 0;
   const armAdjustment = TENSION_ARM_ADJUSTMENTS[armComfort] || 0;
-  const rawTargetPounds = base + racketAdjustment + preferenceAdjustment + armAdjustment;
+  const rawTargetPounds = base + gaugeAdjustment + racketAdjustment + preferenceAdjustment + surfaceAdjustment + armAdjustment;
   const targetPounds = clampNumber(
     rawTargetPounds,
     42,
@@ -5306,6 +5371,18 @@ function buildTensionCalculatorRecommendation({ type, racketFamily, preference, 
     : preference === "Control"
       ? "Your control target nudges the starting point higher."
       : "Balanced keeps the range near the middle.");
+  explanationParts.push(gauge === "15L" || gauge === "16"
+    ? "A thicker gauge gets a small bump because it usually feels a little firmer and lower-powered."
+    : gauge === "17" || gauge === "17L" || gauge === "18"
+      ? "A thinner gauge gets a small drop because it usually pockets more and launches a touch easier."
+      : "16L stays as the neutral gauge reference.");
+  explanationParts.push(surface === "Clay"
+    ? "Clay gets a small bump for extra control when you can swing bigger and the court slows the ball down."
+    : surface === "Grass"
+      ? "Grass gets a small drop to help pocketing and net clearance on the lowest bounce."
+      : surface === "Indoor"
+        ? "Indoor gets a slight bump because the ball usually moves a bit cleaner and faster through the court."
+        : "Hard court stays as the neutral reference point.");
 
   if (armComfort !== "Normal") {
     explanationParts.push("Extra arm comfort lowers the recommendation a bit.");
@@ -5313,6 +5390,7 @@ function buildTensionCalculatorRecommendation({ type, racketFamily, preference, 
 
   const sourceMatchesCurrentFields = Boolean(source)
     && source.type === type
+    && (!source.gauge || normalizeTensionCalculatorGauge(source.gauge) === gauge)
     && source.appliedRacketFamily === racketFamily;
   const proReference = source?.playerTension
     ? {
@@ -5332,8 +5410,10 @@ function buildTensionCalculatorRecommendation({ type, racketFamily, preference, 
 
   return {
     type,
+    gauge,
     racketFamily,
     preference,
+    surface,
     armComfort,
     source,
     proReference,
@@ -5342,7 +5422,7 @@ function buildTensionCalculatorRecommendation({ type, racketFamily, preference, 
     kgRange: formatKilogramRange(min, max),
     explanation: explanationParts.join(" "),
     logic: {
-      formula: `${formatDecimalNumber(base)} base ${formatSignedAdjustment(racketAdjustment)} racket ${formatSignedAdjustment(preferenceAdjustment)} feel ${formatSignedAdjustment(armAdjustment)} arm = ${formatDecimalNumber(targetPounds)} lbs target`,
+      formula: `${formatDecimalNumber(base)} base ${formatSignedAdjustment(gaugeAdjustment)} gauge ${formatSignedAdjustment(racketAdjustment)} racket ${formatSignedAdjustment(preferenceAdjustment)} feel ${formatSignedAdjustment(surfaceAdjustment)} surface ${formatSignedAdjustment(armAdjustment)} arm = ${formatDecimalNumber(targetPounds)} lbs target`,
       rangeExplanation: `${formatPoundsRange(min, max)} is shown as a simple starting window around the ${formatDecimalNumber(targetPounds)} lbs target.`,
       clampNote: rawTargetPounds !== targetPounds
         ? `The raw result was capped to keep calculator outputs between 42 and 58 lbs.`
@@ -5409,7 +5489,7 @@ function formatTensionBandRange(tensionBand) {
 }
 
 function formatPoundsRange(min, max) {
-  return `${Math.round(min)}-${Math.round(max)} lbs`;
+  return `${formatTensionStepValue(min)}-${formatTensionStepValue(max)} lbs`;
 }
 
 function formatDecimalNumber(value) {
@@ -5423,6 +5503,11 @@ function formatSignedAdjustment(value) {
 function formatKilogramRange(min, max) {
   const poundsToKg = (value) => (value * 0.45359237).toFixed(1);
   return `${poundsToKg(min)}-${poundsToKg(max)} kg`;
+}
+
+function formatTensionStepValue(value) {
+  const rounded = Math.round(Number(value) * 2) / 2;
+  return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
 }
 
 function clampNumber(value, min, max) {
@@ -6757,8 +6842,10 @@ if (typeof window !== "undefined") {
     STRINGS,
     FILTERS,
     TENSION_TYPE_BASE,
+    TENSION_GAUGE_ADJUSTMENTS,
     TENSION_RACKET_ADJUSTMENTS,
     TENSION_FEEL_ADJUSTMENTS,
+    TENSION_SURFACE_ADJUSTMENTS,
     TENSION_ARM_ADJUSTMENTS,
     mapStringLevelToNumeric,
     getRacketFamilyGroup,
