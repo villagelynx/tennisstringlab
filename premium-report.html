@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b2f52">
+  <title>Premium Setup Report | TennisSetup</title>
+  <meta name="description" content="Build a premium tennis setup report with your current setup score, best next setup, score lift, backup option, and stringer-ready notes.">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="stylesheet" href="./styles.css?v=20260412g">
+  <link rel="stylesheet" href="./homepage.css?v=20260412l">
+  <link rel="stylesheet" href="./premium-report.css?v=20260412b">
+</head>
+<body class="landing-page premium-report-page">
+  <header class="landing-header">
+    <div class="landing-header-inner">
+      <a class="landing-brand" href="./index.html" aria-label="Go to TennisSetup home">
+        <span class="landing-brand-mark" aria-hidden="true"></span>
+        <span class="landing-brand-wordmark">TennisSetup</span>
+      </a>
+
+      <nav class="landing-nav" aria-label="Primary">
+        <a href="./index.html">Home</a>
+        <a href="./analyze-current-setup.html">Analyze Current Setup</a>
+        <a href="./master-list.html">String Database</a>
+        <a href="./string-library.html">Guides</a>
+      </nav>
+
+      <details class="landing-menu">
+        <summary aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </summary>
+        <div class="landing-menu-panel">
+          <a href="./index.html">Home</a>
+          <a href="./analyze-current-setup.html">Analyze Current Setup</a>
+          <a href="./quick-setup.html">Quick Setup</a>
+          <a href="./setup-result.html">Setup Result</a>
+          <a href="./master-list.html">String Database</a>
+          <a href="./compare-strings.html">Compare Strings</a>
+          <a href="./proshops.html">Pro Shops</a>
+        </div>
+      </details>
+    </div>
+  </header>
+
+  <main class="landing-main premium-main">
+    <section class="premium-hero-card">
+      <div class="premium-hero-copy">
+        <p class="landing-eyebrow">Premium Setup Report</p>
+        <h1 id="premiumHeroTitle">Build your personalized setup report.</h1>
+        <p id="premiumHeroSummary" class="premium-hero-summary">Enter your current racket, string, gauge, and tension to turn the analyzer into one clean action plan with your current setup score, best next setup, score lift, and safer backup option.</p>
+        <div id="premiumContextStrip" class="premium-context-strip planner-hidden"></div>
+        <p id="premiumContextNote" class="premium-context-note planner-hidden"></p>
+
+        <div class="premium-hero-actions">
+          <a id="premiumHeroPrimaryAction" class="landing-button landing-button-primary" href="#premiumReportBuilder">Build My Report</a>
+          <a id="premiumHeroSecondaryAction" class="landing-button landing-button-ghost" href="./analyze-current-setup.html">Open Current Setup Analyzer</a>
+        </div>
+      </div>
+
+      <aside id="premiumHeroScoreboard" class="premium-hero-scoreboard">
+        <p class="landing-eyebrow landing-eyebrow-muted">What this report gives you</p>
+        <div class="premium-score-preview-grid">
+          <div class="premium-score-preview-card">
+            <span class="premium-score-preview-label">Current Score</span>
+            <strong>Live</strong>
+            <p>Built from your exact string, gauge, racket, and tension.</p>
+          </div>
+          <div class="premium-score-preview-card">
+            <span class="premium-score-preview-label">Best Next Setup</span>
+            <strong>Clear</strong>
+            <p>One strongest recommendation plus a safer backup path.</p>
+          </div>
+          <div class="premium-score-preview-card">
+            <span class="premium-score-preview-label">Stringer Ready</span>
+            <strong>Actionable</strong>
+            <p>Email-ready notes so you can actually use the report.</p>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="premiumReportBuilder" class="premium-builder-layout">
+      <article class="premium-builder-card">
+        <div class="premium-builder-header">
+          <p class="landing-eyebrow landing-eyebrow-muted">Step 1</p>
+          <h2>Complete your current setup</h2>
+          <p class="summary-copy">If you came from the homepage or result page, we already carried over the recommendation context. Add your current string, gauge, and tension here so the Premium Report can score what you are actually using now.</p>
+        </div>
+
+        <div class="tool-form-grid tool-form-grid-compact premium-form-grid">
+          <div class="field">
+            <label for="premiumReportRacket">Racket</label>
+            <select id="premiumReportRacket" class="search-input">
+              <option value="">Choose your racket family</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="premiumReportGauge">Gauge</label>
+            <select id="premiumReportGauge" class="search-input">
+              <option value="">Choose your gauge</option>
+            </select>
+          </div>
+          <div class="field is-wide">
+            <label for="premiumReportString">String</label>
+            <select id="premiumReportString" class="search-input">
+              <option value="">Choose your current string</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="premiumReportTension">Current Tension</label>
+            <select id="premiumReportTension" class="search-input">
+              <option value="">Choose your current tension</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="premiumReportGoal">Main Goal</label>
+            <select id="premiumReportGoal" class="search-input">
+              <option value="Balanced">Keep this setup balanced</option>
+              <option value="Spin">More Spin</option>
+              <option value="Comfort">More Comfort</option>
+              <option value="Power">More Power</option>
+              <option value="Control">More Control</option>
+              <option value="Durability">More Durability</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="toggle-field premium-toggle-field" for="premiumReportArm">
+          <input id="premiumReportArm" type="checkbox">
+          <span>I am noticing some arm discomfort with this setup</span>
+        </label>
+
+        <div class="premium-builder-actions">
+          <button id="premiumReportButton" class="landing-button landing-button-primary" type="button">Build Premium Report</button>
+          <a id="premiumReturnLink" class="landing-button landing-button-ghost" href="./setup-result.html">Back to Recommendation</a>
+        </div>
+
+        <p class="field-note">Premium Report v1 turns the existing scoring engine into a cleaner report with current score, recommended setup score, score lift, backup option, and a stringer-ready handoff.</p>
+      </article>
+
+      <div id="premiumReportShell" class="premium-report-shell">
+        <section class="premium-empty-card">
+          <p class="landing-eyebrow landing-eyebrow-muted">Premium Report</p>
+          <h3>Build your full report</h3>
+          <p>Add your current setup details to turn the recommendation engine into a single action page you can actually use before restringing.</p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="./analytics.js?v=20260411f"></script>
+  <script src="./app.js?v=20260409b"></script>
+  <script src="./setup-recommendations.js?v=20260411a"></script>
+  <script src="./setup-analyzer.js?v=20260412c"></script>
+  <script src="./premium-report.js?v=20260412b"></script>
+</body>
+</html>

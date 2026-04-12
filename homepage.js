@@ -29,6 +29,7 @@ const resultAltList = document.getElementById("resultAltList");
 const heroSetupCta = document.getElementById("heroSetupCta");
 const analyzerSetupCta = document.getElementById("analyzerSetupCta");
 const resultSetupCta = document.getElementById("resultSetupCta");
+const premiumReportCta = document.getElementById("premiumReportCta");
 const analyzerStyleSelect = document.getElementById("analyzerStyleSelect");
 const analyzerRacketSelect = document.getElementById("analyzerRacketSelect");
 
@@ -40,12 +41,17 @@ function renderList(target, items) {
 function syncSetupLinks() {
   const query = recommendationApi.toQueryString(state);
   const href = new URL(`./setup-result.html?${query}`, window.location.href).href;
+  const premiumHref = new URL(`./premium-report.html?${query}`, window.location.href).href;
 
   [analyzerSetupCta, resultSetupCta].forEach((link) => {
     if (link) {
       link.href = href;
     }
   });
+
+  if (premiumReportCta) {
+    premiumReportCta.href = premiumHref;
+  }
 }
 
 function updateRecommendation() {

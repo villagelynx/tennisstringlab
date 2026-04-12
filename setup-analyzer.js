@@ -13,8 +13,7 @@
     button: document.getElementById("setupAnalyzerButton"),
     report: document.getElementById("setupAnalyzerReport")
   };
-
-  if (!elements.button || !elements.report) return;
+  const hasAnalyzerUi = Boolean(elements.button && elements.report);
 
   const state = { latestReport: null };
   const metricColors = {
@@ -25,17 +24,19 @@
     Durability: "#5f6a77"
   };
 
-  populateControls();
-  renderReport(null);
+  if (hasAnalyzerUi) {
+    populateControls();
+    renderReport(null);
 
-  elements.string?.addEventListener("change", () => syncGaugeWithString(true));
-  elements.gauge?.addEventListener("change", () => {
-    elements.gauge.dataset.autofilled = "false";
-  });
-  elements.button.addEventListener("click", () => {
-    renderReport(buildReport());
-    api.trackToolUsage?.("setup_analyzer_analyze", "Analyze Setup");
-  });
+    elements.string?.addEventListener("change", () => syncGaugeWithString(true));
+    elements.gauge?.addEventListener("change", () => {
+      elements.gauge.dataset.autofilled = "false";
+    });
+    elements.button.addEventListener("click", () => {
+      renderReport(buildReport());
+      api.trackToolUsage?.("setup_analyzer_analyze", "Analyze Setup");
+    });
+  }
 
   function buildFallbackApi() {
     const strings = Array.isArray(window.TENNIS_STRING_DATA)
@@ -415,6 +416,7 @@
         </div>
         <p class="tool-mini-line">${escapeHtml(report.tensionContextLine)}</p>
         <div class="tool-inline-actions">
+          <a class="secondary-button compact-button" href="${escapeHtml(buildPremiumReportHref(report))}">Open Premium Report</a>
           <button class="secondary-button compact-button setup-analyzer-email-stringer" type="button">Email Report to Stringer</button>
         </div>
       </section>
@@ -526,12 +528,27 @@
   }
 
   function buildReport() {
-    const racketFamily = elements.racket?.value || "";
-    const gauge = elements.gauge?.value || "";
-    const goal = elements.goal?.value || "Balanced";
-    const armSensitive = Boolean(elements.arm?.checked);
-    const currentTension = Number(elements.tension?.value);
-    const entry = findStringEntryByName(elements.string?.value || "");
+    return buildReportFromValues(readFormValues());
+  }
+
+  function readFormValues() {
+    return {
+      racketFamily: elements.racket?.value || "",
+      gauge: elements.gauge?.value || "",
+      goal: elements.goal?.value || "Balanced",
+      armSensitive: Boolean(elements.arm?.checked),
+      currentTension: Number(elements.tension?.value),
+      stringName: elements.string?.value || ""
+    };
+  }
+
+  function buildReportFromValues(input = {}) {
+    const racketFamily = String(input.racketFamily || "").trim();
+    const gauge = String(input.gauge || "").trim();
+    const goal = String(input.goal || "Balanced").trim() || "Balanced";
+    const armSensitive = Boolean(input.armSensitive);
+    const currentTension = Number(input.currentTension);
+    const entry = input.entry || findStringEntryByName(input.stringName || input.string || "");
 
     if (!racketFamily) {
       return {
@@ -1512,6 +1529,24 @@
     window.location.href = "./tension-calculator.html";
   }
 
+  function buildPremiumReportHref(report) {
+    if (!report || report.error) {
+      return "./premium-report.html";
+    }
+
+    const params = new URLSearchParams({
+      source: "analyzer",
+      racketFamily: report.racketFamily,
+      gauge: report.gauge,
+      string: report.entry.name,
+      tension: String(report.currentTension),
+      goal: report.goal,
+      arm: report.armSensitive ? "1" : "0"
+    });
+
+    return `./premium-report.html?${params.toString()}`;
+  }
+
   function emailCurrentSetupReportToStringer() {
     const report = state.latestReport;
     if (!report || report.error) {
@@ -1569,4 +1604,9 @@
   function formatTensionOption(value) {
     return Number.isInteger(value) ? `${value} lbs` : `${value.toFixed(1)} lbs`;
   }
+
+  window.TennisSetupPremiumReportApi = {
+    buildAnalyzerReportFromValues: buildReportFromValues,
+    buildPremiumReportHref
+  };
 })();
