@@ -216,43 +216,20 @@ textarea {
 
 .landing-hero-tennis-ball {
   position: absolute;
-  top: -24px;
-  right: -18px;
-  width: 132px;
-  height: 132px;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0) 24%),
-    radial-gradient(circle at 50% 50%, #f4f36a 0%, #d8ee3f 58%, #bdd425 100%);
-  box-shadow:
-    inset -10px -12px 18px rgba(98, 132, 16, 0.2),
-    0 18px 28px rgba(3, 17, 29, 0.18);
-  opacity: 0.96;
+  top: -30px;
+  right: -22px;
+  width: 148px;
+  height: 148px;
+  background: url("./hero-tennis-ball.svg") center / contain no-repeat;
+  transform: rotate(-18deg);
+  filter: drop-shadow(0 18px 28px rgba(3, 17, 29, 0.18));
   z-index: 0;
+  pointer-events: none;
 }
 
 .landing-hero-tennis-ball::before,
 .landing-hero-tennis-ball::after {
-  content: "";
-  position: absolute;
-  top: 7px;
-  width: 70px;
-  height: 118px;
-  border-radius: 999px;
-  border: 5px solid rgba(255, 255, 255, 0.96);
-  opacity: 0.98;
-}
-
-.landing-hero-tennis-ball::before {
-  left: 10px;
-  clip-path: inset(0 36% 0 0);
-  transform: rotate(18deg);
-}
-
-.landing-hero-tennis-ball::after {
-  right: 10px;
-  clip-path: inset(0 0 0 36%);
-  transform: rotate(18deg);
+  display: none;
 }
 
 .landing-hero-copy::before,
