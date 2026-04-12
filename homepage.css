@@ -967,9 +967,55 @@ textarea {
   color: #ffffff;
 }
 
+.monetization-kicker {
+  margin: 0;
+  color: var(--orange-300);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .monetization-card h3,
 .monetization-card li {
   color: #ffffff;
+}
+
+.monetization-card h3 {
+  margin-top: 14px;
+}
+
+.monetization-pricing {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.monetization-price-box {
+  display: grid;
+  gap: 4px;
+  padding: 16px 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.monetization-price-box strong {
+  color: #ffffff;
+  font-size: 1.8rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.monetization-price-box span {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.monetization-price-box.is-single {
+  grid-column: 1 / -1;
 }
 
 .monetization-card ul {
@@ -978,6 +1024,27 @@ textarea {
 
 .monetization-actions {
   margin-top: 22px;
+}
+
+.monetization-inline-link {
+  display: inline-flex;
+  margin-top: 14px;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.monetization-footnote {
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.proshops-partner-section {
+  margin-top: 24px;
 }
 
 .cross-site-cta {
@@ -1094,8 +1161,13 @@ textarea {
   .credibility-card span,
   .setup-card-meta,
   .monetization-copy p,
-  .monetization-card li {
+  .monetization-card li,
+  .monetization-footnote {
     font-size: 1rem;
+  }
+
+  .monetization-pricing {
+    grid-template-columns: 1fr;
   }
 
   .preview-metrics {
@@ -1352,10 +1424,27 @@ textarea {
   body.landing-page .problem-card p,
   body.landing-page .monetization-copy p,
   body.landing-page .monetization-card li,
+  body.landing-page .monetization-footnote,
   body.landing-page .result-column li,
   body.landing-page .credibility-card span,
   body.landing-page .setup-card-meta {
     font-size: 0.9rem;
+  }
+
+  body.landing-page .monetization-inline-link {
+    font-size: 0.88rem;
+  }
+
+  body.landing-page .monetization-kicker {
+    font-size: 0.72rem;
+  }
+
+  body.landing-page .monetization-price-box strong {
+    font-size: 1.5rem;
+  }
+
+  body.landing-page .monetization-price-box span {
+    font-size: 0.82rem;
   }
 
   body.landing-page .preview-metric strong {
