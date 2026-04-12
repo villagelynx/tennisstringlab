@@ -24,6 +24,7 @@
   const proSetupIndex = new Map(
     proSetupOptions.map((example) => [normalizePlayerName(example.player), example])
   );
+  const scoredProSetups = buildScoredProSetups();
 
   const elements = {
     select: document.getElementById("proSetupPlayerSelect"),
@@ -31,7 +32,8 @@
     report: document.getElementById("proSetupReport"),
     layout: document.getElementById("proSetupLayout"),
     pickerCard: document.getElementById("proSetupPickerCard"),
-    navPanel: document.getElementById("proSetupNavPanel")
+    navPanel: document.getElementById("proSetupNavPanel"),
+    topScoring: document.getElementById("proSetupTopScoring")
   };
 
   if (!elements.select || !elements.button || !elements.report || !strings.length || !proSetupOptions.length) {
@@ -40,6 +42,7 @@
 
   populateControls();
   populateNavDropdown();
+  renderTopScoringSection();
   applyPrefillFromQuery();
 
   elements.button.addEventListener("click", () => {
@@ -95,6 +98,42 @@
     elements.select.value = match.player;
     hidePickerCard();
     renderSetup(buildSelectedSetup());
+  }
+
+  function renderTopScoringSection() {
+    if (!elements.topScoring) {
+      return;
+    }
+
+    const topSetups = scoredProSetups.slice(0, 8);
+    const eliteSetups = scoredProSetups.filter((setup) => setup.setupScore.total >= 98);
+    const intro = eliteSetups.length
+      ? `${eliteSetups.length} player${eliteSetups.length === 1 ? "" : "s"} currently land at 98+ in this model.`
+      : "No player is currently at 98+ in this model, but these are the highest-scoring setups in the database.";
+
+    elements.topScoring.innerHTML = `
+      <div class="setup-analyzer-card-header">
+        <p class="eyebrow">Top Scoring</p>
+        <h3>Top Scoring Pro Setups</h3>
+      </div>
+      <p class="summary-copy">${escapeHtml(intro)}</p>
+      <div class="pro-setup-top-scoring-grid">
+        ${topSetups.map((setup) => renderTopScoringCard(setup)).join("")}
+      </div>
+    `;
+  }
+
+  function renderTopScoringCard(setup) {
+    return `
+      <a class="pro-setup-top-scoring-card" href="./pro-setup.html?player=${encodeURIComponent(setup.player)}">
+        <div class="pro-setup-top-scoring-header">
+          <strong>${escapeHtml(setup.player)}</strong>
+          <span class="pro-setup-score-badge">${setup.setupScore.total}/100</span>
+        </div>
+        <span class="pro-setup-top-scoring-meta">${escapeHtml(setup.stringName)} | ${escapeHtml(setup.actualRacket)}</span>
+        <span class="pro-setup-top-scoring-label">${escapeHtml(setup.setupScore.summary)}</span>
+      </a>
+    `;
   }
 
   function buildSelectedSetup() {
@@ -269,6 +308,19 @@
     }
 
     return bullets.slice(0, 4);
+  }
+
+  function buildScoredProSetups() {
+    return proSetupOptions
+      .map((example) => buildProSetup(example))
+      .filter((setup) => !setup.error)
+      .sort((left, right) => {
+        const scoreGap = right.setupScore.total - left.setupScore.total;
+        if (scoreGap !== 0) {
+          return scoreGap;
+        }
+        return left.player.localeCompare(right.player);
+      });
   }
 
   function buildProSetupOptions() {
