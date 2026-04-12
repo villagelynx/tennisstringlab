@@ -222,12 +222,12 @@ textarea {
   height: 132px;
   border-radius: 999px;
   background:
-    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0) 24%),
-    radial-gradient(circle at 50% 50%, #c7ef61 0%, #a8dc3f 58%, #8ac52f 100%);
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0) 24%),
+    radial-gradient(circle at 50% 50%, #f4f36a 0%, #d8ee3f 58%, #bdd425 100%);
   box-shadow:
-    inset -10px -12px 18px rgba(84, 132, 22, 0.22),
+    inset -10px -12px 18px rgba(98, 132, 16, 0.2),
     0 18px 28px rgba(3, 17, 29, 0.18);
-  opacity: 0.9;
+  opacity: 0.96;
   z-index: 0;
 }
 
@@ -235,20 +235,24 @@ textarea {
 .landing-hero-tennis-ball::after {
   content: "";
   position: absolute;
-  inset: 13px;
+  top: 7px;
+  width: 70px;
+  height: 118px;
   border-radius: 999px;
-  border: 5px solid transparent;
-  opacity: 0.96;
+  border: 5px solid rgba(255, 255, 255, 0.96);
+  opacity: 0.98;
 }
 
 .landing-hero-tennis-ball::before {
-  border-left-color: rgba(255, 255, 255, 0.92);
-  transform: rotate(14deg) scaleX(0.84) translateX(-8px);
+  left: 10px;
+  clip-path: inset(0 36% 0 0);
+  transform: rotate(18deg);
 }
 
 .landing-hero-tennis-ball::after {
-  border-right-color: rgba(255, 255, 255, 0.92);
-  transform: rotate(14deg) scaleX(0.84) translateX(8px);
+  right: 10px;
+  clip-path: inset(0 0 0 36%);
+  transform: rotate(18deg);
 }
 
 .landing-hero-copy::before,
