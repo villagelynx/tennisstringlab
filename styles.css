@@ -2236,6 +2236,217 @@ h1 {
   font-weight: 700;
 }
 
+@media (min-width: 761px) {
+  body.proshops-page .page-shell {
+    width: min(1140px, calc(100% - 26px));
+    gap: 14px;
+    margin-top: 14px;
+  }
+
+  body.proshops-page .hero {
+    padding: 20px;
+    border-radius: 22px !important;
+  }
+
+  body.proshops-page .hero > .eyebrow {
+    font-size: 0.76rem;
+  }
+
+  body.proshops-page .hero > h1 {
+    font-size: clamp(1.95rem, 2.65vw, 2.8rem);
+    line-height: 1.02;
+  }
+
+  body.proshops-page .hero-copy {
+    max-width: 680px;
+    margin-top: 8px;
+    font-size: 0.92rem;
+    line-height: 1.44;
+  }
+
+  body.proshops-page .proshops-hero-owner-cta {
+    margin-top: 12px;
+  }
+
+  body.proshops-page .hero-actions {
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  body.proshops-page .hero .search-input {
+    min-height: 46px;
+    padding: 9px 12px;
+    font-size: 0.94rem;
+  }
+
+  body.proshops-page .hero-search-control {
+    width: min(300px, 100%);
+  }
+
+  body.proshops-page .shop-context-row {
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  body.proshops-page .shop-location-button {
+    min-height: 46px;
+    padding: 0 12px;
+    font-size: 0.86rem;
+  }
+
+  body.proshops-page .standalone-panel {
+    padding-top: 14px;
+  }
+
+  body.proshops-page .results-panel {
+    padding: 16px;
+    border-radius: 20px !important;
+  }
+
+  body.proshops-page .results-header h2 {
+    font-size: 1.16rem;
+  }
+
+  body.proshops-page .results-count {
+    font-size: 0.84rem;
+  }
+
+  body.proshops-page .results-list {
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  body.proshops-page .shop-card {
+    padding: 12px;
+    border-radius: 16px !important;
+  }
+
+  body.proshops-page .shop-card h3 {
+    font-size: 0.92rem;
+  }
+
+  body.proshops-page .shop-card-title-wrap {
+    gap: 4px;
+  }
+
+  body.proshops-page .shop-badge {
+    min-height: 22px;
+    padding: 2px 8px;
+    font-size: 0.66rem;
+  }
+
+  body.proshops-page .shop-distance {
+    min-height: 22px;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+  }
+
+  body.proshops-page .shop-meta {
+    margin-top: 2px;
+    font-size: 0.82rem;
+  }
+
+  body.proshops-page .shop-card .summary-copy {
+    font-size: 0.86rem;
+    line-height: 1.4;
+  }
+
+  body.proshops-page .shop-actions {
+    margin-top: 8px;
+  }
+
+  body.proshops-page .shop-link {
+    min-height: 30px;
+    padding: 4px 10px;
+    font-size: 0.78rem;
+  }
+
+  body.proshops-page .proshops-partner-section {
+    margin-top: 18px;
+  }
+
+  body.proshops-page .proshops-partner-stack {
+    gap: 14px;
+  }
+
+  body.proshops-page .monetization-card,
+  body.proshops-page .proshops-listing-form-card {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  body.proshops-page .monetization-kicker {
+    font-size: 0.72rem;
+  }
+
+  body.proshops-page .monetization-copy h2,
+  body.proshops-page .monetization-card h3 {
+    font-size: clamp(1.34rem, 1.6vw, 1.72rem);
+  }
+
+  body.proshops-page .monetization-copy p,
+  body.proshops-page .monetization-card li,
+  body.proshops-page .proshops-listing-form-card .summary-copy,
+  body.proshops-page .proshops-listing-form-card .field-note,
+  body.proshops-page .proshops-listing-success span {
+    font-size: 0.88rem;
+    line-height: 1.42;
+  }
+
+  body.proshops-page .monetization-pricing {
+    margin-top: 14px;
+    gap: 10px;
+  }
+
+  body.proshops-page .monetization-price-box {
+    padding: 13px 12px;
+    border-radius: 16px;
+  }
+
+  body.proshops-page .monetization-price-box strong {
+    font-size: 1.48rem;
+  }
+
+  body.proshops-page .monetization-price-box span,
+  body.proshops-page .monetization-footnote,
+  body.proshops-page .monetization-inline-link {
+    font-size: 0.82rem;
+  }
+
+  body.proshops-page .proshops-listing-form {
+    gap: 14px;
+    margin-top: 14px;
+  }
+
+  body.proshops-page .proshops-listing-form .tool-form-grid {
+    gap: 10px;
+  }
+
+  body.proshops-page .proshops-listing-form .field label {
+    font-size: 0.76rem;
+  }
+
+  body.proshops-page .proshops-listing-form .search-input {
+    min-height: 46px;
+    padding: 10px 12px;
+    font-size: 0.94rem;
+  }
+
+  body.proshops-page .proshops-listing-textarea {
+    min-height: 118px;
+  }
+
+  body.proshops-page .proshops-listing-success {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-radius: 16px;
+  }
+
+  body.proshops-page .proshops-listing-success strong {
+    font-size: 0.88rem;
+  }
+}
+
 .library-note-card {
   margin-top: 14px;
   border-radius: 18px;
