@@ -1056,9 +1056,24 @@ textarea {
   gap: 18px;
 }
 
+.proshops-partner-card {
+  height: 100%;
+}
+
 .proshops-listing-form-card {
   background: #ffffff;
   color: var(--ink-900);
+}
+
+@media (min-width: 980px) {
+  .proshops-partner-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .proshops-listing-form-card {
+    grid-column: 1 / -1;
+  }
 }
 
 .proshops-listing-form-card h3,
@@ -1489,7 +1504,7 @@ textarea {
   }
 
   body.landing-page .landing-hero h1 {
-    font-size: clamp(1.72rem, 2.55vw, 2.8rem);
+    font-size: clamp(1.58rem, 2.3vw, 2.5rem);
   }
 
   body.landing-page .landing-hero-lead {
