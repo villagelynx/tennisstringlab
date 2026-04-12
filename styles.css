@@ -4459,16 +4459,16 @@ body[data-page="hybrid-builder"] .hybrid-reference-score-badge {
   min-height: 34px;
   padding: 0 12px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #146b78, #22b8b2);
-  box-shadow: 0 10px 18px rgba(20, 107, 120, 0.18);
-  color: #ffffff;
+  background: linear-gradient(135deg, #f6e57a, #f0d94c);
+  box-shadow: 0 10px 18px rgba(210, 184, 53, 0.2);
+  color: #0b2f52;
   font-size: 0.92rem;
   font-weight: 800;
   line-height: 1;
 }
 
 body[data-page="hybrid-builder"] .hybrid-reference-score-label {
-  color: #3d6576;
+  color: #314b63;
   font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.25;
@@ -6814,14 +6814,14 @@ body[data-page="pro-setup"] .tool-page-shell {
 }
 
 body[data-page="hybrid-builder"] .tool-page-header {
-  background: #22b8b2 !important;
+  background: #f0d94c !important;
   background-image: none !important;
   border: 0 !important;
   box-shadow: none !important;
 }
 
 body[data-page="hybrid-builder"] .tool-page-header .eyebrow {
-  color: #dcfaf7 !important;
+  color: rgba(11, 47, 82, 0.72) !important;
 }
 
 body[data-page="hybrid-builder"] .tool-page-header h1,
@@ -6829,19 +6829,19 @@ body[data-page="hybrid-builder"] .tool-page-header h2,
 body[data-page="hybrid-builder"] .tool-page-header p,
 body[data-page="hybrid-builder"] .tool-page-header .tool-page-copy,
 body[data-page="hybrid-builder"] .tool-page-header .results-count {
-  color: #ffffff !important;
+  color: #0b2f52 !important;
 }
 
 body[data-page="hybrid-builder"],
 body[data-page="hybrid-builder"] main,
 body[data-page="hybrid-builder"] .tool-page-shell {
-  background: #22b8b2 !important;
+  background: #f0d94c !important;
 }
 
 body[data-page="hybrid-builder"] .tool-page-card-hybrid-builder,
 body[data-page="hybrid-builder"] .tool-page-card-hybrid-builder-reference {
-  background: #ddf7f4 !important;
-  border: 1px solid rgba(34, 184, 178, 0.2) !important;
+  background: #fff7c8 !important;
+  border: 1px solid rgba(240, 217, 76, 0.26) !important;
 }
 
 body[data-page="hybrid-builder"] #hybridBuilderButton {
@@ -6849,11 +6849,11 @@ body[data-page="hybrid-builder"] #hybridBuilderButton {
   min-height: 54px !important;
   padding: 0 20px !important;
   border-radius: 16px !important;
-  background: #22b8b2 !important;
+  background: #f0d94c !important;
   background-image: none !important;
-  border: 1px solid rgba(34, 184, 178, 0.28) !important;
-  box-shadow: 0 12px 26px rgba(34, 184, 178, 0.24) !important;
-  color: #ffffff !important;
+  border: 1px solid rgba(240, 217, 76, 0.32) !important;
+  box-shadow: 0 12px 26px rgba(210, 184, 53, 0.22) !important;
+  color: #0b2f52 !important;
   font-size: 1rem !important;
   font-weight: 800 !important;
   line-height: 1.1 !important;
