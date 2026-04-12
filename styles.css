@@ -3836,6 +3836,29 @@ body[data-page="tension-calculator"] .tool-reference-item {
   gap: 4px;
 }
 
+.setup-fit-lift {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-top: 6px;
+}
+
+.setup-fit-lift-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #5b31c2, #7a56d9);
+  box-shadow: 0 10px 18px rgba(91, 49, 194, 0.18);
+  color: #ffffff;
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
 .setup-fit-kicker {
   color: #56738d;
   font-size: 0.76rem;

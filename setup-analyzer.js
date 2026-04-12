@@ -380,6 +380,10 @@
             <span class="setup-fit-kicker">Current setup score</span>
             <strong>${report.setupScore.total}/100</strong>
             <p class="tool-note tool-note-compact">${escapeHtml(report.setupScore.summary)}</p>
+            <div class="setup-fit-lift">
+              <span class="setup-fit-lift-badge">+${report.scoreLift.lift}</span>
+              <p class="tool-note tool-note-compact">Best next setup: <strong>${escapeHtml(report.scoreLift.bestOption.entry.name)}</strong> at ${report.scoreLift.bestOption.setupScore.total}/100.</p>
+            </div>
           </div>
           <div class="setup-fit-breakdown">
             ${report.setupScore.breakdown.map((item) => `
@@ -582,6 +586,8 @@
       targetTension: preferredTarget,
       profile
     });
+    const recommendations = buildRecommendations(entry, racketFamily, gauge, safeTension, baselineTarget, goal, armSensitive, profile);
+    const scoreLift = buildScoreLift(setupScore, recommendations);
 
     return {
       entry,
@@ -594,6 +600,7 @@
       tensionDifference,
       tensionPosition,
       setupScore,
+      scoreLift,
       tensionContextLine: `${normalizedType} in ${racketFamily} usually lands around ${api.formatDecimalNumber(baselineTarget)} lbs as a balanced starting point${armSensitive ? " with a small comfort adjustment for the arm" : ""}. Your current ${api.formatDecimalNumber(safeTension)} lbs sits ${tensionPosition.positionText}.`,
       snapshotTitle: `${racketFamily} + ${entry.name} ${gauge} @ ${api.formatDecimalNumber(safeTension)} lbs`,
       snapshotSummary: `${getRacketDescriptor(racketFamily)} + ${getStringDescriptor(entry)} + ${tensionPosition.label.toLowerCase()} tension for this kind of build.`,
@@ -607,7 +614,7 @@
       strengths: buildStrengths(profile, tensionDifference),
       watchouts: buildWatchouts(profile, tensionDifference, armSensitive),
       adjustment: buildAdjustment(entry, gauge, safeTension, baselineTarget, tensionDifference, goal, armSensitive, profile),
-      recommendations: buildRecommendations(entry, racketFamily, gauge, safeTension, baselineTarget, goal, armSensitive, profile)
+      recommendations
     };
   }
 
@@ -707,6 +714,26 @@
       }),
       calculatorType: normalizeTypeForTension(entry.type),
       tensionRecommendation: buildTensionRecommendation(entry, appliedRacketFamily, appliedPreference, armSensitive)
+    };
+  }
+
+  function buildScoreLift(currentSetupScore, recommendations) {
+    const bestOption = [...(recommendations || [])]
+      .sort((left, right) => right.setupScore.total - left.setupScore.total)[0];
+
+    if (!bestOption) {
+      return {
+        bestOption: {
+          entry: { name: "No next setup yet" },
+          setupScore: { total: currentSetupScore.total }
+        },
+        lift: 0
+      };
+    }
+
+    return {
+      bestOption,
+      lift: Math.max(0, bestOption.setupScore.total - currentSetupScore.total)
     };
   }
 
