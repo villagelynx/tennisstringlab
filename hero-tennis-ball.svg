@@ -15,17 +15,22 @@
     <filter id="soften" x="28" y="28" width="264" height="264" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
       <feGaussianBlur stdDeviation="0.35"/>
     </filter>
+    <clipPath id="ballClip">
+      <circle cx="160" cy="150" r="126"/>
+    </clipPath>
   </defs>
 
   <g filter="url(#shadow)">
     <circle cx="160" cy="150" r="126" fill="url(#ballFill)"/>
     <circle cx="160" cy="150" r="126" fill="url(#highlight)"/>
     <ellipse cx="188" cy="236" rx="86" ry="54" fill="#84BB16" fill-opacity="0.22"/>
-    <g filter="url(#soften)">
-      <path d="M90 57C56 86 47 127 49 177C51 223 74 257 111 281" stroke="white" stroke-width="16" stroke-linecap="round"/>
-      <path d="M219 31C254 58 272 91 275 131C279 182 258 226 219 267" stroke="white" stroke-width="16" stroke-linecap="round"/>
+    <g clip-path="url(#ballClip)">
+      <g filter="url(#soften)">
+        <path d="M101 62C74 87 64 126 66 171C68 212 85 244 113 266" stroke="white" stroke-width="16" stroke-linecap="round"/>
+        <path d="M207 44C236 67 250 99 253 138C256 182 241 218 212 255" stroke="white" stroke-width="16" stroke-linecap="round"/>
+      </g>
+      <path d="M101 62C74 87 64 126 66 171C68 212 85 244 113 266" stroke="white" stroke-width="13" stroke-linecap="round"/>
+      <path d="M207 44C236 67 250 99 253 138C256 182 241 218 212 255" stroke="white" stroke-width="13" stroke-linecap="round"/>
     </g>
-    <path d="M90 57C56 86 47 127 49 177C51 223 74 257 111 281" stroke="white" stroke-width="13" stroke-linecap="round"/>
-    <path d="M219 31C254 58 272 91 275 131C279 182 258 226 219 267" stroke="white" stroke-width="13" stroke-linecap="round"/>
   </g>
 </svg>
