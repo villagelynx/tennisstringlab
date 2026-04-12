@@ -209,6 +209,7 @@ textarea {
   color: #ffffff;
   position: relative;
   overflow: visible;
+  z-index: 3;
 }
 
 .landing-hero-copy > * {
@@ -327,7 +328,7 @@ textarea {
 .landing-hero-prosetups {
   margin-top: 0;
   position: relative;
-  z-index: 15;
+  z-index: 30;
 }
 
 .landing-hero-prosetups summary {
@@ -451,7 +452,7 @@ textarea {
   position: absolute;
   top: calc(100% + 10px);
   left: 0;
-  z-index: 12;
+  z-index: 60;
   width: min(320px, 26vw);
   margin-top: 0;
   display: grid;
@@ -535,6 +536,8 @@ textarea {
   border-color: rgba(242, 141, 47, 0.24);
   box-shadow: none;
   backdrop-filter: none;
+  position: relative;
+  z-index: 1;
 }
 
 .preview-card-topline {
@@ -1176,5 +1179,89 @@ textarea {
 
   .cross-site-cta a {
     font-size: 1.08rem;
+  }
+}
+
+@media (min-width: 981px) {
+  .landing-brand-wordmark {
+    font-size: clamp(1.32rem, 1.45vw, 1.58rem);
+  }
+
+  .landing-nav a {
+    font-size: 0.9rem;
+  }
+
+  .landing-eyebrow {
+    font-size: 0.76rem;
+  }
+
+  .landing-hero h1 {
+    font-size: clamp(2.55rem, 4vw, 4.45rem);
+  }
+
+  .landing-hero-lead {
+    max-width: 48rem;
+    font-size: 1rem;
+  }
+
+  .landing-preview-card h2,
+  .analyzer-result-card h3,
+  .monetization-card h3 {
+    font-size: clamp(1.65rem, 1.95vw, 2.15rem);
+  }
+
+  .preview-meta,
+  .result-summary,
+  .section-heading p,
+  .problem-card p,
+  .monetization-copy p,
+  .monetization-card li,
+  .result-column li,
+  .credibility-card span {
+    font-size: 0.96rem;
+  }
+
+  .preview-metric strong {
+    font-size: 1.28rem;
+  }
+
+  .preview-metric span {
+    font-size: 0.86rem;
+  }
+
+  .credibility-card strong,
+  .problem-card h3,
+  .setup-card-name,
+  .pill-group-label,
+  .result-column h4 {
+    font-size: 1rem;
+  }
+
+  .section-heading h2,
+  .monetization-copy h2 {
+    font-size: clamp(1.95rem, 2.35vw, 2.55rem);
+  }
+
+  .analyzer-select-label {
+    font-size: 0.88rem;
+  }
+
+  .analyzer-select {
+    font-size: 1.2rem;
+  }
+
+  .choice-pill {
+    min-height: 52px;
+    font-size: 1rem;
+  }
+
+  .setup-card-spec {
+    font-size: 0.94rem;
+  }
+
+  .setup-card-meta,
+  .setup-card a,
+  .cross-site-cta a {
+    font-size: 0.96rem;
   }
 }

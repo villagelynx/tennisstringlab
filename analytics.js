@@ -830,7 +830,7 @@
 
   function ensureSharedSiteHeader() {
     const page = getCurrentPage();
-    if (page === "index.html" || document.querySelector(".site-header")) {
+    if (page === "index.html" || document.querySelector(".site-header") || document.querySelector(".landing-header")) {
       return;
     }
 

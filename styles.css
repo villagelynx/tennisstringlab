@@ -3416,8 +3416,10 @@ body[data-page="tension-calculator"] .tool-page-card .compact-button {
 }
 
 body[data-page="tension-calculator"] #tensionCalcType,
+body[data-page="tension-calculator"] #tensionCalcGauge,
 body[data-page="tension-calculator"] #tensionCalcRacket,
 body[data-page="tension-calculator"] #tensionCalcPreference,
+body[data-page="tension-calculator"] #tensionCalcSurface,
 body[data-page="tension-calculator"] #tensionCalcArm {
   min-height: 36px;
   padding-top: 4px;
@@ -6376,5 +6378,100 @@ body[data-page="pro-setup"],
 body[data-page="pro-setup"] main,
 body[data-page="pro-setup"] .tool-page-shell {
   background: #5b31c2 !important;
+}
+
+body[data-page="hybrid-builder"] .tool-page-header {
+  background: #22b8b2 !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body[data-page="hybrid-builder"] .tool-page-header .eyebrow {
+  color: #dcfaf7 !important;
+}
+
+body[data-page="hybrid-builder"] .tool-page-header h1,
+body[data-page="hybrid-builder"] .tool-page-header h2,
+body[data-page="hybrid-builder"] .tool-page-header p,
+body[data-page="hybrid-builder"] .tool-page-header .tool-page-copy,
+body[data-page="hybrid-builder"] .tool-page-header .results-count {
+  color: #ffffff !important;
+}
+
+body[data-page="hybrid-builder"],
+body[data-page="hybrid-builder"] main,
+body[data-page="hybrid-builder"] .tool-page-shell {
+  background: #22b8b2 !important;
+}
+
+body[data-page="hybrid-builder"] .tool-page-card-hybrid-builder,
+body[data-page="hybrid-builder"] .tool-page-card-hybrid-builder-reference {
+  background: #ddf7f4 !important;
+  border: 1px solid rgba(34, 184, 178, 0.2) !important;
+}
+
+body[data-page="hybrid-builder"] #hybridBuilderButton {
+  width: 100% !important;
+  min-height: 54px !important;
+  padding: 0 20px !important;
+  border-radius: 16px !important;
+  background: #22b8b2 !important;
+  background-image: none !important;
+  border: 1px solid rgba(34, 184, 178, 0.28) !important;
+  box-shadow: 0 12px 26px rgba(34, 184, 178, 0.24) !important;
+  color: #ffffff !important;
+  font-size: 1rem !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+  justify-content: center !important;
+}
+
+@media (min-width: 981px) {
+  body.tool-page-body .tool-page-title-row h1 {
+    font-size: clamp(2.2rem, 4vw, 3rem);
+  }
+
+  body.tool-page-body .tool-page-copy {
+    font-size: 0.98rem;
+    line-height: 1.5;
+  }
+
+  body.tool-page-body .tool-page-nav-link {
+    min-height: 42px;
+    padding: 0 15px;
+    font-size: 0.9rem;
+  }
+
+  body.tool-page-body .tool-page-card .tool-card h3 {
+    font-size: 1.42rem;
+  }
+
+  body.tool-page-body .tool-page-card .summary-copy,
+  body.tool-page-body .tool-page-card .tool-note,
+  body.tool-page-body .tool-page-card .tool-mini-line,
+  body.tool-page-body .tool-page-card .field-note {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  body.tool-page-body .tool-page-card label,
+  body.tool-page-body .tool-page-card .tool-stat-label {
+    font-size: 0.94rem;
+  }
+
+  body.tool-page-body .tool-page-card .secondary-button,
+  body.tool-page-body .tool-page-card .compact-button {
+    font-size: 0.96rem;
+  }
+
+  body.tool-page-body .tool-page-card .search-input,
+  body.tool-page-body .tool-page-example-picker .search-input {
+    font-size: 1.06rem;
+  }
+
+  body.tool-page-body .tool-recommendation-name {
+    font-size: 1.18rem;
+  }
 }
 
