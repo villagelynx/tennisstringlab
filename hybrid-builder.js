@@ -154,6 +154,7 @@
     const profile = buildHybridProfile(main, cross);
     const split = buildStartingSplit(main, cross, racketFamily, goal, armComfort);
     const identity = classifyHybrid(main, cross);
+    const hybridScore = buildHybridScore({ main, cross, racketFamily, goal, armComfort, profile, split });
 
     return {
       main,
@@ -164,12 +165,13 @@
       profile,
       split,
       identity,
+      hybridScore,
       snapshotTitle: `${main.name} mains + ${cross.name} crosses`,
       snapshotSummary: `${identity.title} in ${racketFamily}. ${identity.summary}`,
       strengths: buildStrengths(main, cross, profile, goal, identity),
       watchouts: buildWatchouts(main, cross, profile, racketFamily, goal, identity),
       fitLines: buildFitLines(main, cross, profile, split),
-      emailDraft: buildEmailDraft(main, cross, racketFamily, goal, armComfort, identity, split)
+      emailDraft: buildEmailDraft(main, cross, racketFamily, goal, armComfort, identity, split, hybridScore)
     };
   }
 
@@ -191,6 +193,21 @@
           <p class="eyebrow">Hybrid Snapshot</p>
           <h3 class="tool-recommendation-name">${escapeHtml(report.snapshotTitle)}</h3>
           <p class="tool-note">${escapeHtml(report.snapshotSummary)}</p>
+        </div>
+        <div class="setup-fit-panel">
+          <div class="setup-fit-total">
+            <span class="setup-fit-kicker">Hybrid setup score</span>
+            <strong>${report.hybridScore.total}/100</strong>
+            <p class="tool-note tool-note-compact">${escapeHtml(report.hybridScore.summary)}</p>
+          </div>
+          <div class="setup-fit-breakdown">
+            ${report.hybridScore.breakdown.map((item) => `
+              <div class="setup-fit-breakdown-item">
+                <span>${escapeHtml(item.label)}</span>
+                <strong>${item.score}/${item.max}</strong>
+              </div>
+            `).join("")}
+          </div>
         </div>
         <div class="tool-stat-grid">
           <div class="tool-stat">
@@ -487,7 +504,7 @@
     return fitLines.slice(0, 4);
   }
 
-  function buildEmailDraft(main, cross, racketFamily, goal, armComfort, identity, split) {
+  function buildEmailDraft(main, cross, racketFamily, goal, armComfort, identity, split, hybridScore) {
     const lines = [
       "Hi,",
       "",
@@ -500,6 +517,7 @@
       `Arm comfort: ${armComfort}`,
       `Suggested starting split: ${split.lbsSplit} (${split.kgSplit})`,
       `Hybrid type: ${identity.title}`,
+      `Hybrid setup score: ${hybridScore.total}/100`,
       `Split note: ${split.note}`,
       main.summary ? `Main string note: ${main.summary}` : "",
       cross.summary ? `Cross string note: ${cross.summary}` : "",
@@ -511,6 +529,292 @@
       subject: `Hybrid setup request: ${main.name} / ${cross.name}`,
       body: lines.join("\n")
     };
+  }
+
+  function buildHybridScore({ main, cross, racketFamily, goal, armComfort, profile, split }) {
+    const breakdown = [
+      { label: "Goal Fit", score: scoreHybridGoalFit(profile, goal), max: 30 },
+      { label: "Racket Fit", score: scoreHybridRacketFit(main, cross, racketFamily), max: 20 },
+      { label: "String Pairing", score: scoreHybridPairingFit(main, cross, profile, goal), max: 20 },
+      { label: "Split + Feel", score: scoreHybridSplitFit(split, goal), max: 15 },
+      { label: "Comfort + Safety", score: scoreHybridComfortFit(main, cross, profile, armComfort), max: 15 }
+    ];
+    const total = clampWhole(breakdown.reduce((sum, item) => sum + item.score, 0), 0, 100);
+
+    return {
+      total,
+      breakdown,
+      summary: buildHybridScoreSummary(total, breakdown)
+    };
+  }
+
+  function scoreHybridGoalFit(profile, goal) {
+    const targets = {
+      Balanced: {
+        spin: { value: 7, weight: 1.5 },
+        control: { value: 7, weight: 1.5 },
+        comfort: { value: 7, weight: 1.5 },
+        power: { value: 7, weight: 1.5 },
+        durability: { value: 6, weight: 1 }
+      },
+      Comfort: {
+        comfort: { value: 9, weight: 3 },
+        power: { value: 7, weight: 1.5 },
+        control: { value: 6, weight: 1.5 },
+        spin: { value: 5, weight: 1 },
+        durability: { value: 5, weight: 1 }
+      },
+      Spin: {
+        spin: { value: 9, weight: 3 },
+        control: { value: 7, weight: 2 },
+        durability: { value: 7, weight: 1.5 },
+        power: { value: 6, weight: 1 },
+        comfort: { value: 5, weight: 1 }
+      },
+      Control: {
+        control: { value: 9, weight: 3 },
+        spin: { value: 7, weight: 1.5 },
+        durability: { value: 7, weight: 1.5 },
+        comfort: { value: 5, weight: 1 },
+        power: { value: 5, weight: 1 }
+      },
+      Power: {
+        power: { value: 9, weight: 3 },
+        comfort: { value: 7, weight: 1.5 },
+        spin: { value: 6, weight: 1.5 },
+        control: { value: 5, weight: 1 },
+        durability: { value: 5, weight: 1 }
+      },
+      Durability: {
+        durability: { value: 9, weight: 3 },
+        control: { value: 7, weight: 1.5 },
+        spin: { value: 6, weight: 1.5 },
+        power: { value: 5, weight: 1 },
+        comfort: { value: 5, weight: 1 }
+      }
+    };
+
+    return scoreProfileAgainstTarget(profile, targets[goal] || targets.Balanced, 30);
+  }
+
+  function scoreHybridRacketFit(main, cross, racketFamily) {
+    const mainScore = scoreEntryRacketFit(main, racketFamily);
+    const crossScore = scoreEntryRacketFit(cross, racketFamily);
+    const normalized = (mainScore * 0.6) + (crossScore * 0.4);
+    return clampWhole((normalized / 10) * 20, 0, 20);
+  }
+
+  function scoreHybridPairingFit(main, cross, profile, goal) {
+    let score = 10;
+    const mainPoly = isPolyType(main.type);
+    const crossPoly = isPolyType(cross.type);
+    const mainSoft = isSoftType(main.type);
+    const crossSoft = isSoftType(cross.type);
+
+    if (mainPoly && crossSoft) {
+      score += 6;
+    } else if (mainSoft && crossPoly) {
+      score += 5;
+    } else if (mainPoly && crossPoly) {
+      score += 2;
+    } else if (mainSoft && crossSoft) {
+      score += 3;
+    } else {
+      score += 4;
+    }
+
+    const gaugeGap = Math.abs(parseGaugeValue(main.gauge) - parseGaugeValue(cross.gauge));
+    if (Number.isFinite(gaugeGap)) {
+      if (gaugeGap <= 0.5) {
+        score += 2;
+      } else if (gaugeGap <= 1) {
+        score += 1;
+      }
+    }
+
+    if (goal === "Comfort" && crossSoft) {
+      score += 2;
+    } else if (goal === "Spin" && mainPoly) {
+      score += 2;
+    } else if (goal === "Control" && (mainPoly || crossPoly)) {
+      score += 1;
+    } else if (goal === "Power" && (mainSoft || crossSoft)) {
+      score += 2;
+    } else if (goal === "Durability" && (mainPoly || crossPoly)) {
+      score += 2;
+    }
+
+    if (profile.comfort <= 4 && mainPoly && crossPoly) {
+      score -= 2;
+    }
+
+    return clampWhole(score, 0, 20);
+  }
+
+  function scoreHybridSplitFit(split, goal) {
+    let score = 8;
+    const average = (split.mains + split.crosses) / 2;
+    const gap = Math.abs(split.mains - split.crosses);
+
+    if (average >= 45 && average <= 55) {
+      score += 3;
+    } else if (average >= 43 && average <= 57) {
+      score += 2;
+    } else {
+      score += 1;
+    }
+
+    if (gap <= 1.5) {
+      score += 2;
+    } else if (gap <= 2.5) {
+      score += 1;
+    }
+
+    if (goal === "Comfort" && average <= 51) {
+      score += 2;
+    } else if (goal === "Power" && average <= 51.5) {
+      score += 2;
+    } else if ((goal === "Control" || goal === "Durability") && average >= 49) {
+      score += 2;
+    } else if (goal === "Spin" && average >= 47 && average <= 52) {
+      score += 2;
+    } else if (goal === "Balanced" && average >= 48 && average <= 52) {
+      score += 2;
+    }
+
+    return clampWhole(score, 0, 15);
+  }
+
+  function scoreHybridComfortFit(main, cross, profile, armComfort) {
+    let score = 6;
+    const bothPoly = isPolyType(main.type) && isPolyType(cross.type);
+    const hasSoftSide = isSoftType(main.type) || isSoftType(cross.type);
+
+    if (profile.comfort >= 8) {
+      score += 5;
+    } else if (profile.comfort >= 6) {
+      score += 3;
+    } else if (profile.comfort >= 5) {
+      score += 1;
+    }
+
+    if (armComfort === "Very Sensitive") {
+      if (hasSoftSide) {
+        score += 3;
+      }
+      if (bothPoly) {
+        score -= 3;
+      }
+      if (profile.comfort <= 5) {
+        score -= 2;
+      }
+    } else if (armComfort === "Sensitive") {
+      if (hasSoftSide) {
+        score += 2;
+      }
+      if (bothPoly) {
+        score -= 1;
+      }
+    } else if (profile.control >= 6 || profile.durability >= 6) {
+      score += 1;
+    }
+
+    if (isSoftType(cross.type)) {
+      score += 1;
+    }
+
+    return clampWhole(score, 0, 15);
+  }
+
+  function buildHybridScoreSummary(total, breakdown) {
+    const strongest = [...breakdown]
+      .map((item) => ({ ...item, ratio: item.max ? item.score / item.max : 0 }))
+      .sort((left, right) => right.ratio - left.ratio)
+      .slice(0, 2)
+      .map((item) => item.label.toLowerCase());
+    const strongestText = strongest.length === 2
+      ? `${strongest[0]} and ${strongest[1]}`
+      : strongest[0] || "overall balance";
+
+    if (total >= 84) {
+      return `Excellent hybrid fit for ${strongestText}.`;
+    }
+
+    if (total >= 72) {
+      return `Strong hybrid fit for ${strongestText}.`;
+    }
+
+    if (total >= 60) {
+      return `Solid starting hybrid, especially for ${strongestText}.`;
+    }
+
+    return `Interesting hybrid idea, but it still needs more dialing-in around ${strongestText}.`;
+  }
+
+  function scoreProfileAgainstTarget(profile, target, maxScore) {
+    let weightedTotal = 0;
+    let totalWeight = 0;
+
+    Object.entries(target).forEach(([metric, config]) => {
+      const actual = profile[metric] || 0;
+      const closeness = 10 - Math.abs(actual - config.value);
+      weightedTotal += closeness * config.weight;
+      totalWeight += config.weight;
+    });
+
+    if (!totalWeight) {
+      return 0;
+    }
+
+    return clampWhole((weightedTotal / totalWeight / 10) * maxScore, 0, maxScore);
+  }
+
+  function scoreEntryRacketFit(entry, racketFamily) {
+    const targetGroup = getRacketFamilyGroup(racketFamily);
+    const entryFamily = String(entry.racketFamily || "").trim();
+
+    if (!entryFamily || entryFamily === "General fit") {
+      return 7;
+    }
+
+    if (entryFamily === racketFamily) {
+      return 10;
+    }
+
+    if (getRacketFamilyGroup(entryFamily) === targetGroup) {
+      return 8;
+    }
+
+    if (isSoftType(entry.type) && targetGroup === "control") {
+      return 6;
+    }
+
+    if (isPolyType(entry.type) && (targetGroup === "spin" || targetGroup === "control")) {
+      return 6;
+    }
+
+    return 5;
+  }
+
+  function getRacketFamilyGroup(racketFamily) {
+    if (["Babolat Pure Aero", "Yonex VCORE", "Spin Frame"].includes(racketFamily)) {
+      return "spin";
+    }
+
+    if (["Babolat Pure Drive", "Wilson Clash", "Yonex Ezone", "Power Frame"].includes(racketFamily)) {
+      return "power";
+    }
+
+    return "control";
+  }
+
+  function parseGaugeValue(gauge) {
+    const match = String(gauge || "").match(/\d+(?:\.\d+)?/);
+    return match ? Number(match[0]) : NaN;
+  }
+
+  function clampWhole(value, min = 0, max = 100) {
+    return clampNumber(Math.round(value), min, max);
   }
 
   function blendMetric(mainValue, crossValue, mainWeight, crossWeight) {
