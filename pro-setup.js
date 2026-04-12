@@ -46,6 +46,14 @@
   renderTopScoringSection();
   applyPrefillFromQuery();
 
+  if (elements.navPanel) {
+    elements.navPanel.addEventListener("click", handleInlinePlayerLinkClick);
+  }
+
+  if (elements.topScoring) {
+    elements.topScoring.addEventListener("click", handleInlinePlayerLinkClick);
+  }
+
   elements.button.addEventListener("click", () => {
     const setup = buildSelectedSetup();
     renderSetup(setup);
@@ -74,7 +82,7 @@
     const links = [
       `<a href="./pro-setup.html">See All Pro Setups</a>`,
       ...proSetupOptions.map(
-        (example) => `<a href="./pro-setup.html?player=${encodeURIComponent(example.player)}">${escapeHtml(example.player)}</a>`
+        (example) => `<a data-player-link="true" data-player="${escapeHtml(example.player)}" href="./pro-setup.html?player=${encodeURIComponent(example.player)}">${escapeHtml(example.player)}</a>`
       )
     ];
 
@@ -126,7 +134,7 @@
 
   function renderTopScoringCard(setup) {
     return `
-      <a class="pro-setup-top-scoring-card" href="./pro-setup.html?player=${encodeURIComponent(setup.player)}">
+      <a class="pro-setup-top-scoring-card" data-player-link="true" data-player="${escapeHtml(setup.player)}" href="./pro-setup.html?player=${encodeURIComponent(setup.player)}">
         <div class="pro-setup-top-scoring-header">
           <strong>${escapeHtml(setup.player)}</strong>
           <span class="pro-setup-score-badge">${setup.setupScore.total}/100</span>
@@ -135,6 +143,45 @@
         <span class="pro-setup-top-scoring-label">${escapeHtml(setup.setupScore.summary)}</span>
       </a>
     `;
+  }
+
+  function handleInlinePlayerLinkClick(event) {
+    const link = event.target.closest("a[data-player-link='true']");
+    if (!link) {
+      return;
+    }
+
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const player = String(link.dataset.player || "").trim();
+    if (!player) {
+      return;
+    }
+
+    openPlayerInReport(player);
+    closeParentDetails(link);
+  }
+
+  function openPlayerInReport(player) {
+    const example = proSetupIndex.get(normalizePlayerName(player));
+    if (!example) {
+      return;
+    }
+
+    elements.select.value = example.player;
+    hidePickerCard();
+    renderSetup(buildProSetup(example));
+  }
+
+  function closeParentDetails(target) {
+    const details = target.closest("details");
+    if (details) {
+      details.removeAttribute("open");
+    }
   }
 
   function buildSelectedSetup() {
