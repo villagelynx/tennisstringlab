@@ -214,6 +214,43 @@ textarea {
   z-index: 1;
 }
 
+.landing-hero-tennis-ball {
+  position: absolute;
+  top: -24px;
+  right: -18px;
+  width: 132px;
+  height: 132px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0) 24%),
+    radial-gradient(circle at 50% 50%, #c7ef61 0%, #a8dc3f 58%, #8ac52f 100%);
+  box-shadow:
+    inset -10px -12px 18px rgba(84, 132, 22, 0.22),
+    0 18px 28px rgba(3, 17, 29, 0.18);
+  opacity: 0.9;
+  z-index: 0;
+}
+
+.landing-hero-tennis-ball::before,
+.landing-hero-tennis-ball::after {
+  content: "";
+  position: absolute;
+  inset: 13px;
+  border-radius: 999px;
+  border: 5px solid transparent;
+  opacity: 0.96;
+}
+
+.landing-hero-tennis-ball::before {
+  border-left-color: rgba(255, 255, 255, 0.92);
+  transform: rotate(14deg) scaleX(0.84) translateX(-8px);
+}
+
+.landing-hero-tennis-ball::after {
+  border-right-color: rgba(255, 255, 255, 0.92);
+  transform: rotate(14deg) scaleX(0.84) translateX(8px);
+}
+
 .landing-hero-copy::before,
 .landing-hero-copy::after {
   content: "";
@@ -228,6 +265,7 @@ textarea {
   background: var(--lime-400);
   right: -84px;
   top: -72px;
+  display: none;
 }
 
 .landing-hero-copy::after {
@@ -262,12 +300,12 @@ textarea {
 }
 
 .landing-hero h1 {
-  max-width: 9.2em;
+  max-width: none;
   font-size: clamp(3.2rem, 5vw, 5.7rem);
 }
 
 .landing-hero-lead {
-  max-width: 40rem;
+  max-width: 54rem;
   margin: 18px 0 0;
   color: rgba(255, 255, 255, 0.82);
   font-size: 1.08rem;
@@ -927,6 +965,10 @@ textarea {
 }
 
 @media (max-width: 980px) {
+  .landing-hero-tennis-ball {
+    display: none;
+  }
+
   .landing-nav {
     display: none;
   }
