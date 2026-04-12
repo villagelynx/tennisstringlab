@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>How the Tension Calculator Works | Tennis String Lab</title>
   <!-- SEO Meta -->
-  <meta name="description" content="See how the Tennis String Lab tension calculator uses string type, racket family, feel goal, arm comfort, and displayed range.">
+  <meta name="description" content="See how the Tennis String Lab tension calculator uses string type, string gauge, racket family, court surface, feel goal, arm comfort, and displayed range.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://tennisstringlab.com/tension-logic.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Tennis String Lab">
   <meta property="og:title" content="How the Tension Calculator Works | Tennis String Lab">
-  <meta property="og:description" content="See how the Tennis String Lab tension calculator uses string type, racket family, feel goal, arm comfort, and displayed range.">
+  <meta property="og:description" content="See how the Tennis String Lab tension calculator uses string type, string gauge, racket family, court surface, feel goal, arm comfort, and displayed range.">
   <meta property="og:url" content="https://tennisstringlab.com/tension-logic.html">
   <meta property="og:image" content="https://tennisstringlab.com/android-chrome-192x192.png">
   <meta property="og:image:alt" content="Tennis String Lab logo">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="How the Tension Calculator Works | Tennis String Lab">
-  <meta name="twitter:description" content="See how the Tennis String Lab tension calculator uses string type, racket family, feel goal, arm comfort, and displayed range.">
+  <meta name="twitter:description" content="See how the Tennis String Lab tension calculator uses string type, string gauge, racket family, court surface, feel goal, arm comfort, and displayed range.">
   <meta name="twitter:image" content="https://tennisstringlab.com/android-chrome-192x192.png">
   <!-- /SEO Meta -->
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
   <link rel="manifest" href="./site.webmanifest">
-  <link rel="stylesheet" href="./styles.css?v=20260410a">
+  <link rel="stylesheet" href="./styles.css?v=20260411q">
   <!-- SEO Structured Data -->
   <script type="application/ld+json">
 {
@@ -31,7 +31,7 @@
     "@type":  "WebPage",
     "url":  "https://tennisstringlab.com/tension-logic.html",
     "name":  "How the Tension Calculator Works | Tennis String Lab",
-    "description":  "See how the Tennis String Lab tension calculator uses string type, racket family, feel goal, arm comfort, and displayed range.",
+    "description":  "See how the Tennis String Lab tension calculator uses string type, string gauge, racket family, court surface, feel goal, arm comfort, and displayed range.",
     "@context":  "https://schema.org",
     "publisher":  {
                       "url":  "https://tennisstringlab.com/",
@@ -53,7 +53,7 @@
       <div class="hero-copy">
         <p class="eyebrow">Reference Guide</p>
         <h1>How the Tension Calculator Works</h1>
-        <p class="summary-copy">This page explains the current starting-tension formula used in Tennis String Lab. It is designed to be transparent: base tension by string type, plus simple adjustments for racket family, feel goal, arm comfort, and the displayed result window.</p>
+        <p class="summary-copy">This page explains the current starting-tension formula used in Tennis String Lab. It is designed to be transparent: base tension by string type, plus simple adjustments for string gauge, racket family, court surface, feel goal, arm comfort, and the displayed result window.</p>
       </div>
     </section>
     <nav class="info-page-nav" aria-label="Information pages">
@@ -81,21 +81,31 @@
         </article>
         <article class="type-guide-card">
           <p class="eyebrow">Step 3</p>
+          <h3>String gauge adjustment</h3>
+          <p class="summary-copy"><strong>15L:</strong> +1 lb<br><strong>16:</strong> +0.5 lbs<br><strong>16L:</strong> 0 lbs<br><strong>17:</strong> -0.5 lbs<br><strong>17L:</strong> -0.75 lbs<br><strong>18:</strong> -1 lb</p>
+        </article>
+        <article class="type-guide-card">
+          <p class="eyebrow">Step 4</p>
           <h3>Feel goal adjustment</h3>
           <p class="summary-copy"><strong>Comfort:</strong> -2 lbs<br><strong>Balanced:</strong> 0 lbs<br><strong>Control:</strong> +2 lbs</p>
         </article>
         <article class="type-guide-card">
-          <p class="eyebrow">Step 4</p>
+          <p class="eyebrow">Step 5</p>
+          <h3>Court surface adjustment</h3>
+          <p class="summary-copy"><strong>Hard Court:</strong> 0 lbs<br><strong>Clay:</strong> +1 lb<br><strong>Grass:</strong> -1 lb<br><strong>Indoor:</strong> +0.5 lbs</p>
+        </article>
+        <article class="type-guide-card">
+          <p class="eyebrow">Step 6</p>
           <h3>Arm comfort adjustment</h3>
           <p class="summary-copy"><strong>Normal:</strong> 0 lbs<br><strong>Sensitive:</strong> -1.5 lbs<br><strong>Very Sensitive:</strong> -3 lbs</p>
         </article>
         <article class="type-guide-card">
-          <p class="eyebrow">Step 5</p>
+          <p class="eyebrow">Step 7</p>
           <h3>Clamp and displayed range</h3>
           <p class="summary-copy">The target number is capped between <strong>42</strong> and <strong>58 lbs</strong>. After that, the tool shows a practical window of <strong>target +/- 1.5 lbs</strong> and converts that range to kilograms.</p>
         </article>
         <article class="type-guide-card">
-          <p class="eyebrow">Step 6</p>
+          <p class="eyebrow">Step 8</p>
           <h3>Nearby string references</h3>
           <p class="summary-copy">The result also pulls in nearby references from the database. It looks for entries with the same string type and the closest stored tension band so the user sees realistic comparison points, not just raw formula output.</p>
         </article>
@@ -113,17 +123,17 @@
         <article class="type-guide-card">
           <p class="eyebrow">Inputs</p>
           <h3>Example setup</h3>
-          <p class="summary-copy"><strong>String Type:</strong> Co-Poly<br><strong>Racket Family:</strong> Control Frame<br><strong>Feel Goal:</strong> Balanced<br><strong>Arm Comfort:</strong> Normal</p>
+          <p class="summary-copy"><strong>String Type:</strong> Co-Poly<br><strong>String Gauge:</strong> 17<br><strong>Racket Family:</strong> Control Frame<br><strong>Court Surface:</strong> Clay<br><strong>Feel Goal:</strong> Balanced<br><strong>Arm Comfort:</strong> Normal</p>
         </article>
         <article class="type-guide-card">
           <p class="eyebrow">Math</p>
           <h3>Formula result</h3>
-          <p class="summary-copy"><strong>49</strong> base + <strong>0.5</strong> racket + <strong>0</strong> feel + <strong>0</strong> arm = <strong>49.5 lbs</strong> target</p>
+          <p class="summary-copy"><strong>49</strong> base + <strong>-0.5</strong> gauge + <strong>0.5</strong> racket + <strong>1</strong> surface + <strong>0</strong> feel + <strong>0</strong> arm = <strong>50 lbs</strong> target</p>
         </article>
         <article class="type-guide-card">
           <p class="eyebrow">Display</p>
           <h3>What the user sees</h3>
-          <p class="summary-copy">That 49.5 lbs target displays as roughly <strong>48-51 lbs</strong>, plus the kilogram equivalent, because the tool shows a small practical range rather than pretending to know one perfect number.</p>
+          <p class="summary-copy">That 50 lbs target displays as roughly <strong>49-52 lbs</strong>, plus the kilogram equivalent, because the tool shows a small practical range rather than pretending to know one perfect number.</p>
         </article>
       </div>
     </section>
@@ -144,7 +154,7 @@
         <article class="type-guide-card">
           <p class="eyebrow">What still matters</p>
           <h3>Real setup variables go beyond this formula</h3>
-          <p class="summary-copy">Gauge, weather, string age, string pattern, ball type, machine calibration, and player feel can all move the right answer a little higher or lower than the starting estimate.</p>
+          <p class="summary-copy">Gauge, weather, string age, string pattern, ball type, altitude, machine calibration, and player feel can all move the right answer a little higher or lower than the starting estimate.</p>
         </article>
         <article class="type-guide-card">
           <p class="eyebrow">Best Use</p>

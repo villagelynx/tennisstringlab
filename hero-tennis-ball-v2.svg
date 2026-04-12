@@ -1,0 +1,31 @@
+<svg width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="ballFill2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(120 98) rotate(48) scale(182 182)">
+      <stop offset="0" stop-color="#FBFF97"/>
+      <stop offset="0.44" stop-color="#DBF34A"/>
+      <stop offset="1" stop-color="#A6D022"/>
+    </radialGradient>
+    <radialGradient id="ballHighlight2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(112 88) rotate(48) scale(92 92)">
+      <stop offset="0" stop-color="white" stop-opacity="0.62"/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="ballShadow2" x="12" y="14" width="296" height="292" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="14" stdDeviation="13" flood-color="#04111D" flood-opacity="0.2"/>
+    </filter>
+    <clipPath id="ballClip2">
+      <circle cx="160" cy="150" r="124"/>
+    </clipPath>
+  </defs>
+
+  <g filter="url(#ballShadow2)">
+    <circle cx="160" cy="150" r="124" fill="url(#ballFill2)"/>
+    <circle cx="160" cy="150" r="124" fill="url(#ballHighlight2)"/>
+    <ellipse cx="191" cy="230" rx="83" ry="50" fill="#7EAF14" fill-opacity="0.2"/>
+    <g clip-path="url(#ballClip2)">
+      <path d="M98 54C70 80 60 113 60 153C60 197 75 232 103 259" stroke="#FFFDF7" stroke-width="17" stroke-linecap="round"/>
+      <path d="M216 41C245 63 260 96 260 137C260 183 245 221 219 251" stroke="#FFFDF7" stroke-width="17" stroke-linecap="round"/>
+      <path d="M98 54C70 80 60 113 60 153C60 197 75 232 103 259" stroke="white" stroke-width="11.5" stroke-linecap="round"/>
+      <path d="M216 41C245 63 260 96 260 137C260 183 245 221 219 251" stroke="white" stroke-width="11.5" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
