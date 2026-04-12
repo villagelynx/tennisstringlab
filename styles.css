@@ -3811,6 +3811,60 @@ body[data-page="tension-calculator"] .tool-reference-item {
   background: var(--setup-analyzer-bar-color, #4d7da8);
 }
 
+.setup-fit-panel {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(232, 243, 252, 0.96), rgba(249, 252, 255, 0.98));
+  border: 1px solid rgba(18, 61, 100, 0.08);
+}
+
+.setup-fit-total {
+  display: grid;
+  gap: 4px;
+}
+
+.setup-fit-kicker {
+  color: #56738d;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.setup-fit-total strong {
+  color: #123d64;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  line-height: 0.95;
+}
+
+.setup-fit-breakdown {
+  display: grid;
+  gap: 8px;
+}
+
+.setup-fit-breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.setup-fit-breakdown-item span {
+  color: #56738d;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.setup-fit-breakdown-item strong {
+  color: #123d64;
+  font-size: 0.9rem;
+}
+
 .setup-analyzer-point-list {
   margin: 0;
   padding-left: 18px;
@@ -3839,6 +3893,37 @@ body[data-page="tension-calculator"] .tool-reference-item {
   justify-content: space-between;
   gap: 14px;
   align-items: flex-start;
+}
+
+.setup-analyzer-recommendation-actions {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+}
+
+.setup-analyzer-recommendation-score {
+  display: grid;
+  gap: 2px;
+  min-width: 108px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(110, 86, 166, 0.12);
+  text-align: right;
+}
+
+.setup-analyzer-recommendation-score span {
+  color: #6a5e88;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.setup-analyzer-recommendation-score strong {
+  color: #431a97;
+  font-size: 1.05rem;
+  line-height: 1;
 }
 
 .tool-inline-actions {

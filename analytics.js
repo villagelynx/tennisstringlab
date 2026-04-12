@@ -694,6 +694,7 @@
           <a href="./index.html#analyzer">Analyzer</a>
           <a href="./index.html#popular-setups">Popular Setups</a>
           <a href="./string-library.html"${guidesCurrent}>Guides</a>
+          <a href="./proshops.html"${page === "proshops.html" ? ' aria-current="page"' : ""}>Pro Shops</a>
         </nav>
 
         <details class="landing-menu">

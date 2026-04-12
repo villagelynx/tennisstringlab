@@ -375,6 +375,21 @@
           <h3 class="tool-recommendation-name">${escapeHtml(report.snapshotTitle)}</h3>
           <p class="tool-note">${escapeHtml(report.snapshotSummary)}</p>
         </div>
+        <div class="setup-fit-panel">
+          <div class="setup-fit-total">
+            <span class="setup-fit-kicker">Current setup score</span>
+            <strong>${report.setupScore.total}/100</strong>
+            <p class="tool-note tool-note-compact">${escapeHtml(report.setupScore.summary)}</p>
+          </div>
+          <div class="setup-fit-breakdown">
+            ${report.setupScore.breakdown.map((item) => `
+              <div class="setup-fit-breakdown-item">
+                <span>${escapeHtml(item.label)}</span>
+                <strong>${item.score}/${item.max}</strong>
+              </div>
+            `).join("")}
+          </div>
+        </div>
         <div class="tool-stat-grid">
           <div class="tool-stat">
             <span class="tool-stat-label">Racket</span>
@@ -462,7 +477,13 @@
                   <p class="eyebrow">${escapeHtml(option.label)}</p>
                   <h4>${escapeHtml(option.entry.name)}</h4>
                 </div>
-                <button class="secondary-button compact-button setup-analyzer-open-tension" type="button" data-index="${index}">Open in Tension</button>
+                <div class="setup-analyzer-recommendation-actions">
+                  <div class="setup-analyzer-recommendation-score">
+                    <span>Setup score</span>
+                    <strong>${option.setupScore.total}/100</strong>
+                  </div>
+                  <button class="secondary-button compact-button setup-analyzer-open-tension" type="button" data-index="${index}">Open in Tension</button>
+                </div>
               </div>
               <div class="tool-stat-grid">
                 <div class="tool-stat">
@@ -483,6 +504,7 @@
                 </div>
               </div>
               <p class="tool-note tool-note-compact">${escapeHtml(option.reason)}</p>
+              <p class="tool-note tool-note-compact">${escapeHtml(option.setupScore.summary)}</p>
             </article>
           `).join("")}
         </div>
@@ -546,9 +568,20 @@
     const safeTension = api.clampNumber(currentTension, 35, 70);
     const normalizedType = normalizeTypeForTension(entry.type);
     const baselineTarget = getBaselineTarget(normalizedType, racketFamily, armSensitive);
+    const preferredTarget = getPreferredTargetTension(normalizedType, racketFamily, inferPreference(goal, armSensitive), armSensitive);
     const tensionDifference = safeTension - baselineTarget;
     const profile = buildMetricProfile(entry, racketFamily, gauge, safeTension, baselineTarget);
     const tensionPosition = describeTensionPosition(tensionDifference);
+    const setupScore = buildSetupScore({
+      goal,
+      entry,
+      gauge,
+      racketFamily,
+      armSensitive,
+      currentTension: safeTension,
+      targetTension: preferredTarget,
+      profile
+    });
 
     return {
       entry,
@@ -560,6 +593,7 @@
       baselineTarget,
       tensionDifference,
       tensionPosition,
+      setupScore,
       tensionContextLine: `${normalizedType} in ${racketFamily} usually lands around ${api.formatDecimalNumber(baselineTarget)} lbs as a balanced starting point${armSensitive ? " with a small comfort adjustment for the arm" : ""}. Your current ${api.formatDecimalNumber(safeTension)} lbs sits ${tensionPosition.positionText}.`,
       snapshotTitle: `${racketFamily} + ${entry.name} ${gauge} @ ${api.formatDecimalNumber(safeTension)} lbs`,
       snapshotSummary: `${getRacketDescriptor(racketFamily)} + ${getStringDescriptor(entry)} + ${tensionPosition.label.toLowerCase()} tension for this kind of build.`,
@@ -585,6 +619,7 @@
       appliedRacketFamily: racketFamily,
       appliedPreference: inferPreference("Balanced", armSensitive, entry),
       reason: buildStayCloseReason(entry, currentTension, baselineTarget),
+      goal,
       armSensitive
     });
 
@@ -607,6 +642,7 @@
       appliedRacketFamily: racketFamily,
       appliedPreference: inferPreference(goal, armSensitive, goalEntry),
       reason: buildGoalReason(goal, goalEntry, racketFamily, entry),
+      goal,
       armSensitive
     });
 
@@ -639,13 +675,19 @@
       appliedRacketFamily: racketFamily,
       appliedPreference: inferPreference(safePreference, armSensitive, safeEntry),
       reason: buildSafeReason(entry, safeEntry, armSensitive),
+      goal,
       armSensitive
     });
 
     return [stayClose, goalOption, safeOption];
   }
 
-  function buildRecommendationCard({ label, entry, displayGauge, appliedRacketFamily, appliedPreference, reason, armSensitive }) {
+  function buildRecommendationCard({ label, entry, displayGauge, appliedRacketFamily, appliedPreference, reason, goal, armSensitive }) {
+    const normalizedType = normalizeTypeForTension(entry.type);
+    const balancedTarget = getBaselineTarget(normalizedType, appliedRacketFamily, armSensitive);
+    const preferredTarget = getPreferredTargetTension(normalizedType, appliedRacketFamily, appliedPreference, armSensitive);
+    const profile = buildMetricProfile(entry, appliedRacketFamily, displayGauge, preferredTarget, balancedTarget);
+
     return {
       label,
       entry,
@@ -653,6 +695,16 @@
       appliedRacketFamily,
       appliedPreference,
       reason,
+      setupScore: buildSetupScore({
+        goal,
+        entry,
+        gauge: displayGauge,
+        racketFamily: appliedRacketFamily,
+        armSensitive,
+        currentTension: preferredTarget,
+        targetTension: preferredTarget,
+        profile
+      }),
       calculatorType: normalizeTypeForTension(entry.type),
       tensionRecommendation: buildTensionRecommendation(entry, appliedRacketFamily, appliedPreference, armSensitive)
     };
@@ -842,6 +894,156 @@
     };
   }
 
+  function buildSetupScore({ goal, entry, gauge, racketFamily, armSensitive, currentTension, targetTension, profile }) {
+    const normalizedType = normalizeTypeForTension(entry.type);
+    const breakdown = [
+      { label: "Goal Fit", score: scoreGoalFit(goal, profile), max: 30 },
+      { label: "Racket Fit", score: scoreRacketFit(entry.racketFamily, racketFamily), max: 20 },
+      { label: "String + Gauge", score: scoreStringGaugeFit(goal, normalizedType, gauge, armSensitive), max: 20 },
+      { label: "Tension + Feel", score: scoreTensionFeelFit(currentTension, targetTension), max: 15 },
+      { label: "Comfort + Safety", score: scoreComfortSafetyFit(profile, normalizedType, armSensitive, currentTension - targetTension), max: 15 }
+    ];
+
+    const total = breakdown.reduce((sum, item) => sum + item.score, 0);
+    return {
+      total,
+      breakdown,
+      summary: buildSetupScoreSummary(total, breakdown)
+    };
+  }
+
+  function scoreGoalFit(goal, profile) {
+    if (goal === "Balanced") {
+      const averageDelta = ["spin", "control", "comfort", "power", "durability"]
+        .reduce((sum, metric) => sum + Math.abs((profile[metric] || 6) - 7), 0) / 5;
+      return clampWhole(30 - (averageDelta * 4.5), 10, 30);
+    }
+
+    const metric = getGoalMetric(goal);
+    const secondaryMetric = {
+      Spin: "control",
+      Control: "durability",
+      Comfort: "power",
+      Power: "comfort",
+      Durability: "control"
+    }[goal] || "control";
+
+    const primaryScore = ((profile[metric] || 6) / 10) * 22;
+    const secondaryScore = ((profile[secondaryMetric] || 6) / 10) * 8;
+    return clampWhole(primaryScore + secondaryScore, 8, 30);
+  }
+
+  function scoreRacketFit(entryRacketFamily, selectedRacketFamily) {
+    if (!entryRacketFamily || !selectedRacketFamily) {
+      return 14;
+    }
+
+    if (entryRacketFamily === selectedRacketFamily) {
+      return 20;
+    }
+
+    if (api.getRacketFamilyGroup(entryRacketFamily) === api.getRacketFamilyGroup(selectedRacketFamily)) {
+      return 17;
+    }
+
+    return 12;
+  }
+
+  function scoreStringGaugeFit(goal, stringType, gauge, armSensitive) {
+    const typeScore = getTypeGoalFit(goal, stringType, armSensitive);
+    const gaugeScore = getGaugeGoalFit(goal, gauge, armSensitive);
+    return clampWhole((typeScore / 10) * 12 + (gaugeScore / 10) * 8, 5, 20);
+  }
+
+  function getTypeGoalFit(goal, stringType, armSensitive) {
+    const tables = {
+      Balanced: { Poly: 6.5, "Co-Poly": 7.5, "Synthetic Gut": 7, Multifilament: 7, "Natural Gut": 7.5, Hybrid: 8 },
+      Spin: { Poly: 10, "Co-Poly": 9.5, Hybrid: 7.5, "Synthetic Gut": 5.5, Multifilament: 4.5, "Natural Gut": 4 },
+      Control: { Poly: 8.5, "Co-Poly": 9.5, Hybrid: 7.5, "Synthetic Gut": 6.5, Multifilament: 5.5, "Natural Gut": 5.5 },
+      Power: { Poly: 4.5, "Co-Poly": 5.5, Hybrid: 7, "Synthetic Gut": 8, Multifilament: 9, "Natural Gut": 10 },
+      Comfort: { Poly: 4, "Co-Poly": 5, Hybrid: 8, "Synthetic Gut": 7.5, Multifilament: 9.5, "Natural Gut": 10 },
+      Durability: { Poly: 10, "Co-Poly": 9, Hybrid: 7.5, "Synthetic Gut": 6, Multifilament: 4.5, "Natural Gut": 3.5 }
+    };
+
+    let score = (tables[goal] && tables[goal][stringType]) || 7;
+    if (armSensitive && (stringType === "Poly" || stringType === "Co-Poly")) {
+      score -= 1.2;
+    }
+    if (armSensitive && (stringType === "Multifilament" || stringType === "Natural Gut" || stringType === "Hybrid")) {
+      score += 0.6;
+    }
+    return api.clampNumber(score, 1, 10);
+  }
+
+  function getGaugeGoalFit(goal, gauge, armSensitive) {
+    const ideals = {
+      Balanced: 16.5,
+      Spin: 17.25,
+      Control: 16.25,
+      Power: 16.75,
+      Comfort: 17,
+      Durability: 16
+    };
+
+    let ideal = ideals[goal] || 16.5;
+    if (armSensitive && (goal === "Balanced" || goal === "Comfort")) {
+      ideal += 0.25;
+    }
+
+    const score = 10 - (Math.abs(getGaugeValue(gauge) - ideal) * 3.5);
+    return api.clampNumber(score, 2, 10);
+  }
+
+  function scoreTensionFeelFit(currentTension, targetTension) {
+    return clampWhole(15 - (Math.abs(currentTension - targetTension) * 2.2), 3, 15);
+  }
+
+  function scoreComfortSafetyFit(profile, stringType, armSensitive, tensionDifference) {
+    let score = ((profile.comfort || 6) / 10) * 10;
+
+    if (stringType === "Multifilament" || stringType === "Natural Gut" || stringType === "Hybrid") {
+      score += 2;
+    }
+
+    if (stringType === "Poly" || stringType === "Co-Poly") {
+      score += armSensitive ? -2.5 : -1;
+    }
+
+    score += api.clampNumber(-tensionDifference * 0.8, -2.5, 2.5);
+
+    if (armSensitive) {
+      score += 2;
+    }
+
+    return clampWhole(score, 2, 15);
+  }
+
+  function buildSetupScoreSummary(total, breakdown) {
+    const ordered = breakdown
+      .map((item) => ({ ...item, ratio: item.score / item.max }))
+      .sort((left, right) => right.ratio - left.ratio);
+    const strongest = ordered[0]?.label || "Goal Fit";
+    const weakest = ordered[ordered.length - 1]?.label || "Comfort + Safety";
+
+    if (total >= 85) {
+      return `Excellent overall fit. ${strongest} is the strongest part of this setup.`;
+    }
+
+    if (total >= 75) {
+      return `Strong overall fit, with the biggest drag coming from ${weakest.toLowerCase()}.`;
+    }
+
+    if (total >= 65) {
+      return `Solid base, but ${weakest.toLowerCase()} is still costing you some performance.`;
+    }
+
+    return `Playable, but there is clear room to improve, especially in ${weakest.toLowerCase()}.`;
+  }
+
+  function clampWhole(value, min, max) {
+    return Math.round(api.clampNumber(value, min, max));
+  }
+
   function applyAdjustments(base, adjustments) {
     const total = adjustments.reduce((sum, value) => sum + value, base);
     return Math.round(api.clampNumber(total, 1, 10));
@@ -894,6 +1096,14 @@
     const racketAdjustment = api.TENSION_RACKET_ADJUSTMENTS[racketFamily] || 0;
     const armAdjustment = armSensitive ? api.TENSION_ARM_ADJUSTMENTS.Sensitive : 0;
     return api.clampNumber(base + racketAdjustment + armAdjustment, 42, 58);
+  }
+
+  function getPreferredTargetTension(type, racketFamily, preference, armSensitive) {
+    const base = api.TENSION_TYPE_BASE[type] || api.TENSION_TYPE_BASE["Co-Poly"];
+    const racketAdjustment = api.TENSION_RACKET_ADJUSTMENTS[racketFamily] || 0;
+    const preferenceAdjustment = api.TENSION_FEEL_ADJUSTMENTS[preference] || 0;
+    const armAdjustment = armSensitive ? api.TENSION_ARM_ADJUSTMENTS.Sensitive : 0;
+    return api.clampNumber(base + racketAdjustment + preferenceAdjustment + armAdjustment, 42, 58);
   }
 
   function describeTensionPosition(difference) {

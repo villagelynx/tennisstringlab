@@ -89,6 +89,64 @@
   padding: 22px;
 }
 
+.result-score-panel {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 18px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(230, 241, 250, 0.96), rgba(247, 251, 255, 0.98));
+  border: 1px solid rgba(11, 47, 82, 0.08);
+}
+
+.result-score-kicker {
+  color: var(--ink-700);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.result-score-panel strong {
+  color: var(--navy-900);
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  line-height: 0.95;
+}
+
+.result-score-summary {
+  margin: 0;
+  color: var(--ink-700);
+  font-size: 0.96rem;
+  line-height: 1.5;
+}
+
+.result-score-breakdown {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.result-score-breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.result-score-breakdown-item span {
+  color: var(--ink-700);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.result-score-breakdown-item strong {
+  color: var(--navy-900);
+  font-size: 0.94rem;
+}
+
 .improvement-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

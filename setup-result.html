@@ -10,8 +10,8 @@
   <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
   <link rel="manifest" href="./site.webmanifest">
-  <link rel="stylesheet" href="./homepage.css?v=20260410e">
-  <link rel="stylesheet" href="./setup-result.css?v=20260410b">
+  <link rel="stylesheet" href="./homepage.css?v=20260411z">
+  <link rel="stylesheet" href="./setup-result.css?v=20260411a">
 </head>
 <body class="landing-page setup-result-page">
   <header class="landing-header">
@@ -68,6 +68,33 @@
 
       <aside class="result-improvement-card">
         <p class="landing-eyebrow landing-eyebrow-muted">Expected improvement</p>
+        <div class="result-score-panel">
+          <span class="result-score-kicker">Recommended setup score</span>
+          <strong id="resultSetupScore">84/100</strong>
+          <p id="resultScoreSummary" class="result-score-summary">Strong fit overall with a clean balance of issue fit, racket fit, and comfort.</p>
+        </div>
+        <div class="result-score-breakdown">
+          <div class="result-score-breakdown-item">
+            <span>Issue Fit</span>
+            <strong id="resultScoreIssue">26/30</strong>
+          </div>
+          <div class="result-score-breakdown-item">
+            <span>Racket Fit</span>
+            <strong id="resultScoreRacket">16/20</strong>
+          </div>
+          <div class="result-score-breakdown-item">
+            <span>String + Gauge</span>
+            <strong id="resultScoreString">17/20</strong>
+          </div>
+          <div class="result-score-breakdown-item">
+            <span>Feel Fit</span>
+            <strong id="resultScoreFeel">12/15</strong>
+          </div>
+          <div class="result-score-breakdown-item">
+            <span>Comfort + Safety</span>
+            <strong id="resultScoreComfort">13/15</strong>
+          </div>
+        </div>
         <div class="improvement-grid">
           <div class="improvement-item">
             <strong id="resultMetricSpin">+15%</strong>
@@ -134,7 +161,7 @@
     </section>
   </main>
 
-  <script src="./setup-recommendations.js?v=20260410b"></script>
-  <script src="./setup-result.js?v=20260410c"></script>
+  <script src="./setup-recommendations.js?v=20260411a"></script>
+  <script src="./setup-result.js?v=20260411a"></script>
 </body>
 </html>

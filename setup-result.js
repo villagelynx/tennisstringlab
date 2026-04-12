@@ -34,6 +34,13 @@ const resultMeta = document.getElementById("resultMeta");
 const resultChipA = document.getElementById("resultChipA");
 const resultChipB = document.getElementById("resultChipB");
 const resultChipC = document.getElementById("resultChipC");
+const resultSetupScore = document.getElementById("resultSetupScore");
+const resultScoreSummary = document.getElementById("resultScoreSummary");
+const resultScoreIssue = document.getElementById("resultScoreIssue");
+const resultScoreRacket = document.getElementById("resultScoreRacket");
+const resultScoreString = document.getElementById("resultScoreString");
+const resultScoreFeel = document.getElementById("resultScoreFeel");
+const resultScoreComfort = document.getElementById("resultScoreComfort");
 const resultBenefitsList = document.getElementById("resultBenefitsList");
 const resultSetupNotes = document.getElementById("resultSetupNotes");
 const resultAltList = document.getElementById("resultAltList");
@@ -59,6 +66,13 @@ if (resultMeta) resultMeta.textContent = recommendation.meta;
 if (resultChipA) resultChipA.textContent = recommendation.chips[0];
 if (resultChipB) resultChipB.textContent = recommendation.chips[1];
 if (resultChipC) resultChipC.textContent = recommendation.chips[2];
+if (resultSetupScore) resultSetupScore.textContent = `${recommendation.score.total}/100`;
+if (resultScoreSummary) resultScoreSummary.textContent = recommendation.score.summary;
+if (resultScoreIssue) resultScoreIssue.textContent = formatBreakdownScore(recommendation.score.breakdown, "Issue Fit");
+if (resultScoreRacket) resultScoreRacket.textContent = formatBreakdownScore(recommendation.score.breakdown, "Racket Fit");
+if (resultScoreString) resultScoreString.textContent = formatBreakdownScore(recommendation.score.breakdown, "String + Gauge");
+if (resultScoreFeel) resultScoreFeel.textContent = formatBreakdownScore(recommendation.score.breakdown, "Feel Fit");
+if (resultScoreComfort) resultScoreComfort.textContent = formatBreakdownScore(recommendation.score.breakdown, "Comfort + Safety");
 
 renderList(resultBenefitsList, recommendation.benefits);
 renderList(resultSetupNotes, [
@@ -68,3 +82,11 @@ renderList(resultSetupNotes, [
   recommendation.feelNote
 ]);
 renderList(resultAltList, recommendation.alt);
+
+function formatBreakdownScore(items, label) {
+  const row = Array.isArray(items) ? items.find((item) => item.label === label) : null;
+  if (!row) {
+    return "";
+  }
+  return `${row.score}/${row.max}`;
+}
