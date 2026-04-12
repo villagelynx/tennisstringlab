@@ -591,6 +591,37 @@ textarea {
   color: var(--navy-900);
 }
 
+.preview-score-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  margin-top: 14px;
+}
+
+.preview-score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 16px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #123d64, #1c669f);
+  box-shadow: 0 14px 28px rgba(18, 61, 100, 0.18);
+  color: #ffffff;
+  font-size: 1.18rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.preview-score-summary {
+  color: var(--ink-900);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.4;
+  max-width: 24rem;
+}
+
 .preview-meta,
 .result-summary,
 .section-heading p,
@@ -1302,6 +1333,17 @@ textarea {
   body.landing-page .analyzer-result-card h3,
   body.landing-page .monetization-card h3 {
     font-size: clamp(1.48rem, 1.75vw, 1.9rem);
+  }
+
+  body.landing-page .preview-score-badge {
+    min-height: 40px;
+    padding: 0 14px;
+    font-size: 1rem;
+  }
+
+  body.landing-page .preview-score-summary {
+    font-size: 0.82rem;
+    max-width: 21rem;
   }
 
   body.landing-page .preview-meta,

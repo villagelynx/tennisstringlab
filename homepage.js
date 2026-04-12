@@ -13,6 +13,8 @@ const state = recommendationApi.normalizeState({
 
 const previewBadge = document.getElementById("previewBadge");
 const previewTitle = document.getElementById("previewTitle");
+const previewScore = document.getElementById("previewScore");
+const previewScoreSummary = document.getElementById("previewScoreSummary");
 const previewMeta = document.getElementById("previewMeta");
 const previewBullets = document.getElementById("previewBullets");
 const metricSpin = document.getElementById("metricSpin");
@@ -51,6 +53,8 @@ function updateRecommendation() {
 
   if (previewBadge) previewBadge.textContent = recommendation.styleLabel;
   if (previewTitle) previewTitle.textContent = recommendation.shortTitle;
+  if (previewScore) previewScore.textContent = `${recommendation.score.total}/100`;
+  if (previewScoreSummary) previewScoreSummary.textContent = recommendation.score.summary;
   if (previewMeta) previewMeta.textContent = `${recommendation.meta} ${recommendation.racketNote}`;
   if (metricSpin) metricSpin.textContent = recommendation.metrics.spin;
   if (metricControl) metricControl.textContent = recommendation.metrics.control;

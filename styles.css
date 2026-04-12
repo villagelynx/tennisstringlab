@@ -3834,7 +3834,15 @@ body[data-page="tension-calculator"] .tool-reference-item {
 }
 
 .setup-fit-total strong {
-  color: #123d64;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #123d64, #1c669f);
+  box-shadow: 0 12px 24px rgba(18, 61, 100, 0.18);
+  color: #ffffff;
   font-size: clamp(2rem, 3vw, 2.8rem);
   line-height: 0.95;
 }
@@ -3907,13 +3915,14 @@ body[data-page="tension-calculator"] .tool-reference-item {
   min-width: 108px;
   padding: 10px 12px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(110, 86, 166, 0.12);
+  background: linear-gradient(135deg, rgba(90, 49, 194, 0.96), rgba(125, 84, 230, 0.96));
+  border: 1px solid rgba(90, 49, 194, 0.24);
+  box-shadow: 0 12px 24px rgba(90, 49, 194, 0.16);
   text-align: right;
 }
 
 .setup-analyzer-recommendation-score span {
-  color: #6a5e88;
+  color: rgba(255, 255, 255, 0.82);
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -3921,8 +3930,10 @@ body[data-page="tension-calculator"] .tool-reference-item {
 }
 
 .setup-analyzer-recommendation-score strong {
-  color: #431a97;
-  font-size: 1.05rem;
+  display: inline-flex;
+  justify-content: flex-end;
+  color: #ffffff;
+  font-size: 1.12rem;
   line-height: 1;
 }
 

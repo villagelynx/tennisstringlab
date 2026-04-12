@@ -108,7 +108,15 @@
 }
 
 .result-score-panel strong {
-  color: var(--navy-900);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--navy-900), #1c669f);
+  box-shadow: 0 14px 28px rgba(11, 47, 82, 0.18);
+  color: #ffffff;
   font-size: clamp(2rem, 3.2vw, 3rem);
   line-height: 0.95;
 }
