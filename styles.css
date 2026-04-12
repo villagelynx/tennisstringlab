@@ -2161,8 +2161,33 @@ h1 {
   gap: 12px;
 }
 
+.shop-card-title-wrap {
+  display: grid;
+  gap: 8px;
+}
+
 .shop-card-header h3 {
   margin: 0;
+}
+
+.shop-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.shop-badge-sponsored {
+  background: rgba(240, 217, 76, 0.2);
+  border: 1px solid rgba(240, 217, 76, 0.38);
+  color: #6a5200;
 }
 
 .shop-meta {

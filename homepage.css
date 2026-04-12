@@ -1051,6 +1051,91 @@ textarea {
   margin-top: 24px;
 }
 
+.proshops-partner-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.proshops-listing-form-card {
+  background: #ffffff;
+  color: var(--ink-900);
+}
+
+.proshops-listing-form-card h3,
+.proshops-listing-form-card .summary-copy,
+.proshops-listing-form-card .field-note {
+  color: var(--ink-900);
+}
+
+.proshops-listing-success {
+  display: grid;
+  gap: 6px;
+  margin-top: 18px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #edf8ee;
+  border: 1px solid rgba(47, 139, 87, 0.22);
+  color: #1f5b38;
+}
+
+.proshops-listing-success strong {
+  font-size: 0.96rem;
+  font-weight: 900;
+}
+
+.proshops-listing-success span {
+  color: #35664a;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.proshops-listing-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.proshops-listing-form .tool-form-grid {
+  gap: 12px;
+}
+
+.proshops-listing-form .field {
+  display: grid;
+  gap: 6px;
+}
+
+.proshops-listing-form .field label {
+  color: var(--navy-900);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.proshops-listing-form .search-input {
+  min-height: 52px;
+  padding: 12px 14px;
+  border: 1px solid rgba(11, 47, 82, 0.14);
+  border-radius: 16px;
+  background: #ffffff;
+  color: var(--navy-900);
+  box-shadow: none;
+}
+
+.proshops-listing-textarea {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.proshops-listing-form .monetization-actions {
+  margin-top: 0;
+}
+
+.proshops-listing-form .landing-button {
+  width: auto;
+}
+
 .cross-site-cta {
   display: flex;
   align-items: center;
@@ -1193,6 +1278,10 @@ textarea {
   .monetization-actions,
   .landing-hero-actions {
     flex-direction: column;
+  }
+
+  .proshops-listing-form .landing-button {
+    width: 100%;
   }
 
   .landing-hero-prosetups-panel {

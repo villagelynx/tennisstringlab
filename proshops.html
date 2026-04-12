@@ -29,7 +29,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
   <link rel="manifest" href="./site.webmanifest">
   <link rel="stylesheet" href="./styles.css?v=20260411s">
-  <link rel="stylesheet" href="./homepage.css?v=20260412c">
+  <link rel="stylesheet" href="./homepage.css?v=20260412j">
   <!-- SEO Structured Data -->
   <script type="application/ld+json">
 {
@@ -134,34 +134,101 @@
       <div class="monetization-copy">
         <p class="landing-eyebrow">For Pro Shops</p>
         <h2>Offer sponsored shop listings for $50 per year.</h2>
-        <p>Keep it simple: a clear paid listing with the shop name, city, website link, and a short note about stringing specialties. That is enough to test whether shops will pay for visibility here.</p>
+        <p>Keep it simple: a clear paid listing with the shop name, city, website link, and a short note about stringing specialties. Shops can submit directly here, and nothing gets published until you review and approve it as the administrator.</p>
       </div>
 
-      <aside class="monetization-card proshops-partner-card">
-        <p class="monetization-kicker">Beta listing offer</p>
-        <h3>Get your shop featured on TennisSetup.</h3>
-        <div class="monetization-pricing">
-          <div class="monetization-price-box is-single">
-            <strong>$50</strong>
-            <span>Per year sponsored listing</span>
+      <div class="proshops-partner-stack">
+        <aside class="monetization-card proshops-partner-card">
+          <p class="monetization-kicker">Beta listing offer</p>
+          <h3>Get your shop featured on TennisSetup.</h3>
+          <div class="monetization-pricing">
+            <div class="monetization-price-box is-single">
+              <strong>$50</strong>
+              <span>Per year sponsored listing</span>
+            </div>
           </div>
-        </div>
-        <ul>
-          <li>Shop name, location, and direct link to your homepage</li>
-          <li>Short description for stringing services and specialties</li>
-          <li>Clear sponsored label so the listing is transparent</li>
-        </ul>
-        <div class="monetization-actions">
-          <a class="landing-button landing-button-primary" href="./contact.html?offer=proshop-listing">Request a listing</a>
-          <a class="landing-button landing-button-ghost" href="./contact.html?offer=proshop-listing">Ask about sponsored placement</a>
-        </div>
-        <p class="monetization-footnote">Start this as a beta offer. Once the page proves it can send real traffic or leads, the annual price can move up.</p>
-      </aside>
+          <ul>
+            <li>Shop name, location, and direct link to your homepage</li>
+            <li>Short description for stringing services and specialties</li>
+            <li>Clear sponsored label so the listing is transparent</li>
+            <li>Manual approval before anything appears on the live site</li>
+          </ul>
+          <div class="monetization-actions">
+            <a class="landing-button landing-button-primary" href="#proshopListingRequest">Submit a listing request</a>
+            <a class="landing-button landing-button-ghost" href="./contact.html?offer=proshop-listing">Ask about sponsored placement</a>
+          </div>
+          <p class="monetization-footnote">Start this as a beta offer. Once the page proves it can send real traffic or leads, the annual price can move up.</p>
+        </aside>
+
+        <section id="proshopListingRequest" class="monetization-card proshops-listing-form-card">
+          <p class="monetization-kicker">Listing Request</p>
+          <h3>Submit your shop for admin review.</h3>
+          <p class="summary-copy">Fill this out once. The request comes through as pending, and you can review, edit, and approve it before it goes live on the Pro Shops page.</p>
+          <div id="proshopListingSuccess" class="proshops-listing-success planner-hidden" aria-live="polite">
+            <strong>Listing request received.</strong>
+            <span>Thanks. Your shop submission is marked for admin review and will stay off the live page until you approve it.</span>
+          </div>
+
+          <form class="proshops-listing-form" name="pro-shop-listing-request" method="POST" action="./proshops.html?submitted=listing-request#proshopListingRequest" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="pro-shop-listing-request">
+            <input type="hidden" name="approval_status" value="Pending Admin Review">
+            <input type="hidden" name="listing_type" value="Sponsored Pro Shop Listing">
+            <input type="hidden" name="source_page" value="proshops.html">
+            <p class="planner-hidden">
+              <label>Do not fill this out if you are human <input name="bot-field"></label>
+            </p>
+
+            <div class="tool-form-grid">
+              <div class="field is-wide">
+                <label for="proshopShopName">Shop Name</label>
+                <input id="proshopShopName" class="search-input" type="text" name="shop_name" placeholder="Your shop name" required>
+              </div>
+              <div class="field">
+                <label for="proshopContactName">Contact Name</label>
+                <input id="proshopContactName" class="search-input" type="text" name="contact_name" placeholder="Owner or manager" required>
+              </div>
+              <div class="field">
+                <label for="proshopEmail">Email</label>
+                <input id="proshopEmail" class="search-input" type="email" name="email" placeholder="you@example.com" required>
+              </div>
+              <div class="field">
+                <label for="proshopCity">City</label>
+                <input id="proshopCity" class="search-input" type="text" name="city" placeholder="City" required>
+              </div>
+              <div class="field">
+                <label for="proshopState">State / Province</label>
+                <input id="proshopState" class="search-input" type="text" name="state_province" placeholder="State or province" required>
+              </div>
+              <div class="field">
+                <label for="proshopCountry">Country</label>
+                <input id="proshopCountry" class="search-input" type="text" name="country" placeholder="Country" required>
+              </div>
+              <div class="field is-wide">
+                <label for="proshopWebsite">Website</label>
+                <input id="proshopWebsite" class="search-input" type="url" name="website" placeholder="https://yourshop.com" required>
+              </div>
+              <div class="field is-wide">
+                <label for="proshopSpecialties">Specialties</label>
+                <input id="proshopSpecialties" class="search-input" type="text" name="specialties" placeholder="Same-day stringing, hybrids, junior players, arm-friendly setups">
+              </div>
+              <div class="field is-wide">
+                <label for="proshopNotes">Listing Notes</label>
+                <textarea id="proshopNotes" class="search-input proshops-listing-textarea" name="listing_notes" rows="5" placeholder="Tell TennisSetup what players should know about your stringing service, turnaround time, and specialties." required></textarea>
+              </div>
+            </div>
+
+            <div class="monetization-actions">
+              <button class="landing-button landing-button-primary" type="submit">Submit Listing For Review</button>
+            </div>
+            <p class="field-note">Submissions are not published automatically. Every request is reviewed and approved manually by the site administrator first.</p>
+          </form>
+        </section>
+      </div>
     </section>
   </main>
 
   <script src="./analytics.js?v=20260411f"></script>
-  <script src="./proshops.js"></script>
+  <script src="./proshops.js?v=20260412b"></script>
 </body>
 </html>
 
