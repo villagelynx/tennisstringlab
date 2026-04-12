@@ -1067,6 +1067,13 @@ textarea {
   color: var(--ink-900);
 }
 
+.proshops-hero-owner-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
 .proshops-listing-success {
   display: grid;
   gap: 6px;
