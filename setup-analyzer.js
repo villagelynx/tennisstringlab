@@ -381,7 +381,7 @@
             <strong>${report.setupScore.total}/100</strong>
             <p class="tool-note tool-note-compact">${escapeHtml(report.setupScore.summary)}</p>
             <div class="setup-fit-lift">
-              <span class="setup-fit-lift-badge">+${report.scoreLift.lift}</span>
+              <span class="setup-fit-lift-badge">+${report.scoreLift.lift} score lift</span>
               <p class="tool-note tool-note-compact">Best next setup: <strong>${escapeHtml(report.scoreLift.bestOption.entry.name)}</strong> at ${report.scoreLift.bestOption.setupScore.total}/100.</p>
             </div>
           </div>
