@@ -173,7 +173,7 @@
     }
 
     elements.select.value = example.player;
-    hidePickerCard();
+    showPickerCard();
     renderSetup(buildProSetup(example));
   }
 
