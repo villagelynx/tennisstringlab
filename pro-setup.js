@@ -5,7 +5,7 @@
       ? window.TENNIS_STRING_PLANNER_STRINGS
       : [];
 
-  const PRO_SETUP_EXAMPLES = [
+  const CURATED_PRO_SETUP_EXAMPLES = [
     { player: "Carlos Alcaraz", style: "Aggressive Baseliner", preferredTopEntryName: "Babolat RPM Blast", racketFamily: "Babolat Pure Aero", preferences: { spin: "Very High", power: "Medium", control: "High" } },
     { player: "Jannik Sinner", style: "Aggressive Baseliner", preferredTopEntryName: "Head Hawk Touch", racketFamily: "Head Speed", preferences: { spin: "High", power: "Medium", control: "Very High" } },
     { player: "Aryna Sabalenka", style: "Aggressive Baseliner", preferredTopEntryName: "Luxilon ALU Power", racketFamily: "Wilson Blade", preferences: { spin: "High", power: "High", control: "High" } },
@@ -20,19 +20,26 @@
     { player: "Elena Rybakina", style: "Aggressive Baseliner", preferredTopEntryName: "Yonex Poly Tour Fire", racketFamily: "Yonex Ezone", preferences: { spin: "High", power: "Medium", control: "High" } }
   ];
 
+  const proSetupOptions = buildProSetupOptions();
+  const proSetupIndex = new Map(
+    proSetupOptions.map((example) => [normalizePlayerName(example.player), example])
+  );
+
   const elements = {
     select: document.getElementById("proSetupPlayerSelect"),
     button: document.getElementById("showProSetupButton"),
     report: document.getElementById("proSetupReport"),
     layout: document.getElementById("proSetupLayout"),
-    pickerCard: document.getElementById("proSetupPickerCard")
+    pickerCard: document.getElementById("proSetupPickerCard"),
+    navPanel: document.getElementById("proSetupNavPanel")
   };
 
-  if (!elements.select || !elements.button || !elements.report || !strings.length) {
+  if (!elements.select || !elements.button || !elements.report || !strings.length || !proSetupOptions.length) {
     return;
   }
 
   populateControls();
+  populateNavDropdown();
   applyPrefillFromQuery();
 
   elements.button.addEventListener("click", () => {
@@ -48,24 +55,37 @@
   });
 
   function populateControls() {
-    const options = PRO_SETUP_EXAMPLES
+    const options = proSetupOptions
       .map((example) => `<option value="${escapeHtml(example.player)}">${escapeHtml(example.player)}</option>`)
       .join("");
 
     elements.select.innerHTML = `<option value="">Choose a pro player</option>${options}`;
   }
 
+  function populateNavDropdown() {
+    if (!elements.navPanel) {
+      return;
+    }
+
+    const links = [
+      `<a href="./pro-setup.html">See All Pro Setups</a>`,
+      ...proSetupOptions.map(
+        (example) => `<a href="./pro-setup.html?player=${encodeURIComponent(example.player)}">${escapeHtml(example.player)}</a>`
+      )
+    ];
+
+    elements.navPanel.innerHTML = links.join("");
+  }
+
   function applyPrefillFromQuery() {
     const params = new URLSearchParams(window.location.search);
-    const requestedPlayer = (params.get("player") || "").trim().toLowerCase();
+    const requestedPlayer = normalizePlayerName(params.get("player"));
     if (!requestedPlayer) {
       showPickerCard();
       return;
     }
 
-    const match = PRO_SETUP_EXAMPLES.find(
-      (example) => example.player.toLowerCase() === requestedPlayer
-    );
+    const match = proSetupIndex.get(requestedPlayer);
 
     if (!match) {
       showPickerCard();
@@ -79,13 +99,13 @@
 
   function buildSelectedSetup() {
     const selectedPlayer = String(elements.select.value || "").trim();
-    const example = PRO_SETUP_EXAMPLES.find((item) => item.player === selectedPlayer);
+    const example = proSetupIndex.get(normalizePlayerName(selectedPlayer));
 
     if (!example) {
       return {
         error: {
           title: "Choose a pro player",
-          text: "Pick one player from the dropdown so the page can load that curated pro-inspired setup."
+          text: "Pick one player from the dropdown so the page can load that player's setup reference from the current pro database."
         }
       };
     }
@@ -95,16 +115,17 @@
 
   function buildProSetup(example) {
     const entry = findStringEntryByName(example.preferredTopEntryName);
-    const proRacket = findPlayerRacket(entry, example.player);
-    const proTension = findPlayerTension(entry, example.player);
-    const stringSummary = entry?.summary || `${example.preferredTopEntryName} is used here as the anchor string for this curated pro-inspired example.`;
+    const proRacket = findPlayerRacket(entry, example.player) || findAnyPlayerRacket(example.player);
+    const proTension = findPlayerTension(entry, example.player) || findAnyPlayerTension(example.player);
+    const fallbackStringName = example.preferredTopEntryName || "the best available string reference";
+    const stringSummary = entry?.summary || `${fallbackStringName} is used here as the anchor string for this player-specific setup reference.`;
 
     return {
       player: example.player,
       style: example.style,
       racketFamily: example.racketFamily,
       actualRacket: proRacket?.racket || example.racketFamily,
-      stringName: entry?.name || example.preferredTopEntryName,
+      stringName: entry?.name || example.preferredTopEntryName || "Best available string reference",
       stringType: entry?.type || "Unknown",
       gauge: entry?.gauge || "Unknown",
       tensionLabel: proTension?.tension || formatTensionBand(entry?.tensionBand),
@@ -248,6 +269,130 @@
     }
 
     return bullets.slice(0, 4);
+  }
+
+  function buildProSetupOptions() {
+    const curatedByPlayer = new Map(
+      CURATED_PRO_SETUP_EXAMPLES.map((example) => [normalizePlayerName(example.player), example])
+    );
+    const fullPlayerRecords = collectPlayerRecords();
+
+    fullPlayerRecords.forEach((record, playerKey) => {
+      if (curatedByPlayer.has(playerKey)) {
+        return;
+      }
+
+      curatedByPlayer.set(playerKey, buildFallbackExample(record));
+    });
+
+    return [...curatedByPlayer.values()].sort((left, right) => left.player.localeCompare(right.player));
+  }
+
+  function collectPlayerRecords() {
+    const playerRecords = new Map();
+
+    strings.forEach((entry) => {
+      const playerNames = new Set([
+        ...(entry.atpPlayers || []),
+        ...(entry.wtaPlayers || []),
+        ...(entry.proRackets || []).map((item) => item.player),
+        ...(entry.proTensions || []).map((item) => item.player)
+      ]);
+
+      playerNames.forEach((playerName) => {
+        const player = String(playerName || "").trim();
+        if (!player) {
+          return;
+        }
+
+        const playerKey = normalizePlayerName(player);
+        if (!playerRecords.has(playerKey)) {
+          playerRecords.set(playerKey, {
+            player,
+            entries: []
+          });
+        }
+
+        playerRecords.get(playerKey).entries.push(entry);
+      });
+    });
+
+    return playerRecords;
+  }
+
+  function buildFallbackExample(record) {
+    const entry = pickBestEntryForPlayer(record);
+    const racket = findAnyPlayerRacket(record.player);
+    const style = inferPlayerStyle(entry);
+
+    return {
+      player: record.player,
+      style,
+      preferredTopEntryName: entry?.name || "",
+      racketFamily: entry?.racketFamily || racket?.racket || "Control Frame",
+      preferences: buildFallbackPreferences(entry, style)
+    };
+  }
+
+  function pickBestEntryForPlayer(record) {
+    return [...record.entries].sort((left, right) => {
+      const scoreGap = scoreEntryForPlayer(right, record.player) - scoreEntryForPlayer(left, record.player);
+      if (scoreGap !== 0) {
+        return scoreGap;
+      }
+      return String(left.name || "").localeCompare(String(right.name || ""));
+    })[0] || null;
+  }
+
+  function scoreEntryForPlayer(entry, player) {
+    let score = 0;
+
+    if ((entry.atpPlayers || []).includes(player) || (entry.wtaPlayers || []).includes(player)) {
+      score += 5;
+    }
+    if ((entry.proRackets || []).some((item) => item.player === player)) {
+      score += 8;
+    }
+    if ((entry.proTensions || []).some((item) => item.player === player)) {
+      score += 8;
+    }
+    if (entry.summary) {
+      score += 2;
+    }
+    if (entry.racketFamily) {
+      score += 2;
+    }
+    if (entry.gameStyle) {
+      score += 2;
+    }
+    if (entry.gauge) {
+      score += 1;
+    }
+    if (entry.type) {
+      score += 1;
+    }
+
+    return score;
+  }
+
+  function inferPlayerStyle(entry) {
+    return entry?.gameStyle || "Aggressive Baseliner";
+  }
+
+  function buildFallbackPreferences(entry, style) {
+    const defaultPreferencesByStyle = {
+      "Aggressive Baseliner": { spin: "High", power: "Medium", control: "High" },
+      "All-Court": { spin: "Medium", power: "Medium", control: "High" },
+      "Flat Hitter": { spin: "Medium", power: "Medium", control: "Very High" },
+      "Heavy Topspin": { spin: "Very High", power: "Low", control: "High" }
+    };
+    const defaults = defaultPreferencesByStyle[style] || defaultPreferencesByStyle["Aggressive Baseliner"];
+
+    return {
+      spin: entry?.spin || defaults.spin,
+      power: entry?.power || defaults.power,
+      control: entry?.control || defaults.control
+    };
   }
 
   function buildProSetupScore({ example, entry, actualRacket, hasLiveTension, hasTensionBand }) {
@@ -476,12 +621,44 @@
     return (entry.proRackets || []).find((item) => item.player === player) || null;
   }
 
+  function findAnyPlayerRacket(player) {
+    return findBestPlayerMatch(player, "proRackets");
+  }
+
   function findPlayerTension(entry, player) {
     if (!entry || !player) {
       return null;
     }
 
     return (entry.proTensions || []).find((item) => item.player === player) || null;
+  }
+
+  function findAnyPlayerTension(player) {
+    return findBestPlayerMatch(player, "proTensions");
+  }
+
+  function findBestPlayerMatch(player, collectionKey) {
+    const playerKey = normalizePlayerName(player);
+    let bestMatch = null;
+
+    strings.forEach((entry) => {
+      (entry[collectionKey] || []).forEach((item) => {
+        if (normalizePlayerName(item.player) !== playerKey) {
+          return;
+        }
+
+        const match = {
+          ...item,
+          entry
+        };
+
+        if (!bestMatch || scoreEntryForPlayer(entry, player) > scoreEntryForPlayer(bestMatch.entry, player)) {
+          bestMatch = match;
+        }
+      });
+    });
+
+    return bestMatch;
   }
 
   function getRacketFamilyGroup(racketFamily) {
@@ -510,6 +687,10 @@
 
   function clampWhole(value, min = 0, max = 100) {
     return Math.min(max, Math.max(min, Math.round(value)));
+  }
+
+  function normalizePlayerName(value) {
+    return String(value || "").trim().toLowerCase();
   }
 
   function trackToolUsage(eventName, eventLabel, extra = {}) {

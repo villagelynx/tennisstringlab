@@ -26,7 +26,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
   <link rel="manifest" href="./site.webmanifest">
-  <link rel="stylesheet" href="./styles.css?v=20260411z">
+  <link rel="stylesheet" href="./styles.css?v=20260411ab">
 </head>
 <body class="tool-page-body" data-page="pro-setup">
   <main class="tool-page-shell">
@@ -40,21 +40,7 @@
         <a class="tool-page-nav-link" href="/">Home</a>
         <details class="tool-page-nav-dropdown tool-page-nav-dropdown-pros">
           <summary class="tool-page-nav-link is-primary">All Pro Setups</summary>
-          <div class="tool-page-nav-dropdown-panel">
-            <a href="./pro-setup.html">See All Pro Setups</a>
-            <a href="./pro-setup.html?player=Carlos%20Alcaraz">Carlos Alcaraz</a>
-            <a href="./pro-setup.html?player=Jannik%20Sinner">Jannik Sinner</a>
-            <a href="./pro-setup.html?player=Aryna%20Sabalenka">Aryna Sabalenka</a>
-            <a href="./pro-setup.html?player=Taylor%20Fritz">Taylor Fritz</a>
-            <a href="./pro-setup.html?player=Ben%20Shelton">Ben Shelton</a>
-            <a href="./pro-setup.html?player=Iga%20Swiatek">Iga Swiatek</a>
-            <a href="./pro-setup.html?player=Novak%20Djokovic">Novak Djokovic</a>
-            <a href="./pro-setup.html?player=Alexander%20Zverev">Alexander Zverev</a>
-            <a href="./pro-setup.html?player=Coco%20Gauff">Coco Gauff</a>
-            <a href="./pro-setup.html?player=Tommy%20Paul">Tommy Paul</a>
-            <a href="./pro-setup.html?player=Paula%20Badosa">Paula Badosa</a>
-            <a href="./pro-setup.html?player=Elena%20Rybakina">Elena Rybakina</a>
-          </div>
+          <div id="proSetupNavPanel" class="tool-page-nav-dropdown-panel"></div>
         </details>
         <a class="tool-page-nav-link" href="./quick-setup.html">Quick String Setup</a>
         <a class="tool-page-nav-link" href="./compare-pro-setups.html">Compare Pro Setups</a>
@@ -68,7 +54,7 @@
         <article id="proSetupPickerCard" class="tool-card compare-tool-form-card">
           <div>
             <h3>Choose a player</h3>
-            <p class="summary-copy">Pick one player from the curated pro list to see the string anchor, racket fit, tension reference, and the likely setup profile in one place.</p>
+            <p class="summary-copy">Pick any player from the current pro database to see the string anchor, racket fit, tension reference, and likely setup profile in one place.</p>
           </div>
           <div class="tool-form-grid tool-form-grid-compact">
             <div class="field is-wide">
@@ -81,7 +67,7 @@
           <div class="tool-actions tool-actions-compact">
             <button id="showProSetupButton" class="secondary-button tool-primary-button" type="button">Show Pro Setup</button>
           </div>
-          <p class="field-note">These are curated pro-inspired examples matched against the current string database. They are meant to be practical starting points, not a complete live tour equipment audit.</p>
+          <p class="field-note">These player pages are built from the current string database. Featured players use richer hand-tuned references, while the rest use the best available player-specific string, racket, and tension data in the database.</p>
         </article>
 
         <div id="proSetupReport" class="compare-tool-report-shell">
@@ -97,6 +83,6 @@
 
   <script src="./analytics.js?v=20260411f"></script>
   <script src="./strings-data.js"></script>
-  <script src="./pro-setup.js?v=20260411b"></script>
+  <script src="./pro-setup.js?v=20260412c"></script>
 </body>
 </html>
