@@ -20,6 +20,7 @@
     { player: "Elena Rybakina", style: "Aggressive Baseliner", preferredTopEntryName: "Yonex Poly Tour Fire", racketFamily: "Yonex Ezone", preferences: { spin: "High", power: "Medium", control: "High" } }
   ];
 
+  const playerNameCollator = new Intl.Collator(undefined, { sensitivity: "base" });
   const proSetupOptions = buildProSetupOptions();
   const proSetupIndex = new Map(
     proSetupOptions.map((example) => [normalizePlayerName(example.player), example])
@@ -319,7 +320,7 @@
         if (scoreGap !== 0) {
           return scoreGap;
         }
-        return left.player.localeCompare(right.player);
+        return comparePlayersBySurname(left.player, right.player);
       });
   }
 
@@ -337,7 +338,7 @@
       curatedByPlayer.set(playerKey, buildFallbackExample(record));
     });
 
-    return [...curatedByPlayer.values()].sort((left, right) => left.player.localeCompare(right.player));
+    return [...curatedByPlayer.values()].sort((left, right) => comparePlayersBySurname(left.player, right.player));
   }
 
   function collectPlayerRecords() {
@@ -743,6 +744,21 @@
 
   function normalizePlayerName(value) {
     return String(value || "").trim().toLowerCase();
+  }
+
+  function comparePlayersBySurname(leftPlayer, rightPlayer) {
+    const leftParts = String(leftPlayer || "").trim().split(/\s+/).filter(Boolean);
+    const rightParts = String(rightPlayer || "").trim().split(/\s+/).filter(Boolean);
+
+    const leftSurname = leftParts.length ? leftParts[leftParts.length - 1] : "";
+    const rightSurname = rightParts.length ? rightParts[rightParts.length - 1] : "";
+
+    const surnameResult = playerNameCollator.compare(leftSurname, rightSurname);
+    if (surnameResult !== 0) {
+      return surnameResult;
+    }
+
+    return playerNameCollator.compare(String(leftPlayer || ""), String(rightPlayer || ""));
   }
 
   function trackToolUsage(eventName, eventLabel, extra = {}) {
