@@ -4176,6 +4176,36 @@ body[data-page="pro-setup"] .compare-tool-report-card .tool-recommendation-name 
   line-height: 1.1;
 }
 
+body[data-page="pro-setup"] .pro-setup-score-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin: 6px 0 10px;
+}
+
+body[data-page="pro-setup"] .pro-setup-score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #5b31c2, #7a56d9);
+  box-shadow: 0 12px 22px rgba(91, 49, 194, 0.2);
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+body[data-page="pro-setup"] .pro-setup-score-label {
+  color: #5b5f7a;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
 body[data-page="pro-setup"] .compare-tool-string-card h4,
 body[data-page="pro-setup"] .compare-tool-report-card h3 {
   font-size: 1.48rem;

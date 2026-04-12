@@ -116,7 +116,14 @@
         control: blendScores(example.preferences.control, entry?.control),
         comfort: convertLevelToTen(entry?.comfort),
         durability: convertLevelToTen(entry?.durability)
-      }
+      },
+      setupScore: buildProSetupScore({
+        example,
+        entry,
+        actualRacket: proRacket?.racket || example.racketFamily,
+        hasLiveTension: Boolean(proTension),
+        hasTensionBand: Boolean(entry?.tensionBand)
+      })
     };
   }
 
@@ -150,6 +157,10 @@
           <div>
             <p class="eyebrow">Setup Snapshot</p>
             <h4>${escapeHtml(setup.player)}</h4>
+            <div class="pro-setup-score-row">
+              <span class="pro-setup-score-badge">${setup.setupScore.total}/100</span>
+              <span class="pro-setup-score-label">${escapeHtml(setup.setupScore.summary)}</span>
+            </div>
             <p class="summary-copy">${escapeHtml(setup.stringSummary)}</p>
           </div>
           <div class="tool-stat-grid">
@@ -239,6 +250,164 @@
     return bullets.slice(0, 4);
   }
 
+  function buildProSetupScore({ example, entry, actualRacket, hasLiveTension, hasTensionBand }) {
+    const profile = {
+      spin: blendScores(example.preferences.spin, entry?.spin),
+      power: blendScores(example.preferences.power, entry?.power),
+      control: blendScores(example.preferences.control, entry?.control),
+      comfort: convertLevelToTen(entry?.comfort),
+      durability: convertLevelToTen(entry?.durability)
+    };
+
+    const breakdown = [
+      scoreProStyleFit(example, profile),
+      scoreProRacketFit(example.racketFamily, actualRacket),
+      scoreProStringAnchor(entry, example, profile),
+      scoreProTensionReference(hasLiveTension, hasTensionBand),
+      scoreProComfortBalance(example, entry, profile)
+    ];
+
+    const total = clampWhole(breakdown.reduce((sum, item) => sum + item.score, 0), 0, 100);
+    const strongest = [...breakdown]
+      .sort((left, right) => (right.score / right.max) - (left.score / left.max))
+      .slice(0, 2)
+      .map((item) => item.label.toLowerCase());
+
+    return {
+      total,
+      summary: total >= 88
+        ? `Excellent pro fit for ${joinLabels(strongest)}.`
+        : total >= 76
+          ? `Strong pro fit for ${joinLabels(strongest)}.`
+          : `Solid pro reference for ${joinLabels(strongest)}.`
+    };
+  }
+
+  function scoreProStyleFit(example, profile) {
+    const targets = {
+      spin: { value: convertLevelToTen(example.preferences.spin), weight: 2 },
+      power: { value: convertLevelToTen(example.preferences.power), weight: 1.5 },
+      control: { value: convertLevelToTen(example.preferences.control), weight: 2 }
+    };
+
+    if (example.style === "All-Court") {
+      targets.comfort = { value: 7, weight: 1 };
+    } else if (example.style === "Heavy Topspin") {
+      targets.spin.weight += 0.5;
+    } else if (example.style === "Flat Hitter") {
+      targets.control.weight += 0.5;
+    }
+
+    return {
+      label: "Style Fit",
+      score: scoreProfileAgainstTarget(profile, targets, 35),
+      max: 35
+    };
+  }
+
+  function scoreProRacketFit(targetFamily, actualRacket) {
+    const familyGroup = getRacketFamilyGroup(targetFamily);
+    let score = 12;
+
+    if (String(actualRacket || "").trim() === targetFamily) {
+      score = 20;
+    } else if (getRacketFamilyGroup(actualRacket) === familyGroup) {
+      score = 17;
+    } else if (String(actualRacket || "").toLowerCase().includes(String(targetFamily).split(" ")[0].toLowerCase())) {
+      score = 16;
+    }
+
+    return {
+      label: "Racket Fit",
+      score,
+      max: 20
+    };
+  }
+
+  function scoreProStringAnchor(entry, example, profile) {
+    let score = 9;
+
+    if (entry) {
+      score += 5;
+    }
+    if (entry?.type && entry.type !== "Unknown") {
+      score += 3;
+    }
+    if (entry?.gauge && entry.gauge !== "Unknown") {
+      score += 2;
+    }
+
+    if (example.style === "Aggressive Baseliner" && (profile.spin >= 7 || profile.control >= 7)) {
+      score += 4;
+    } else if (example.style === "All-Court" && profile.control >= 7 && profile.comfort >= 6) {
+      score += 4;
+    } else if (example.style === "Flat Hitter" && profile.control >= 8) {
+      score += 4;
+    } else if (example.style === "Heavy Topspin" && profile.spin >= 8) {
+      score += 4;
+    }
+
+    return {
+      label: "String Anchor",
+      score: clampWhole(score, 0, 20),
+      max: 20
+    };
+  }
+
+  function scoreProTensionReference(hasLiveTension, hasTensionBand) {
+    return {
+      label: "Tension Ref",
+      score: hasLiveTension ? 15 : hasTensionBand ? 11 : 6,
+      max: 15
+    };
+  }
+
+  function scoreProComfortBalance(example, entry, profile) {
+    let score = 5;
+
+    if (profile.comfort >= 6 && profile.comfort <= 8) {
+      score += 2;
+    } else if (profile.comfort >= 5) {
+      score += 1;
+    }
+
+    if (profile.durability >= 6) {
+      score += 2;
+    }
+
+    if (example.style === "All-Court" && profile.comfort >= 6) {
+      score += 1;
+    }
+
+    if (entry?.type === "Natural Gut" || entry?.type === "Multifilament") {
+      score += 1;
+    }
+
+    return {
+      label: "Comfort Balance",
+      score: clampWhole(score, 0, 10),
+      max: 10
+    };
+  }
+
+  function scoreProfileAgainstTarget(profile, target, maxScore) {
+    let weightedTotal = 0;
+    let totalWeight = 0;
+
+    Object.entries(target).forEach(([metric, config]) => {
+      const actual = profile[metric] || 0;
+      const closeness = 10 - Math.abs(actual - config.value);
+      weightedTotal += closeness * config.weight;
+      totalWeight += config.weight;
+    });
+
+    if (!totalWeight) {
+      return 0;
+    }
+
+    return clampWhole((weightedTotal / totalWeight / 10) * maxScore, 0, maxScore);
+  }
+
   function syncUrl(player) {
     const url = new URL(window.location.href);
     url.searchParams.set("player", player);
@@ -313,6 +482,34 @@
     }
 
     return (entry.proTensions || []).find((item) => item.player === player) || null;
+  }
+
+  function getRacketFamilyGroup(racketFamily) {
+    if (["Babolat Pure Aero", "Yonex VCORE", "Spin Frame"].includes(racketFamily)) {
+      return "spin";
+    }
+
+    if (["Babolat Pure Drive", "Wilson Clash", "Yonex Ezone", "Power Frame"].includes(racketFamily)) {
+      return "power";
+    }
+
+    return "control";
+  }
+
+  function joinLabels(labels) {
+    if (labels.length <= 1) {
+      return labels[0] || "overall fit";
+    }
+
+    if (labels.length === 2) {
+      return `${labels[0]} and ${labels[1]}`;
+    }
+
+    return `${labels.slice(0, -1).join(", ")}, and ${labels[labels.length - 1]}`;
+  }
+
+  function clampWhole(value, min = 0, max = 100) {
+    return Math.min(max, Math.max(min, Math.round(value)));
   }
 
   function trackToolUsage(eventName, eventLabel, extra = {}) {
