@@ -4324,6 +4324,13 @@ body[data-page="compare-pro-setups"] .pro-setup-score-badge {
   line-height: 1;
 }
 
+body[data-page="pro-setup"] .pro-setup-score-badge-hybrid,
+body[data-page="compare-pro-setups"] .pro-setup-score-badge-hybrid {
+  background: linear-gradient(90deg, #f7e77c, #8ed8c7);
+  box-shadow: 0 10px 18px rgba(127, 186, 171, 0.22);
+  color: var(--navy-900);
+}
+
 body[data-page="pro-setup"] .pro-setup-score-label,
 body[data-page="compare-pro-setups"] .pro-setup-score-label {
   color: #5b5f7a;

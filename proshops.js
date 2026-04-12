@@ -472,6 +472,13 @@ function applyLocationFilter(shops, hasExplicitFilters) {
 }
 
 function compareShops(left, right) {
+  const leftSponsored = Boolean(left.sponsored);
+  const rightSponsored = Boolean(right.sponsored);
+
+  if (leftSponsored !== rightSponsored) {
+    return leftSponsored ? -1 : 1;
+  }
+
   const leftDistance = Number.isFinite(left.distanceKm) ? left.distanceKm : Number.POSITIVE_INFINITY;
   const rightDistance = Number.isFinite(right.distanceKm) ? right.distanceKm : Number.POSITIVE_INFINITY;
 
