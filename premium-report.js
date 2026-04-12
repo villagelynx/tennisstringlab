@@ -54,6 +54,7 @@
     arm: document.getElementById("premiumReportArm"),
     button: document.getElementById("premiumReportButton"),
     returnLink: document.getElementById("premiumReturnLink"),
+    validationNote: document.getElementById("premiumValidationNote"),
     shell: document.getElementById("premiumReportShell")
   };
 
@@ -89,6 +90,9 @@
 
   function bindEvents() {
     elements.string?.addEventListener("change", () => syncGaugeWithString(true));
+    [elements.racket, elements.gauge, elements.string, elements.tension, elements.goal, elements.arm].forEach((control) => {
+      control?.addEventListener("change", () => clearValidationState());
+    });
     elements.gauge?.addEventListener("change", () => {
       elements.gauge.dataset.autofilled = "false";
     });
@@ -252,6 +256,7 @@
   function renderEmptyState(error) {
     state.latestReport = null;
     renderHero(error);
+    applyValidationState(error);
 
     if (!elements.shell) {
       return;
@@ -473,6 +478,7 @@
     }
 
     state.latestReport = report;
+    clearValidationState();
     renderHero(report);
 
     const bestOption = report.scoreLift.bestOption;
@@ -749,6 +755,61 @@
 
   function buildDatabaseHref(stringName) {
     return `./master-list.html?q=${encodeURIComponent(stringName)}`;
+  }
+
+  function clearValidationState() {
+    elements.validationNote?.classList.add("planner-hidden");
+    if (elements.validationNote) {
+      elements.validationNote.textContent = "";
+    }
+
+    [elements.racket, elements.gauge, elements.string, elements.tension, elements.goal].forEach((control) => {
+      if (!control) {
+        return;
+      }
+
+      control.removeAttribute("aria-invalid");
+      control.closest(".field")?.classList.remove("is-invalid");
+    });
+  }
+
+  function applyValidationState(reportOrError) {
+    clearValidationState();
+
+    const error = reportOrError?.error;
+    if (!error) {
+      return;
+    }
+
+    const targetControl = getValidationControl(error.title);
+    if (elements.validationNote) {
+      elements.validationNote.innerHTML = `<strong>${escapeHtml(error.title)}</strong> ${escapeHtml(error.text)}`;
+      elements.validationNote.classList.remove("planner-hidden");
+    }
+
+    if (!targetControl) {
+      return;
+    }
+
+    targetControl.setAttribute("aria-invalid", "true");
+    targetControl.closest(".field")?.classList.add("is-invalid");
+    targetControl.focus({ preventScroll: true });
+    targetControl.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  function getValidationControl(title) {
+    switch (title) {
+      case "Choose your racket family":
+        return elements.racket;
+      case "Choose a string from the database":
+        return elements.string;
+      case "Choose your gauge":
+        return elements.gauge;
+      case "Enter your current tension":
+        return elements.tension;
+      default:
+        return null;
+    }
   }
 
   function getTensionLabel(option) {

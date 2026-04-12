@@ -159,15 +159,65 @@
 
 .premium-builder-header {
   display: grid;
-  gap: 4px;
+  gap: 6px;
 }
 
-.premium-builder-header p {
-  margin-top: 12px;
+.premium-builder-header .landing-eyebrow,
+.premium-builder-header h2,
+.premium-builder-header .summary-copy {
+  margin: 0;
+}
+
+.premium-builder-header .summary-copy {
+  margin-top: 6px;
 }
 
 .premium-form-grid {
   margin-top: 18px;
+}
+
+.premium-validation-note {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #fff2ef;
+  border: 1px solid rgba(201, 72, 52, 0.2);
+  color: #8d2f1f;
+  font-size: 0.9rem;
+  line-height: 1.42;
+}
+
+.premium-report-page .premium-form-grid .field.is-invalid label {
+  color: #8d2f1f;
+}
+
+.premium-report-page .premium-form-grid .field.is-invalid .search-input,
+.premium-report-page .premium-form-grid .field.is-invalid select.search-input,
+.premium-report-page .premium-form-grid .field.is-invalid input.search-input,
+.premium-report-page .premium-form-grid .field.is-invalid textarea.search-input {
+  border-color: rgba(201, 72, 52, 0.55) !important;
+  box-shadow: 0 0 0 3px rgba(201, 72, 52, 0.12) !important;
+}
+
+.premium-report-page .premium-form-grid .field label {
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+}
+
+.premium-report-page .premium-form-grid .search-input,
+.premium-report-page .premium-form-grid select.search-input,
+.premium-report-page .premium-form-grid input.search-input,
+.premium-report-page .premium-form-grid textarea.search-input {
+  min-height: 52px !important;
+  padding: 10px 42px 10px 12px !important;
+  font-size: 0.95rem !important;
+  line-height: 1.3 !important;
+}
+
+.premium-report-page .premium-toggle-field span,
+.premium-report-page .field-note {
+  font-size: 0.88rem;
+  line-height: 1.42;
 }
 
 .premium-toggle-field {
@@ -440,5 +490,28 @@
   .premium-context-strip span {
     min-height: 36px;
     font-size: 0.88rem;
+  }
+
+  .premium-report-page .premium-form-grid .field label {
+    font-size: 0.68rem;
+  }
+
+  .premium-validation-note {
+    font-size: 0.82rem;
+    padding: 11px 12px;
+  }
+
+  .premium-report-page .premium-form-grid .search-input,
+  .premium-report-page .premium-form-grid select.search-input,
+  .premium-report-page .premium-form-grid input.search-input,
+  .premium-report-page .premium-form-grid textarea.search-input {
+    min-height: 48px !important;
+    padding: 9px 38px 9px 11px !important;
+    font-size: 0.88rem !important;
+  }
+
+  .premium-report-page .premium-toggle-field span,
+  .premium-report-page .field-note {
+    font-size: 0.82rem;
   }
 }

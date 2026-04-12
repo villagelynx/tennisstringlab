@@ -29,7 +29,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
   <link rel="manifest" href="./site.webmanifest">
   <link rel="stylesheet" href="./styles.css?v=20260412j">
-  <link rel="stylesheet" href="./homepage.css?v=20260412l">
+  <link rel="stylesheet" href="./homepage.css?v=20260412m">
   <!-- SEO Structured Data -->
   <script type="application/ld+json">
 {
@@ -97,7 +97,7 @@
         Search by city, state or province, or shop name to find tennis retailers and pro shops that offer restringing and setup help. Use your browser location for automatic nearby filtering, or pick a city from the backup location menu.
       </p>
       <div class="proshops-hero-owner-cta">
-        <a class="landing-button landing-button-ghost" href="#proshopListingRequest">Own a pro shop? Add your listing</a>
+        <a class="landing-button landing-button-ghost" href="#proshopListingRequest">Own a pro shop? Apply here</a>
       </div>
       <div class="hero-actions">
         <input id="shopSearchInput" class="search-input hero-search-control" type="search" placeholder="Search city, shop, state, or province">
@@ -136,8 +136,8 @@
     <section id="for-pro-shops" class="proshops-partner-section monetization-section">
       <div class="monetization-copy">
         <p class="landing-eyebrow">For Pro Shops</p>
-        <h2>Get your shop listed on TennisSetup for $50 per year.</h2>
-        <p>Sponsored listings include your shop name, city, website link, specialties, and a clear sponsored label. Approved sponsored shops appear first in Pro Shops search results, and every submission is still reviewed before it goes live.</p>
+        <h2>Add a sponsored listing or subscribe to Premium Reports for your shop.</h2>
+        <p>Choose the offer that fits your business. Sponsored listings help players find you in search, and Premium Reports give your shop a higher-value way to recommend setups in person.</p>
       </div>
 
       <div class="proshops-partner-stack">
@@ -164,25 +164,57 @@
           <p class="monetization-footnote">Listings stay pending until you review and approve them. Approved sponsored shops show first in the public search results.</p>
         </aside>
 
+        <aside class="monetization-card proshops-partner-card">
+          <p class="monetization-kicker">Premium Reports Access</p>
+          <h3>Offer TennisSetup Premium Reports through your shop for $99 per year.</h3>
+          <div class="monetization-pricing">
+            <div class="monetization-price-box is-single">
+              <strong>$99</strong>
+              <span>Per year Premium Reports subscription</span>
+            </div>
+          </div>
+          <ul>
+            <li>Pull Premium Reports during stringing consultations and setup conversations</li>
+            <li>Show current score, best next setup, score lift, and a safer backup option</li>
+            <li>Use a cleaner recommendation flow for juniors, league players, and frequent restring customers</li>
+            <li>Manual review and approval before any reports subscription is turned on</li>
+            <li>Good fit for shops that want a premium add-on service, not just a listing</li>
+          </ul>
+          <div class="monetization-actions">
+            <a class="landing-button landing-button-primary" href="#proshopListingRequest">Request reports access</a>
+            <a class="landing-button landing-button-ghost" href="./contact.html?offer=proshop-premium-reports">Ask about reports access</a>
+          </div>
+          <p class="monetization-footnote">Reports access is set up manually after approval so you stay in control of which shops can use it.</p>
+        </aside>
+
         <section id="proshopListingRequest" class="monetization-card proshops-listing-form-card">
-          <p class="monetization-kicker">Listing Request</p>
-          <h3>Submit your shop for admin review.</h3>
-          <p class="summary-copy">Fill this out once. The request comes through as pending, and you can review, edit, and approve it before it goes live on the Pro Shops page.</p>
+          <p class="monetization-kicker">Partner Request</p>
+          <h3>Request a listing, Premium Reports access, or both.</h3>
+          <p class="summary-copy">Fill this out once. The request comes through as pending, and you can review, edit, and approve the right offer before anything goes live or gets turned on.</p>
           <div id="proshopListingSuccess" class="proshops-listing-success planner-hidden" aria-live="polite">
-            <strong>Listing request received.</strong>
-            <span>Thanks. Your shop submission is marked for admin review and will stay off the live page until you approve it.</span>
+            <strong>Partner request received.</strong>
+            <span>Thanks. Your request is marked for admin review and nothing will go live or be activated until you approve it.</span>
           </div>
 
           <form class="proshops-listing-form" name="pro-shop-listing-request" method="POST" action="./proshops.html?submitted=listing-request#proshopListingRequest" data-netlify="true" netlify-honeypot="bot-field">
             <input type="hidden" name="form-name" value="pro-shop-listing-request">
             <input type="hidden" name="approval_status" value="Pending Admin Review">
-            <input type="hidden" name="listing_type" value="Sponsored Pro Shop Listing">
+            <input type="hidden" name="request_type" value="Pro Shop Partner Request">
             <input type="hidden" name="source_page" value="proshops.html">
             <p class="planner-hidden">
               <label>Do not fill this out if you are human <input name="bot-field"></label>
             </p>
 
             <div class="tool-form-grid">
+              <div class="field is-wide">
+                <label for="proshopOfferInterest">What are you interested in?</label>
+                <select id="proshopOfferInterest" class="search-input" name="offer_interest" required>
+                  <option value="">Choose an option</option>
+                  <option value="Sponsored Listing">Sponsored Listing</option>
+                  <option value="Premium Reports Subscription">Premium Reports Subscription</option>
+                  <option value="Both">Both</option>
+                </select>
+              </div>
               <div class="field is-wide">
                 <label for="proshopShopName">Shop Name</label>
                 <input id="proshopShopName" class="search-input" type="text" name="shop_name" placeholder="Your shop name" required>
@@ -222,9 +254,9 @@
             </div>
 
             <div class="monetization-actions">
-              <button class="landing-button landing-button-primary" type="submit">Submit Listing For Review</button>
+              <button class="landing-button landing-button-primary" type="submit">Submit Partner Request For Review</button>
             </div>
-            <p class="field-note">Submissions are not published automatically. Every request is reviewed and approved manually by the site administrator first.</p>
+            <p class="field-note">Submissions are not published or activated automatically. Every request is reviewed and approved manually by the site administrator first.</p>
           </form>
         </section>
       </div>
