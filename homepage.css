@@ -1286,7 +1286,7 @@ textarea {
   }
 
   body.landing-page .landing-hero h1 {
-    font-size: clamp(2.2rem, 3.45vw, 3.8rem);
+    font-size: clamp(1.72rem, 2.55vw, 2.8rem);
   }
 
   body.landing-page .landing-hero-lead {
@@ -1295,7 +1295,7 @@ textarea {
 
   body.landing-page .landing-button {
     min-height: 50px;
-    font-size: 0.9rem;
+    font-size: 0.82rem;
   }
 
   body.landing-page .landing-preview-card h2,
@@ -1334,20 +1334,20 @@ textarea {
 
   body.landing-page .section-heading h2,
   body.landing-page .monetization-copy h2 {
-    font-size: clamp(1.78rem, 2.1vw, 2.24rem);
+    font-size: clamp(1.34rem, 1.55vw, 1.72rem);
   }
 
   body.landing-page .analyzer-select-label {
-    font-size: 0.82rem;
+    font-size: 0.76rem;
   }
 
   body.landing-page .analyzer-select {
-    font-size: 1.05rem;
+    font-size: 0.96rem;
   }
 
   body.landing-page .choice-pill {
     min-height: 48px;
-    font-size: 0.92rem;
+    font-size: 0.84rem;
   }
 
   body.landing-page .setup-card-spec,

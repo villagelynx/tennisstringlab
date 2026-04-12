@@ -734,7 +734,7 @@
     return new Promise((resolve) => {
       const link = document.createElement("link");
       link.rel = "stylesheet";
-      link.href = "./homepage.css?v=20260411aa";
+      link.href = "./homepage.css?v=20260411ad";
       link.addEventListener("load", resolve, { once: true });
       link.addEventListener("error", resolve, { once: true });
       const manifest = document.querySelector('link[rel="manifest"]');
