@@ -13,6 +13,8 @@
   --turquoise-100: #ddf7f4;
   --yellow-500: #f0d94c;
   --yellow-200: #fff5ba;
+  --hybrid-mint-300: #8ed8c7;
+  --hybrid-mint-100: #e7faf4;
   --ink-900: #10263b;
   --ink-700: #425d75;
   --ink-500: #70879c;
@@ -417,10 +419,10 @@ textarea {
 }
 
 .landing-button-turquoise {
-  background: var(--yellow-500);
+  background: linear-gradient(135deg, var(--yellow-500), var(--hybrid-mint-300));
   color: var(--navy-950);
-  border-color: rgba(240, 217, 76, 0.28);
-  box-shadow: 0 12px 26px rgba(240, 217, 76, 0.24);
+  border-color: rgba(138, 199, 182, 0.34);
+  box-shadow: 0 12px 26px rgba(145, 191, 144, 0.24);
 }
 
 .landing-button-soft {
