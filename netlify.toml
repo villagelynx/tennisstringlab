@@ -2,6 +2,42 @@
   directory = "netlify/functions"
 
 [[redirects]]
+  from = "https://tennisstringlab.com/*"
+  to = "https://tennissetup.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://tennisstringlab.com/*"
+  to = "https://tennissetup.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.tennisstringlab.com/*"
+  to = "https://tennissetup.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.tennisstringlab.com/*"
+  to = "https://tennissetup.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.tennissetup.com/*"
+  to = "https://tennissetup.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.tennissetup.com/*"
+  to = "https://tennissetup.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/index.html"
   to = "/"
   status = 301
