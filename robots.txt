@@ -9,4 +9,4 @@ Disallow: /favicon-preview.html
 Disallow: /mobile-app-mockup.html
 Disallow: /mobile-app-mockup-filters.html
 
-Sitemap: https://tennisstringlab.com/sitemap.xml
+Sitemap: https://tennissetup.com/sitemap.xml
