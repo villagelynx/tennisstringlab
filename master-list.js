@@ -531,6 +531,7 @@ function renderMasterList() {
           </div>
           ${renderMasterTensions(entry)}
           ${renderMasterRackets(entry)}
+          ${renderMasterAffiliateLink(entry)}
         </div>
       </details>
     `).join("")}
@@ -723,3 +724,12 @@ document.addEventListener("tsl-language-change", () => {
     renderMasterError(`Master List failed to refresh: ${error && error.message ? error.message : "Unknown error"}`);
   }
 });
+
+function renderMasterAffiliateLink(entry) {
+  const affiliateUrl = "https://www.awin1.com/awclick.php?gid=550402&mid=95803&awinaffid=3113300&linkid=4216660&clickref=";
+  const name = escapeHtml(entry.name || "this string");
+  return `<div class="master-detail-section master-affiliate-shop">
+    <a class="master-affiliate-link" href="${affiliateUrl}" target="_blank" rel="sponsored noopener noreferrer" aria-label="Shop strings at Midwest Racquet Sports — affiliate link for ${name}">Shop strings at Midwest Racquet Sports ↗ <small>(affiliate link)</small></a>
+    <p class="master-detail-copy">Opens the retailer’s website. Search for ${name} and check the gauge and availability.</p>
+  </div>`;
+}
