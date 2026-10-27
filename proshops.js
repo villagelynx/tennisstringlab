@@ -16,7 +16,6 @@ const CLOSEST_FALLBACK_LIMIT = 8;
 const NEARBY_DISTANCE_KM = 40;
 
 const SHOPS = [
-  { name: "Your Pro Shop Here - Demo", city: "Vancouver", state: "BC", country: "Canada", region: "Canada", latitude: 49.2827, longitude: -123.1207, website: "./contact.html?offer=proshop-listing", websiteCtaLabel: "Get Listed", notes: "Example sponsored placement. Use this as the model for a paid, admin-approved pro shop listing on TennisSetup.", sponsored: true },
   { name: "Tennis Warehouse", city: "San Luis Obispo", state: "CA", country: "USA", region: "West Coast", latitude: 35.2828, longitude: -120.6596, website: "https://www.tennis-warehouse.com", notes: "Major tennis retailer with stringing support and string selection." },
   { name: "Belltown Tennis Shop", city: "Seattle", state: "WA", country: "USA", region: "West Coast", latitude: 47.6062, longitude: -122.3321, website: "https://www.yelp.com/search?find_desc=tennis+stringing&find_loc=Seattle%2C+WA", notes: "Seattle-area independent tennis shop and restringing lead." },
   { name: "Avanti Sports", city: "Portland", state: "OR", country: "USA", region: "West Coast", latitude: 45.5152, longitude: -122.6784, website: "https://www.avantisports.com", notes: "Portland tennis and racquet sports retailer with restringing services." },
@@ -472,12 +471,7 @@ function applyLocationFilter(shops, hasExplicitFilters) {
 }
 
 function compareShops(left, right) {
-  const leftSponsored = Boolean(left.sponsored);
-  const rightSponsored = Boolean(right.sponsored);
 
-  if (leftSponsored !== rightSponsored) {
-    return leftSponsored ? -1 : 1;
-  }
 
   const leftDistance = Number.isFinite(left.distanceKm) ? left.distanceKm : Number.POSITIVE_INFINITY;
   const rightDistance = Number.isFinite(right.distanceKm) ? right.distanceKm : Number.POSITIVE_INFINITY;
@@ -530,9 +524,7 @@ function renderShopCard(shop) {
   const distanceLabel = Number.isFinite(shop.distanceKm)
     ? (isNearYou ? "Near you" : `${formatDistance(shop.distanceKm)} away`)
     : "";
-  const sponsoredBadge = shop.sponsored
-    ? `<span class="shop-badge shop-badge-sponsored">Sponsored</span>`
-    : "";
+
   const ctaLabel = String(shop.websiteCtaLabel || "Visit Shop");
 
   return `
@@ -540,7 +532,7 @@ function renderShopCard(shop) {
       <div class="shop-card-header">
         <div class="shop-card-title-wrap">
           <h3>${escapeHtml(shop.name)}</h3>
-          ${sponsoredBadge}
+          
         </div>
         ${distanceLabel ? `<span class="shop-distance${isNearYou ? " shop-distance-near" : ""}">${escapeHtml(distanceLabel)}</span>` : ""}
       </div>
@@ -702,3 +694,4 @@ function escapeHtml(value) {
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
 }
+

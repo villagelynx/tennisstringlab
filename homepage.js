@@ -41,7 +41,7 @@ function renderList(target, items) {
 function syncSetupLinks() {
   const query = recommendationApi.toQueryString(state);
   const href = new URL(`./setup-result.html?${query}`, window.location.href).href;
-  const premiumHref = new URL(`./premium-report.html?${query}`, window.location.href).href;
+  const premiumHref = new URL(`./setup-report.html?${query}`, window.location.href).href;
 
   [analyzerSetupCta, resultSetupCta].forEach((link) => {
     if (link) {
@@ -111,3 +111,4 @@ if (analyzerRacketSelect) {
 }
 
 updateRecommendation();
+

@@ -60,7 +60,7 @@ if (selectionRacket) selectionRacket.textContent = recommendation.racketLabel;
 if (selectionFeel) selectionFeel.textContent = feelLabels[recommendation.state.feel] || "Balanced feel";
 if (shopSetupButton) shopSetupButton.href = recommendation.shopHref;
 if (databaseLinkButton) databaseLinkButton.href = recommendation.shopHref;
-if (premiumReportLinkButton) premiumReportLinkButton.href = `./premium-report.html?${recommendationApi.toQueryString(state)}`;
+if (premiumReportLinkButton) premiumReportLinkButton.href = `./setup-report.html?${recommendationApi.toQueryString(state)}`;
 if (resultMetricSpin) resultMetricSpin.textContent = recommendation.metrics.spin;
 if (resultMetricControl) resultMetricControl.textContent = recommendation.metrics.control;
 if (resultMetricComfort) resultMetricComfort.textContent = recommendation.metrics.comfort;
@@ -92,3 +92,4 @@ function formatBreakdownScore(items, label) {
   }
   return `${row.score}/${row.max}`;
 }
+

@@ -145,64 +145,28 @@
     <section id="for-pro-shops" class="proshops-partner-section monetization-section">
       <div class="monetization-copy">
         <p class="landing-eyebrow">For Pro Shops</p>
-        <h2>Add a sponsored listing or subscribe to Premium Reports for your shop.</h2>
-        <p>Choose the offer that fits your business. Sponsored listings help players find you in search, and Premium Reports give your shop a higher-value way to recommend setups in person.</p>
+        <h2>Request a free listing for your pro shop.</h2>
+        <p>Help players find your stringing services. Directory listing requests and setup reports are free to use.</p>
       </div>
 
       <div class="proshops-partner-stack">
         <aside class="monetization-card proshops-partner-card">
-          <p class="monetization-kicker">Sponsored Listing</p>
-          <h3>Get your shop featured on TennisSetup.</h3>
-          <div class="monetization-pricing">
-            <div class="monetization-price-box is-single">
-              <strong>$50</strong>
-              <span>Per year sponsored listing</span>
-            </div>
-          </div>
-          <ul>
-            <li>Shop name, location, and direct link to your homepage</li>
-            <li>Sponsored listings appear first in Pro Shops search results</li>
-            <li>Short description for stringing services and specialties</li>
-            <li>Clear sponsored label so the listing is transparent</li>
-            <li>Manual approval before anything appears on the live site</li>
-          </ul>
+          <p class="monetization-kicker">Free resources</p>
+          <h3>Help players find your shop and plan their next restring.</h3>
+          <p>Request a free directory listing, or use the full setup report during a stringing consultation. No payment, subscription or account is required.</p>
           <div class="monetization-actions">
-            <a class="landing-button landing-button-primary" href="#proshopListingRequest">Submit a listing request</a>
-            <a class="landing-button landing-button-ghost" href="./contact.html?offer=proshop-listing">Ask about sponsored placement</a>
+            <a class="landing-button landing-button-primary" href="#proshopListingRequest">Request a Free Listing</a>
+            <a class="landing-button landing-button-ghost" href="./setup-report.html">Build a Free Setup Report</a>
           </div>
-          <p class="monetization-footnote">Listings stay pending until you review and approve them. Approved sponsored shops show first in the public search results.</p>
-        </aside>
-
-        <aside class="monetization-card proshops-partner-card">
-          <p class="monetization-kicker">Premium Reports Access</p>
-          <h3>Offer TennisSetup Premium Reports through your shop for $99 per year.</h3>
-          <div class="monetization-pricing">
-            <div class="monetization-price-box is-single">
-              <strong>$99</strong>
-              <span>Per year Premium Reports subscription</span>
-            </div>
-          </div>
-          <ul>
-            <li>Pull Premium Reports during stringing consultations and setup conversations</li>
-            <li>Show current score, best next setup, score lift, and a safer backup option</li>
-            <li>Use a cleaner recommendation flow for juniors, league players, and frequent restring customers</li>
-            <li>Manual review and approval before any reports subscription is turned on</li>
-            <li>Good fit for shops that want a premium add-on service, not just a listing</li>
-          </ul>
-          <div class="monetization-actions">
-            <a class="landing-button landing-button-primary" href="#proshopListingRequest">Request reports access</a>
-            <a class="landing-button landing-button-ghost" href="./contact.html?offer=proshop-premium-reports">Ask about reports access</a>
-          </div>
-          <p class="monetization-footnote">Reports access is set up manually after approval so you stay in control of which shops can use it.</p>
         </aside>
 
         <section id="proshopListingRequest" class="monetization-card proshops-listing-form-card">
           <p class="monetization-kicker">Partner Request</p>
-          <h3>Request a listing, Premium Reports access, or both.</h3>
-          <p class="summary-copy">Fill this out once. The request comes through as pending, and you can review, edit, and approve the right offer before anything goes live or gets turned on.</p>
+          <h3>Request a free pro shop listing.</h3>
+          <p class="summary-copy">Submit your shop details for review. Listings are free and are checked by the site administrator before publication.</p>
           <div id="proshopListingSuccess" class="proshops-listing-success planner-hidden" aria-live="polite">
             <strong>Partner request received.</strong>
-            <span>Thanks. Your request is marked for admin review and nothing will go live or be activated until you approve it.</span>
+            <span>Thanks. Your free listing request is pending review by the site administrator.</span>
           </div>
 
           <form class="proshops-listing-form" name="pro-shop-listing-request" method="POST" action="./proshops.html?submitted=listing-request#proshopListingRequest" data-netlify="true" netlify-honeypot="bot-field">
@@ -218,10 +182,7 @@
               <div class="field is-wide">
                 <label for="proshopOfferInterest">What are you interested in?</label>
                 <select id="proshopOfferInterest" class="search-input" name="offer_interest" required>
-                  <option value="">Choose an option</option>
-                  <option value="Sponsored Listing">Sponsored Listing</option>
-                  <option value="Premium Reports Subscription">Premium Reports Subscription</option>
-                  <option value="Both">Both</option>
+                  <option value="Free Listing">Free Directory Listing</option>
                 </select>
               </div>
               <div class="field is-wide">
@@ -281,9 +242,10 @@
 
 
   <script src="./analytics.js?v=20260411f"></script>
-  <script src="./proshops.js?v=20260412c"></script>
+  <script src="./proshops.js?v=20261026-free"></script>
 </body>
 </html>
+
 
 
 

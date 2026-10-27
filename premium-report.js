@@ -275,7 +275,7 @@
 
     elements.shell.innerHTML = `
       <section class="premium-empty-card">
-        <p class="landing-eyebrow landing-eyebrow-muted">Premium Report</p>
+        <p class="landing-eyebrow landing-eyebrow-muted">Setup Report</p>
         <h3>Build your full report</h3>
         <p>Add your current setup details to turn the recommendation engine into one clean action page with your current score, best next setup, score lift, and one safer backup option.</p>
       </section>
@@ -290,11 +290,11 @@
 
     if (elements.title) {
       if (report) {
-        elements.title.textContent = "Your Premium Report is ready.";
+        elements.title.textContent = "Your Setup Report is ready.";
       } else if (recommendation) {
-        elements.title.textContent = "Turn this recommendation into your Premium Report.";
+        elements.title.textContent = "Turn this recommendation into your Setup Report.";
       } else if (hasCurrentSetupPrefill()) {
-        elements.title.textContent = "Your current setup is ready for a Premium Report.";
+        elements.title.textContent = "Your current setup is ready for a Setup Report.";
       } else {
         elements.title.textContent = "Build your personalized setup report.";
       }
@@ -370,7 +370,7 @@
     if (report) {
       const bestOption = report.scoreLift.bestOption;
       elements.scoreboard.innerHTML = `
-        <p class="landing-eyebrow landing-eyebrow-muted">Premium Report Summary</p>
+        <p class="landing-eyebrow landing-eyebrow-muted">Setup Report Summary</p>
         <div class="premium-score-summary-grid">
           <article class="premium-score-panel-card">
             <span class="premium-score-kicker">Current Score</span>
@@ -407,7 +407,7 @@
             <p>${escapeHtml(recommendation.meta)}</p>
           </div>
           <div class="premium-score-preview-card">
-            <span class="premium-score-preview-label">What Premium adds</span>
+            <span class="premium-score-preview-label">What the report adds</span>
             <strong>Current vs. Next</strong>
             <p>Score what you actually use now, then compare it against the recommended setup and one safer backup.</p>
           </div>
@@ -499,7 +499,7 @@
     state.initialReportLoaded = true;
 
     if (track) {
-      analyzerApi.trackToolUsage?.("premium_report_build", "Build Premium Report", {
+      analyzerApi.trackToolUsage?.("premium_report_build", "Build Setup Report", {
         source: state.recommendationState ? "recommendation" : state.source || "direct",
         currentString: report.entry.name,
         racketFamily: report.racketFamily,
@@ -653,7 +653,7 @@
 
     emailButton.addEventListener("click", () => {
       const draft = buildStringerDraft(report, bestOption, backupOption, recommendation);
-      analyzerApi.trackToolUsage?.("premium_report_email_stringer", "Email Premium Report", {
+      analyzerApi.trackToolUsage?.("premium_report_email_stringer", "Email Setup Report", {
         currentString: report.entry.name,
         recommendedString: bestOption.entry.name,
         goal: report.goal
@@ -696,7 +696,7 @@
     ].filter(Boolean);
 
     return {
-      subject: `Premium setup report: ${bestOption.entry.name} ${bestOption.displayGauge}`.trim(),
+      subject: `Setup report: ${bestOption.entry.name} ${bestOption.displayGauge}`.trim(),
       body: lines.join("\n")
     };
   }
@@ -840,3 +840,4 @@
       .replaceAll('"', "&quot;");
   }
 })();
+

@@ -416,7 +416,7 @@
         </div>
         <p class="tool-mini-line">${escapeHtml(report.tensionContextLine)}</p>
         <div class="tool-inline-actions">
-          <a class="secondary-button compact-button" href="${escapeHtml(buildPremiumReportHref(report))}">Open Premium Report</a>
+          <a class="secondary-button compact-button" href="${escapeHtml(buildPremiumReportHref(report))}">Open Setup Report</a>
           <button class="secondary-button compact-button setup-analyzer-email-stringer" type="button">Email Report to Stringer</button>
         </div>
       </section>
@@ -1531,7 +1531,7 @@
 
   function buildPremiumReportHref(report) {
     if (!report || report.error) {
-      return "./premium-report.html";
+      return "./setup-report.html";
     }
 
     const params = new URLSearchParams({
@@ -1544,7 +1544,7 @@
       arm: report.armSensitive ? "1" : "0"
     });
 
-    return `./premium-report.html?${params.toString()}`;
+    return `./setup-report.html?${params.toString()}`;
   }
 
   function emailCurrentSetupReportToStringer() {
@@ -1610,3 +1610,4 @@
     buildPremiumReportHref
   };
 })();
+
